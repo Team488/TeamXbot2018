@@ -1,6 +1,5 @@
 package competition.operator_interface;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
