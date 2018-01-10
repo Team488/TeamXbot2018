@@ -2,7 +2,7 @@ package competition.subsystems.drive;
 
 import org.apache.log4j.Logger;
 
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -31,17 +31,12 @@ public class DriveSubsystem extends BaseSubsystem {
         this.rightFrontDrive.setInverted(true);
         this.rightRearDrive = factory.createCANTalon(3);
         this.rightRearDrive.setInverted(true);
-        
-        this.leftFrontDrive.ensureTalonControlMode(TalonControlMode.PercentVbus);
-        this.leftRearDrive.ensureTalonControlMode(TalonControlMode.PercentVbus);
-        this.rightFrontDrive.ensureTalonControlMode(TalonControlMode.PercentVbus);
-        this.rightRearDrive.ensureTalonControlMode(TalonControlMode.PercentVbus);
     }
 
     public void tankDrive(double leftPower, double rightPower) {
-        this.leftFrontDrive.set(leftPower);
-        this.leftRearDrive.set(leftPower);
-        this.rightFrontDrive.set(rightPower);
-        this.rightRearDrive.set(rightPower);
+        this.leftFrontDrive.set(ControlMode.PercentOutput, leftPower);
+        this.leftRearDrive.set(ControlMode.PercentOutput, leftPower);
+        this.rightFrontDrive.set(ControlMode.PercentOutput, rightPower);
+        this.rightRearDrive.set(ControlMode.PercentOutput, rightPower);
     }
 }

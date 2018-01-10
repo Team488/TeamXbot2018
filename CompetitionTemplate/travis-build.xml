@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<project name="Travis testing" default="check">
-  <property file="travis-build.properties" />
-  <import file="robot-program-build.xml"/>
-</project>

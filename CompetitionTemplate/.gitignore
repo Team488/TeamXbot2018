@@ -2,3 +2,6 @@
 /TeamDatabase
 derby.log
 /488Logs
+
+.gradle/
+/build/
