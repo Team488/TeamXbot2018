@@ -1,4 +1,4 @@
-rootProject.name = 'Template'
+rootProject.name = 'Competition2018'
 /*include ':SeriouslyCommonLib'
 project(':SeriouslyCommonLib').projectDir = new File(settingsDir, '../SeriouslyCommonLib')*/
 
