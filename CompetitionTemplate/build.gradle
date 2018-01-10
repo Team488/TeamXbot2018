@@ -29,16 +29,11 @@ deploy {
 repositories {
     jcenter()
     
-    maven {
-        url "https://mvnrepository.com/artifact/com.google.inject/guice"
-        url "http://first.wpi.edu/FRC/roborio/maven/release"
-        
-        //http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/
-    }
+    maven { url "https://mvnrepository.com/artifact/com.google.inject/guice" }
+    maven { url "http://first.wpi.edu/FRC/roborio/maven/release"}
+    maven { url uri ("../SeriouslyCommonLib/lib/")}
     
-    flatDir {
-       dirs '/../SeriouslyCommonLib/build/libs'
-   }
+    flatDir { dirs '/../SeriouslyCommonLib/build/libs' }
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Toolsuite (Talon SRX)
