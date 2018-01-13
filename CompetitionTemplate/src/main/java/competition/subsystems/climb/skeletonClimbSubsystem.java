@@ -8,20 +8,22 @@ import xbot.common.command.BaseSubsystem;
 @Singleton
 public class skeletonClimbSubsystem extends BaseSubsystem{
 	
+	double defaultClimbPower;
+	
 	 @Inject
 	public skeletonClimbSubsystem() {
-		// TODO Auto-generated constructor stub
+		
 	
 		 }
 	 
 	 /**
-	  * The arms will extend longer
+	  * Extends the arms. Power is controlled by a property.
 	 **/
 		  public void extend(){
 	}
 	
 	/**
-	 * The arms will withdraw 
+	 * Withdraws the arms. Power is controlled by a property.
 	 */
 		  public void withdraw(){
 			  
@@ -30,7 +32,7 @@ public class skeletonClimbSubsystem extends BaseSubsystem{
 			  
 	}
 	/**
-	 * This boolean will determine if the arms extend close to the longest length
+	 * Returns true if the arms extend close to the longest length
 	 * @return
 	 */
 		  boolean isCloseLongest(){
@@ -38,13 +40,13 @@ public class skeletonClimbSubsystem extends BaseSubsystem{
 			  
 	}
 	/**
-	 * if the arms withdraw and it's close to the shortest length
+	 * Returns true if the arms extend close to the shortest length
 	 * @return
 	 */
 		  boolean isCloseShortest(){
 			  return false;
 			  
 	}
-		  public void de
+	
 		  
 }
