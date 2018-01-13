@@ -1,5 +1,6 @@
 package competition.subsystems.drive;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -22,6 +23,8 @@ public class DriveSubsystem extends BaseDriveSubsystem{
     public final XCANTalon leftFollower;
     public final XCANTalon rightMaster;
     public final XCANTalon rightFollower;
+    
+    private Map<XCANTalon, MotionRegistration> masterTalons;
 
     @Inject
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
@@ -30,18 +33,24 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         this.leftMaster = factory.createCANTalon(34);
         this.leftFollower = factory.createCANTalon(35);
         leftFollower.follow(leftMaster);
+        
+        leftMaster.setInverted(true);
+        leftFollower.setInverted(true);
 
         this.rightMaster = factory.createCANTalon(21);
         this.rightFollower = factory.createCANTalon(20);
         rightFollower.follow(rightMaster);
+        rightFollower.setInverted(true);
         
         this.rightMaster.setInverted(true);
+        masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
+        masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
+        masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
     }
 
 	@Override
 	protected Map<XCANTalon, MotionRegistration> getAllMasterTalons() {
-		// TODO Auto-generated method stub
-		return null;
+		return masterTalons;
 	}
 
 	@Override
