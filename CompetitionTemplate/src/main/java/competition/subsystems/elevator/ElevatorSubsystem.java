@@ -9,14 +9,15 @@ import xbot.common.command.BaseSubsystem;
 @Singleton
 public class ElevatorSubsystem extends BaseSubsystem {
 	
+	double defaultElevatorPower;
+	
 	@Inject
 	public ElevatorSubsystem() {
-		// TODO Auto-generated constructor stub
 	
 	}
 
 	/**
-	 * the elevator will rise by certain speed, the speed may change
+	 * Raises the elevator. Power is controlled by a property.
 	 */
 	public void rise(){
 		
@@ -24,10 +25,10 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	
 	
 	/**
-	 * the elevator will fail by certain speed, the speed may change
+	 * Lower the elevator. Power is controlled by a property.
 	 */
 	public void lower(){
-	//move when hold the button??
+	
 	}
 	
 	public void stop(){
@@ -35,24 +36,24 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	}
 	
 	/**
-	 * if it's close to the max height
+	 * Returns true if the elevator is close to its maximum height.
 	 */
 	boolean isCloseHighest(){
 		return false;
 		}
 	
 	/**
-	 * if it's close to the min height
+	 * Returns true if the elevator is close to its minimum height.
 	 */
 	boolean isCloseLowest(){
 		return false;
 	}
 	
 
-	public void toMaxHeight(){
+	public void moveToMaxHeight(){
 		
 	}
-	public void toMinHeight(){
+	public void moveTtoMinHeight(){
 		
 	}
 	
