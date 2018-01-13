@@ -8,4 +8,8 @@ import xbot.common.injection.BaseWPITest;
 
 public class DriveSubsystemTest extends BaseWPITest {
 	
+	@Test
+	public void testStartingDriveSubsystem() {
+		injector.getInstance(DriveSubsystem.class);
+	}
 }
