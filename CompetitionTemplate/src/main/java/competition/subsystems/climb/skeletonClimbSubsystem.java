@@ -37,7 +37,7 @@ public class skeletonClimbSubsystem extends BaseSubsystem{
 	 * Returns true if the arms extend close to the longest length
 	 * @return
 	 */
-	boolean isCloseToMaxmumHeight(){
+	boolean isCloseToLongest(){
 		return false;
 
 	}
@@ -46,7 +46,7 @@ public class skeletonClimbSubsystem extends BaseSubsystem{
 	 * Returns true if the arms extend close to the shortest length
 	 * @return
 	 */
-	boolean isCloseToMinimumHeight(){
+	boolean isCloseToShortest(){
 		return false;
 
 	}
