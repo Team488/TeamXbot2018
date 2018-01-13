@@ -38,14 +38,14 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	/**
 	 * Returns true if the elevator is close to its maximum height.
 	 */
-	boolean isCloseHighest(){
+	boolean isCloseToMaxmumHeight(){
 		return false;
 		}
 	
 	/**
 	 * Returns true if the elevator is close to its minimum height.
 	 */
-	boolean isCloseLowest(){
+	boolean isCloseToMinimumHeight(){
 		return false;
 	}
 	
@@ -53,6 +53,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	public void moveToMaxHeight(){
 		
 	}
+	
 	public void moveTtoMinHeight(){
 		
 	}
