@@ -1,31 +1,36 @@
 package competition.subsystems.lean;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSubsystem;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
+@Singleton
 public class LeanSubsystem extends BaseSubsystem {
 
 	DoubleProperty leanSpeed;
 	
 	@Inject
 	public LeanSubsystem(XPropertyManager propMan) {
-		
+		propMan.createPersistentProperty("LeanSpeed", 0.2);
 	}
 	
 	/**
 	 * makes the climb arm lean left
 	 */
 	public void leanLeft() {
-		
+		double speed = leanSpeed.get();
+
 	}
 	
 	/**
 	 * makes the climb arm lean right
 	 */
 	public void leanRight() {
-	
+		double speed = leanSpeed.get();
+		
 	}
 	
 	/**
@@ -49,16 +54,16 @@ public class LeanSubsystem extends BaseSubsystem {
 	}
 	
 	/**
-	 * slows down the speed of the leaning arm
+	 * increases leaning arm speed
 	 */
-	public void slowLean() {
-		
+	public void increaseSpeed() {
+
 	}
 	
 	/**
-	 * speeds up the speed of the leaning arm
+	 * decreases leaning arm speed
 	 */
-	public void fastLean() {
+	public void decreaseSpeed() {
 		
 	}
 }
