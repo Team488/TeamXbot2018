@@ -17,11 +17,11 @@ public class DecreaseSpeedCommand extends BaseCommand {
 	@Override
 	public void initialize() {
 		log.info("Initializing");
+		leaner.decreaseSpeed();
 	}
 
 	@Override
 	public void execute() {
-		leaner.decreaseSpeed();
 	}
 	
 }
