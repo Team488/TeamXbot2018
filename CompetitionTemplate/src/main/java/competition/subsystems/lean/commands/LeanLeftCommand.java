@@ -13,6 +13,7 @@ public class LeanLeftCommand extends BaseCommand {
 	@Inject
 	public LeanLeftCommand(LeanSubsystem leaner) {
 		this.leaner = leaner;
+		this.requires(leaner); 
 	}
 	
 	@Override

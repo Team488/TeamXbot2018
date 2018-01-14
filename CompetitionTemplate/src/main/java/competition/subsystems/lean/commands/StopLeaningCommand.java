@@ -12,6 +12,7 @@ public class StopLeaningCommand extends BaseCommand {
 	@Inject
 	public StopLeaningCommand(LeanSubsystem leaner) {
 		this.leaner = leaner;
+		this.requires(leaner); 
 	}
 	
 	@Override
