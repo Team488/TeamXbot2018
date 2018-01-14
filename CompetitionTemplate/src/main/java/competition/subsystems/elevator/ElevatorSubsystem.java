@@ -4,27 +4,36 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSubsystem;
+import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.injection.wpi_factories.CommonLibFactory;
 
 
 @Singleton
 public class ElevatorSubsystem extends BaseSubsystem {
 	
 	double defaultElevatorPower;
+	CommonLibFactory clf;
 	
 	double height;
 	double maxHeight;
 	double minHeight;
 	
-	@Inject
-	public ElevatorSubsystem() {
+	public XCANTalon motor;
 	
+	@Inject
+	public ElevatorSubsystem(CommonLibFactory clf) {
+		this.clf = clf;
+	}
+	
+	public void temporaryHack() {
+		motor = clf.createCANTalon(40);
 	}
 
 	/**
 	 * Raises the elevator. Power is controlled by a property.
 	 */
 	public void rise(){
-		
+		motor.simpleSet(0.4);
 	}
 	
 	
@@ -32,11 +41,11 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	 * Lower the elevator. Power is controlled by a property.
 	 */
 	public void lower(){
-	
+		motor.simpleSet(-0.4);
 	}
 	
 	public void stop(){
-		
+		motor.simpleSet(0);
 	}
 	
 	public double currentHeight() {
@@ -70,12 +79,16 @@ public class ElevatorSubsystem extends BaseSubsystem {
 		return false;
 	}
 
-	public void moveToMaxHeight(){
-		
+	public void moveToMaxHeight() {
+		motor.simpleSet(0.4);
 	}
 	
-	public void moveTtoMinHeight(){
-		
+	public void moveToMinHeight() {
+		motor.simpleSet(-0.4);
+	}
+	
+	public void setPower(double power) {
+		motor.simpleSet(power);
 	}
 	
 }

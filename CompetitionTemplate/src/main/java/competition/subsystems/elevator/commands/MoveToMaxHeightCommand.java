@@ -6,20 +6,31 @@ import com.google.inject.Singleton;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.command.BaseSubsystem;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDManager;
 
 @Singleton
-public class MoveToMaxHeight extends BaseCommand {
+public class MoveToMaxHeightCommand extends BaseCommand {
 	
-	ElevatorSubsystem moveMax;
+	ElevatorSubsystem elevator;
+	PIDManager pid;
 	
 	boolean stop;
 	
-	double max;
+	double max = 90;
 	double speed;
 	
 	double leftConstant;
 	double rightConstant;
 	double oldError;
+	
+	@Inject
+	public MoveToMaxHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
+		// TODO Auto-generated constructor stub
+		this.elevator = elevator;
+		pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
+		pid.setErrorThreshold(0.1);
+	}
 
 	@Override
 	public void initialize() {
@@ -31,30 +42,14 @@ public class MoveToMaxHeight extends BaseCommand {
 	public void execute() {
 		// TODO Auto-generated method stub
 		
-		double error = max - moveMax.currentHeight();
-		double changeInError = error - oldError;
+		double power = pid.calculate(max, elevator.currentHeight());
 		
-		double power = leftConstant * error - rightConstant * changeInError;
-		
-		//give power to thingy, to move cube up to max
-		
-		oldError = error;
-		
-		if ( moveMax.currentHeight() >= max-0.1) {
-			if ( speed >= -0.1 && speed <= 0.1) {
-				stop = true;
-			}
-		}
+		elevator.setPower(power);
 	}
 	
 	@Override
 	public boolean isFinished() {
-		
-		if (stop = true) {
-			return true;
-		}
-		
-		return false;
+		return pid.isOnTarget();
 	}
 	
 

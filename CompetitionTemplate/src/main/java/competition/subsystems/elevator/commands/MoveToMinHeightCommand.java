@@ -6,11 +6,14 @@ import com.google.inject.Singleton;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.command.BaseSubsystem;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDManager;
 
 @Singleton
-public class MoveToMinHeight extends BaseCommand {
+public class MoveToMinHeightCommand extends BaseCommand {
 	
-	ElevatorSubsystem moveMin;
+	ElevatorSubsystem elevator;
+	PIDManager pid;
 	
 	boolean stop;
 	
@@ -20,6 +23,13 @@ public class MoveToMinHeight extends BaseCommand {
 	
 	double leftConstant;
 	double rightConstant;
+	
+	@Inject
+	public MoveToMinHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) { 
+		this.elevator = elevator;
+		pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
+		pid.setErrorThreshold(0.1);
+	}
 
 	@Override
 	public void initialize() {
@@ -31,29 +41,15 @@ public class MoveToMinHeight extends BaseCommand {
 	public void execute() {
 		// TODO Auto-generated method stub
 		
-		double error = min - moveMin.currentHeight();
-		double changeInError = error - oldError;
+		double power = pid.calculate(min, elevator.currentHeight());
 		
-		double power = leftConstant * error - rightConstant * changeInError;
+		//elevator.setPower(power);
 		
-		// give power to elevator thingy to bring cube down to in
-		
-		oldError = error;
-		
-		if (moveMin.currentHeight() <= min + 0.1) {
-			if (speed >= -0.1 && speed <= 0.1) {
-				stop = true;
-			}
-		}
 	}
 	
 	@Override
 	public boolean isFinished() {
-		if (stop = true ) {
-			return true;
-		}
-		
-		return false;
+		return pid.isOnTarget();
 	}
 
 }
