@@ -11,6 +11,6 @@ before_script:
   - export LD_LIBRARY_PATH=${PWD}
   - cd ../../../
 script: 
-  - cd CompetitionTemplate
+  - cd Competition2018
   - chmod +x gradlew
   - ./gradlew build
