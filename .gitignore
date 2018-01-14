@@ -21,4 +21,4 @@ sysProps.xml
 .metadata/
 RemoteSystemsTempFiles/
 /.gradle/
-/competitionTemplate/.project
+.project
