@@ -49,7 +49,7 @@ public class LeanSubsystem extends BaseSubsystem {
 	/**
 	 * sensor to determine if the arm has hit the bar
 	 */
-	public boolean HitBar() {
+	public boolean hitBar() {
 		return false;
 	}
 	

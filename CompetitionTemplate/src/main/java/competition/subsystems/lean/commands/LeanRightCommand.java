@@ -23,7 +23,7 @@ public class LeanRightCommand extends BaseCommand {
 	@Override
 	public void execute() {
 		leaner.leanRight();
-		if (leaner.HitBar()) {
+		if (leaner.hitBar()) {
 			stop = true;
 			leaner.stopLean();
 		}
