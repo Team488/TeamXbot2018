@@ -7,3 +7,4 @@ derby.log
 /build/
 .classpath
 .settings/
+.project
