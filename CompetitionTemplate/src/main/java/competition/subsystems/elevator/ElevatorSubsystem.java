@@ -11,6 +11,10 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	
 	double defaultElevatorPower;
 	
+	double height;
+	double maxHeight;
+	double minHeight;
+	
 	@Inject
 	public ElevatorSubsystem() {
 	
@@ -35,20 +39,36 @@ public class ElevatorSubsystem extends BaseSubsystem {
 		
 	}
 	
+	public double currentHeight() {
+		return height;
+	}
+	
 	/**
 	 * Returns true if the elevator is close to its maximum height.
 	 */
-	boolean isCloseToMaxmumHeight(){
-		return false;
+	
+	boolean isCloseToMaxmumHeight() {
+		
+		if (height >= maxHeight * 0.9) {
+			return true;
 		}
+	
+		return false;
+		
+	}
 	
 	/**
 	 * Returns true if the elevator is close to its minimum height.
 	 */
-	boolean isCloseToMinimumHeight(){
+	
+	boolean isCloseToMinimumHeight() {
+		
+		if (height < maxHeight * 0.15) {
+			return true;
+		}
+		
 		return false;
 	}
-	
 
 	public void moveToMaxHeight(){
 		
