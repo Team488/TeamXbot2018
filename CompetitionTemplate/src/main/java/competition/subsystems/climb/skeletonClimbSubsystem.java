@@ -23,9 +23,9 @@ public class skeletonClimbSubsystem extends BaseSubsystem{
 	}
 
 	/**
-	 * Withdraws the arms. Power is controlled by a property.
+	 * Retracts the arms. Power is controlled by a property.
 	 */
-	public void withdraw(){
+	public void retract(){
 
 	}
 	
