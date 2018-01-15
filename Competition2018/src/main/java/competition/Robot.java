@@ -4,6 +4,7 @@ package competition;
 import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.command.BaseRobot;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -25,5 +26,6 @@ public class Robot extends BaseRobot {
         
         
         periodicDataSources.add(this.injector.getInstance(DriveSubsystem.class));
+        periodicDataSources.add(this.injector.getInstance(PoseSubsystem.class));
     }
 }
