@@ -60,22 +60,35 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         
     }
     
+    /**
+     * Helper function to get the "typical" number of inches for a given number of ticks. This assumes
+     * that there isn't much difference between left/right drive encoders.
+     * @param ticks Number of encoder ticks
+     * @return Number of inches
+     */
     public double ticksToInches(double ticks) {
-        double tpi = ticksPerInch();
+        double ticksPerInch = getAverageTicksPerInch();
         
-        if (tpi != 0) {
-            return (1.0 / ticksPerInch()) * ticks;
+        if (ticksPerInch != 0) {
+            return ticks / ticksPerInch;
         }
         return 0;
     }
     
-    public double inchesToTicks(double inches) {
+    /**
+     * Helper function to get the typical number of ticks for a given number of inches. This assumes
+     * that there isn't much difference between left/right drive encoders.
+     * @param inches Number of inches
+     * @return Number of encoder ticks
+     */
+    public double getInchesToTicks(double inches) {
         // this is taking the average of left and right, then dividing by 60 inches (5 feet)
-        return ticksPerInch() * inches;
+        return getAverageTicksPerInch() * inches;
     }
     
-    private double ticksPerInch() {
-        return ((leftTicksPerFiveFeet.get() + rightTicksPerFiveFeet.get()) / 120.0);
+    private double getAverageTicksPerInch() {
+        double averageTicksPerFiveFeet = (leftTicksPerFiveFeet.get() + rightTicksPerFiveFeet.get())/ 2.0;
+        return averageTicksPerFiveFeet / 60.0;
     }
 
 	@Override
@@ -85,12 +98,12 @@ public class DriveSubsystem extends BaseDriveSubsystem{
 
 	@Override
 	public double getLeftTotalDistance() {
-		return ticksToInches(leftMaster.getSelectedSensorPosition(0));
+		return (leftTicksPerFiveFeet.get() / 60.0) * leftMaster.getSelectedSensorPosition(0);
 	}
 
 	@Override
 	public double getRightTotalDistance() {
-		return ticksToInches(rightMaster.getSelectedSensorPosition(0));
+		return (rightTicksPerFiveFeet.get() / 60.0) * rightMaster.getSelectedSensorPosition(0);
 	}
 
 	@Override
