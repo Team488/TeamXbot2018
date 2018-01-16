@@ -8,3 +8,4 @@ derby.log
 .classpath
 .settings/
 .project
+*.csv
