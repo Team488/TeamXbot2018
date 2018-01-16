@@ -27,6 +27,10 @@ public class PathfinderTest extends BaseWPITest {
         TankModifier modifier = new TankModifier(trajectory).modify(0.5);
         
         File myFile = new File("myfile.csv");
+        File left = new File("left.csv");
+        File right = new File("right.csv");
         Pathfinder.writeToCSV(myFile, trajectory);
+        Pathfinder.writeToCSV(left, modifier.getLeftTrajectory());
+        Pathfinder.writeToCSV(right, modifier.getRightTrajectory());
     }
 }
