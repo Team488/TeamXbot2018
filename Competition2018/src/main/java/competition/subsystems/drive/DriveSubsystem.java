@@ -29,6 +29,11 @@ public class DriveSubsystem extends BaseDriveSubsystem{
     private final DoubleProperty rightTicksPerFiveFeet;
     
     private Map<XCANTalon, MotionRegistration> masterTalons;
+    
+    public enum Side {
+        Left,
+        Right
+    }
 
     @Inject
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
@@ -66,13 +71,14 @@ public class DriveSubsystem extends BaseDriveSubsystem{
      * @param ticks Number of encoder ticks
      * @return Number of inches
      */
-    public double ticksToInches(double ticks) {
-        double ticksPerInch = getAverageTicksPerInch();
+    public double ticksToInches(Side side, double ticks) {
+        double ticksPerInch = getSideTicksPerInch(side);
         
-        if (ticksPerInch != 0) {
-            return ticks / ticksPerInch;
+        // Escape if nobody ever defined any ticks per inch
+        if (ticksPerInch == 0) {
+            return 0;
         }
-        return 0;
+        return ticks / ticksPerInch;
     }
     
     /**
@@ -81,16 +87,22 @@ public class DriveSubsystem extends BaseDriveSubsystem{
      * @param inches Number of inches
      * @return Number of encoder ticks
      */
-    public double getInchesToTicks(double inches) {
+    public double getInchesToTicks(Side side, double inches) {
         // this is taking the average of left and right, then dividing by 60 inches (5 feet)
-        return getAverageTicksPerInch() * inches;
+        return getSideTicksPerInch(side) * inches;
     }
     
-    private double getAverageTicksPerInch() {
-        double averageTicksPerFiveFeet = (leftTicksPerFiveFeet.get() + rightTicksPerFiveFeet.get())/ 2.0;
-        return averageTicksPerFiveFeet / 60.0;
+    public double getSideTicksPerInch(Side side) {
+        switch (side) {
+            case Left:
+                return leftTicksPerFiveFeet.get() / 60;
+            case Right:
+                return rightTicksPerFiveFeet.get() / 60;
+            default: 
+                return 0;
+        }
     }
-
+    
 	@Override
 	protected Map<XCANTalon, MotionRegistration> getAllMasterTalons() {
 		return masterTalons;
@@ -98,12 +110,12 @@ public class DriveSubsystem extends BaseDriveSubsystem{
 
 	@Override
 	public double getLeftTotalDistance() {
-		return (leftTicksPerFiveFeet.get() / 60.0) * leftMaster.getSelectedSensorPosition(0);
+		return getSideTicksPerInch(Side.Left) * leftMaster.getSelectedSensorPosition(0);
 	}
 
 	@Override
 	public double getRightTotalDistance() {
-		return (rightTicksPerFiveFeet.get() / 60.0) * rightMaster.getSelectedSensorPosition(0);
+		return getSideTicksPerInch(Side.Right) * rightMaster.getSelectedSensorPosition(0);
 	}
 
 	@Override
