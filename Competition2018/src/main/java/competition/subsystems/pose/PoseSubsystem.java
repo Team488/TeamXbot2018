@@ -15,6 +15,9 @@ public class PoseSubsystem extends BasePoseSubsystem {
 	public PoseSubsystem(CommonLibFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
 		super(factory, propManager);
 		this.drive = drive;
+		
+		updatePeriodicData();
+		resetDistanceTraveled();
 	}
 
 	@Override
