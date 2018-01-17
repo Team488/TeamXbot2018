@@ -1,9 +1,12 @@
 package competition.subsystems.lean;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSubsystem;
+import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -11,26 +14,36 @@ import xbot.common.properties.XPropertyManager;
 public class LeanSubsystem extends BaseSubsystem {
 
 	DoubleProperty leanSpeed;
+	CommonLibFactory clf;
+	double speed;
+	
+	public XCANTalon motor;
 	
 	@Inject
-	public LeanSubsystem(XPropertyManager propMan) {
-		propMan.createPersistentProperty("LeanSpeed", 0.2);
+	public LeanSubsystem(CommonLibFactory clf, XPropertyManager propMan) {
+		this.clf = clf;
+		leanSpeed = propMan.createPersistentProperty("LeanSpeed", 0.2);
 	}
+	
+	public void temporaryHack() {
+		motor = clf.createCANTalon(40);
+	}
+	
 	
 	/**
 	 * makes the climb arm lean left
 	 */
 	public void leanLeft() {
-		double speed = leanSpeed.get();
-
+		speed = leanSpeed.get();
+		motor.set(ControlMode.PercentOutput, speed);
 	}
 	
 	/**
 	 * makes the climb arm lean right
 	 */
 	public void leanRight() {
-		double speed = leanSpeed.get();
-		
+		speed = leanSpeed.get();
+		motor.set(ControlMode.PercentOutput, -speed);
 	}
 	
 	/**
@@ -64,6 +77,6 @@ public class LeanSubsystem extends BaseSubsystem {
 	 * decreases leaning arm speed
 	 */
 	public void decreaseSpeed() {
-		
+		speed /= speed;
 	}
 }
