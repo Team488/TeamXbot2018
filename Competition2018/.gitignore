@@ -5,3 +5,6 @@ derby.log
 
 .gradle/
 /build/
+.classpath
+.settings/
+.project

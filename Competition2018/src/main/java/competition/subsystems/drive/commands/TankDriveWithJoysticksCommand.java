@@ -25,7 +25,9 @@ public class TankDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        driveSubsystem.drive(oi.leftJoystick.getVector().y, oi.rightJoystick.getVector().y);
+        driveSubsystem.drive(
+        		oi.gamepad.getLeftVector().y, 
+        		oi.gamepad.getRightVector().y);
     }
 
 }

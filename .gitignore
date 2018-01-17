@@ -20,3 +20,5 @@ sysProps.xml
 #Eclipse files
 .metadata/
 RemoteSystemsTempFiles/
+/.gradle/
+.project
