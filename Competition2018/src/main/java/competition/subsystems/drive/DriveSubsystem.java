@@ -53,9 +53,11 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         this.rightMaster = factory.createCANTalon(34);
         this.rightFollower = factory.createCANTalon(35);
         rightFollower.follow(rightMaster);
-        rightFollower.setInverted(true);
         
-        this.rightMaster.setInverted(true);
+        rightMaster.setInverted(false);
+        rightFollower.setInverted(false);
+        
+        
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
