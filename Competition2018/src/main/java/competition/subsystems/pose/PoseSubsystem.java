@@ -14,7 +14,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
 	@Inject
 	public PoseSubsystem(CommonLibFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
 		super(factory, propManager);
-		// TODO Auto-generated constructor stub
+		this.drive = drive;
 	}
 
 	@Override
