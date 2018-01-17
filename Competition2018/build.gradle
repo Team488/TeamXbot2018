@@ -32,6 +32,7 @@ repositories {
     maven { url "https://mvnrepository.com/artifact/com.google.inject/guice" }
     maven { url "http://first.wpi.edu/FRC/roborio/maven/release"}
     maven { url "http://www.kauailabs.com/maven2" }
+    maven { url uri ("../SeriouslyCommonLib/lib/")}
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), CTRE Toolsuite (Talon SRX)
