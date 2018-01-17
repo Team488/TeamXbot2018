@@ -58,6 +58,9 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
+        leftMaster.setSensorPhase(true);
+        rightMaster.setSensorPhase(true);
+        
         
         leftMaster.createTelemetryProperties("LeftDriveMaster");
         rightMaster.createTelemetryProperties("RightDriveMaster");
