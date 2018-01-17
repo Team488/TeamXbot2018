@@ -30,18 +30,18 @@ public class ToggleGearCommandTest extends BaseWPITest {
 	public void testCommand() {
 		// start with high gear
 		subsystem.setGear(Gear.HIGH_GEAR);
-		assertTrue(solenoid.isOn());
+		assertTrue(solenoid.get());
 		// switch to low gear
 		command.initialize();
 		command.execute();
 		// false if low gear
-		assertFalse(solenoid.isOn());
+		assertFalse(solenoid.get());
 
 		// switch to high gear
 		command.initialize();
 		command.execute();
 		// true if high gear
-		assertTrue(solenoid.isOn());
+		assertTrue(solenoid.get());
 	}
 
 }

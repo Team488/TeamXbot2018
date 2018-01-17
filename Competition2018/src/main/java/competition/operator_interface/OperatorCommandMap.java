@@ -25,6 +25,6 @@ public class OperatorCommandMap {
 			OperatorInterface oi,
 			ToggleGearCommand shiftGear
 			) {
-		oi.leftJoystick.getifAvailable(8).whenPressed(shiftGear);
+		oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
 	}
 }
