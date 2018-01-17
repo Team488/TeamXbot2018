@@ -7,12 +7,12 @@ import org.junit.Test;
 
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
-import competition.subsystems.shift.commands.ShiftGearCommand;
+import competition.subsystems.shift.commands.ToggleGearCommand;
 import edu.wpi.first.wpilibj.MockSolenoid;
 import xbot.common.injection.BaseWPITest;
 
-public class ShiftGearCommandTest extends BaseWPITest {
-	ShiftGearCommand command;
+public class ToggleGearCommandTest extends BaseWPITest {
+	ToggleGearCommand command;
 	ShiftSubsystem subsystem;
 	MockSolenoid solenoid;
 
@@ -20,10 +20,10 @@ public class ShiftGearCommandTest extends BaseWPITest {
 	public void setUp() {
 		super.setUp();
 
-		command = injector.getInstance(ShiftGearCommand.class);
+		command = injector.getInstance(ToggleGearCommand.class);
 		subsystem = injector.getInstance(ShiftSubsystem.class);
-		
-		solenoid = ((MockSolenoid)subsystem.solenoid);
+
+		solenoid = ((MockSolenoid) subsystem.solenoid);
 	}
 
 	@Test

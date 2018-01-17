@@ -6,13 +6,13 @@ import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import xbot.common.command.BaseCommand;
 
-public class ShiftGearCommand extends BaseCommand {
+public class ToggleGearCommand extends BaseCommand {
 
 	private ShiftSubsystem shiftSubsystem;
 	private Gear gear;
 
 	@Inject
-	public ShiftGearCommand(ShiftSubsystem shiftSubsystem) {
+	public ToggleGearCommand(ShiftSubsystem shiftSubsystem) {
 		this.shiftSubsystem = shiftSubsystem;
 		this.requires(shiftSubsystem);
 	}
@@ -35,7 +35,7 @@ public class ShiftGearCommand extends BaseCommand {
 	public void execute() {
 
 	}
-	
+
 	@Override
 	public boolean isFinished() {
 		return true;
