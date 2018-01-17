@@ -42,11 +42,7 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         this.leftMaster = factory.createCANTalon(20);
         this.leftFollower = factory.createCANTalon(21);
         leftFollower.follow(leftMaster);
-        //34
-        //35
-        
-        //20
-        //21
+
         leftMaster.setInverted(true);
         leftFollower.setInverted(true);
 
