@@ -1,6 +1,9 @@
 package competition.operator_interface;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import competition.subsystems.shift.commands.ShiftGearCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -16,4 +19,12 @@ public class OperatorCommandMap {
         operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand);
     }
     */
+	
+	@Inject
+	public void setupShiftGearCommand(
+			OperatorInterface oi,
+			ShiftGearCommand shiftGear
+			) {
+		oi.leftJoystick.getifAvailable(8).whenPressed(shiftGear);
+	}
 }
