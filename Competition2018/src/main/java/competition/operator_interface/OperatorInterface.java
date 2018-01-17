@@ -3,6 +3,7 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import xbot.common.controls.sensors.XFTCGamepad;
 import xbot.common.controls.sensors.XJoystick;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logging.RobotAssertionManager;
@@ -13,15 +14,20 @@ import xbot.common.logging.RobotAssertionManager;
  */
 @Singleton
 public class OperatorInterface {
-    public XJoystick leftJoystick;
-    public XJoystick rightJoystick;
+    //public XJoystick leftJoystick;
+    //public XJoystick rightJoystick;
+	public XFTCGamepad gamepad;
 
     @Inject
     public OperatorInterface(CommonLibFactory factory, RobotAssertionManager assertionManager) {
-        leftJoystick = factory.createJoystick(1, 10);
-        rightJoystick = factory.createJoystick(2, 10);
+        //leftJoystick = factory.createJoystick(1, 10);
+        //rightJoystick = factory.createJoystick(2, 10);
 
-        leftJoystick.setYInversion(true);
-        rightJoystick.setXInversion(true);
+        //leftJoystick.setYInversion(true);
+        //rightJoystick.setXInversion(true);
+    	gamepad = factory.createGamepad(3, 10);
+    	
+    	gamepad.setLeftStickYInversion(true);
+    	gamepad.setRightStickYInversion(true);
     }
 }
