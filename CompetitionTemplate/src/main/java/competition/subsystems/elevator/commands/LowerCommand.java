@@ -13,12 +13,6 @@ public class LowerCommand extends BaseCommand {
 	
 	ElevatorSubsystem lower;
 	
-	boolean stop;
-	
-	double setTarget;
-	double speed;
-	
-	
 	@Inject
 	public LowerCommand(ElevatorSubsystem lower) {
 		this.lower = lower;
@@ -26,34 +20,14 @@ public class LowerCommand extends BaseCommand {
 	
 	@Override
 	public void initialize() {
-		log.info("Initializing");
+		// TODO Auto-generated method stub
 		
-		lower.lower();
 	}
 	
 	@Override
 	public void execute() {
-		
 		lower.lower();
 		
-		if (lower.currentHeight() == setTarget) {
-			if (speed <= 0.1 && speed >= -0.1) {
-				stop = true;
-			}
-		}
-		
-	}
-	
-	@Override 
-	public boolean isFinished() {
-		
-		if (stop = true) {
-			lower.stop();
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 
 }

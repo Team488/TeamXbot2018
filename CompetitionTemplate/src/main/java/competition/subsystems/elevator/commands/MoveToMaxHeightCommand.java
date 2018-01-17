@@ -15,14 +15,9 @@ public class MoveToMaxHeightCommand extends BaseCommand {
 	ElevatorSubsystem elevator;
 	PIDManager pid;
 	
-	boolean stop;
 	
 	double max = 90;
-	double speed;
 	
-	double leftConstant;
-	double rightConstant;
-	double oldError;
 	
 	@Inject
 	public MoveToMaxHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
@@ -51,6 +46,5 @@ public class MoveToMaxHeightCommand extends BaseCommand {
 	public boolean isFinished() {
 		return pid.isOnTarget();
 	}
-	
 
 }

@@ -17,12 +17,7 @@ public class MoveToMinHeightCommand extends BaseCommand {
 	
 	boolean stop;
 	
-	double min;
-	double speed;
-	double oldError;
-	
-	double leftConstant;
-	double rightConstant;
+	double min = 0;
 	
 	@Inject
 	public MoveToMinHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) { 
@@ -43,7 +38,7 @@ public class MoveToMinHeightCommand extends BaseCommand {
 		
 		double power = pid.calculate(min, elevator.currentHeight());
 		
-		//elevator.setPower(power);
+		elevator.setPower(power);
 		
 	}
 	
