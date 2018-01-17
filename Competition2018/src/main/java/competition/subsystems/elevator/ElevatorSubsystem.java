@@ -23,6 +23,15 @@ public class ElevatorSubsystem extends BaseSubsystem {
 		
 	}
 	
+
+	/**
+	 * Returns true if the robot is rising
+	 * @return
+	 */
+	boolean isRising() {
+		return false;
+	}
+	
 	
 	/**
 	 * Lower the elevator. Power is controlled by a property.
@@ -31,7 +40,26 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	
 	}
 	
+	/**
+	 * Returns true if the robot is lowing
+	 * @return
+	 */
+	boolean isLowing() {
+		return false;
+		
+	}
+	
 	public void stop(){
+		
+	}
+	
+
+	/**
+	 * Returns true if the robot is stopped
+	 * @return
+	 */
+	boolean isStopping() {
+		return false;
 		
 	}
 	
