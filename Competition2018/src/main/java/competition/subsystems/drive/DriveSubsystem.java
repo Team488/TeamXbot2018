@@ -115,12 +115,12 @@ public class DriveSubsystem extends BaseDriveSubsystem{
 
 	@Override
 	public double getLeftTotalDistance() {
-		return getSideTicksPerInch(Side.Left) * leftMaster.getSelectedSensorPosition(0);
+		return ticksToInches(Side.Left, leftMaster.getSelectedSensorPosition(0));
 	}
 
 	@Override
 	public double getRightTotalDistance() {
-		return getSideTicksPerInch(Side.Right) * rightMaster.getSelectedSensorPosition(0);
+		return ticksToInches(Side.Right, rightMaster.getSelectedSensorPosition(0));
 	}
 
 	@Override
