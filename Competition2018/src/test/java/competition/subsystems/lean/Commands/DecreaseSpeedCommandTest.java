@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.DecreaseSpeedCommand;
-import competition.subsystems.lean.commands.LeanLeftCommand;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
@@ -18,7 +17,6 @@ public class DecreaseSpeedCommandTest extends BaseWPITest{
 	
 	@Override
 	public void setUp() {
-		// TODO Auto-generated method stub
 		super.setUp();
 		
 		lean = injector.getInstance(LeanSubsystem.class);
@@ -34,7 +32,7 @@ public class DecreaseSpeedCommandTest extends BaseWPITest{
 	}
 	
 	@Test
-	public void checkLeanLeft() {
+	public void checkDecreaseSpeed() {
 		command.initialize();
 		command.execute();
 		
