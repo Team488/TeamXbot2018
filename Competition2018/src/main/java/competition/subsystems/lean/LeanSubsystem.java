@@ -70,13 +70,18 @@ public class LeanSubsystem extends BaseSubsystem {
 	 * increases leaning arm speed
 	 */
 	public void increaseSpeed() {
-
+		speed = leanSpeed.get();
+		speed *= 2;
+		motor.set(ControlMode.PercentOutput, speed);
 	}
 	
 	/**
 	 * decreases leaning arm speed
 	 */
 	public void decreaseSpeed() {
-		speed /= speed;
+		speed = leanSpeed.get();
+		speed /= 2;
+		motor.set(ControlMode.PercentOutput, speed);
+
 	}
 }
