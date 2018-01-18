@@ -30,6 +30,7 @@ public class FollowPathfinderCommand extends BaseCommand {
     final DoubleProperty wheelDiameterInFeet;
     final DoubleProperty driveBaseWidthInFeet;
     final DoubleProperty encoderTicksPerRev;
+    final DoubleProperty maxVelocity;
     
     
     @Inject
@@ -45,6 +46,7 @@ public class FollowPathfinderCommand extends BaseCommand {
         wheelDiameterInFeet = propMan.createPersistentProperty("wheelDiameterInFeet", 0.3333);
         driveBaseWidthInFeet = propMan.createPersistentProperty("DriveBaseWidthInFeet", 2.0);
         encoderTicksPerRev = propMan.createPersistentProperty("EncoderTicksPerRev", 360);
+        maxVelocity = propMan.createPersistentProperty("maxVelocityInFeet", 8);
     }
     
     @Override
@@ -58,7 +60,7 @@ public class FollowPathfinderCommand extends BaseCommand {
                     Trajectory.FitMethod.HERMITE_CUBIC, 
                     Trajectory.Config.SAMPLES_HIGH, 
                     0.02, // delta time. 0.02 is 50Hz, which is roughly our control loop.
-                    1.7,  // max velocity
+                    4.0,  // max velocity
                     2.0,  // max acceleration
                     60.0 // max jerk
                     );
@@ -68,6 +70,9 @@ public class FollowPathfinderCommand extends BaseCommand {
             
             leftFollower.setTrajectory(tankPaths.getLeftTrajectory());
             rightFollower.setTrajectory(tankPaths.getRightTrajectory());
+            
+            leftFollower.configurePIDVA(1, 0, 0, 1 / maxVelocity.get(), 0);
+            rightFollower.configurePIDVA(1, 0, 0, 1 / maxVelocity.get(), 0);
                         
             leftFollower.configureEncoder(
                     drive.getLeftRawTotalDistance(),
