@@ -11,6 +11,8 @@ import jaci.pathfinder.modifiers.TankModifier;
 import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.PIDFactory;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
 public class FollowPathfinderCommand extends BaseCommand {
@@ -25,9 +27,13 @@ public class FollowPathfinderCommand extends BaseCommand {
     double leftOffset;
     double rightOffset;
     
+    final DoubleProperty wheelDiameterInFeet;
+    final DoubleProperty driveBaseWidthInFeet;
+    final DoubleProperty encoderTicksPerRev;
+    
     
     @Inject
-    public FollowPathfinderCommand(CommonLibFactory clf, PIDFactory pf, DriveSubsystem drive) {
+    public FollowPathfinderCommand(CommonLibFactory clf, PIDFactory pf, DriveSubsystem drive, XPropertyManager propMan) {
         this.drive = drive;
         this.requires(drive);
         
@@ -35,43 +41,57 @@ public class FollowPathfinderCommand extends BaseCommand {
         
         leftFollower = new EncoderFollower();
         rightFollower = new EncoderFollower();
+        
+        wheelDiameterInFeet = propMan.createPersistentProperty("wheelDiameterInFeet", 0.3333);
+        driveBaseWidthInFeet = propMan.createPersistentProperty("DriveBaseWidthInFeet", 2.0);
+        encoderTicksPerRev = propMan.createPersistentProperty("EncoderTicksPerRev", 360);
     }
     
     @Override
     public void initialize() {
         Waypoint[] points = new Waypoint[] {
-                new Waypoint(-4, -1, Pathfinder.d2r(-45)),      // Waypoint @ x=-4, y=-1, exit angle=-45 degrees
-                new Waypoint(-2, -2, 0),                        // Waypoint @ x=-2, y=-2, exit angle=0 radians
-                new Waypoint(0, 0, 0)    
+                new Waypoint(0, 0, 0),
+                new Waypoint(5, 0, 0)   
             };
             
-            Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.02, 1.7, 2.0, 60.0);
+            Trajectory.Config config = new Trajectory.Config(
+                    Trajectory.FitMethod.HERMITE_CUBIC, 
+                    Trajectory.Config.SAMPLES_HIGH, 
+                    0.02, // delta time. 0.02 is 50Hz, which is roughly our control loop.
+                    1.7,  // max velocity
+                    2.0,  // max acceleration
+                    60.0 // max jerk
+                    );
             Trajectory trajectory = Pathfinder.generate(points, config);  
             
-            tankPaths = new TankModifier(trajectory).modify(0.5);
+            tankPaths = new TankModifier(trajectory).modify(driveBaseWidthInFeet.get());
             
             leftFollower.setTrajectory(tankPaths.getLeftTrajectory());
             rightFollower.setTrajectory(tankPaths.getRightTrajectory());
-            
-            leftOffset = drive.getLeftTotalDistance();
-            rightOffset = drive.getRightTotalDistance();
-            
+                        
             leftFollower.configureEncoder(
                     drive.getLeftRawTotalDistance(),
-                    360, 
-                    4);
+                    (int)encoderTicksPerRev.get(), 
+                    wheelDiameterInFeet.get());
             
             rightFollower.configureEncoder(
                     drive.getRightRawTotalDistance(),
-                    360,
-                    4);
+                    (int)encoderTicksPerRev.get(), 
+                    wheelDiameterInFeet.get());
     }
 
     @Override
     public void execute() {
+        double leftPower = leftFollower.calculate(drive.getLeftRawTotalDistance());
+        double rightPower = rightFollower.calculate(drive.getRightRawTotalDistance());
         
-        
-        double turnPower = heading.calculateHeadingPower(desiredHeading)
+        double turnPower = heading.calculateHeadingPower(Pathfinder.r2d(leftFollower.getHeading()));
+                
+        drive.drive(leftPower-turnPower, rightPower+turnPower);
     }
-
+    
+    @Override
+    public boolean isFinished() {
+        return leftFollower.isFinished() || rightFollower.isFinished();
+    }
 }
