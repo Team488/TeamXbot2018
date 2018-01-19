@@ -8,7 +8,7 @@ import xbot.common.command.BaseCommand;
 public class ExtendClimberArmCommand extends BaseCommand {
 	
 	ClimberdeploySubsystem deploy;
-	boolean stop;
+	boolean stop = false;
 	
 	@Inject
 	public ExtendClimberArmCommand (ClimberdeploySubsystem deploy) {
@@ -26,10 +26,9 @@ public class ExtendClimberArmCommand extends BaseCommand {
 		deploy.extendClimberArm();
 		if (deploy.hitBarHeight()) {
 			stop = true;
+			deploy.stopClimberArm();
 		}
-		else {
-			stop = false;
-		}
+		
 	}
 	
 	@Override

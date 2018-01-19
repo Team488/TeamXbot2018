@@ -14,7 +14,6 @@ public class LeanRightCommand extends BaseCommand {
 	public LeanRightCommand(LeanSubsystem leaner) {
 		this.leaner = leaner;
 		this.requires(leaner); 
-
 	}
 	
 	@Override

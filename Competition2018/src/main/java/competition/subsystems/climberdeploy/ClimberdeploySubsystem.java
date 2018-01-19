@@ -1,8 +1,11 @@
 package competition.subsystems.climberdeploy;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSubsystem;
+import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -10,24 +13,38 @@ import xbot.common.properties.XPropertyManager;
 public class ClimberdeploySubsystem extends BaseSubsystem {
 	
 	DoubleProperty deploySpeed;
+	CommonLibFactory clf;
+	double speed;
+	
+	public XCANTalon motor;
+
 	
 	@Inject
-	public ClimberdeploySubsystem(XPropertyManager propMan) {
-		propMan.createPersistentProperty("deploySpeed", 0.2);
+	public ClimberdeploySubsystem(CommonLibFactory clf, XPropertyManager propMan) {
+		this.clf = clf;
+		deploySpeed =  propMan.createPersistentProperty("deploySpeed", 0.2);
+	}
+	
+	public void temporaryHack() {
+		motor = clf.createCANTalon(40);
 	}
 	
 	/**
 	 * extends the climber arm
 	 */
 	public void extendClimberArm() {
-		double speed = deploySpeed.get();
+		speed = deploySpeed.get();
+		motor.set(ControlMode.PercentOutput, speed);
+
 	}
 	
 	/**
 	 * detracts the climber arm
 	 */
 	public void detractClimberArm() {
-		double speed = deploySpeed.get();
+		speed = deploySpeed.get();
+		motor.set(ControlMode.PercentOutput, -speed);
+
 	}
 	
 	/**
@@ -41,14 +58,18 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 * speeds up the arm, regardless of what direction the arm is moving
 	 */
 	public void increaseSpeed() {
-		
+		speed = deploySpeed.get();
+		speed *= 2;
+		motor.set(ControlMode.PercentOutput, speed);
 	}
 	
 	/**
 	 * slows down the arm, regardless of what direction the arm is moving
 	 */
 	public void decreaseSpeed() {
-	
+		speed = deploySpeed.get();
+		speed /= 2;
+		motor.set(ControlMode.PercentOutput, speed);
 	}
 	
 	/**

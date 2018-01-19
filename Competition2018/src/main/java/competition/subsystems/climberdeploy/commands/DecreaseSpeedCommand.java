@@ -21,7 +21,6 @@ public class DecreaseSpeedCommand extends BaseCommand{
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -17,7 +17,6 @@ public class LeanRightCommandTest extends BaseWPITest{
 	
 	@Override
 	public void setUp() {
-		// TODO Auto-generated method stub
 		super.setUp();
 		
 		lean = injector.getInstance(LeanSubsystem.class);
