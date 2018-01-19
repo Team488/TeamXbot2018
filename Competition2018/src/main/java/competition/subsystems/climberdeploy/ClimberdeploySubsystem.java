@@ -14,7 +14,6 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	
 	DoubleProperty deploySpeed;
 	CommonLibFactory clf;
-	double speed;
 	
 	public XCANTalon motor;
 
@@ -22,7 +21,7 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	@Inject
 	public ClimberdeploySubsystem(CommonLibFactory clf, XPropertyManager propMan) {
 		this.clf = clf;
-		deploySpeed =  propMan.createPersistentProperty("deploySpeed", 0.2);
+		deploySpeed = propMan.createPersistentProperty("deploySpeed", 0.2);
 	}
 	
 	public void temporaryHack() {
@@ -33,8 +32,7 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 * extends the climber arm
 	 */
 	public void extendClimberArm() {
-		speed = deploySpeed.get();
-		motor.set(ControlMode.PercentOutput, speed);
+		motor.simpleSet(deploySpeed.get());
 
 	}
 	
@@ -42,8 +40,7 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 * detracts the climber arm
 	 */
 	public void detractClimberArm() {
-		speed = deploySpeed.get();
-		motor.set(ControlMode.PercentOutput, -speed);
+		motor.set(ControlMode.PercentOutput, -deploySpeed.get());
 
 	}
 	
@@ -58,18 +55,14 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 * speeds up the arm, regardless of what direction the arm is moving
 	 */
 	public void increaseSpeed() {
-		speed = deploySpeed.get();
-		speed *= 2;
-		motor.set(ControlMode.PercentOutput, speed);
+		motor.set(ControlMode.PercentOutput, deploySpeed.get()*2);
 	}
 	
 	/**
 	 * slows down the arm, regardless of what direction the arm is moving
 	 */
 	public void decreaseSpeed() {
-		speed = deploySpeed.get();
-		speed /= 2;
-		motor.set(ControlMode.PercentOutput, speed);
+		motor.set(ControlMode.PercentOutput, deploySpeed.get()/2);
 	}
 	
 	/**
