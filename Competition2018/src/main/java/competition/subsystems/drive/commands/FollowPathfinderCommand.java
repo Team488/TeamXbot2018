@@ -31,6 +31,7 @@ public class FollowPathfinderCommand extends BaseCommand {
     final DoubleProperty driveBaseWidthInFeet;
     final DoubleProperty encoderTicksPerRev;
     final DoubleProperty maxVelocity;
+    final DoubleProperty pathfinderP;
     
     
     @Inject
@@ -47,42 +48,53 @@ public class FollowPathfinderCommand extends BaseCommand {
         driveBaseWidthInFeet = propMan.createPersistentProperty("DriveBaseWidthInFeet", 2.0);
         encoderTicksPerRev = propMan.createPersistentProperty("EncoderTicksPerRev", 360);
         maxVelocity = propMan.createPersistentProperty("maxVelocityInFeet", 8);
+        pathfinderP = propMan.createPersistentProperty("PathfinderP", 1.0);
     }
     
     @Override
     public void initialize() {
+    	
+    	log.info("Initializing");
+    	
         Waypoint[] points = new Waypoint[] {
                 new Waypoint(0, 0, 0),
                 new Waypoint(5, 0, 0)   
             };
             
-            Trajectory.Config config = new Trajectory.Config(
-                    Trajectory.FitMethod.HERMITE_CUBIC, 
-                    Trajectory.Config.SAMPLES_HIGH, 
-                    0.02, // delta time. 0.02 is 50Hz, which is roughly our control loop.
-                    4.0,  // max velocity
-                    2.0,  // max acceleration
-                    60.0 // max jerk
-                    );
-            Trajectory trajectory = Pathfinder.generate(points, config);  
-            
-            tankPaths = new TankModifier(trajectory).modify(driveBaseWidthInFeet.get());
-            
-            leftFollower.setTrajectory(tankPaths.getLeftTrajectory());
-            rightFollower.setTrajectory(tankPaths.getRightTrajectory());
-            
-            leftFollower.configurePIDVA(1, 0, 0, 1 / maxVelocity.get(), 0);
-            rightFollower.configurePIDVA(1, 0, 0, 1 / maxVelocity.get(), 0);
-                        
-            leftFollower.configureEncoder(
-                    drive.getLeftRawTotalDistance(),
-                    (int)encoderTicksPerRev.get(), 
-                    wheelDiameterInFeet.get());
-            
-            rightFollower.configureEncoder(
-                    drive.getRightRawTotalDistance(),
-                    (int)encoderTicksPerRev.get(), 
-                    wheelDiameterInFeet.get());
+        Trajectory.Config config = new Trajectory.Config(
+                Trajectory.FitMethod.HERMITE_CUBIC, 
+                Trajectory.Config.SAMPLES_HIGH, 
+                0.02, // delta time. 0.02 is 50Hz, which is roughly our control loop.
+                4.0,  // max velocity
+                2.0,  // max acceleration
+                60.0 // max jerk
+                );
+        
+        log.info("Trajectory Configured");
+        
+        Trajectory trajectory = Pathfinder.generate(points, config);  
+        
+        log.info("Trajectory Generated");
+        
+        tankPaths = new TankModifier(trajectory).modify(driveBaseWidthInFeet.get());
+        
+        leftFollower.setTrajectory(tankPaths.getLeftTrajectory());
+        rightFollower.setTrajectory(tankPaths.getRightTrajectory());
+        
+        leftFollower.configurePIDVA(pathfinderP.get(), 0, 0, 1 / maxVelocity.get(), 0);
+        rightFollower.configurePIDVA(pathfinderP.get(), 0, 0, 1 / maxVelocity.get(), 0);
+                    
+        leftFollower.configureEncoder(
+                drive.getLeftRawTotalDistance(),
+                (int)encoderTicksPerRev.get(), 
+                wheelDiameterInFeet.get());
+        
+        rightFollower.configureEncoder(
+                drive.getRightRawTotalDistance(),
+                (int)encoderTicksPerRev.get(), 
+                wheelDiameterInFeet.get());
+        
+        log.info("All configuration finished.");
     }
 
     @Override
