@@ -65,8 +65,8 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         leftMaster.createTelemetryProperties("LeftDriveMaster");
         rightMaster.createTelemetryProperties("RightDriveMaster");
         
-        leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", 0);
-        rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", 0);
+        leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", 12257);
+        rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", 12849);
         
     }
     
