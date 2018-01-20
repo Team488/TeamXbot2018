@@ -8,13 +8,11 @@ import xbot.common.command.BaseCommand;
 public class LeanRightCommand extends BaseCommand {
 
 	LeanSubsystem leaner;
-	boolean stop;
 	
 	@Inject
 	public LeanRightCommand(LeanSubsystem leaner) {
 		this.leaner = leaner;
 		this.requires(leaner); 
-
 	}
 	
 	@Override
@@ -25,22 +23,14 @@ public class LeanRightCommand extends BaseCommand {
 	@Override
 	public void execute() {
 		leaner.leanRight();
-		if (leaner.hitBar()) {
-			stop = true;
-			leaner.stopLean();
-		}
-		else {
-			stop = false;
-		}
 	}
+
 	@Override
 	public boolean isFinished() {
-		if (stop) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return leaner.hitBar();
+	}
+	public void end() {
+		leaner.stopLean();
 	}
 
 }

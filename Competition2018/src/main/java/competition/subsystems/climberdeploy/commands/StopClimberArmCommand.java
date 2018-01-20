@@ -2,15 +2,15 @@ package competition.subsystems.climberdeploy.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.climberdeploy.ClimberdeploySubsystem;
+import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
 public class StopClimberArmCommand extends BaseCommand{
 
-	ClimberdeploySubsystem deploy;
+	ClimberDeploySubsystem deploy;
 
 	@Inject
-	public void StopClimberArmCommand(ClimberdeploySubsystem deploy) {
+	public void StopClimberArmCommand(ClimberDeploySubsystem deploy) {
 		this.deploy = deploy;
 		this.requires(deploy); 
 
