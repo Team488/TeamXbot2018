@@ -33,12 +33,9 @@ public class ExtendClimberArmCommand extends BaseCommand {
 	
 	@Override
 	public boolean isFinished() {
-		if (stop) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return deploy.hitBarHeight();
 	}
-
+	public void end() {
+		deploy.stopClimberArm();
+	}
 }

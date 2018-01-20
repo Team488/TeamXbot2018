@@ -5,13 +5,13 @@ import com.google.inject.Inject;
 import competition.subsystems.climberdeploy.ClimberdeploySubsystem;
 import xbot.common.command.BaseCommand;
 
-public class DetractClimberArmCommand extends BaseCommand {
+public class RetractClimberArmCommand extends BaseCommand {
 
 	ClimberdeploySubsystem deploy;
 	boolean stop;
 
 	@Inject
-	public DetractClimberArmCommand (ClimberdeploySubsystem deploy) {
+	public RetractClimberArmCommand (ClimberdeploySubsystem deploy) {
 		this.deploy = deploy;
 		this.requires(deploy);
 	}
@@ -23,7 +23,7 @@ public class DetractClimberArmCommand extends BaseCommand {
 
 	@Override
 	public void execute() {
-		deploy.detractClimberArm();
+		deploy.retractClimberArm();
 		if (deploy.isRetracted()) {
 			stop = true;
 		}
@@ -34,11 +34,9 @@ public class DetractClimberArmCommand extends BaseCommand {
 
 	@Override
 	public boolean isFinished() {
-		if (stop) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return deploy.hitBarHeight();
+	}
+	public void end() {
+		deploy.stopClimberArm();
 	}
 }

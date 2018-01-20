@@ -6,20 +6,20 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import competition.subsystems.climberdeploy.ClimberdeploySubsystem;
-import competition.subsystems.climberdeploy.commands.DetractClimberArmCommand;
+import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
-public class DetractClimberArmCommandTest extends BaseWPITest{
+public class RetractClimberArmCommandTest extends BaseWPITest{
 	
 	ClimberdeploySubsystem deploy;
-	DetractClimberArmCommand command;
+	RetractClimberArmCommand command;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		deploy = injector.getInstance(ClimberdeploySubsystem.class);
-		command = injector.getInstance(DetractClimberArmCommand.class);
+		command = injector.getInstance(RetractClimberArmCommand.class);
 		deploy.temporaryHack();
 	}
 	
@@ -30,10 +30,10 @@ public class DetractClimberArmCommandTest extends BaseWPITest{
 	}
 	
 	@Test
-	public void checkDetractClimberArm() {
+	public void checkRetractClimberArm() {
 		command.initialize();
+		assertEquals(0.0, deploy.motor.getMotorOutputPercent(), 0.001);
 		command.execute();
-		
 		assertEquals(-0.2, deploy.motor.getMotorOutputPercent(), 0.001);
 	}
 }

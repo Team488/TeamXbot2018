@@ -14,8 +14,9 @@ import xbot.common.properties.XPropertyManager;
 public class LeanSubsystem extends BaseSubsystem {
 
 	DoubleProperty leanSpeed;
+	DoubleProperty fastLeanSpeed;
+	DoubleProperty slowLeanSpeed;
 	CommonLibFactory clf;
-	double speed;
 	
 	public XCANTalon motor;
 	
@@ -34,16 +35,15 @@ public class LeanSubsystem extends BaseSubsystem {
 	 * makes the climb arm lean left
 	 */
 	public void leanLeft() {
-		speed = leanSpeed.get();
-		motor.set(ControlMode.PercentOutput, speed);
+		motor.simpleSet(leanSpeed.get());
 	}
 	
 	/**
 	 * makes the climb arm lean right
 	 */
 	public void leanRight() {
-		speed = leanSpeed.get();
-		motor.set(ControlMode.PercentOutput, -speed);
+		motor.simpleSet(-leanSpeed.get());
+
 	}
 	
 	/**
@@ -70,18 +70,13 @@ public class LeanSubsystem extends BaseSubsystem {
 	 * increases leaning arm speed
 	 */
 	public void increaseSpeed() {
-		speed = leanSpeed.get();
-		speed *= 2;
-		motor.set(ControlMode.PercentOutput, speed);
+		motor.simpleSet(leanSpeed.get()*2);
 	}
 	
 	/**
 	 * decreases leaning arm speed
 	 */
 	public void decreaseSpeed() {
-		speed = leanSpeed.get();
-		speed /= 2;
-		motor.set(ControlMode.PercentOutput, speed);
-
+		motor.simpleSet(leanSpeed.get()/2);
 	}
 }

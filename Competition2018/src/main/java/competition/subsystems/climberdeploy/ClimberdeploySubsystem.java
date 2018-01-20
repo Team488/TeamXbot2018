@@ -13,6 +13,8 @@ import xbot.common.properties.XPropertyManager;
 public class ClimberdeploySubsystem extends BaseSubsystem {
 	
 	DoubleProperty deploySpeed;
+	DoubleProperty fastDeploySpeed;
+	DoubleProperty slowDeploySpeed;
 	CommonLibFactory clf;
 	
 	public XCANTalon motor;
@@ -33,15 +35,13 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 */
 	public void extendClimberArm() {
 		motor.simpleSet(deploySpeed.get());
-
 	}
 	
 	/**
 	 * detracts the climber arm
 	 */
-	public void detractClimberArm() {
-		motor.set(ControlMode.PercentOutput, -deploySpeed.get());
-
+	public void retractClimberArm() {
+		motor.simpleSet(-deploySpeed.get());
 	}
 	
 	/**
@@ -55,14 +55,14 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 * speeds up the arm, regardless of what direction the arm is moving
 	 */
 	public void increaseSpeed() {
-		motor.set(ControlMode.PercentOutput, deploySpeed.get()*2);
+		motor.simpleSet(deploySpeed.get()*2);
 	}
 	
 	/**
 	 * slows down the arm, regardless of what direction the arm is moving
 	 */
 	public void decreaseSpeed() {
-		motor.set(ControlMode.PercentOutput, deploySpeed.get()/2);
+		motor.simpleSet(deploySpeed.get()/2);
 	}
 	
 	/**

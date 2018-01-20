@@ -34,8 +34,8 @@ public class LeanRightCommandTest extends BaseWPITest{
 	@Test
 	public void checkLeanRight() {
 		command.initialize();
+		assertEquals(0.0, lean.motor.getMotorOutputPercent(), 0.001);
 		command.execute();
-		
 		assertEquals(-0.2, lean.motor.getMotorOutputPercent(), 0.001);
 	}
 }
