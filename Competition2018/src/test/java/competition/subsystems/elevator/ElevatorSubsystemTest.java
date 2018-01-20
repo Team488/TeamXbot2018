@@ -1,7 +1,5 @@
 package competition.subsystems.elevator;
 
-
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,63 +7,40 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import xbot.common.injection.BaseWPITest;
-import xbot.common.properties.BooleanProperty;
 
 public class ElevatorSubsystemTest extends BaseWPITest{
 	
 	ElevatorSubsystem elevator;
-
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		this.elevator=injector.getInstance(ElevatorSubsystem.class);
-		
+		this.elevator.temporaryHack();
 	}
-	
-	@Test
-	public void ElevatorSubsystemTest() {
-		// TODO Auto-generated constructor stub
-	}
-	
-
 
 	@Test
 	public void isStopped() {
-		
+		elevator.setPower(1);
 		elevator.stop();
-		assertTrue(elevator.isStopping());
+		checkElevatorPower(0);
 	}
 	
 	@Test
 	public void rise() {
-		
+		assertEquals(elevator.motor.getMotorOutputPercent(), 0, 0.001);
 		elevator.rise();
-		assertTrue(elevator.isRising());
-		assertFalse(elevator.isCloseToMaxmumHeight());
-		assertFalse(elevator.isCloseToMinimumHeight());
+		assertTrue(elevator.motor.getMotorOutputPercent() > 0);
 	}
 	
 	@Test
 	public void lower() {
-		
+		assertEquals(elevator.motor.getMotorOutputPercent(), 0, 0.001);
 		elevator.lower();
-		assertTrue(elevator.isLowing());
-		assertFalse(elevator.isCloseToMinimumHeight());
-		assertFalse(elevator.isCloseToMaxmumHeight());
+		assertTrue(elevator.motor.getMotorOutputPercent() < 0);
 	}
 	
-	public void moveToMaxmumHeight() {
-		
-		elevator.moveToMaxHeight();
-		assertFalse(elevator.isRising()||elevator.isCloseToMinimumHeight());
-		
+	private void checkElevatorPower(double power) {
+		assertEquals(elevator.motor.getMotorOutputPercent(), power, 0.001);
 	}
-	
-	public void moveToMinimumHeight() {
-		
-		elevator.moveTtoMinHeight();
-		assertFalse(elevator.isLowing()||elevator.isCloseToMaxmumHeight());
-	}
-	
 }
