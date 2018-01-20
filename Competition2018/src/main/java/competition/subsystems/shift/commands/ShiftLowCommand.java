@@ -9,6 +9,7 @@ public class ShiftLowCommand extends BaseCommand {
 	
 	public ShiftLowCommand(ShiftSubsystem subsystem){
 		shiftSubsystem = subsystem;
+		this.requires(shiftSubsystem);
 	}
 
 	@Override
