@@ -25,7 +25,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	
 
 	/**
-	 * Returns true if the robot is rising
+	 * Returns true if the elevator is rising
 	 * @return
 	 */
 	boolean isRising() {
@@ -41,7 +41,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	}
 	
 	/**
-	 * Returns true if the robot is lowing
+	 * Returns true if the elevator is lowing
 	 * @return
 	 */
 	boolean isLowing() {
@@ -55,7 +55,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	
 
 	/**
-	 * Returns true if the robot is stopped
+	 * Returns true if the elevator is stopped
 	 * @return
 	 */
 	boolean isStopping() {
