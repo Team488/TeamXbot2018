@@ -17,12 +17,17 @@ public class IncreaseSpeedCommand extends BaseCommand {
 	@Override
 	public void initialize() {
 		log.info("Initializing");
+		leaner.increaseSpeed();
 	}
 
 	@Override
 	public void execute() {
 	}
-
+	
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }
 
 

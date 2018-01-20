@@ -24,6 +24,10 @@ public class DecreaseSpeedCommand extends BaseCommand {
 	public void execute() {
 	}
 	
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }
 
 
