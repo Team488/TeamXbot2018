@@ -26,20 +26,18 @@ public class LeanRightCommand extends BaseCommand {
 		leaner.leanRight();
 		if (leaner.hitBar()) {
 			stop = true;
-			leaner.stopLean();
 		}
 		else {
 			stop = false;
 		}
 	}
+
 	@Override
 	public boolean isFinished() {
-		if (stop) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return leaner.hitBar();
+	}
+	public void end() {
+		leaner.stopLean();
 	}
 
 }

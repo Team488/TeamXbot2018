@@ -31,8 +31,8 @@ public class RetractClimberArmCommandTest extends BaseWPITest{
 	
 	@Test
 	public void checkRetractClimberArm() {
-		command.initialize();
 		assertEquals(0.0, deploy.motor.getMotorOutputPercent(), 0.001);
+		command.initialize();
 		command.execute();
 		assertEquals(-0.2, deploy.motor.getMotorOutputPercent(), 0.001);
 	}

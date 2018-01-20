@@ -33,9 +33,10 @@ public class StopClimberArmCommandTest extends BaseWPITest{
 	
 	@Test
 	public void checkStopClimberArm() {
+		deploy.extendClimberArm();
+		assertEquals(0.2, deploy.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
-		
 		assertEquals(0.0, deploy.motor.getMotorOutputPercent(), 0.001);
 	}
 }

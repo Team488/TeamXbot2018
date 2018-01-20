@@ -27,9 +27,6 @@ public class RetractClimberArmCommand extends BaseCommand {
 		if (deploy.isRetracted()) {
 			stop = true;
 		}
-		else {
-			stop = false;
-		}
 	}
 
 	@Override

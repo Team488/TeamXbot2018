@@ -13,7 +13,7 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class LeanSubsystem extends BaseSubsystem {
 
-	DoubleProperty leanSpeed;
+	double currentLeanSpeed;
 	DoubleProperty fastLeanSpeed;
 	DoubleProperty slowLeanSpeed;
 	CommonLibFactory clf;
@@ -23,27 +23,27 @@ public class LeanSubsystem extends BaseSubsystem {
 	@Inject
 	public LeanSubsystem(CommonLibFactory clf, XPropertyManager propMan) {
 		this.clf = clf;
-		leanSpeed = propMan.createPersistentProperty("LeanSpeed", 0.2);
+		currentLeanSpeed = 0.2;		
+		slowLeanSpeed = propMan.createPersistentProperty("slowLeanSpeed", currentLeanSpeed/2);
+		fastLeanSpeed = propMan.createPersistentProperty("fastLeanSpeed", currentLeanSpeed*2);
 	}
 	
 	public void temporaryHack() {
 		motor = clf.createCANTalon(40);
 	}
 	
-	
 	/**
 	 * makes the climb arm lean left
 	 */
 	public void leanLeft() {
-		motor.simpleSet(leanSpeed.get());
+		motor.simpleSet(currentLeanSpeed);
 	}
 	
 	/**
 	 * makes the climb arm lean right
 	 */
 	public void leanRight() {
-		motor.simpleSet(-leanSpeed.get());
-
+		motor.simpleSet(-currentLeanSpeed);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class LeanSubsystem extends BaseSubsystem {
 	 * stops the climb arm from leaning left
 	 */
 	public void stopLean() {
-		
+		motor.simpleSet(0);
 	}
 	/**
 	 * sensor to determine if the arm has hit the bar
@@ -70,13 +70,13 @@ public class LeanSubsystem extends BaseSubsystem {
 	 * increases leaning arm speed
 	 */
 	public void increaseSpeed() {
-		motor.simpleSet(leanSpeed.get()*2);
+		currentLeanSpeed = fastLeanSpeed.get();
 	}
 	
 	/**
 	 * decreases leaning arm speed
 	 */
 	public void decreaseSpeed() {
-		motor.simpleSet(leanSpeed.get()/2);
+		currentLeanSpeed = slowLeanSpeed.get();
 	}
 }

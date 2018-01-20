@@ -12,7 +12,7 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class ClimberdeploySubsystem extends BaseSubsystem {
 	
-	DoubleProperty deploySpeed;
+	double currentDeploySpeed;
 	DoubleProperty fastDeploySpeed;
 	DoubleProperty slowDeploySpeed;
 	CommonLibFactory clf;
@@ -23,7 +23,9 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	@Inject
 	public ClimberdeploySubsystem(CommonLibFactory clf, XPropertyManager propMan) {
 		this.clf = clf;
-		deploySpeed = propMan.createPersistentProperty("deploySpeed", 0.2);
+		currentDeploySpeed = 0.2;
+		fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", currentDeploySpeed*2 );
+		slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", currentDeploySpeed/2);
 	}
 	
 	public void temporaryHack() {
@@ -34,35 +36,35 @@ public class ClimberdeploySubsystem extends BaseSubsystem {
 	 * extends the climber arm
 	 */
 	public void extendClimberArm() {
-		motor.simpleSet(deploySpeed.get());
+		motor.simpleSet(currentDeploySpeed);
 	}
 	
 	/**
 	 * detracts the climber arm
 	 */
 	public void retractClimberArm() {
-		motor.simpleSet(-deploySpeed.get());
+		motor.simpleSet(-currentDeploySpeed);
 	}
 	
 	/**
 	 * stops arm from moving or deploying
 	 */
 	public void stopClimberArm() {
-		
+		motor.simpleSet(0);
 	}
 	
 	/**
 	 * speeds up the arm, regardless of what direction the arm is moving
 	 */
 	public void increaseSpeed() {
-		motor.simpleSet(deploySpeed.get()*2);
+		currentDeploySpeed = fastDeploySpeed.get();
 	}
 	
 	/**
 	 * slows down the arm, regardless of what direction the arm is moving
 	 */
 	public void decreaseSpeed() {
-		motor.simpleSet(deploySpeed.get()/2);
+		currentDeploySpeed = slowDeploySpeed.get();
 	}
 	
 	/**

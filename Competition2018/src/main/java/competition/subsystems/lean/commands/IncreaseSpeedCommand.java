@@ -23,7 +23,11 @@ public class IncreaseSpeedCommand extends BaseCommand {
 	@Override
 	public void execute() {
 	}
-
+	
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }
 
 

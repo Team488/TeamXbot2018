@@ -13,6 +13,7 @@ public class DecreaseSpeedCommand extends BaseCommand{
 	public DecreaseSpeedCommand(ClimberdeploySubsystem deploy) {
 		this.deploy = deploy;
 	}
+	
 	@Override
 	public void initialize() {
 		log.info("Initializing");
@@ -21,7 +22,10 @@ public class DecreaseSpeedCommand extends BaseCommand{
 
 	@Override
 	public void execute() {
-		
 	}
-
+	
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }

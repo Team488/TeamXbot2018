@@ -17,7 +17,6 @@ public class LeanLeftCommandTest extends BaseWPITest{
 	
 	@Override
 	public void setUp() {
-		// TODO Auto-generated method stub
 		super.setUp();
 		
 		lean = injector.getInstance(LeanSubsystem.class);
@@ -34,8 +33,8 @@ public class LeanLeftCommandTest extends BaseWPITest{
 	
 	@Test
 	public void checkLeanLeft() {
-		command.initialize();
 		assertEquals(0.0, lean.motor.getMotorOutputPercent(), 0.001);
+		command.initialize();
 		command.execute();
 		assertEquals(0.2, lean.motor.getMotorOutputPercent(), 0.001);
 	}

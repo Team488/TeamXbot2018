@@ -26,9 +26,7 @@ public class ExtendClimberArmCommand extends BaseCommand {
 		deploy.extendClimberArm();
 		if (deploy.hitBarHeight()) {
 			stop = true;
-			deploy.stopClimberArm();
 		}
-		
 	}
 	
 	@Override

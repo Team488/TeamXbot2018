@@ -32,9 +32,11 @@ public class DecreaseSpeedCommandTest extends BaseWPITest{
 	
 	@Test
 	public void checkDecreaseSpeed() {
+		deploy.extendClimberArm();
+		assertEquals(0.2, deploy.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
-		
+		deploy.extendClimberArm();
 		assertEquals(0.1, deploy.motor.getMotorOutputPercent(), 0.001);
 	}
 }
