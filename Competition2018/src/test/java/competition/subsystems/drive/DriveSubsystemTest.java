@@ -1,12 +1,10 @@
 package competition.subsystems.drive;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import xbot.common.injection.BaseWPITest;
+import competition.BaseCompetitionTest;
 
-public class DriveSubsystemTest extends BaseWPITest {
+public class DriveSubsystemTest extends BaseCompetitionTest {
 	
 	@Test
 	public void testStartingDriveSubsystem() {
