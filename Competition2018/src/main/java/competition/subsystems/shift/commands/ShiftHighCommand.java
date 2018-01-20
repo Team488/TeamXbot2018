@@ -6,8 +6,8 @@ import xbot.common.command.BaseCommand;
 
 public class ShiftHighCommand extends BaseCommand {
 	ShiftSubsystem shiftSubsystem;
-	
-	public ShiftHighCommand(ShiftSubsystem subsystem){
+
+	public ShiftHighCommand(ShiftSubsystem subsystem) {
 		shiftSubsystem = subsystem;
 		this.requires(shiftSubsystem);
 	}
@@ -20,9 +20,9 @@ public class ShiftHighCommand extends BaseCommand {
 
 	@Override
 	public void execute() {
-		
+
 	}
-	
+
 	public boolean isFinished() {
 		return true;
 	}
