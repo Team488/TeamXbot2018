@@ -14,8 +14,8 @@ import xbot.common.properties.XPropertyManager;
 public class LeanSubsystem extends BaseSubsystem {
 
 	double currentLeanSpeed;
-	DoubleProperty fastLeanSpeed;
-	DoubleProperty slowLeanSpeed;
+	final DoubleProperty fastLeanSpeed;
+	final DoubleProperty slowLeanSpeed;
 	CommonLibFactory clf;
 	
 	public XCANTalon motor;
@@ -23,9 +23,9 @@ public class LeanSubsystem extends BaseSubsystem {
 	@Inject
 	public LeanSubsystem(CommonLibFactory clf, XPropertyManager propMan) {
 		this.clf = clf;
-		currentLeanSpeed = 0.2;		
-		slowLeanSpeed = propMan.createPersistentProperty("slowLeanSpeed", currentLeanSpeed/2);
-		fastLeanSpeed = propMan.createPersistentProperty("fastLeanSpeed", currentLeanSpeed*2);
+		slowLeanSpeed = propMan.createPersistentProperty("slowLeanSpeed", .1);
+		fastLeanSpeed = propMan.createPersistentProperty("fastLeanSpeed", .4);
+		currentLeanSpeed = fastLeanSpeed.get();		
 	}
 	
 	public void temporaryHack() {

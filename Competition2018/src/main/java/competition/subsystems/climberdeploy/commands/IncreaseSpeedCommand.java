@@ -2,15 +2,15 @@ package competition.subsystems.climberdeploy.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.climberdeploy.ClimberdeploySubsystem;
+import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
 public class IncreaseSpeedCommand extends BaseCommand {
 	
-	ClimberdeploySubsystem deploy;
+	ClimberDeploySubsystem deploy;
 
 	@Inject
-	public IncreaseSpeedCommand(ClimberdeploySubsystem deploy) {
+	public IncreaseSpeedCommand(ClimberDeploySubsystem deploy) {
 		this.deploy = deploy;
 	}
 	

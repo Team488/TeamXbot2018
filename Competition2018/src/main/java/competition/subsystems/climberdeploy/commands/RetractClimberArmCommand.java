@@ -2,16 +2,15 @@ package competition.subsystems.climberdeploy.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.climberdeploy.ClimberdeploySubsystem;
+import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
 public class RetractClimberArmCommand extends BaseCommand {
 
-	ClimberdeploySubsystem deploy;
-	boolean stop;
+	ClimberDeploySubsystem deploy;
 
 	@Inject
-	public RetractClimberArmCommand (ClimberdeploySubsystem deploy) {
+	public RetractClimberArmCommand (ClimberDeploySubsystem deploy) {
 		this.deploy = deploy;
 		this.requires(deploy);
 	}
@@ -24,9 +23,6 @@ public class RetractClimberArmCommand extends BaseCommand {
 	@Override
 	public void execute() {
 		deploy.retractClimberArm();
-		if (deploy.isRetracted()) {
-			stop = true;
-		}
 	}
 
 	@Override

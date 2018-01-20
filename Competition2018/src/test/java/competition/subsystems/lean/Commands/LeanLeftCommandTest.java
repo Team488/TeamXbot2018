@@ -36,6 +36,6 @@ public class LeanLeftCommandTest extends BaseWPITest{
 		assertEquals(0.0, lean.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
-		assertEquals(0.2, lean.motor.getMotorOutputPercent(), 0.001);
+		assertEquals(0.4, lean.motor.getMotorOutputPercent(), 0.001);
 	}
 }

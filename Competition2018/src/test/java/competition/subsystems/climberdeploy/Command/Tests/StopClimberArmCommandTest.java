@@ -5,21 +5,21 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import competition.subsystems.climberdeploy.ClimberdeploySubsystem;
+import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
 public class StopClimberArmCommandTest extends BaseWPITest{
 	
-	ClimberdeploySubsystem deploy;
+	ClimberDeploySubsystem deploy;
 	StopClimberArmCommand command;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		
-		deploy = injector.getInstance(ClimberdeploySubsystem.class);
+		deploy = injector.getInstance(ClimberDeploySubsystem.class);
 		command = injector.getInstance(StopClimberArmCommand.class);
 		
 		deploy.temporaryHack();
@@ -34,7 +34,7 @@ public class StopClimberArmCommandTest extends BaseWPITest{
 	@Test
 	public void checkStopClimberArm() {
 		deploy.extendClimberArm();
-		assertEquals(0.2, deploy.motor.getMotorOutputPercent(), 0.001);
+		assertEquals(0.4, deploy.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
 		assertEquals(0.0, deploy.motor.getMotorOutputPercent(), 0.001);

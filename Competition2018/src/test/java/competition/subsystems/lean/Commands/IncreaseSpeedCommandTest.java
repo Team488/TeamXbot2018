@@ -33,8 +33,9 @@ public class IncreaseSpeedCommandTest extends BaseWPITest{
 	
 	@Test
 	public void checkIncreaseSpeed() {
+		lean.decreaseSpeed();
 		lean.leanRight();
-		assertEquals(-0.2, lean.motor.getMotorOutputPercent(), 0.001);
+		assertEquals(-0.1, lean.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
 		lean.leanRight();

@@ -10,22 +10,22 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class ClimberdeploySubsystem extends BaseSubsystem {
+public class ClimberDeploySubsystem extends BaseSubsystem {
 	
 	double currentDeploySpeed;
-	DoubleProperty fastDeploySpeed;
-	DoubleProperty slowDeploySpeed;
+	final DoubleProperty fastDeploySpeed;
+	final DoubleProperty slowDeploySpeed;
 	CommonLibFactory clf;
 	
 	public XCANTalon motor;
 
 	
 	@Inject
-	public ClimberdeploySubsystem(CommonLibFactory clf, XPropertyManager propMan) {
+	public ClimberDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan) {
 		this.clf = clf;
-		currentDeploySpeed = 0.2;
-		fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", currentDeploySpeed*2 );
-		slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", currentDeploySpeed/2);
+		fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", .4);
+		slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", .1);
+		currentDeploySpeed = fastDeploySpeed.get();
 	}
 	
 	public void temporaryHack() {
