@@ -3,12 +3,13 @@ package competition.subsystems.drive;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import competition.BaseTest;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import edu.wpi.first.wpilibj.MockSolenoid;
-import xbot.common.injection.BaseWPITest;
 
-public class ShiftSubsystemTest extends BaseWPITest {
+public class ShiftSubsystemTest extends BaseTest {
 
 	ShiftSubsystem subsystem;
 	MockSolenoid solenoid;
