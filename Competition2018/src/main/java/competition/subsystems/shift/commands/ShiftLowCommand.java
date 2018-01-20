@@ -1,5 +1,7 @@
 package competition.subsystems.shift.commands;
 
+import com.google.inject.Inject;
+
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import xbot.common.command.BaseCommand;
@@ -7,6 +9,7 @@ import xbot.common.command.BaseCommand;
 public class ShiftLowCommand extends BaseCommand {
 	ShiftSubsystem shiftSubsystem;
 
+	@Inject
 	public ShiftLowCommand(ShiftSubsystem subsystem) {
 		shiftSubsystem = subsystem;
 		this.requires(shiftSubsystem);

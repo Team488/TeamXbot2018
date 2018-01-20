@@ -10,7 +10,7 @@ import competition.subsystems.shift.commands.ShiftLowCommand;
 import edu.wpi.first.wpilibj.MockSolenoid;
 import xbot.common.injection.BaseWPITest;
 
-public class ShiftHighAndLowCommands extends BaseWPITest {
+public class ShiftHighAndLowCommandsTest extends BaseWPITest {
 	ShiftHighCommand shiftHighCommand;
 	ShiftLowCommand shiftLowCommand;
 	ShiftSubsystem subsystem;
