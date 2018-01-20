@@ -6,7 +6,7 @@ import xbot.common.injection.BaseWPITest;
 import xbot.common.injection.UnitTestModule;
 
 @Ignore
-public class BaseTest extends BaseWPITest {
+public class BaseCompetitionTest extends BaseWPITest {
     
     protected class TestModule extends UnitTestModule {
         @Override
@@ -15,7 +15,7 @@ public class BaseTest extends BaseWPITest {
         }
     }
     
-    public BaseTest() {
+    public BaseCompetitionTest() {
         guiceModule = new TestModule();
     }
     

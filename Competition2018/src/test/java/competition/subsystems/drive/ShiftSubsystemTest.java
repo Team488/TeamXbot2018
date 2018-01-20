@@ -4,12 +4,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import competition.BaseTest;
+import competition.BaseCompetitionTest;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import edu.wpi.first.wpilibj.MockSolenoid;
 
-public class ShiftSubsystemTest extends BaseTest {
+public class ShiftSubsystemTest extends BaseCompetitionTest {
 
 	ShiftSubsystem subsystem;
 	MockSolenoid solenoid;

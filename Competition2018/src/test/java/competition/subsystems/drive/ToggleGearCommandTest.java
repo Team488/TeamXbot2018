@@ -5,13 +5,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import competition.BaseTest;
+import competition.BaseCompetitionTest;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 import edu.wpi.first.wpilibj.MockSolenoid;
 
-public class ToggleGearCommandTest extends BaseTest {
+public class ToggleGearCommandTest extends BaseCompetitionTest {
 	ToggleGearCommand command;
 	ShiftSubsystem subsystem;
 	MockSolenoid solenoid;

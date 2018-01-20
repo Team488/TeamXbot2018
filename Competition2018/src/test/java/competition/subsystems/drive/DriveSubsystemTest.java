@@ -2,9 +2,9 @@ package competition.subsystems.drive;
 
 import org.junit.Test;
 
-import competition.BaseTest;
+import competition.BaseCompetitionTest;
 
-public class DriveSubsystemTest extends BaseTest {
+public class DriveSubsystemTest extends BaseCompetitionTest {
 	
 	@Test
 	public void testStartingDriveSubsystem() {
