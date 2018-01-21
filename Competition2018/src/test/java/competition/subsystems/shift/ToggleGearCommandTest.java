@@ -1,17 +1,17 @@
-package competition.subsystems.drive;
+package competition.subsystems.shift;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 import edu.wpi.first.wpilibj.MockSolenoid;
-import xbot.common.injection.BaseWPITest;
 
-public class ToggleGearCommandTest extends BaseWPITest {
+public class ToggleGearCommandTest extends BaseCompetitionTest {
 	ToggleGearCommand command;
 	ShiftSubsystem subsystem;
 	MockSolenoid solenoid;
