@@ -108,24 +108,23 @@ public class DriveSubsystem extends BaseDriveSubsystem{
         }
     }
     
-	@Override
-	protected Map<XCANTalon, MotionRegistration> getAllMasterTalons() {
-		return masterTalons;
-	}
+    @Override
+    protected Map<XCANTalon, MotionRegistration> getAllMasterTalons() {
+        return masterTalons;
+    }
 
-	@Override
-	public double getLeftTotalDistance() {
-		return ticksToInches(Side.Left, leftMaster.getSelectedSensorPosition(0));
-	}
+    @Override
+    public double getLeftTotalDistance() {
+        return ticksToInches(Side.Left, leftMaster.getSelectedSensorPosition(0));
+    }
 
-	@Override
-	public double getRightTotalDistance() {
-		return ticksToInches(Side.Right, rightMaster.getSelectedSensorPosition(0));
-	}
+    @Override
+    public double getRightTotalDistance() {
+        return ticksToInches(Side.Right, rightMaster.getSelectedSensorPosition(0));
+    }
 
-	@Override
-	public double getTransverseDistance() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public double getTransverseDistance() {
+        return 0;
+    }
 }

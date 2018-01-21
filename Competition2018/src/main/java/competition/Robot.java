@@ -11,13 +11,13 @@ import xbot.common.properties.XPropertyManager;
 
 public class Robot extends BaseRobot {
 
-	DoubleProperty example;
-	
-	@Override
+    DoubleProperty example;
+    
+    @Override
     protected void setupInjectionModule() {
         this.injectionModule = new CompetitionModule();
     }
-	
+    
     @Override
     protected void initializeSystems() {
         super.initializeSystems();

@@ -19,12 +19,12 @@ public class OperatorCommandMap {
         operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand);
     }
     */
-	
-	@Inject
-	public void setupShiftGearCommand(
-			OperatorInterface oi,
-			ToggleGearCommand shiftGear
-			) {
-		oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
-	}
+    
+    @Inject
+    public void setupShiftGearCommand(
+            OperatorInterface oi,
+            ToggleGearCommand shiftGear
+            ) {
+        oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
+    }
 }

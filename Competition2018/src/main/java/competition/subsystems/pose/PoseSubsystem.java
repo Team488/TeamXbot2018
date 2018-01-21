@@ -11,23 +11,23 @@ public class PoseSubsystem extends BasePoseSubsystem {
     
     DriveSubsystem drive;
 
-	@Inject
-	public PoseSubsystem(CommonLibFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
-		super(factory, propManager);
-		this.drive = drive;
-		
-		updatePeriodicData();
-		resetDistanceTraveled();
-	}
+    @Inject
+    public PoseSubsystem(CommonLibFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
+        super(factory, propManager);
+        this.drive = drive;
+        
+        updatePeriodicData();
+        resetDistanceTraveled();
+    }
 
-	@Override
-	protected double getLeftDriveDistance() {
-		return drive.getLeftTotalDistance();
-	}
+    @Override
+    protected double getLeftDriveDistance() {
+        return drive.getLeftTotalDistance();
+    }
 
-	@Override
-	protected double getRightDriveDistance() {
-		return drive.getRightTotalDistance();
-	}
+    @Override
+    protected double getRightDriveDistance() {
+        return drive.getRightTotalDistance();
+    }
 
 }
