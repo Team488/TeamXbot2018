@@ -12,5 +12,4 @@ before_script:
   - cd ../../../
 script: 
   - cd Competition2018
-  - chmod +x gradlew
-  - ./gradlew build
+  - ./gradlew build checkstyle
