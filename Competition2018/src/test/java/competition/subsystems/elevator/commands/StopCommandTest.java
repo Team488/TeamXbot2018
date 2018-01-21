@@ -4,12 +4,13 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
-public class StopCommandTest extends BaseWPITest{
+public class StopCommandTest extends BaseCompetitionTest{
 	
 	StopCommand command;
 	ElevatorSubsystem elevator;

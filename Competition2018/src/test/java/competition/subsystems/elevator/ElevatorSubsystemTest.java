@@ -6,9 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import xbot.common.injection.BaseWPITest;
 
-public class ElevatorSubsystemTest extends BaseWPITest{
+public class ElevatorSubsystemTest extends BaseCompetitionTest {
 	
 	ElevatorSubsystem elevator;
 	
