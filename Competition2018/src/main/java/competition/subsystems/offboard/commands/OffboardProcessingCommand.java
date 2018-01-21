@@ -29,6 +29,7 @@ public abstract class OffboardProcessingCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+        isRemoteFinished = false;
         log.info("Sending remote start for command ID " + stringifyCommandId());
         subsystem.sendSetCurrentCommand(commandId);
     }

@@ -7,8 +7,13 @@ public class DriveCommandPacket {
     
     private DriveCommandPacket(byte[] packetData) {
         this.commandId = packetData[0] & 0xFF;
-        this.leftPower = ((packetData[1] & 0xFF) << 8) | (packetData[2] & 0xFF);
-        this.rightPower = ((packetData[3] & 0xFF) << 8) | (packetData[4] & 0xFF);
+        this.leftPower = parseSinglePower(packetData[1], packetData[2]);
+        this.rightPower = parseSinglePower(packetData[3], packetData[4]);
+    }
+    
+    public static double parseSinglePower(byte firstByte, byte secondByte) {
+        int total = (firstByte << 8) | (secondByte & 0xFF);
+        return total / 3000d;
     }
     
     public static DriveCommandPacket parse(byte[] packetData) {

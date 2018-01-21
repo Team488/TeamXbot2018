@@ -12,6 +12,7 @@ public abstract class OffboardProcessingWithDriveCommand extends OffboardProcess
     protected OffboardProcessingWithDriveCommand(int commandId, OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem) {
         super(commandId, offboardSubsystem);
         this.driveSubsystem = driveSubsystem;
+        this.requires(driveSubsystem);
     }
     
     protected abstract void handleIncomingNonDrivePacket(OffboardCommunicationPacket packet);
@@ -25,7 +26,7 @@ public abstract class OffboardProcessingWithDriveCommand extends OffboardProcess
                 this.driveSubsystem.drive(drivePacket.leftPower, drivePacket.rightPower);
             }
             else {
-                log.warn("Received \"drive command\" packet for command which is not currently running!");
+                log.warn("Received \"drive command\" packet for command which is not currently running");
             }
         }
         else {
