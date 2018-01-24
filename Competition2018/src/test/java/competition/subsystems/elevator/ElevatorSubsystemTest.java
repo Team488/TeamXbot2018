@@ -9,7 +9,6 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import edu.wpi.first.wpilibj.MockDigitalInput;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
 public class ElevatorSubsystemTest extends BaseCompetitionTest {
 	
