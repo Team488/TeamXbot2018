@@ -1,5 +1,10 @@
 package competition.subsystems.offboard;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
@@ -18,9 +23,12 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
 
     private static final double INCHES_TO_CM = 2.54;
     
+    private final Queue<OffboardCommunicationPacket> incomingPacketQueue = new LinkedList<>();
+    private final int PACKET_QUEUE_MAX_LENGTH = 25;
+    
     private final DriveSubsystem driveSubsystem;
     private final PoseSubsystem poseSubsystem;
-    public final XOffboardCommsInterface rawCommsInterface;
+    private final XOffboardCommsInterface rawCommsInterface;
 
     private Double lastWheelOdomSend = null;
     private double lastLeftDriveDistance;
@@ -40,13 +48,19 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         
         double leftDriveDistanceInches = this.driveSubsystem.getLeftTotalDistance();
         double rightDriveDistanceInches = this.driveSubsystem.getRightTotalDistance();
+
+        if (lastWheelOdomSend == null) {
+            lastWheelOdomSend = timestamp;
+            lastLeftDriveDistance = leftDriveDistanceInches;
+            lastRightDriveDistance = rightDriveDistanceInches;
+        }
         
         double leftDriveDeltaCm = (leftDriveDistanceInches - lastLeftDriveDistance) * INCHES_TO_CM;
         double rightDriveDeltaCm = (rightDriveDistanceInches - lastRightDriveDistance) * INCHES_TO_CM;
+
+        this.lastLeftDriveDistance = leftDriveDistanceInches;
+        this.lastRightDriveDistance = rightDriveDistanceInches;
         
-        if (lastWheelOdomSend == null) {
-            lastWheelOdomSend = timestamp;
-        }
         double timeDelta = timestamp - lastWheelOdomSend;
         lastWheelOdomSend = timestamp;
         
@@ -71,11 +85,39 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     public void sendSetCurrentCommand(int commandId) {
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, OffboardFramePackingUtils.packSetCommandFrame(commandId));
     }
+    
+    public Collection<OffboardCommunicationPacket> getPacketQueue() {
+        return Collections.unmodifiableCollection(this.incomingPacketQueue);
+    }
+    
+    public void clearPacketQueue() {
+        this.incomingPacketQueue.clear();
+    }
 
     @Override
     public void updatePeriodicData() {
         sendWheelOdomUpdate();
-        sendOrientationUpdate();
-        sendHeadingUpdate();
+        //sendOrientationUpdate();
+        //sendHeadingUpdate();
+
+        // TODO: Tune loop? Logging when hit limit?
+        int numPacketsDropped = 0;
+        for(int receiveCount = 0; receiveCount < 5; receiveCount++) {
+            OffboardCommunicationPacket packet = this.rawCommsInterface.receiveRaw();
+            if(packet == null) {
+                break;
+            }
+            
+            this.incomingPacketQueue.add(packet);
+            if (this.incomingPacketQueue.size() > PACKET_QUEUE_MAX_LENGTH) {
+                this.incomingPacketQueue.remove();
+                numPacketsDropped++;
+            }
+        }
+        
+        if (numPacketsDropped > 0 && this.getCurrentCommand() != null) {
+            // TODO: this.getCurrentCommand() instanceof OffboardProcessingCommand
+            log.warn(numPacketsDropped + " offboard comms packets dropped from queue while command is running; all commands running on the offboard subsystem should process incoming packets.");
+        }
     }
 }
