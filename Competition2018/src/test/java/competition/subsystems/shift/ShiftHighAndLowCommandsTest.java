@@ -5,13 +5,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import edu.wpi.first.wpilibj.MockSolenoid;
 import xbot.common.injection.BaseWPITest;
 
-public class ShiftHighAndLowCommandsTest extends BaseWPITest {
+public class ShiftHighAndLowCommandsTest extends BaseCompetitionTest {
 	ShiftHighCommand shiftHighCommand;
 	ShiftLowCommand shiftLowCommand;
 	ShiftSubsystem subsystem;
