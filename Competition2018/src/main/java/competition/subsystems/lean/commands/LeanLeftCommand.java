@@ -29,9 +29,9 @@ public class LeanLeftCommand extends BaseCommand {
 	public boolean isFinished() {
 		return leaner.hitBar();
 	}
+	
 	public void end() {
 		leaner.stopLean();
 	}
-
 }
 
