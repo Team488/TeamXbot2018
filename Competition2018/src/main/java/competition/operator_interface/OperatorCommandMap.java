@@ -3,6 +3,8 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.drive.commands.AssistedTankDriveCommand;
+import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 
 @Singleton
@@ -26,5 +28,14 @@ public class OperatorCommandMap {
 			ToggleGearCommand shiftGear
 			) {
 		oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
+	}
+	
+	@Inject
+	public void setupDriveCommands(
+	        OperatorInterface oi,
+	        AssistedTankDriveCommand assistedTank,
+	        TankDriveWithJoysticksCommand simpleTank) {
+	    oi.gamepad.getifAvailable(9).whenPressed(assistedTank);
+	    oi.gamepad.getifAvailable(10).whenPressed(simpleTank);
 	}
 }
