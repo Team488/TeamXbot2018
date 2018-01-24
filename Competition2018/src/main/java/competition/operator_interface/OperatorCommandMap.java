@@ -3,6 +3,7 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.elevator.commands.CalibrateCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 
 @Singleton
@@ -23,8 +24,15 @@ public class OperatorCommandMap {
 	@Inject
 	public void setupShiftGearCommand(
 			OperatorInterface oi,
-			ToggleGearCommand shiftGear
-			) {
+			ToggleGearCommand shiftGear) {
 		oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
+		
+	}
+	
+	@Inject
+	public void setupElevatorCommands(
+	        OperatorInterface oi,
+	        CalibrateCommand calibrate) {
+	    oi.gamepad.getifAvailable(1).whenPressed(calibrate);
 	}
 }

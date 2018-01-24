@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.elevator.commands.CalibrateCommand;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.sensors.XDigitalInput;
@@ -22,6 +23,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	CommonLibFactory clf;
 	final DoubleProperty elevatorPower;
 	final DoubleProperty elevatorTicksPerInch;
+	
 	
 	/**
 	 * If our elevator is uncalibrated, we don't allow large power inputs.
@@ -113,14 +115,32 @@ public class ElevatorSubsystem extends BaseSubsystem {
 		return ticksToInches(motor.getSelectedSensorPosition(0));
 	}
 	
+	public double currentTick() {
+		return ticksToInches(motor.getSelectedSensorPosition(0));
+	}
+	
+	public double minHeightInInches() {
+		return ticksToInches(motor.getSelectedSensorPosition(0));
+	}
+	
+	public double maxHeightInInches() {
+	        return ticksToInches(motor.getSelectedSensorPosition(0));
+	}
+	
+	public void setTickPerInch(double tip) {
+	    setTickPerInch(tip);
+	}
+
 	private double ticksToInches(double ticks) { 
 	    double tpi = elevatorTicksPerInch.get();
 	    if (tpi == 0) {
 	        return 0;
 	    }
 	    
-	    return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
+	   return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
+	    
 	}
+
 	
 	public boolean isCalibrated() {
 	    return _isCalibrated;
