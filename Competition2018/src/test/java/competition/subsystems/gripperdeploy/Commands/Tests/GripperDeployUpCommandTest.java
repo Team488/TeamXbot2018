@@ -6,21 +6,21 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
-import competition.subsystems.gripperdeploy.commands.DeployUpCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
-public class DeployUpCommandTest extends BaseWPITest{
+public class GripperDeployUpCommandTest extends BaseWPITest{
 	
 	GripperDeploySubsystem gripperDeploy;
-	DeployUpCommand command;
+	GripperDeployUpCommand command;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		
 		gripperDeploy = injector.getInstance(GripperDeploySubsystem.class);
-		command = injector.getInstance(DeployUpCommand.class);
+		command = injector.getInstance(GripperDeployUpCommand.class);
 		
 		gripperDeploy.temporaryHack();
 	}

@@ -5,12 +5,12 @@ import com.google.inject.Inject;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
-public class DeployUpCommand extends BaseCommand {
+public class GripperDeployUpCommand extends BaseCommand {
 	
 	GripperDeploySubsystem gripperDeploy;
 
 	@Inject
-	public DeployUpCommand(GripperDeploySubsystem gripperDeploy) {
+	public GripperDeployUpCommand(GripperDeploySubsystem gripperDeploy) {
 		this.gripperDeploy = gripperDeploy;
 		this.requires(gripperDeploy);
 	}
@@ -23,11 +23,6 @@ public class DeployUpCommand extends BaseCommand {
 	@Override
 	public void execute() {
 		gripperDeploy.deployUp();
-	}
-	
-	@Override
-	public boolean isFinished() {
-		return true;
 	}
 	
 	public void end() {
