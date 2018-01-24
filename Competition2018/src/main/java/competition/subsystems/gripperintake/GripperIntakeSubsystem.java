@@ -38,9 +38,10 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
 		calibrationSensor = clf.createDigitalInput(1);
 	}
 	
-	public void setPower(double power) {
-		
-	}
+	/**
+	 * Directly controls motor power
+	 * @param power -1 intakes, +1 ejects
+	 */
 	
 	public void maxOut() {
 		rightMotor.simpleSet(highPower.get());
