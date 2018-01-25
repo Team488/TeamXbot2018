@@ -8,25 +8,23 @@ import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import xbot.common.command.BaseCommand;
 
 @Singleton
-public class GripperInHalfRight extends BaseCommand {
-	
-	GripperIntakeSubsystem intake;
+public class GripperRightDominant extends BaseCommand {
 
+	GripperIntakeSubsystem intake;
+	
 	@Inject
-	public GripperInHalfRight(GripperIntakeSubsystem intake) {
+	public GripperRightDominant(GripperIntakeSubsystem intake) {
 		this.intake = intake;
 	}
 	
 	@Override
 	public void initialize() {
 		log.info("Initializing");
-		
 	}
 
 	@Override
 	public void execute() {
-		intake.halfRightIn();
-		
+		intake.intakerightDominant();
 	}
 
 }

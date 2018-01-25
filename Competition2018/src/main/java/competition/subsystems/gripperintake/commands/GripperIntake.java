@@ -8,25 +8,23 @@ import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import xbot.common.command.BaseCommand;
 
 @Singleton
-public class GripperMaxOut extends BaseCommand {
+public class GripperIntake extends BaseCommand {
 
 	GripperIntakeSubsystem intake;
 	
 	@Inject
-	public GripperMaxOut(GripperIntakeSubsystem intake) {
+	public GripperIntake(GripperIntakeSubsystem intake) {
 		this.intake = intake;
 	}
 	
 	@Override
 	public void initialize() {
 		log.info("Initializing");
-		
 	}
 
 	@Override
 	public void execute() {
-		intake.maxOut();
-		
+		intake.intake();
 	}
 
 }

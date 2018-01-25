@@ -6,20 +6,17 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
-import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
 public class GripperMaxOutTest extends BaseCompetitionTest {
 
-	GripperMaxOut command;
+	GripperEject command;
 	GripperIntakeSubsystem intake;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		
-		command = injector.getInstance(GripperMaxOut.class);
+		command = injector.getInstance(GripperEject.class);
 		intake = injector.getInstance(GripperIntakeSubsystem.class);
 		intake.temporaryHack();
 	}

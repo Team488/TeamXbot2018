@@ -6,20 +6,17 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
-import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
 public class GripperInHalfRightTest extends BaseCompetitionTest {
 	
-	GripperInHalfRight command;
+	GripperLeftDominant command;
 	GripperIntakeSubsystem intake;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		
-		command = injector.getInstance(GripperInHalfRight.class);
+		command = injector.getInstance(GripperLeftDominant.class);
 		intake = injector.getInstance(GripperIntakeSubsystem.class);
 		intake.temporaryHack();
 	}
@@ -36,8 +33,8 @@ public class GripperInHalfRightTest extends BaseCompetitionTest {
 		command.initialize();
 		command.execute();
 		
-		assertTrue(intake.leftMotor.getMotorOutputPercent() >= 1);
-		assertTrue(intake.rightMotor.getMotorOutputPercent() <= 0.25 && intake.rightMotor.getMotorOutputPercent() > 0);
+		assertTrue(intake.leftMotor.getMotorOutputPercent() <= -1);
+		assertTrue(intake.rightMotor.getMotorOutputPercent() >= -0.25 && intake.rightMotor.getMotorOutputPercent() < 0);
 	}
 
 }
