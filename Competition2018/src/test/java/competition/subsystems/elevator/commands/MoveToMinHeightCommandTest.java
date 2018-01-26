@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
+import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
+import xbot.common.injection.BaseWPITest;
 
 public class MoveToMinHeightCommandTest extends BaseCompetitionTest {
 	
