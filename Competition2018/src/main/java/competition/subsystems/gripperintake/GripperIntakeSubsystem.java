@@ -36,8 +36,9 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
 	 * Directly controls motor power
 	 * @param power -1 intakes, +1 ejects
 	 */
-	public void setPower(double power) {
-		
+	public void setPower(double RightPower, double LeftPower) {
+		rightMotor.simpleSet(RightPower);
+		leftMotor.simpleSet(LeftPower);
 	}
 	
 	public void eject() {
