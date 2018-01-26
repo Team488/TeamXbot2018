@@ -1,13 +1,10 @@
 package competition.subsystems.climberdeploy.Command.Tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
 public class StopClimberArmCommandTest extends BaseWPITest{

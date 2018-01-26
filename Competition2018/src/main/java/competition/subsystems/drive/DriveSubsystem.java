@@ -5,11 +5,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;

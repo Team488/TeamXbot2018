@@ -3,7 +3,7 @@ plugins {
     id "eclipse"
     id "idea"
     id "checkstyle"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.01.11"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.01.22"
     id 'org.hidetake.ssh' version "2.9.0"
 }
 
