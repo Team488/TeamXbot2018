@@ -1,10 +1,13 @@
 package competition.subsystems.lean.Commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.DecreaseSpeedCommand;
+import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 
 public class DecreaseSpeedCommandTest extends BaseWPITest{
