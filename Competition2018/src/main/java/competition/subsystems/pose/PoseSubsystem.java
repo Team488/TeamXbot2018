@@ -8,14 +8,14 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class PoseSubsystem extends BasePoseSubsystem {
-    
+
     DriveSubsystem drive;
 
     @Inject
     public PoseSubsystem(CommonLibFactory factory, XPropertyManager propManager, DriveSubsystem drive) {
         super(factory, propManager);
         this.drive = drive;
-        
+
         updatePeriodicData();
         resetDistanceTraveled();
     }

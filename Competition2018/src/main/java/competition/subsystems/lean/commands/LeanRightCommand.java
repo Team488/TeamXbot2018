@@ -8,13 +8,13 @@ import xbot.common.command.BaseCommand;
 public class LeanRightCommand extends BaseCommand {
 
     LeanSubsystem leaner;
-    
+
     @Inject
     public LeanRightCommand(LeanSubsystem leaner) {
         this.leaner = leaner;
-        this.requires(leaner); 
+        this.requires(leaner);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -29,9 +29,9 @@ public class LeanRightCommand extends BaseCommand {
     public boolean isFinished() {
         return leaner.hitBar();
     }
+
     public void end() {
         leaner.stopLean();
     }
 
 }
-

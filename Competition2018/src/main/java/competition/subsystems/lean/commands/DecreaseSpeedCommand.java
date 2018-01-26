@@ -8,12 +8,12 @@ import xbot.common.command.BaseCommand;
 public class DecreaseSpeedCommand extends BaseCommand {
 
     LeanSubsystem leaner;
-    
+
     @Inject
     public DecreaseSpeedCommand(LeanSubsystem leaner) {
         this.leaner = leaner;
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -23,11 +23,9 @@ public class DecreaseSpeedCommand extends BaseCommand {
     @Override
     public void execute() {
     }
-    
+
     @Override
     public boolean isFinished() {
         return true;
     }
 }
-
-

@@ -8,13 +8,13 @@ import xbot.common.command.BaseCommand;
 public class StopLeaningCommand extends BaseCommand {
 
     LeanSubsystem leaner;
-    
+
     @Inject
     public StopLeaningCommand(LeanSubsystem leaner) {
         this.leaner = leaner;
-        this.requires(leaner); 
+        this.requires(leaner);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");

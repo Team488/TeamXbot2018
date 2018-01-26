@@ -6,50 +6,50 @@ import com.google.inject.Singleton;
 import xbot.common.command.BaseSubsystem;
 
 @Singleton
-public class ClimbSubsystem extends BaseSubsystem{
+public class ClimbSubsystem extends BaseSubsystem {
 
     double defaultClimbPower;
 
     @Inject
     public ClimbSubsystem() {
 
-
     }
 
     /**
      * Extends the arms. Power is controlled by a property.
      **/
-    public void extend(){
+    public void extend() {
     }
 
     /**
      * Retracts the arms. Power is controlled by a property.
      */
-    public void retract(){
+    public void retract() {
 
     }
-    
-    public void stop(){
+
+    public void stop() {
 
     }
-    
+
     /**
      * Returns true if the arms extend close to the longest length
+     * 
      * @return
      */
-    boolean isCloseToLongest(){
+    boolean isCloseToLongest() {
         return false;
 
     }
-    
+
     /**
      * Returns true if the arms extend close to the shortest length
+     * 
      * @return
      */
-    boolean isCloseToShortest(){
+    boolean isCloseToShortest() {
         return false;
 
     }
-
 
 }

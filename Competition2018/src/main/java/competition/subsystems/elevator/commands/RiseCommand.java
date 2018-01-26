@@ -8,23 +8,23 @@ import xbot.common.command.BaseCommand;
 
 @Singleton
 public class RiseCommand extends BaseCommand {
-	
-	ElevatorSubsystem rise;
-	
-	@Inject
-	public RiseCommand(ElevatorSubsystem rise) {
-		this.rise = rise;
-	}
-	
-	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void execute() {
-		rise.rise();
-	}
-	
+
+    ElevatorSubsystem rise;
+
+    @Inject
+    public RiseCommand(ElevatorSubsystem rise) {
+        this.rise = rise;
+    }
+
+    @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void execute() {
+        rise.rise();
+    }
+
 }

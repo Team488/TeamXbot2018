@@ -9,31 +9,31 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 
 public class MoveToMaxHeightCommandTest extends BaseCompetitionTest {
 
-	MoveToMaxHeightCommand command;
-	ElevatorSubsystem elevator;
-	
-	@Override
-	public void setUp() {
-		// TODO Auto-generated method stub
-		super.setUp();
-		
-		command = injector.getInstance(MoveToMaxHeightCommand.class);
-		elevator = injector.getInstance(ElevatorSubsystem.class);
-		elevator.temporaryHack();
-	}
-	
-	@Test
-	public void testSimple() {
-		command.initialize();
-		command.execute();
-	}
-	
-	@Test
-	public void verifyMovingUp() {
-		
-		command.initialize();
-		command.execute();
-		
-		assertTrue(elevator.motor.getMotorOutputPercent() >= 0.1);
-	}
+    MoveToMaxHeightCommand command;
+    ElevatorSubsystem elevator;
+
+    @Override
+    public void setUp() {
+        // TODO Auto-generated method stub
+        super.setUp();
+
+        command = injector.getInstance(MoveToMaxHeightCommand.class);
+        elevator = injector.getInstance(ElevatorSubsystem.class);
+        elevator.temporaryHack();
+    }
+
+    @Test
+    public void testSimple() {
+        command.initialize();
+        command.execute();
+    }
+
+    @Test
+    public void verifyMovingUp() {
+
+        command.initialize();
+        command.execute();
+
+        assertTrue(elevator.motor.getMotorOutputPercent() >= 0.1);
+    }
 }

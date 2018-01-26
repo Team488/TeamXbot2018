@@ -10,11 +10,11 @@ public class RetractClimberArmCommand extends BaseCommand {
     ClimberDeploySubsystem deploy;
 
     @Inject
-    public RetractClimberArmCommand (ClimberDeploySubsystem deploy) {
+    public RetractClimberArmCommand(ClimberDeploySubsystem deploy) {
         this.deploy = deploy;
         this.requires(deploy);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -29,6 +29,7 @@ public class RetractClimberArmCommand extends BaseCommand {
     public boolean isFinished() {
         return deploy.hitBarHeight();
     }
+
     public void end() {
         deploy.stopClimberArm();
     }

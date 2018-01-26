@@ -13,7 +13,7 @@ public class IncreaseSpeedCommand extends BaseCommand {
     public IncreaseSpeedCommand(LeanSubsystem leaner) {
         this.leaner = leaner;
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -23,11 +23,9 @@ public class IncreaseSpeedCommand extends BaseCommand {
     @Override
     public void execute() {
     }
-    
+
     @Override
     public boolean isFinished() {
         return true;
     }
 }
-
-
