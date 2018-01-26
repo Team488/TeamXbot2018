@@ -10,7 +10,7 @@ public class StopClimberArmCommand extends BaseCommand{
 	ClimberDeploySubsystem deploy;
 
 	@Inject
-	public StopClimberArmCommand(ClimberDeploySubsystem deploy) {
+	public void StopClimberArmCommand(ClimberDeploySubsystem deploy) {
 		this.deploy = deploy;
 		this.requires(deploy); 
 
