@@ -16,8 +16,7 @@ public class DecendClimberCommand extends BaseCommand{
 	
 	@Override
 	public void initialize() {
-		log.info("Initializing");
-		
+		log.info("Initializing");		
 	}
 
 	@Override
