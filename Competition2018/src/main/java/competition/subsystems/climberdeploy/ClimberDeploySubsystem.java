@@ -1,5 +1,4 @@
 package competition.subsystems.climberdeploy;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

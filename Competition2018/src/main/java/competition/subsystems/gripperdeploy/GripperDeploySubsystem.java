@@ -1,10 +1,8 @@
 package competition.subsystems.gripperdeploy;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.drive.DriveSubsystem.Side;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
