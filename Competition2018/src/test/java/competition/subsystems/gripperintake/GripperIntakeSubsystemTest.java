@@ -54,9 +54,10 @@ public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
 	
 	@Test
 	public void testStop() {
-		assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
-		assertEquals(intake.rightMotor.getMotorOutputPercent(), 0, 0.001);
 		intake.setPower(1, 1);
+		assertEquals(intake.leftMotor.getMotorOutputPercent(), 1, 0.001);
+		assertEquals(intake.rightMotor.getMotorOutputPercent(), 1, 0.001);
+		
 		intake.stop();
 		assertTrue(intake.leftMotor.getMotorOutputPercent() == 0 );
 		assertTrue(intake.rightMotor.getMotorOutputPercent() == 0);
