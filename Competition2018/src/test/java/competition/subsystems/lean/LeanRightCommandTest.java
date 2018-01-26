@@ -1,24 +1,23 @@
-package competition.subsystems.lean.Commands;
+package competition.subsystems.lean;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.subsystems.lean.LeanSubsystem;
-import competition.subsystems.lean.commands.StopLeaningCommand;
+import competition.subsystems.lean.commands.LeanRightCommand;
 import xbot.common.injection.BaseWPITest;
 
-public class StopLeaningCommandTest extends BaseWPITest{
+public class LeanRightCommandTest extends BaseWPITest{
 	
 	LeanSubsystem lean;
-	StopLeaningCommand command;
-
+	LeanRightCommand command;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		
 		lean = injector.getInstance(LeanSubsystem.class);
-		command = injector.getInstance(StopLeaningCommand.class);
+		command = injector.getInstance(LeanRightCommand.class);
 		
 		lean.temporaryHack();
 	}
@@ -28,14 +27,12 @@ public class StopLeaningCommandTest extends BaseWPITest{
 		command.initialize();
 		command.execute();
 	}
-
 	
 	@Test
-	public void checkStopLeaning() {
-		lean.leanRight();
-		assertEquals(-0.4, lean.motor.getMotorOutputPercent(), 0.001);
+	public void checkLeanRight() {
+		assertEquals(0.0, lean.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
-		assertEquals(0.0, lean.motor.getMotorOutputPercent(), 0.001);
+		assertEquals(-0.4, lean.motor.getMotorOutputPercent(), 0.001);
 	}
 }

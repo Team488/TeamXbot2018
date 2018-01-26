@@ -1,23 +1,23 @@
-package competition.subsystems.gripperdeploy.Commands.Tests;
+package competition.subsystems.gripperdeploy;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
-import competition.subsystems.gripperdeploy.commands.GripperStopDeployCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import xbot.common.injection.BaseWPITest;
 
-public class GripperStopDeployCommandTest extends BaseWPITest{
-
+public class GripperDeployDownCommandTest extends BaseWPITest{
+	
 	GripperDeploySubsystem gripperDeploy;
-	GripperStopDeployCommand command;
+	GripperDeployDownCommand command;
 	
 	@Override
 	public void setUp() {
 		super.setUp();
 		
 		gripperDeploy = injector.getInstance(GripperDeploySubsystem.class);
-		command = injector.getInstance(GripperStopDeployCommand.class);
+		command = injector.getInstance(GripperDeployDownCommand.class);
 		
 		gripperDeploy.temporaryHack();
 	}
@@ -29,11 +29,10 @@ public class GripperStopDeployCommandTest extends BaseWPITest{
 	}
 	
 	@Test
-	public void checkStopDeploy() {
-		gripperDeploy.deployUp();
-		assertEquals(0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+	public void checkDeployDown() {
+		assertEquals(0.0, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
 		command.initialize();
 		command.execute();
-		assertEquals(0.0, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+		assertEquals(-0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
 	}
 }
