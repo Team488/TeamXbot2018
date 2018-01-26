@@ -14,6 +14,7 @@ public class GripperIntakeCommand extends BaseCommand {
 	
 	@Inject
 	public GripperIntakeCommand(GripperIntakeSubsystem intake) {
+		this.requires(intake);
 		this.intake = intake;
 	}
 	

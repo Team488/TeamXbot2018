@@ -14,6 +14,7 @@ public class GripperLeftDominantCommand extends BaseCommand {
 
 	@Inject
 	public GripperLeftDominantCommand(GripperIntakeSubsystem intake) {
+		this.requires(intake);
 		this.intake = intake;
 	}
 	
