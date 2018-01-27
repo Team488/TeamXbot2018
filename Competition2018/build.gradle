@@ -32,7 +32,7 @@ checkstyle {
 
 task checkstyle(type: Checkstyle) {
     source 'src/main/java'
-    configProperties.rootDir = "../SeriouslyCommonLib/"
+    configProperties.basedir = "../SeriouslyCommonLib/"
     
     // Empty classpath
     classpath = files()
