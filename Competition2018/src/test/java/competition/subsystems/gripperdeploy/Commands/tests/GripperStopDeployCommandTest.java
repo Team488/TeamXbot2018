@@ -1,4 +1,4 @@
-package competition.subsystems.gripperdeploy.Commands.Tests;
+package competition.subsystems.gripperdeploy.commands.tests;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class GripperStopDeployCommandTest extends BaseWPITest {
     }
 
     @Test
-    public void SimpleTest() {
+    public void simpleTest() {
         command.initialize();
         command.execute();
     }
