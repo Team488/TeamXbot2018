@@ -2,6 +2,7 @@ package competition.subsystems.elevator.commands;
 
 import com.google.inject.Inject;
 
+import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
@@ -14,15 +15,14 @@ public class CalibrateCommand extends BaseCommand {
     OperatorInterface oi;
 
     @Inject
-    public CalibrateCommand(ElevatorSubsystem elevator) {
-        // TODO Auto-generated constructor stub
+    public CalibrateCommand(ElevatorSubsystem elevator,OperatorInterface oi) {
         this.elevator = elevator;
+        this.oi=oi;
     }
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
-        double tick = elevator.currentTick();
+        double tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
 
@@ -34,8 +34,7 @@ public class CalibrateCommand extends BaseCommand {
     @Override
     public void execute() {
         // Stuff we do on every execute, since we want to read a lot of information
-        double tick = elevator.currentTick();
-
+        double tick = elevator.getCurrentTick();
         if (tick > maxTick) {
             maxTick = tick;
         }
@@ -46,6 +45,10 @@ public class CalibrateCommand extends BaseCommand {
         
         // Directly control the elevator with a joystick
         elevator.setPower(0);
+        elevator.setPower(oi.gamepad.);
+        
+        
+        
     }
     
     @Override
@@ -55,6 +58,5 @@ public class CalibrateCommand extends BaseCommand {
         double ticksPerInch = ((maxTick - minTick) / (maxHeightInInches - minHeightInInches));
         // some code here to set the ticks per inch on the subsystem
         elevator.setTickPerInch(ticksPerInch);
-        
     }
 }
