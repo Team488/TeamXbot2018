@@ -1,25 +1,26 @@
-package competition.subsystems.climberdeploy;
+package competition.subsystems.lean.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
-import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
-import competition.subsystems.climberdeploy.commands.IncreaseSpeedCommand;
+import competition.subsystems.lean.LeanSubsystem;
+import competition.subsystems.lean.commands.IncreaseSpeedCommand;
+import xbot.common.injection.BaseWPITest;
 
 public class IncreaseSpeedCommandTest extends BaseCompetitionTest {
 
-    ClimberDeploySubsystem deploy;
+    LeanSubsystem lean;
     IncreaseSpeedCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        deploy = injector.getInstance(ClimberDeploySubsystem.class);
+        lean = injector.getInstance(LeanSubsystem.class);
         command = injector.getInstance(IncreaseSpeedCommand.class);
 
-        deploy.temporaryHack();
+        lean.temporaryHack();
     }
 
     @Test
@@ -30,12 +31,12 @@ public class IncreaseSpeedCommandTest extends BaseCompetitionTest {
 
     @Test
     public void checkIncreaseSpeed() {
-        deploy.decreaseSpeed();
-        deploy.extendClimberArm();
-        assertEquals(0.1, deploy.motor.getMotorOutputPercent(), 0.001);
+        lean.decreaseSpeed();
+        lean.leanRight();
+        assertEquals(-0.1, lean.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        deploy.extendClimberArm();
-        assertEquals(0.4, deploy.motor.getMotorOutputPercent(), 0.001);
+        lean.leanRight();
+        assertEquals(-0.4, lean.motor.getMotorOutputPercent(), 0.001);
     }
 }

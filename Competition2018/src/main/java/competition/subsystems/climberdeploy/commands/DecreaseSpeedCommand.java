@@ -5,27 +5,27 @@ import com.google.inject.Inject;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
-public class DecreaseSpeedCommand extends BaseCommand{
+public class DecreaseSpeedCommand extends BaseCommand {
 
-	ClimberDeploySubsystem deploy;
+    ClimberDeploySubsystem deploy;
 
-	@Inject 
-	public DecreaseSpeedCommand(ClimberDeploySubsystem deploy) {
-		this.deploy = deploy;
-	}
-	
-	@Override
-	public void initialize() {
-		log.info("Initializing");
-		deploy.decreaseSpeed();
-	}
+    @Inject
+    public DecreaseSpeedCommand(ClimberDeploySubsystem deploy) {
+        this.deploy = deploy;
+    }
 
-	@Override
-	public void execute() {
-	}
-	
-	@Override
-	public boolean isFinished() {
-		return true;
-	}
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+        deploy.decreaseSpeed();
+    }
+
+    @Override
+    public void execute() {
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }
