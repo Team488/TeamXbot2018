@@ -1,4 +1,4 @@
-package competition.subsystems.lean.Commands;
+package competition.subsystems.lean.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
