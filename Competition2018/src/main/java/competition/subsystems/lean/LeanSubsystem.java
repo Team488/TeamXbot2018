@@ -28,7 +28,7 @@ public class LeanSubsystem extends BaseSubsystem {
         slowLeanSpeed = propMan.createPersistentProperty("slowLeanSpeed", .1);
         fastLeanSpeed = propMan.createPersistentProperty("fastLeanSpeed", .4);
         currentLeanSpeed = fastLeanSpeed.get();
-        
+
         if (contract.climbLeanReady()) {
             temporaryHack();
         }

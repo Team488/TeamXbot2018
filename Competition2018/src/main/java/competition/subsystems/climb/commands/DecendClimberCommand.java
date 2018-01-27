@@ -4,19 +4,19 @@ import com.google.inject.Inject;
 import competition.subsystems.climb.ClimbSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class DecendClimberCommand extends BaseCommand{
+public class DecendClimberCommand extends BaseCommand {
 
     ClimbSubsystem climb;
 
     @Inject
-    public DecendClimberCommand (ClimbSubsystem climb) {
+    public DecendClimberCommand(ClimbSubsystem climb) {
         this.climb = climb;
         this.requires(climb);
     }
-    
+
     @Override
     public void initialize() {
-        log.info("Initializing");        
+        log.info("Initializing");
     }
 
     @Override
