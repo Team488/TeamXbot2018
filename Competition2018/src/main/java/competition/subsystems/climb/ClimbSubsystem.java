@@ -11,40 +11,40 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class ClimbSubsystem extends BaseSubsystem{
 
-	final DoubleProperty ascendSpeed;
-	final DoubleProperty decendSpeed;
-	CommonLibFactory clf;
-	public XCANTalon motor;
-	
-	@Inject
-	public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan) {
-		this.clf = clf;
-		ascendSpeed = propMan.createPersistentProperty("ascendSpeed", 1);
-		decendSpeed = propMan.createPersistentProperty("decendSpeed", -.1);
-	}
-	
-	public void temporaryHack() {
-		motor = clf.createCANTalon(40);
-	}
-	
-	/**
-	 * moves the winch to pull the robot up
-	 **/
-	public void ascend(){
-		motor.simpleSet(ascendSpeed.get());
-	}
+    final DoubleProperty ascendSpeed;
+    final DoubleProperty decendSpeed;
+    CommonLibFactory clf;
+    public XCANTalon motor;
+    
+    @Inject
+    public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan) {
+        this.clf = clf;
+        ascendSpeed = propMan.createPersistentProperty("ascendSpeed", 1);
+        decendSpeed = propMan.createPersistentProperty("decendSpeed", -.1);
+    }
+    
+    public void temporaryHack() {
+        motor = clf.createCANTalon(40);
+    }
+    
+    /**
+     * moves the winch to pull the robot up
+     **/
+    public void ascend(){
+        motor.simpleSet(ascendSpeed.get());
+    }
 
-	/**
-	 * moves the winch to let the robot down
-	 */
-	public void decend(){
-		motor.simpleSet(decendSpeed.get());
-	}
-	
-	/**
-	 * stops the winch
-	 */
-	public void stop(){
-		motor.simpleSet(0);
-	}
+    /**
+     * moves the winch to let the robot down
+     */
+    public void decend(){
+        motor.simpleSet(decendSpeed.get());
+    }
+    
+    /**
+     * stops the winch
+     */
+    public void stop(){
+        motor.simpleSet(0);
+    }
 }

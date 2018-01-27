@@ -27,14 +27,11 @@ public class MoveToMinHeightCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
         log.info("Initializing");
     }
 
     @Override
     public void execute() {
-        // TODO Auto-generated method stub
-
         double power = pid.calculate(min, elevator.currentHeight());
 
         elevator.setPower(power);

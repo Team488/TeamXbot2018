@@ -17,12 +17,6 @@ public class RiseCommand extends BaseCommand {
     }
 
     @Override
-    public void initialize() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void execute() {
         rise.rise();
     }

@@ -14,7 +14,6 @@ public class RiseCommandTest extends BaseCompetitionTest {
 
     @Override
     public void setUp() {
-        // TODO Auto-generated method stub
         super.setUp();
 
         command = injector.getInstance(RiseCommand.class);

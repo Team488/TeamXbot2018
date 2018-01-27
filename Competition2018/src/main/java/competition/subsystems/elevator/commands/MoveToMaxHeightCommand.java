@@ -18,7 +18,6 @@ public class MoveToMaxHeightCommand extends BaseCommand {
 
     @Inject
     public MoveToMaxHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
-        // TODO Auto-generated constructor stub
         this.elevator = elevator;
         pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
         pid.setErrorThreshold(0.1);
@@ -26,14 +25,11 @@ public class MoveToMaxHeightCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
         log.info("Initializing");
     }
 
     @Override
     public void execute() {
-        // TODO Auto-generated method stub
-
         double power = pid.calculate(max, elevator.currentHeight());
 
         elevator.setPower(power);

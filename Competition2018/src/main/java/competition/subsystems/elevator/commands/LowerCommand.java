@@ -18,7 +18,6 @@ public class LowerCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
 
     }
 

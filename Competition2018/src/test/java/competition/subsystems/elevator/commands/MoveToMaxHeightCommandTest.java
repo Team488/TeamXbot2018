@@ -14,7 +14,6 @@ public class MoveToMaxHeightCommandTest extends BaseCompetitionTest {
 
     @Override
     public void setUp() {
-        // TODO Auto-generated method stub
         super.setUp();
 
         command = injector.getInstance(MoveToMaxHeightCommand.class);

@@ -14,7 +14,6 @@ public class MoveToMinHeightCommandTest extends BaseCompetitionTest {
 
     @Override
     public void setUp() {
-        // TODO Auto-generated method stub
         super.setUp();
 
         command = injector.getInstance(MoveToMinHeightCommand.class);

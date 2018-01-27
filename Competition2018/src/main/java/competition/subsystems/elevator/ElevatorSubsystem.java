@@ -27,7 +27,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
      */
     final DoubleProperty calibrationPower;
 
-    private boolean _isCalibrated;
+    private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
 
@@ -63,13 +63,13 @@ public class ElevatorSubsystem extends BaseSubsystem {
 
     private void calibrate() {
         calibrationOffset = motor.getSelectedSensorPosition(0);
-        _isCalibrated = true;
+        isCalibrated = true;
     }
 
     /**
      * Directly sets the % power on the elevator motor. If the elevator is uncalibrated, power will be constrained.
      * 
-     * @param power
+     * @param power power percentage in robot scale
      */
     public void setPower(double power) {
 
@@ -82,7 +82,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
         }
 
         // If the elevator is not calibrated, then maximum power should be constrained.
-        if (!_isCalibrated) {
+        if (!isCalibrated) {
             power = MathUtils.constrainDouble(power, -calibrationPower.get(), calibrationPower.get());
         }
 
@@ -121,7 +121,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
     }
 
     public boolean isCalibrated() {
-        return _isCalibrated;
+        return isCalibrated;
     }
 
     /**
