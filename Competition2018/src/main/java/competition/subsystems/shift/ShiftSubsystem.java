@@ -9,29 +9,29 @@ import xbot.common.injection.wpi_factories.CommonLibFactory;
 
 @Singleton
 public class ShiftSubsystem extends BaseSubsystem {
-	public final XSolenoid solenoid;
-	public Gear gear;
+    public final XSolenoid solenoid;
+    public Gear gear;
 
-	public enum Gear {
-		LOW_GEAR, HIGH_GEAR
-	}
+    public enum Gear {
+        LOW_GEAR, HIGH_GEAR
+    }
 
-	@Inject
-	public ShiftSubsystem(CommonLibFactory factory) {
-		this.solenoid = factory.createSolenoid(1);
-		gear = Gear.LOW_GEAR;
-	}
+    @Inject
+    public ShiftSubsystem(CommonLibFactory factory) {
+        this.solenoid = factory.createSolenoid(1);
+        gear = Gear.LOW_GEAR;
+    }
 
-	public void setGear(Gear gear) {
-		if (gear == Gear.HIGH_GEAR) {
-			solenoid.setOn(true);
-		} else {
-			solenoid.setOn(false);
-		}
-		this.gear = gear;
-	}
+    public void setGear(Gear gear) {
+        if (gear == Gear.HIGH_GEAR) {
+            solenoid.setOn(true);
+        } else {
+            solenoid.setOn(false);
+        }
+        this.gear = gear;
+    }
 
-	public Gear getGear() {
-		return gear;
-	}
+    public Gear getGear() {
+        return gear;
+    }
 }

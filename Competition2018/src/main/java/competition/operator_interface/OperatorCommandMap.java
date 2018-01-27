@@ -11,20 +11,12 @@ public class OperatorCommandMap {
 
     // Example for setting up a command to fire when a button is pressed:
     /*
+     * @Inject public void setupMyCommands( OperatorInterface operatorInterface, MyCommand myCommand) {
+     * operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand); }
+     */
+
     @Inject
-    public void setupMyCommands(
-            OperatorInterface operatorInterface,
-            MyCommand myCommand)
-    {
-        operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand);
+    public void setupShiftGearCommand(OperatorInterface oi, ToggleGearCommand shiftGear) {
+        oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
     }
-    */
-	
-	@Inject
-	public void setupShiftGearCommand(
-			OperatorInterface oi,
-			ToggleGearCommand shiftGear
-			) {
-		oi.gamepad.getifAvailable(4).whenPressed(shiftGear);
-	}
 }

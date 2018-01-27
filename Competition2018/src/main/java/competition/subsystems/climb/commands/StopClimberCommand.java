@@ -7,22 +7,22 @@ import xbot.common.command.BaseCommand;
 
 public class StopClimberCommand extends BaseCommand{
 
-	ClimbSubsystem climb;
-	
-	@Inject
-	public StopClimberCommand (ClimbSubsystem climb) {
-		this.climb = climb;
-		this.requires(climb);
-	}
-	
-	@Override
-	public void initialize() {
-		log.info("Initializing");
-	}
+    ClimbSubsystem climb;
+    
+    @Inject
+    public StopClimberCommand (ClimbSubsystem climb) {
+        this.climb = climb;
+        this.requires(climb);
+    }
+    
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
 
-	@Override
-	public void execute() {
-		climb.stop();
-	}
+    @Override
+    public void execute() {
+        climb.stop();
+    }
 
 }
