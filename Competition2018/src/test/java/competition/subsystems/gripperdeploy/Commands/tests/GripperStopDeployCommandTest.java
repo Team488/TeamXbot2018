@@ -3,11 +3,12 @@ package competition.subsystems.gripperdeploy.commands.tests;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import competition.subsystems.gripperdeploy.commands.GripperStopDeployCommand;
 import xbot.common.injection.BaseWPITest;
 
-public class GripperStopDeployCommandTest extends BaseWPITest {
+public class GripperStopDeployCommandTest extends BaseCompetitionTest {
 
     GripperDeploySubsystem gripperDeploy;
     GripperStopDeployCommand command;

@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.sensors.XDigitalInput;
@@ -18,7 +19,8 @@ import xbot.common.properties.XPropertyManager;
 public class ElevatorSubsystem extends BaseSubsystem {
 
     double defaultElevatorPower;
-    CommonLibFactory clf;
+    final CommonLibFactory clf;
+    final ElectricalContract2018 contract;
     final DoubleProperty elevatorPower;
     final DoubleProperty elevatorTicksPerInch;
 
@@ -38,8 +40,9 @@ public class ElevatorSubsystem extends BaseSubsystem {
     public XDigitalInput calibrationSensor;
 
     @Inject
-    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan) {
+    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
+        this.contract = contract;
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
         elevatorTicksPerInch = propMan.createPersistentProperty("ElevatorTicksPerInch", 100);
         calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
@@ -53,10 +56,16 @@ public class ElevatorSubsystem extends BaseSubsystem {
                 calibrate();
             }
         });
+        
+        if (contract.elevatorReady()) {
+            temporaryHack();
+        }
+        
     }
 
     public void temporaryHack() {
-        motor = clf.createCANTalon(40);
+        motor = clf.createCANTalon(contract.getElevatorMaster().channel);
+        motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
         calibrationSensor = clf.createDigitalInput(1);
     }

@@ -3,6 +3,7 @@ package competition.subsystems.shift;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XSolenoid;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
@@ -17,8 +18,8 @@ public class ShiftSubsystem extends BaseSubsystem {
     }
 
     @Inject
-    public ShiftSubsystem(CommonLibFactory factory) {
-        this.solenoid = factory.createSolenoid(1);
+    public ShiftSubsystem(CommonLibFactory factory, ElectricalContract2018 contract) {
+        this.solenoid = factory.createSolenoid(contract.getShifterSolenoid().channel);
         gear = Gear.LOW_GEAR;
     }
 

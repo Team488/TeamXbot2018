@@ -3,11 +3,12 @@ package competition.subsystems.lean.commands;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.LeanLeftCommand;
 import xbot.common.injection.BaseWPITest;
 
-public class LeanLeftCommandTest extends BaseWPITest {
+public class LeanLeftCommandTest extends BaseCompetitionTest {
 
     LeanSubsystem lean;
     LeanLeftCommand command;
