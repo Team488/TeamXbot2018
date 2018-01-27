@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.ElectricalContract2018;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
@@ -33,22 +34,25 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
+    public DriveSubsystem(
+            CommonLibFactory factory, 
+            XPropertyManager propManager,
+            ElectricalContract2018 contract) {
         log.info("Creating DriveSubsystem");
 
-        this.leftMaster = factory.createCANTalon(34);
-        this.leftFollower = factory.createCANTalon(35);
+        this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
+        this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
         leftFollower.follow(leftMaster);
 
-        leftMaster.setInverted(true);
-        leftFollower.setInverted(true);
+        leftMaster.setInverted(contract.getLeftDriveMaster().inverted);
+        leftFollower.setInverted(contract.getLeftDriveFollower().inverted);
 
-        this.rightMaster = factory.createCANTalon(21);
-        this.rightFollower = factory.createCANTalon(20);
+        this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
+        this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
         rightFollower.follow(rightMaster);
 
-        rightMaster.setInverted(false);
-        rightFollower.setInverted(false);
+        rightMaster.setInverted(contract.getRightDriveMaster().inverted);
+        rightFollower.setInverted(contract.getRightDriveFollower().inverted);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));

@@ -1,6 +1,6 @@
 package competition;
 
-public abstract class ElectricalContract {
+public abstract class ElectricalContract2018 {
     
     public class MotorInfo {
         public int channel;

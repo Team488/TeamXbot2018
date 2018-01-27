@@ -1,25 +1,28 @@
 package competition;
 
-public class Practice2017Platform extends ElectricalContract {
+import com.google.inject.Singleton;
+
+@Singleton
+public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public MotorInfo getLeftDriveMaster() {
-        return new MotorInfo(20, true);
+        return new MotorInfo(34, true);
     }
 
     @Override
     public MotorInfo getLeftDriveFollower() {
-        return new MotorInfo(21, true);
+        return new MotorInfo(35, true);
     }
 
     @Override
     public MotorInfo getRightDriveMaster() {
-        return new MotorInfo(34, false);
+        return new MotorInfo(21, false);
     }
 
     @Override
     public MotorInfo getRightDriveFollower() {
-        return new MotorInfo(35, false);
+        return new MotorInfo(20, false);
     }
 
     @Override
@@ -29,74 +32,62 @@ public class Practice2017Platform extends ElectricalContract {
 
     @Override
     public MotorInfo getElevatorMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(25, false);
     }
 
     @Override
     public boolean wristReady() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public MotorInfo getWristMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(2, false);
     }
 
     @Override
     public boolean collectorReady() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public MotorInfo getLeftCollectorMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(34,false);
     }
 
     @Override
     public MotorInfo getRightCollectorMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(31, false);
     }
 
     @Override
     public boolean climbLeanReady() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public MotorInfo getClimbLeanMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(5, false);
     }
 
     @Override
     public boolean climbExtendReady() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public MotorInfo getClimbExtendMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(6, false);
     }
 
     @Override
     public boolean climbReady() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public MotorInfo getClimbMaster() {
-        // TODO Auto-generated method stub
-        return null;
+        return new MotorInfo(7, false);
     }
 
 }
