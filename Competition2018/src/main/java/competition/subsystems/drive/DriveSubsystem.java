@@ -37,15 +37,15 @@ public class DriveSubsystem extends BaseDriveSubsystem{
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
         log.info("Creating DriveSubsystem");
 
-        this.leftMaster = factory.createCANTalon(20);
-        this.leftFollower = factory.createCANTalon(21);
+        this.leftMaster = factory.createCANTalon(34);
+        this.leftFollower = factory.createCANTalon(35);
         leftFollower.follow(leftMaster);
 
         leftMaster.setInverted(true);
         leftFollower.setInverted(true);
 
-        this.rightMaster = factory.createCANTalon(34);
-        this.rightFollower = factory.createCANTalon(35);
+        this.rightMaster = factory.createCANTalon(21);
+        this.rightFollower = factory.createCANTalon(20);
         rightFollower.follow(rightMaster);
         
         rightMaster.setInverted(false);

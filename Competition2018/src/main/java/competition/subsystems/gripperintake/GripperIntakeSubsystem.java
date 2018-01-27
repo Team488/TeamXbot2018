@@ -28,8 +28,8 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
 	}
 	
 	public void temporaryHack() {
-		rightMotor = clf.createCANTalon(40);
-		leftMotor = clf.createCANTalon(41);
+		rightMotor = clf.createCANTalon(34);
+		leftMotor = clf.createCANTalon(31);
 	}
 	
 	/**

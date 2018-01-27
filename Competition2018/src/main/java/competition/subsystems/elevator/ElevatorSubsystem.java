@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 	}
 	
 	public void temporaryHack() {
-		motor = clf.createCANTalon(40);
+		motor = clf.createCANTalon(25);
 		motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
 		calibrationSensor = clf.createDigitalInput(1);
 	}
