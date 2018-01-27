@@ -22,24 +22,26 @@ public class SubsystemDefaultCommandMap {
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
     }
-    
+
     @Inject
-    public void setupClimberDeploySubsystem(ClimberDeploySubsystem climberdeploySubsystem, StopClimberArmCommand command) {
-    	climberdeploySubsystem.setDefaultCommand(command);
+    public void setupClimberDeploySubsystem(ClimberDeploySubsystem climberdeploySubsystem,
+            StopClimberArmCommand command) {
+        climberdeploySubsystem.setDefaultCommand(command);
     }
-    
-    @Inject 
-    public void setupGripperDeploySubsystem(GripperDeploySubsystem gripperdeploySubsystem, GripperStopDeployCommand command) {
-    	gripperdeploySubsystem.setDefaultCommand(command);
+
+    @Inject
+    public void setupGripperDeploySubsystem(GripperDeploySubsystem gripperdeploySubsystem,
+            GripperStopDeployCommand command) {
+        gripperdeploySubsystem.setDefaultCommand(command);
     }
-    
+
     @Inject
     public void setupLeanSubsystem(LeanSubsystem leanSubsystem, StopLeaningCommand command) {
-    	leanSubsystem.setDefaultCommand(command);
+        leanSubsystem.setDefaultCommand(command);
     }
-    
+
     @Inject
     public void setupShiftSubsytem(ShiftSubsystem shiftSubsystem, ShiftLowCommand command) {
-    	shiftSubsystem.setDefaultCommand(command);
+        shiftSubsystem.setDefaultCommand(command);
     }
 }

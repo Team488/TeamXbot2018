@@ -13,6 +13,7 @@ import xbot.common.logging.RobotAssertionManager;
  */
 @Singleton
 public class OperatorInterface {
+    
 	public XFTCGamepad driverGamepad;
 	public XFTCGamepad operatorGamepad;
 

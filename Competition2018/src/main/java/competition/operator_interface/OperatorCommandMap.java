@@ -18,14 +18,9 @@ public class OperatorCommandMap {
 
     // Example for setting up a command to fire when a button is pressed:
     /*
-    @Inject
-    public void setupMyCommands(
-            OperatorInterface operatorInterface,
-            MyCommand myCommand)
-    {
-        operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand);
-    }
-    */
+     * @Inject public void setupMyCommands( OperatorInterface operatorInterface, MyCommand myCommand) {
+     * operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand); }
+     */
 	
 	@Inject
 	public void setupShiftGearCommand(
@@ -88,6 +83,4 @@ public class OperatorCommandMap {
 		oi.driverGamepad.getAnalogIfAvailable(new AnalogHIDDescription(3,.501,1.0)).whileActive(ascend);
 
 	}
-	
-
 }
