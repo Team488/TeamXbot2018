@@ -44,12 +44,12 @@ public class Practice2017Robot extends Practice2018Robot {
     public boolean climbLeanReady() {
         return false;
     }
-    
+
     @Override
     public boolean climbDeployReady() {
         return false;
     }
-    
+
     @Override
     public boolean climbReady() {
         return false;

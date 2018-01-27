@@ -56,11 +56,11 @@ public class ElevatorSubsystem extends BaseSubsystem {
                 calibrate();
             }
         });
-        
+
         if (contract.elevatorReady()) {
             temporaryHack();
         }
-        
+
     }
 
     public void temporaryHack() {
@@ -78,7 +78,8 @@ public class ElevatorSubsystem extends BaseSubsystem {
     /**
      * Directly sets the % power on the elevator motor. If the elevator is uncalibrated, power will be constrained.
      * 
-     * @param power power percentage in robot scale
+     * @param power
+     *            power percentage in robot scale
      */
     public void setPower(double power) {
 

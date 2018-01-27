@@ -6,7 +6,6 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import competition.subsystems.gripperdeploy.commands.GripperStopDeployCommand;
-import xbot.common.injection.BaseWPITest;
 
 public class GripperStopDeployCommandTest extends BaseCompetitionTest {
 
