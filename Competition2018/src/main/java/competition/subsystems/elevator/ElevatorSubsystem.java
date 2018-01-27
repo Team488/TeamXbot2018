@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.elevator.commands.CalibrateCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.sensors.XDigitalInput;
@@ -115,20 +115,20 @@ public class ElevatorSubsystem extends BaseSubsystem {
 		return ticksToInches(motor.getSelectedSensorPosition(0));
 	}
 	
-	public double currentTick() {
+	public double getCurrentTick() {
 		return ticksToInches(motor.getSelectedSensorPosition(0));
 	}
 	
 	public double minHeightInInches() {
-		return ticksToInches(motor.getSelectedSensorPosition(0));
+	    return ticksToInches(minHeightInInches.get());
 	}
 	
 	public double maxHeightInInches() {
-	        return ticksToInches(motor.getSelectedSensorPosition(0));
+	        return ticksToInches(maxHeightInInches.get());
 	}
 	
-	public void setTickPerInch(double tip) {
-	    setTickPerInch(tip);
+	public void setTickPerInch(double ticksPerInch) {
+	    elevatorTicksPerInch.set(ticksPerInch);
 	}
 
 	private double ticksToInches(double ticks) { 

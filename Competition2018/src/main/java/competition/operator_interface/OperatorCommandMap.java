@@ -3,7 +3,7 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.elevator.commands.CalibrateCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 
 @Singleton
@@ -32,7 +32,7 @@ public class OperatorCommandMap {
 	@Inject
 	public void setupElevatorCommands(
 	        OperatorInterface oi,
-	        CalibrateCommand calibrate) {
+	        CalibrateElevatorTicksPerInchCommand calibrate) {
 	    oi.gamepad.getifAvailable(1).whenPressed(calibrate);
 	}
 }

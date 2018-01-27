@@ -7,7 +7,7 @@ import competition.operator_interface.OperatorInterface;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class CalibrateCommand extends BaseCommand {
+public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
     double maxTick;
     double minTick;
@@ -15,9 +15,10 @@ public class CalibrateCommand extends BaseCommand {
     OperatorInterface oi;
 
     @Inject
-    public CalibrateCommand(ElevatorSubsystem elevator,OperatorInterface oi) {
+    public CalibrateElevatorTicksPerInchCommand(ElevatorSubsystem elevator,OperatorInterface oi) {
         this.elevator = elevator;
         this.oi=oi;
+        this.requires(elevator);
     }
 
     @Override
@@ -44,11 +45,8 @@ public class CalibrateCommand extends BaseCommand {
         }
         
         // Directly control the elevator with a joystick
-        elevator.setPower(0);
-        elevator.setPower(oi.gamepad.);
-        
-        
-        
+
+        elevator.setPower(oi.gamepad.getRightVector().y);
     }
     
     @Override
