@@ -6,23 +6,23 @@ import com.google.inject.Singleton;
 public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
-    public MotorInfo getLeftDriveMaster() {
-        return new MotorInfo(34, true);
+    public DeviceInfo getLeftDriveMaster() {
+        return new DeviceInfo(34, true);
     }
 
     @Override
-    public MotorInfo getLeftDriveFollower() {
-        return new MotorInfo(35, true);
+    public DeviceInfo getLeftDriveFollower() {
+        return new DeviceInfo(35, true);
     }
 
     @Override
-    public MotorInfo getRightDriveMaster() {
-        return new MotorInfo(21, false);
+    public DeviceInfo getRightDriveMaster() {
+        return new DeviceInfo(21, false);
     }
 
     @Override
-    public MotorInfo getRightDriveFollower() {
-        return new MotorInfo(20, false);
+    public DeviceInfo getRightDriveFollower() {
+        return new DeviceInfo(20, false);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public MotorInfo getElevatorMaster() {
-        return new MotorInfo(25, false);
+    public DeviceInfo getElevatorMaster() {
+        return new DeviceInfo(25, false);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public MotorInfo getWristMaster() {
-        return new MotorInfo(2, false);
+    public DeviceInfo getWristMaster() {
+        return new DeviceInfo(2, false);
     }
 
     @Override
@@ -51,13 +51,13 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public MotorInfo getLeftCollectorMaster() {
-        return new MotorInfo(34,false);
+    public DeviceInfo getLeftCollectorMaster() {
+        return new DeviceInfo(34,false);
     }
 
     @Override
-    public MotorInfo getRightCollectorMaster() {
-        return new MotorInfo(31, false);
+    public DeviceInfo getRightCollectorMaster() {
+        return new DeviceInfo(31, false);
     }
 
     @Override
@@ -66,8 +66,8 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public MotorInfo getClimbLeanMaster() {
-        return new MotorInfo(5, false);
+    public DeviceInfo getClimbLeanMaster() {
+        return new DeviceInfo(5, false);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public MotorInfo getClimbDeployMaster() {
-        return new MotorInfo(6, false);
+    public DeviceInfo getClimbDeployMaster() {
+        return new DeviceInfo(6, false);
     }
 
     @Override
@@ -86,8 +86,13 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public MotorInfo getClimbMaster() {
-        return new MotorInfo(7, false);
+    public DeviceInfo getClimbMaster() {
+        return new DeviceInfo(7, false);
+    }
+
+    @Override
+    public DeviceInfo getShifterSolenoid() {
+        return new DeviceInfo(1, false);
     }
 
 }

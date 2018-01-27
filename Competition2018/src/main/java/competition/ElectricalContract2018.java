@@ -2,45 +2,48 @@ package competition;
 
 public abstract class ElectricalContract2018 {
     
-    public class MotorInfo {
+    public class DeviceInfo {
         public int channel;
         public boolean inverted;
         
-        public MotorInfo(int channel, boolean inverted) {
+        public DeviceInfo(int channel, boolean inverted) {
             this.channel = channel;
             this.inverted = inverted;
         }
     }
 
     // Drive motors
-    public abstract MotorInfo getLeftDriveMaster();
-    public abstract MotorInfo getLeftDriveFollower();
+    public abstract DeviceInfo getLeftDriveMaster();
+    public abstract DeviceInfo getLeftDriveFollower();
     
-    public abstract MotorInfo getRightDriveMaster();
-    public abstract MotorInfo getRightDriveFollower();
+    public abstract DeviceInfo getRightDriveMaster();
+    public abstract DeviceInfo getRightDriveFollower();
+    
+    // Pneumatic Shifters
+    public abstract DeviceInfo getShifterSolenoid();
     
     // Elevator motor
     public abstract boolean elevatorReady();
-    public abstract MotorInfo getElevatorMaster();
+    public abstract DeviceInfo getElevatorMaster();
     
     // Wrist Motor
     public abstract boolean wristReady();
-    public abstract MotorInfo getWristMaster();
+    public abstract DeviceInfo getWristMaster();
     
     // Collector Motors
     public abstract boolean collectorReady();
-    public abstract MotorInfo getLeftCollectorMaster();
-    public abstract MotorInfo getRightCollectorMaster();
+    public abstract DeviceInfo getLeftCollectorMaster();
+    public abstract DeviceInfo getRightCollectorMaster();
     
     // Climb Lean
     public abstract boolean climbLeanReady();
-    public abstract MotorInfo getClimbLeanMaster();
+    public abstract DeviceInfo getClimbLeanMaster();
     
     // Climb extend
     public abstract boolean climbDeployReady();
-    public abstract MotorInfo getClimbDeployMaster();
+    public abstract DeviceInfo getClimbDeployMaster();
     
     // Climber
     public abstract boolean climbReady();
-    public abstract MotorInfo getClimbMaster();
+    public abstract DeviceInfo getClimbMaster();
 }

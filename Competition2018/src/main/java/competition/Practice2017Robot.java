@@ -6,23 +6,23 @@ import com.google.inject.Singleton;
 public class Practice2017Robot extends Practice2018Robot {
 
     @Override
-    public MotorInfo getLeftDriveMaster() {
-        return new MotorInfo(20, true);
+    public DeviceInfo getLeftDriveMaster() {
+        return new DeviceInfo(20, true);
     }
 
     @Override
-    public MotorInfo getLeftDriveFollower() {
-        return new MotorInfo(21, true);
+    public DeviceInfo getLeftDriveFollower() {
+        return new DeviceInfo(21, true);
     }
 
     @Override
-    public MotorInfo getRightDriveMaster() {
-        return new MotorInfo(34, false);
+    public DeviceInfo getRightDriveMaster() {
+        return new DeviceInfo(34, false);
     }
 
     @Override
-    public MotorInfo getRightDriveFollower() {
-        return new MotorInfo(35, false);
+    public DeviceInfo getRightDriveFollower() {
+        return new DeviceInfo(35, false);
     }
 
     @Override
