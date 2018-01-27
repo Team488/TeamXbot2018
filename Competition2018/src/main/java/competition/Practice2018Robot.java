@@ -71,12 +71,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public boolean climbExtendReady() {
+    public boolean climbDeployReady() {
         return false;
     }
 
     @Override
-    public MotorInfo getClimbExtendMaster() {
+    public MotorInfo getClimbDeployMaster() {
         return new MotorInfo(6, false);
     }
 

@@ -3,11 +3,11 @@ package competition.subsystems.climberdeploy.command.tests;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import competition.BaseCompetitionTest;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
-import xbot.common.injection.BaseWPITest;
 
-public class StopClimberArmCommandTest extends BaseWPITest {
+public class StopClimberArmCommandTest extends BaseCompetitionTest {
 
     ClimberDeploySubsystem deploy;
     StopClimberArmCommand command;

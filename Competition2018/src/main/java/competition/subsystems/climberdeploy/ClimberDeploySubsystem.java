@@ -3,6 +3,7 @@ package competition.subsystems.climberdeploy;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
@@ -15,20 +16,26 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     double currentDeploySpeed;
     final DoubleProperty fastDeploySpeed;
     final DoubleProperty slowDeploySpeed;
-    CommonLibFactory clf;
-
+    final CommonLibFactory clf;
+    final ElectricalContract2018 contract;
     public XCANTalon motor;
 
     @Inject
-    public ClimberDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan) {
+    public ClimberDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
+        this.contract = contract;
         fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", .4);
         slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", .1);
         currentDeploySpeed = fastDeploySpeed.get();
+        
+        if (contract.climbDeployReady()) {
+            temporaryHack();
+        }
     }
 
     public void temporaryHack() {
-        motor = clf.createCANTalon(40);
+        motor = clf.createCANTalon(contract.getClimbDeployMaster().channel);
+        motor.setInverted(contract.getClimbDeployMaster().inverted);
     }
 
     /**

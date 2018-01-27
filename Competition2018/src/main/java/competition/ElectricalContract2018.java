@@ -37,8 +37,8 @@ public abstract class ElectricalContract2018 {
     public abstract MotorInfo getClimbLeanMaster();
     
     // Climb extend
-    public abstract boolean climbExtendReady();
-    public abstract MotorInfo getClimbExtendMaster();
+    public abstract boolean climbDeployReady();
+    public abstract MotorInfo getClimbDeployMaster();
     
     // Climber
     public abstract boolean climbReady();
