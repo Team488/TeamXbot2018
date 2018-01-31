@@ -47,7 +47,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
 		calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
 		maxHeightInInches = propMan.createPersistentProperty("Elevator Max HeightInInches", 80);
 		minHeightInInches = propMan.createPersistentProperty("Elevator Min HeightInInches", 3);		
-		elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", minHeightInInches.get());
+		elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
 		
 		calibrationOffset = 0;
 		

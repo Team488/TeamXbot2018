@@ -11,8 +11,6 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     
     ElevatorSubsystem elevator;
     PIDManager pid;
-    double error;
-    boolean isFinished;
     
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf) {

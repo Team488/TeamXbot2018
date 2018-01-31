@@ -30,20 +30,29 @@ public class MaintainerCommandTest extends BaseCompetitionTest {
     }
     
     @Test
-    public void checkGoDown() {
+    public void checkGoUp() {
         ((MockCANTalon)elevator.motor).setPosition(1200);
-        elevator.setTargetHeight(7000);
+        elevator.setTargetHeight(70);
         command.initialize();
         command.execute();
         assertTrue(elevator.motor.getMotorOutputPercent() > 0);
     }
     
     @Test
-    public void getToTarget() {
-        ((MockCANTalon)elevator.motor).setPosition(1200);
-        elevator.setTargetHeight(7000);
+    public void checkGoDown() {
+        ((MockCANTalon)elevator.motor).setPosition(7000);
+        elevator.setTargetHeight(12);
         command.initialize();
         command.execute();
-        assertTrue(elevator.getTargetHeight()+.1 >= elevator.currentHeight() && elevator.getTargetHeight()-.1 <= elevator.currentHeight());
+        assertTrue(elevator.motor.getMotorOutputPercent() < 0);
+    }
+    
+    @Test
+    public void Stop() {
+        ((MockCANTalon)elevator.motor).setPosition(7000);
+        elevator.setTargetHeight(70);
+        command.initialize();
+        command.execute();
+        assertTrue(elevator.motor.getMotorOutputPercent() <= .01);
     }
 }
