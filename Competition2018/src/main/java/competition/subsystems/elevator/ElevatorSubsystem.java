@@ -34,8 +34,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
 	
 	final DoubleProperty maxHeightInInches;
 	final DoubleProperty minHeightInInches;
-	
-	final DoubleProperty targetHeight;
+	final DoubleProperty elevatorTargetHeight;
 	
 	public XCANTalon motor;
 	public XDigitalInput calibrationSensor;
@@ -48,7 +47,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
 		calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
 		maxHeightInInches = propMan.createPersistentProperty("Elevator Max HeightInInches", 80);
 		minHeightInInches = propMan.createPersistentProperty("Elevator Min HeightInInches", 3);		
-		targetHeight = propMan.createEphemeralProperty("targetHeight", minHeightInInches.get());
+		elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", minHeightInInches.get());
 		
 		calibrationOffset = 0;
 		
@@ -93,16 +92,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
 	    motor.simpleSet(power);
 	}
 	
-	public void maintainer() {
-	    
-	}
-	
 	public void setTargetHeight(double height) {
-	    targetHeight.set(height);
+	    elevatorTargetHeight.set(height);
 	}
 	
 	public double getTargetHeight() {
-	    return targetHeight.get();
+	    return elevatorTargetHeight.get();
 	}
 
 	/**

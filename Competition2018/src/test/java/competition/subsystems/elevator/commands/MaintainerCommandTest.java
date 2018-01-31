@@ -11,13 +11,13 @@ import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 public class MaintainerCommandTest extends BaseCompetitionTest {
     
     ElevatorSubsystem elevator;
-    MaintainerCommand command;
+    ElevatorMaintainerCommand command;
     
     @Override
     public void setUp() {
         super.setUp();
         
-        command = injector.getInstance(MaintainerCommand.class);
+        command = injector.getInstance(ElevatorMaintainerCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
         elevator.temporaryHack();
         
@@ -30,10 +30,20 @@ public class MaintainerCommandTest extends BaseCompetitionTest {
     }
     
     @Test
-    public void checkGoUp() {
+    public void checkGoDown() {
         ((MockCANTalon)elevator.motor).setPosition(1200);
+        elevator.setTargetHeight(7000);
         command.initialize();
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() < 0);
+        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
+    }
+    
+    @Test
+    public void getToTarget() {
+        ((MockCANTalon)elevator.motor).setPosition(1200);
+        elevator.setTargetHeight(7000);
+        command.initialize();
+        command.execute();
+        assertTrue(elevator.getTargetHeight()+.1 >= elevator.currentHeight() && elevator.getTargetHeight()-.1 <= elevator.currentHeight());
     }
 }
