@@ -1,23 +1,23 @@
-package competition.subsystems.gripperdeploy.commands.tests;
+package competition.subsystems.gripperdeploy;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
-import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 
-public class GripperDeployUpCommandTest extends BaseCompetitionTest {
+public class GripperDeployDownCommandTest extends BaseCompetitionTest {
 
     GripperDeploySubsystem gripperDeploy;
-    GripperDeployUpCommand command;
+    GripperDeployDownCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
         gripperDeploy = injector.getInstance(GripperDeploySubsystem.class);
-        command = injector.getInstance(GripperDeployUpCommand.class);
+        command = injector.getInstance(GripperDeployDownCommand.class);
 
         gripperDeploy.temporaryHack();
     }
@@ -29,10 +29,10 @@ public class GripperDeployUpCommandTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void checkDeployUp() {
+    public void checkDeployDown() {
         assertEquals(0.0, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(-0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
     }
 }

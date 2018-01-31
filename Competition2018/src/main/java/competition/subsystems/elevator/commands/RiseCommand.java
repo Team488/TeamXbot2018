@@ -15,7 +15,6 @@ public class RiseCommand extends BaseCommand {
     public RiseCommand(ElevatorSubsystem rise) {
         this.rise = rise;
     }
-    
 
     @Override
     public void initialize() {

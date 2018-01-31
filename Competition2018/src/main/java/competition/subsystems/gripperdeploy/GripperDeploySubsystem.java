@@ -23,7 +23,7 @@ public class GripperDeploySubsystem extends BaseSubsystem {
         this.clf = clf;
         this.contract = contract;
         gripperDeploySpeed = propMan.createPersistentProperty("gripperDeploySpeed", .5);
-        
+
         if (contract.wristReady()) {
             temporaryHack();
         }

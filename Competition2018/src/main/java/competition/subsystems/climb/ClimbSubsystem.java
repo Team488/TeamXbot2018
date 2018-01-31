@@ -1,4 +1,5 @@
 package competition.subsystems.climb;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -10,53 +11,53 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class ClimbSubsystem extends BaseSubsystem{
+public class ClimbSubsystem extends BaseSubsystem {
 
     final DoubleProperty ascendSpeed;
     final DoubleProperty decendSpeed;
     CommonLibFactory clf;
     public XCANTalon motor;
     ElectricalContract2018 contract;
-    
+
     @Inject
     public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
         ascendSpeed = propMan.createPersistentProperty("ascendSpeed", 1);
         decendSpeed = propMan.createPersistentProperty("decendSpeed", -.1);
-        
+
         if (contract.climbReady()) {
             temporaryHack();
         }
     }
-    
+
     /**
-     * Should only be called directly by test code. Temporary workaround to deal with
-     * the "too-many-CAN-errors-crashes-robot" situation.
+     * Should only be called directly by test code. Temporary workaround to deal with the
+     * "too-many-CAN-errors-crashes-robot" situation.
      */
     public void temporaryHack() {
         motor = clf.createCANTalon(contract.getClimbMaster().channel);
         motor.setInverted(contract.getClimbMaster().inverted);
     }
-    
+
     /**
      * moves the winch to pull the robot up
      **/
-    public void ascend(){
+    public void ascend() {
         motor.simpleSet(ascendSpeed.get());
     }
 
     /**
      * moves the winch to let the robot down
      */
-    public void decend(){
+    public void decend() {
         motor.simpleSet(decendSpeed.get());
     }
-    
+
     /**
      * stops the winch
      */
-    public void stop(){
+    public void stop() {
         motor.simpleSet(0);
     }
 }

@@ -6,7 +6,6 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.LeanRightCommand;
-import xbot.common.injection.BaseWPITest;
 
 public class LeanRightCommandTest extends BaseCompetitionTest {
 

@@ -52,7 +52,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getLeftCollectorMaster() {
-        return new DeviceInfo(34,false);
+        return new DeviceInfo(34, false);
     }
 
     @Override
