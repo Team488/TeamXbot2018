@@ -1,5 +1,7 @@
 package competition.subsystems.drive.commands;
 import com.google.inject.Inject;
+
+import xbot.common.command.BaseCommand;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
@@ -9,12 +11,12 @@ import xbot.common.properties.XPropertyManager;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
-public class DriveForDistanceCommand extends BaseDriveCommand {
+public class DriveForDistanceCommand extends BaseCommand {
     
     private final PIDManager travelManager;
     private final PIDManager headingDrivePid;
     private final PoseSubsystem poseSubsystem;
-    
+    private final DriveSubsystem drive;
     
     public double leftPower;
     public double rightPower;
@@ -33,8 +35,8 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
             RobotAssertionManager assertionManager,
             PIDFactory pidFactory,
             PoseSubsystem pose) {
-        super(driveSubsystem);
         
+    	this.drive = driveSubsystem;
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
         this.travelManager = pidFactory.createPIDManager("Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
@@ -79,7 +81,7 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
         leftPower = power - calculateHeadingPower();
         rightPower = power + calculateHeadingPower();
         
-        driveSubsystem.drive(leftPower, rightPower);
+        drive.drive(leftPower, rightPower);
     }
     
     public double calculateHeadingPower() {
@@ -104,6 +106,6 @@ public class DriveForDistanceCommand extends BaseDriveCommand {
         log.info("Ending, PreviousPosition was " + previousPositionInches 
                 + ", Targeted Delta in distance is " + deltaDistance + " Distance traveled is " 
                 + getYDistance());
-        driveSubsystem.stop();
+        drive.stop();
     }
 }
