@@ -19,14 +19,14 @@ public class OperatorInterface {
 
     @Inject
     public OperatorInterface(CommonLibFactory factory, RobotAssertionManager assertionManager) {
-    	driverGamepad = factory.createGamepad(3, 10);
+    	driverGamepad = factory.createGamepad(3,10);
     	
     	driverGamepad.setLeftStickYInversion(true);
     	driverGamepad.setRightStickYInversion(true);
     	
-    	operatorGamepad = factory.createGamepad(3, 10);
-    	
-    	operatorGamepad.setLeftStickYInversion(true);
-    	operatorGamepad.setRightStickYInversion(true);
+        operatorGamepad = factory.createGamepad(0,10);
+        
+        operatorGamepad.setLeftStickYInversion(true);
+        operatorGamepad.setRightStickYInversion(true);
     }
 }

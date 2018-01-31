@@ -31,16 +31,6 @@ public class OperatorCommandMap {
 	}
 	
 	@Inject
-	public void setupLeanCommands(
-			OperatorInterface oi,
-			LeanLeftCommand left,
-			LeanRightCommand right
-			) {
-		oi.operatorGamepad.getAnalogIfAvailable(new AnalogHIDDescription(0,0,.45)).whileActive(left);
-		oi.operatorGamepad.getAnalogIfAvailable(new AnalogHIDDescription(0,.55,1.0)).whileActive(right);
-	}
-	
-	@Inject
 	public void setupGripperCommands(
 			OperatorInterface oi,
 			GripperDeployDownCommand down,
@@ -58,12 +48,8 @@ public class OperatorCommandMap {
 	public void setupElevatorCommands(
 			OperatorInterface oi,
 			LowerCommand lower,
-			RiseCommand rise,
-			MoveToMaxHeightCommand max,
-			MoveToMinHeightCommand min
+			RiseCommand rise
 			) {
-		oi.operatorGamepad.getAnalogIfAvailable( new AnalogHIDDescription(3,.8,1.0)).whileActive(max);
-		oi.operatorGamepad.getAnalogIfAvailable( new AnalogHIDDescription(2,.8,1.0)).whileActive(min);
 		oi.operatorGamepad.getAnalogIfAvailable( new AnalogHIDDescription(3,.501,.799)).whileActive(rise);
 		oi.operatorGamepad.getAnalogIfAvailable( new AnalogHIDDescription(2,.501,.799)).whileActive(lower);
 
