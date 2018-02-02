@@ -1,6 +1,5 @@
 package competition.subsystems.drive;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import competition.BaseCompetitionTest;
@@ -13,11 +12,9 @@ public class DriveTestBase extends BaseCompetitionTest {
 	protected DriveSubsystem drive;
 	protected PoseSubsystem pose;
 	protected MockTimer mockTimer;
-
-
+	
     public void setUp() {        
         super.setUp();
-        
         drive = injector.getInstance(DriveSubsystem.class);
         pose = injector.getInstance(PoseSubsystem.class);
         mockTimer = injector.getInstance(MockTimer.class);

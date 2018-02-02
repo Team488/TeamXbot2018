@@ -6,25 +6,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import competition.subsystems.drive.DriveTestBase;
-import competition.BaseCompetitionTest;
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.DriveSubsystem.Side;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
-import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.controls.MockRobotIO;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
-public class DriveForDistanceCommandTest extends BaseCompetitionTest {
-    MockTimer mockTimer;
-    DriveSubsystem drive;
-    DriveTestBase base;
-
+public class DriveForDistanceCommandTest extends DriveTestBase {
+  
     @Before
     public void setUp() {
         super.setUp();
-        mockTimer = injector.getInstance(MockTimer.class);
-        drive = injector.getInstance(DriveSubsystem.class);
-        base = injector.getInstance(DriveTestBase.class);
     }
 
     @Test
@@ -35,7 +26,7 @@ public class DriveForDistanceCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
 
-        base.verifyDrivePositive();
+        verifyDrivePositive();
     } 
 
     @Test
@@ -46,7 +37,7 @@ public class DriveForDistanceCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
 
-        base.verifyDriveNegative();
+        verifyDriveNegative();
     }
 
     @Test
