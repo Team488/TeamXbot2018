@@ -9,23 +9,23 @@ import xbot.common.command.BaseCommand;
 
 @Singleton
 public class GripperLeftDominantCommand extends BaseCommand {
-	
-	GripperIntakeSubsystem intake;
 
-	@Inject
-	public GripperLeftDominantCommand(GripperIntakeSubsystem intake) {
-		this.requires(intake);
-		this.intake = intake;
-	}
-	
-	@Override
-	public void initialize() {
-		log.info("Initializing");
-	}
+    GripperIntakeSubsystem intake;
 
-	@Override
-	public void execute() {
-		intake.intakeleftDominant();	
-	}
+    @Inject
+    public GripperLeftDominantCommand(GripperIntakeSubsystem intake) {
+        this.requires(intake);
+        this.intake = intake;
+    }
+
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
+
+    @Override
+    public void execute() {
+        intake.intakeleftDominant();
+    }
 
 }

@@ -10,40 +10,37 @@ import xbot.common.math.PIDManager;
 
 @Singleton
 public class MoveToMinHeightCommand extends BaseCommand {
-	
-	ElevatorSubsystem elevator;
-	PIDManager pid;
-	
-	boolean stop;
-	
-	double min = 0;
-	
-	@Inject
-	public MoveToMinHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) { 
-		this.elevator = elevator;
-		pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
-		pid.setErrorThreshold(0.1);
-	}
 
-	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-		log.info("Initializing");
-	}
+    ElevatorSubsystem elevator;
+    PIDManager pid;
 
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
-		double power = pid.calculate(min, elevator.currentHeight());
-		
-		elevator.setPower(power);
-		
-	}
-	
-	@Override
-	public boolean isFinished() {
-		return pid.isOnTarget();
-	}
+    boolean stop;
+
+    double min = 0;
+
+    @Inject
+    public MoveToMinHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
+        this.elevator = elevator;
+        pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
+        pid.setErrorThreshold(0.1);
+    }
+
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
+
+    @Override
+    public void execute() {
+        double power = pid.calculate(min, elevator.currentHeight());
+
+        elevator.setPower(power);
+
+    }
+
+    @Override
+    public boolean isFinished() {
+        return pid.isOnTarget();
+    }
 
 }
