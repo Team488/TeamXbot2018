@@ -48,7 +48,7 @@ public class MaintainerCommandTest extends BaseCompetitionTest {
     }
     
     @Test
-    public void Stop() {
+    public void stop() {
         ((MockCANTalon)elevator.motor).setPosition(7000);
         elevator.setTargetHeight(70);
         command.initialize();
