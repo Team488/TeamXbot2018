@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
@@ -16,7 +17,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class ElevatorSubsystem extends BaseSubsystem {
+public class ElevatorSubsystem extends BaseSetpointSubsystem {
 
     double defaultElevatorPower;
     final CommonLibFactory clf;
@@ -35,6 +36,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 
     final DoubleProperty maxHeightInInches;
     final DoubleProperty minHeightInInches;
+    final DoubleProperty elevatorTargetHeight;
 
     public XCANTalon motor;
     public XDigitalInput calibrationSensor;
@@ -48,6 +50,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
         calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
         maxHeightInInches = propMan.createPersistentProperty("Elevator Max HeightInInches", 80);
         minHeightInInches = propMan.createPersistentProperty("Elevator Min HeightInInches", 3);
+        elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
 
         calibrationOffset = 0;
 
@@ -97,6 +100,14 @@ public class ElevatorSubsystem extends BaseSubsystem {
         }
 
         motor.simpleSet(power);
+    }
+
+    public void setTargetHeight(double height) {
+        elevatorTargetHeight.set(height);
+    }
+
+    public double getTargetHeight() {
+        return elevatorTargetHeight.get();
     }
 
     /**
