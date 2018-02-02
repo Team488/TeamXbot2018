@@ -3,7 +3,7 @@ package competition.subsystems.lean.commands;
 import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
-import competition.subsystems.lean.*;
+import competition.subsystems.lean.LeanSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class LeanWithJoystickCommand extends BaseCommand {
@@ -20,13 +20,12 @@ public class LeanWithJoystickCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
+        log.info("Initializing");
 
     }
 
     @Override
     public void execute() {
-        // TODO Auto-generated method stub
         leanSubsystem.setLeanSpeed(oi.operatorGamepad.getLeftVector().x);
     }
 }

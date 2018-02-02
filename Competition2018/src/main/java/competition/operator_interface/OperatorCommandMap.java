@@ -3,12 +3,17 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.shift.commands.*;
-import competition.subsystems.gripperdeploy.commands.*;
-import competition.subsystems.gripperintake.commands.*;
-import competition.subsystems.elevator.commands.*;
-import competition.subsystems.climb.commands.*;
-import competition.subsystems.climberdeploy.commands.*;
+import competition.subsystems.climb.commands.AscendClimberCommand;
+import competition.subsystems.climb.commands.DecendClimberCommand;
+import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
+import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
+import competition.subsystems.elevator.commands.LowerCommand;
+import competition.subsystems.elevator.commands.RiseCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
+import competition.subsystems.gripperintake.commands.GripperEjectCommand;
+import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.shift.commands.ToggleGearCommand;
 
 @Singleton
 public class OperatorCommandMap {
