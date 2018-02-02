@@ -87,7 +87,7 @@ public class LeanSubsystem extends BaseSubsystem {
     public void decreaseSpeed() {
         currentLeanSpeed = slowLeanSpeed.get();
     }
-    
+
     public void setLeanSpeed(double power) {
         currentLeanSpeed = power;
     }
