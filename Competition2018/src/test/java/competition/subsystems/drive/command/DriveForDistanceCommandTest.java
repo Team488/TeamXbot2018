@@ -5,20 +5,26 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import competition.subsystems.drive.DriveSubsystem.Side;
 import competition.subsystems.drive.DriveTestBase;
+import competition.BaseCompetitionTest;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.drive.DriveSubsystem.Side;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.controls.MockRobotIO;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
-public class DriveForDistanceCommandTest extends DriveTestBase {
+public class DriveForDistanceCommandTest extends BaseCompetitionTest {
     MockTimer mockTimer;
+    DriveSubsystem drive;
+    DriveTestBase base;
 
     @Before
     public void setUp() {
         super.setUp();
         mockTimer = injector.getInstance(MockTimer.class);
+        drive = injector.getInstance(DriveSubsystem.class);
+        base = injector.getInstance(DriveTestBase.class);
     }
 
     @Test
@@ -29,8 +35,8 @@ public class DriveForDistanceCommandTest extends DriveTestBase {
         command.initialize();
         command.execute();
 
-        verifyDrivePositive();
-    }
+        base.verifyDrivePositive();
+    } 
 
     @Test
     public void negativeDistanceTest() {
@@ -40,7 +46,7 @@ public class DriveForDistanceCommandTest extends DriveTestBase {
         command.initialize();
         command.execute();
 
-        verifyDriveNegative();
+        base.verifyDriveNegative();
     }
 
     @Test
@@ -50,15 +56,12 @@ public class DriveForDistanceCommandTest extends DriveTestBase {
         command.initialize();
         command.setDeltaDistance(1.0);
 
-        MockCANTalon rightMaster = (MockCANTalon) drive.rightMaster;
-        rightMaster.setPosition((int)drive.getInchesToTicks(Side.Right, -1));
+        ((MockCANTalon)drive.rightMaster).setPosition((int)drive.getInchesToTicks(Side.Right,-1));
 
         command.execute();
         assertTrue(!command.isFinished());
 
-        MockCANTalon leftMaster = (MockCANTalon) drive.leftMaster;
-        leftMaster.setPosition((int)drive.getInchesToTicks(Side.Left, 0.1));
-        
+        ((MockCANTalon)drive.rightMaster).setPosition((int)drive.getInchesToTicks(Side.Right,0.1));
         command.execute();
         mockTimer.advanceTimeInSecondsBy(0.6);
         command.execute();
@@ -79,11 +82,11 @@ public class DriveForDistanceCommandTest extends DriveTestBase {
         mockIO.setGyroHeading(80);
         command.execute();
 
-        assertTrue(((MockCANTalon) drive.leftDrive).getSetpoint() < ((MockCANTalon) drive.rightDrive).getSetpoint());
+        assertTrue(drive.leftMaster.getMotorOutputPercent() < ((MockCANTalon) drive.rightMaster).getMotorOutputPercent());
 
         mockIO.setGyroHeading(100);
         command.execute();
 
-        assertTrue(((MockCANTalon) drive.rightDrive).getSetpoint() < ((MockCANTalon) drive.leftDrive).getSetpoint());
+        assertTrue(((MockCANTalon) drive.rightMaster).getMotorOutputPercent() < ((MockCANTalon) drive.leftMaster).getMotorOutputPercent());
     }
 }
