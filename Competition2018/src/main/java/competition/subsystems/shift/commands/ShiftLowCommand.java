@@ -25,8 +25,4 @@ public class ShiftLowCommand extends BaseCommand {
     public void execute() {
 
     }
-
-    public boolean isFinished() {
-        return true;
-    }
 }
