@@ -51,7 +51,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         maxHeightInInches = propMan.createPersistentProperty("Elevator Max HeightInInches", 80);
         minHeightInInches = propMan.createPersistentProperty("Elevator Min HeightInInches", 3);
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
-
         calibrationOffset = 0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -78,10 +77,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         isCalibrated = true;
     }
     
-    public void setCalibrate(boolean calibrated) {
-        isCalibrated = calibrated;
-        
-        if (calibrated) {
+    public void setCalibrate(boolean forceCalibrated) {
+        isCalibrated = forceCalibrated;
+        if (forceCalibrated) {
             calibrate();
         }
     }
