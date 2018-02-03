@@ -4,8 +4,6 @@ import xbot.common.command.BaseCommand;
 import xbot.common.math.PIDFactory;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
 
 public class ElevatorMaintainerCommand extends BaseCommand {
@@ -17,14 +15,14 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf) {
         this.elevator = elevator;
         pid = pf.createPIDManager("Elevator", 1, 0, 0);
-        pid.setErrorThreshold(0.01);
+        pid.setErrorThreshold(0.1);
     }
 
     @Override
     public void initialize() {
         log.info("Initializing");
         if (!elevator.isCalibrated()) {
-            log.warn("THE ELEVATOR WILL NOT BE ABLE TO RUN UNDER AUTOMATIC CONTROL!");
+            log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
         }
     }
 
@@ -33,6 +31,9 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         if (elevator.isCalibrated()) {
             double power = pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeight());
             elevator.setPower(power);
+        }
+        else {
+            elevator.stop;
         }
     }
 }
