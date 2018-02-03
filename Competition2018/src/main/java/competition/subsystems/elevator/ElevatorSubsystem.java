@@ -81,14 +81,14 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         calibrationOffset = motor.getSelectedSensorPosition(0);
         isCalibrated = true;
     }
-    
+
     public void setCalibrate(boolean forceCalibrate) {
         if (forceCalibrate) {
             calibrate();
         }
         isCalibrated = forceCalibrate;
     }
-    
+
     public boolean isCalibrated() {
         return isCalibrated;
     }
