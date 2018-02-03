@@ -12,10 +12,10 @@ import xbot.common.properties.XPropertyManager;
 public class CalibrateElevatorCommand extends BaseCommand {
     ElevatorSubsystem elevator;
     CommonLibFactory clf;
-    
+
     DoubleProperty power;
     DoubleProperty calibrationTime; // In milliseconds
-    
+
     double targetTime;
     boolean atTarget;
 
@@ -25,7 +25,7 @@ public class CalibrateElevatorCommand extends BaseCommand {
         power = propMan.createPersistentProperty("Calibration Power", -0.2);
         calibrationTime = propMan.createPersistentProperty("Time in milliseconds", 4000);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -36,11 +36,11 @@ public class CalibrateElevatorCommand extends BaseCommand {
     public void execute() {
         if (Timer.getFPGATimestamp() > targetTime) {
             elevator.setPower(power.get());
-        }
-        else {
+        } else {
             atTarget = true;
         }
     }
+
     @Override
     public boolean isFinished() {
         if (atTarget) {
@@ -49,10 +49,10 @@ public class CalibrateElevatorCommand extends BaseCommand {
         }
         return false;
     }
-    
-    @Override 
+
+    @Override
     public void end() {
         elevator.stop();
     }
-   
+
 }
