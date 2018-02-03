@@ -9,13 +9,13 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 
 public class StopCommandTest extends BaseCompetitionTest {
 
-    StopCommand command;
+    StopElevatorCommand command;
     ElevatorSubsystem elevator;
 
     @Override
     public void setUp() {
         super.setUp();
-        command = injector.getInstance(StopCommand.class);
+        command = injector.getInstance(StopElevatorCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
         elevator.temporaryHack();
     }
