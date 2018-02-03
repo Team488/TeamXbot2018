@@ -6,7 +6,7 @@ import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
-import xbot.common.command.BaseSubsystem;
+import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
@@ -17,7 +17,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class ElevatorSubsystem extends BaseSetpointSubsystem {
+public class ElevatorSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
 
     double defaultElevatorPower;
     final CommonLibFactory clf;
@@ -37,6 +37,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
     final DoubleProperty maxHeightInInches;
     final DoubleProperty minHeightInInches;
     final DoubleProperty elevatorTargetHeight;
+    final DoubleProperty currentTicks;
+    final DoubleProperty currentHeight;
 
     public XCANTalon motor;
     public XDigitalInput calibrationSensor;
@@ -51,6 +53,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         maxHeightInInches = propMan.createPersistentProperty("Elevator Max HeightInInches", 80);
         minHeightInInches = propMan.createPersistentProperty("Elevator Min HeightInInches", 3);
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
+        currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
+        currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
 
         calibrationOffset = 0;
 
@@ -69,7 +73,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
     public void temporaryHack() {
         motor = clf.createCANTalon(contract.getElevatorMaster().channel);
         motor.setInverted(contract.getElevatorMaster().inverted);
-        motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         calibrationSensor = clf.createDigitalInput(1);
     }
 
@@ -139,8 +143,24 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         setPower(0);
     }
 
-    public double currentHeight() {
+    public double getCurrentHeight() {
         return ticksToInches(motor.getSelectedSensorPosition(0));
+    }
+
+    public double getCurrentTick() {
+        return ticksToInches(motor.getSelectedSensorPosition(0));
+    }
+
+    public double minHeightInInches() {
+        return ticksToInches(minHeightInInches.get());
+    }
+
+    public double maxHeightInInches() {
+        return ticksToInches(maxHeightInInches.get());
+    }
+
+    public void setTickPerInch(double ticksPerInch) {
+        elevatorTicksPerInch.set(ticksPerInch);
     }
 
     private double ticksToInches(double ticks) {
@@ -158,7 +178,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
 
     boolean isCloseToMaxmumHeight() {
 
-        if (currentHeight() >= maxHeightInInches.get() * 0.9) {
+        if (getCurrentHeight() >= maxHeightInInches.get() * 0.9) {
             return true;
         }
 
@@ -172,10 +192,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
 
     boolean isCloseToMinimumHeight() {
 
-        if (currentHeight() < maxHeightInInches.get() * 0.15) {
+        if (getCurrentHeight() < maxHeightInInches.get() * 0.15) {
             return true;
         }
 
         return false;
+    }
+
+    @Override
+    public void updatePeriodicData() {
+        currentTicks.set(getCurrentTick());
+        currentHeight.set(getCurrentHeight());
     }
 }
