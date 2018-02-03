@@ -3,8 +3,6 @@ import xbot.common.command.BaseCommand;
 import xbot.common.math.PIDFactory;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
 
 public class ElevatorMaintainerCommand extends BaseCommand {

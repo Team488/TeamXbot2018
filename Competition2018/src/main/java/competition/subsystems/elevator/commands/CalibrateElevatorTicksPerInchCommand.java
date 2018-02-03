@@ -2,7 +2,6 @@ package competition.subsystems.elevator.commands;
 
 import com.google.inject.Inject;
 
-import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.climb.ClimbSubsystem;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;

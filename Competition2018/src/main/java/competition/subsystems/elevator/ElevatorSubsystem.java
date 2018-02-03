@@ -6,7 +6,6 @@ import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
-import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.sensors.XDigitalInput;
