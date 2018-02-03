@@ -55,8 +55,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
-
-        calibrationOffset = 0;
+        calibrationOffset = 0.0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
@@ -205,7 +204,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     
     public double getMinHeight() {
         return minHeightInInches.get();
-
+    }
+    
     @Override
     public void updatePeriodicData() {
         currentTicks.set(getCurrentTick());

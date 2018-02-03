@@ -19,9 +19,8 @@ public class MaintainerCommandTest extends BaseCompetitionTest {
         super.setUp();
         command = injector.getInstance(ElevatorMaintainerCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        elevator.setCalibrate(true);
         elevator.temporaryHack();
-        
+        elevator.setCalibrate(true);
     }
     
     @Test

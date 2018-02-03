@@ -31,7 +31,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     @Override
     public void execute() {
         if (elevator.isCalibrated()) {
-            double power = pid.calculate(elevator.getTargetHeight(), elevator.currentHeight());
+            double power = pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeight());
             elevator.setPower(power);
         }
     }
