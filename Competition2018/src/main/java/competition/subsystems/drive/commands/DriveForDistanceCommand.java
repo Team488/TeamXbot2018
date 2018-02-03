@@ -3,12 +3,14 @@ package competition.subsystems.drive.commands;
 import com.google.inject.Inject;
 
 import xbot.common.command.BaseCommand;
+import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.PIDManager;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
+import xbot.common.subsystems.drive.control_logic.HeadingModule;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
@@ -18,6 +20,7 @@ public class DriveForDistanceCommand extends BaseCommand {
     private final PIDManager headingDrivePid;
     private final PoseSubsystem poseSubsystem;
     private final DriveSubsystem drive;
+    private final HeadingModule heading;
 
     private double deltaDistance;
     private double targetDistance;
@@ -29,14 +32,17 @@ public class DriveForDistanceCommand extends BaseCommand {
 
     @Inject
     public DriveForDistanceCommand(DriveSubsystem driveSubsystem, XPropertyManager propManager,
-            RobotAssertionManager assertionManager, PIDFactory pidFactory, PoseSubsystem pose) {
+            RobotAssertionManager assertionManager, PIDFactory pidFactory, PoseSubsystem pose, CommonLibFactory clf) {
 
+       
         this.drive = driveSubsystem;
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
         this.travelManager = pidFactory.createPIDManager("Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
         headingDrivePid = pidFactory.createPIDManager("Heading module", defaultPValue, 0, 0);
         targetHeading = new ContiguousHeading();
+        this.heading = clf.createHeadingModule(headingDrivePid);
+       
     }
 
     /**
@@ -76,20 +82,12 @@ public class DriveForDistanceCommand extends BaseCommand {
     @Override
     public void execute() {
         double power = travelManager.calculate(targetDistance, getYDistance());
-        double headingPower = calculateHeadingPower();
+        double headingPower = heading.calculateHeadingPower(targetHeading.getValue());
 
         double leftPower = power - headingPower;
         double rightPower = power + headingPower;
 
         drive.drive(leftPower, rightPower);
-    }
-
-    public double calculateHeadingPower() {
-        double errorInDegrees = targetHeading.difference(poseSubsystem.getCurrentHeading());
-        double normalizedError = errorInDegrees / 180;
-        double rotationalPower = headingDrivePid.calculate(0, normalizedError);
-
-        return rotationalPower;
     }
 
     private double getYDistance() {
