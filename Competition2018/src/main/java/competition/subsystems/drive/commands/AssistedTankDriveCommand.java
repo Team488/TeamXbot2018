@@ -39,8 +39,8 @@ public class AssistedTankDriveCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double left = oi.gamepad.getLeftVector().y; 
-        double right = oi.gamepad.getRightVector().y;
+        double left = oi.driverGamepad.getLeftVector().y; 
+        double right = oi.driverGamepad.getRightVector().y;
         
         double yTranslate = (left+right) / 2;
         double turn = ham.calculateHeadingPower((right-left)/2);
