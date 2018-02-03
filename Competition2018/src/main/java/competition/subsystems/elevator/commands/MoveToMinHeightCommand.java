@@ -32,7 +32,7 @@ public class MoveToMinHeightCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double power = pid.calculate(min, elevator.currentHeight());
+        double power = pid.calculate(min, elevator.getCurrentHeight());
 
         elevator.setPower(power);
 
