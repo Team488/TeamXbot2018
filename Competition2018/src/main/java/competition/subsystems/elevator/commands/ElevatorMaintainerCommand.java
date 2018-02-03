@@ -24,8 +24,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double power = pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeight());
+        double power = pid.calculate(elevator.getTargetHeight(), elevator.currentHeight());
         elevator.setPower(power);
     }
-    
 }

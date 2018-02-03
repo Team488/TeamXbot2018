@@ -22,13 +22,15 @@ public class CalibrateElevatorCommand extends BaseCommand {
     @Inject
     public CalibrateElevatorCommand(XPropertyManager propMan, CommonLibFactory clf) {
         this.clf = clf;
-        power = propMan.createPersistentProperty("Default Elevator Calibration Power", -0.2);
-        calibrationTime = propMan.createPersistentProperty("Elevator Calibration time in milliseconds", 4000);
+        power = propMan.createPersistentProperty("Elevator Calibration Power", -0.2);
+        calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
     }
 
     @Override
     public void initialize() {
         log.info("Initializing");
+        log.info("Current time is: " + Timer.getFPGATimestamp());
+        log.info("Calibrating elevator at power" + power.get() + " until: " + targetTime);
         targetTime = Timer.getFPGATimestamp() + calibrationTime.get();
     }
 
@@ -39,11 +41,7 @@ public class CalibrateElevatorCommand extends BaseCommand {
 
     @Override
     public boolean isFinished() {
-        if (Timer.getFPGATimestamp() > targetTime) {
-            end();
-            return true;
-        }
-        return false;
+        return Timer.getFPGATimestamp() > targetTime;
     }
 
     @Override
