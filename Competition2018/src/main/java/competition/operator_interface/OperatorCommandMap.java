@@ -15,6 +15,8 @@ import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import competition.commandgroups.CollectCubeCommandGroup;
 
 @Singleton
 public class OperatorCommandMap {
@@ -34,10 +36,10 @@ public class OperatorCommandMap {
     @Inject
     public void setupGripperCommands(OperatorInterface oi, GripperDeployDownCommand down, GripperDeployUpCommand up,
             GripperEjectCommand eject, GripperIntakeCommand intake) {
-        oi.operatorGamepad.getifAvailable(3).whenPressed(up);
-        oi.operatorGamepad.getifAvailable(2).whenPressed(down);
+        oi.operatorGamepad.getifAvailable(3).whileHeld(up);
+        oi.operatorGamepad.getifAvailable(2).whileHeld(down);
         oi.operatorGamepad.getifAvailable(4).whenPressed(eject);
-        oi.operatorGamepad.getifAvailable(1).whenPressed(intake);
+        oi.operatorGamepad.getifAvailable(1).whileHeld(intake);
     }
 
     @Inject
@@ -54,9 +56,14 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
             ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm) {
-        oi.driverGamepad.getifAvailable(1).whenPressed(extendArm);
-        oi.driverGamepad.getifAvailable(2).whenPressed(retractArm);
+        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm);
+        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm);
         oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
         oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
+    }
+    
+    @Inject
+    public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
+        oi.operatorGamepad.getifAvailable(6).whileHeld(collectCube);
     }
 }
