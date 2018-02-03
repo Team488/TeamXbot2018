@@ -12,7 +12,7 @@ import xbot.common.math.PIDManager;
 public class MoveToMaxHeightCommand extends BaseCommand {
 
     ElevatorSubsystem elevator;
-    PIDManager pid;
+    PIDManager pid; 
 
     @Inject
     public MoveToMaxHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
