@@ -7,31 +7,31 @@ import xbot.common.command.BaseCommand;
 
 public class LeanRightCommand extends BaseCommand {
 
-	LeanSubsystem leaner;
-	
-	@Inject
-	public LeanRightCommand(LeanSubsystem leaner) {
-		this.leaner = leaner;
-		this.requires(leaner); 
-	}
-	
-	@Override
-	public void initialize() {
-		log.info("Initializing");
-	}
+    LeanSubsystem leaner;
 
-	@Override
-	public void execute() {
-		leaner.leanRight();
-	}
+    @Inject
+    public LeanRightCommand(LeanSubsystem leaner) {
+        this.leaner = leaner;
+        this.requires(leaner);
+    }
 
-	@Override
-	public boolean isFinished() {
-		return leaner.hitBar();
-	}
-	public void end() {
-		leaner.stopLean();
-	}
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
+
+    @Override
+    public void execute() {
+        leaner.leanRight();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return leaner.hitBar();
+    }
+
+    public void end() {
+        leaner.stopLean();
+    }
 
 }
-
