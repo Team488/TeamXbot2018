@@ -4,7 +4,13 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.OperatorInterface;
+import competition.subsystems.climb.ClimbSubsystem;
+import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
+import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
+import competition.subsystems.gripperintake.GripperIntakeSubsystem;
+import competition.subsystems.lean.LeanSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
@@ -14,11 +20,30 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
     ElevatorSubsystem elevator;
     OperatorInterface oi;
 
+    /**
+     * This command needs to require all possible subsystems - while calibrating the elevator we DO NOT WANT
+     * ANYTHING ELSE TO MOVE.
+     */
     @Inject
-    public CalibrateElevatorTicksPerInchCommand(ElevatorSubsystem elevator,OperatorInterface oi) {
+    public CalibrateElevatorTicksPerInchCommand(
+            ElevatorSubsystem elevator,
+            DriveSubsystem drive,
+            GripperDeploySubsystem wrist,
+            GripperIntakeSubsystem intake,
+            LeanSubsystem leaner,
+            ClimbSubsystem climber,
+            ClimberDeploySubsystem climbDeploy,
+            OperatorInterface oi) {
         this.elevator = elevator;
         this.oi=oi;
+        
         this.requires(elevator);
+        this.requires(drive);
+        this.requires(wrist);
+        this.requires(intake);
+        this.requires(leaner);
+        this.requires(climber);
+        this.requires(climbDeploy);
     }
 
     @Override
