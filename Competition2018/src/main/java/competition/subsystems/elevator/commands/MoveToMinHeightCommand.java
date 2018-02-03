@@ -28,6 +28,9 @@ public class MoveToMinHeightCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
+        if (!elevator.isCalibrated()) {
+            log.info("Elevator uncalibrated");
+        }
     }
 
     @Override
@@ -35,9 +38,6 @@ public class MoveToMinHeightCommand extends BaseCommand {
         if(elevator.isCalibrated()) {
             double power = pid.calculate(min, elevator.currentHeight());
             elevator.setPower(power);
-        }
-        else {
-            log.info("Elevator uncalibrated");
         }
     }
 
