@@ -13,8 +13,7 @@ public class MoveToMaxHeightCommand extends BaseCommand {
 
     ElevatorSubsystem elevator;
     PIDManager pid;
-
-    double max = 90;
+    double max;
 
     @Inject
     public MoveToMaxHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
@@ -22,17 +21,18 @@ public class MoveToMaxHeightCommand extends BaseCommand {
         pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
         pid.setErrorThreshold(0.1);
     }
-
+    
     @Override
     public void initialize() {
         log.info("Initializing");
-    if (!elevator.isCalibrated()) {
-        log.info("Elevator uncalibrated");
+        if (!elevator.isCalibrated()) {
+            log.info("Elevator uncalibrated");
         }
     }
 
     @Override
     public void execute() {
+        max = elevator.getMaxHeight();
         if (elevator.isCalibrated()) {
             double power = pid.calculate(max, elevator.currentHeight());
             elevator.setPower(power);

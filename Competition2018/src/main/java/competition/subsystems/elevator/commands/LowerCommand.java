@@ -15,7 +15,7 @@ public class LowerCommand extends BaseCommand {
     public LowerCommand(ElevatorSubsystem lower) {
         this.lower = lower;
     }
-
+    
     @Override
     public void initialize() {
 

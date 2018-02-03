@@ -27,7 +27,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         elevator.stop();
         checkElevatorPower(0);
     }
-
+    
     @Test
     public void rise() {
         assertEquals(elevator.motor.getMotorOutputPercent(), 0, 0.001);

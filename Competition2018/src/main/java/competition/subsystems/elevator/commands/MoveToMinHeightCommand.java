@@ -14,9 +14,7 @@ public class MoveToMinHeightCommand extends BaseCommand {
     ElevatorSubsystem elevator;
     PIDManager pid;
 
-    boolean stop;
-
-    double min = 0;
+    double min;
 
     @Inject
     public MoveToMinHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
@@ -24,7 +22,7 @@ public class MoveToMinHeightCommand extends BaseCommand {
         pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
         pid.setErrorThreshold(0.1);
     }
-
+    
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -35,7 +33,8 @@ public class MoveToMinHeightCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if(elevator.isCalibrated()) {
+        min = elevator.getMinHeight();
+        if (elevator.isCalibrated()) {
             double power = pid.calculate(min, elevator.currentHeight());
             elevator.setPower(power);
         }

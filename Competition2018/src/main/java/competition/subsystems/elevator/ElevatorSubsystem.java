@@ -37,10 +37,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
     final DoubleProperty maxHeightInInches;
     final DoubleProperty minHeightInInches;
     final DoubleProperty elevatorTargetHeight;
-
+    
     public XCANTalon motor;
     public XDigitalInput calibrationSensor;
-
+    
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
@@ -76,6 +76,14 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
     private void calibrate() {
         calibrationOffset = motor.getSelectedSensorPosition(0);
         isCalibrated = true;
+    }
+    
+    public void setCalibrate(boolean calbrated) {
+        isCalibrated = calbrated;
+    }
+    
+    public boolean isCalibrated() {
+        return isCalibrated;
     }
 
     /**
@@ -141,10 +149,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
     }
 
-    public boolean isCalibrated() {
-        return isCalibrated;
-    }
-
     /**
      * Returns true if the elevator is close to its maximum height.
      */
@@ -170,5 +174,13 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         }
 
         return false;
+    }
+    
+    public double getMaxHeight() {
+        return maxHeightInInches.get();
+    }
+    
+    public double getMinHeight() {
+        return minHeightInInches.get();
     }
 }

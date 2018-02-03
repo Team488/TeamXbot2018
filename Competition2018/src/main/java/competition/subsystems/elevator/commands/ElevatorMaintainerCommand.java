@@ -17,7 +17,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf) {
         this.elevator = elevator;
         pid = pf.createPIDManager("Elevator", 1, 0, 0);
-        pid.setErrorThreshold(0.1);
+        pid.setErrorThreshold(0.01);
     }
 
     @Override
