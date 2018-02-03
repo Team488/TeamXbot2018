@@ -7,6 +7,9 @@ import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
+import competition.subsystems.drive.commands.AssistedTankDriveCommand;
+import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
@@ -26,6 +29,13 @@ public class OperatorCommandMap {
      */
 
     @Inject
+    public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
+            TankDriveWithJoysticksCommand simpleTank) {
+        oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
+        oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
+    }
+
+    @Inject
     public void setupShiftGearCommand(OperatorInterface oi, ToggleGearCommand shiftGear) {
         oi.driverGamepad.getifAvailable(6).whenPressed(shiftGear);
     }
@@ -40,9 +50,14 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupElevatorCommands(OperatorInterface oi, LowerCommand lower, RiseCommand rise) {
+    public void setupElevatorCommands(
+            OperatorInterface oi,
+            LowerCommand lower,
+            RiseCommand rise,
+            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
         oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
+        oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
     }
 
     @Inject

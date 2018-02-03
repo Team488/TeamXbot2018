@@ -1,6 +1,5 @@
 package competition.subsystems.elevator.commands;
 import xbot.common.command.BaseSetpointCommand;
-import xbot.common.command.SupportsSetpointLock;
 import com.google.inject.Inject;
 import competition.subsystems.elevator.ElevatorSubsystem;
 

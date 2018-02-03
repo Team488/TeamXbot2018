@@ -32,11 +32,17 @@ public class MoveToMaxHeightCommand extends BaseCommand {
 
     @Override
     public void execute() {
+<<<<<<< HEAD
         max = elevator.getMaxHeight();
         if (elevator.isCalibrated()) {
             double power = pid.calculate(max, elevator.currentHeight());
             elevator.setPower(power);
         }
+=======
+        double power = pid.calculate(max, elevator.getCurrentHeight());
+
+        elevator.setPower(power);
+>>>>>>> master
     }
 
     @Override
