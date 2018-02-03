@@ -3,11 +3,13 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
+import competition.subsystems.drive.commands.AssistedTankDriveCommand;
+import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
@@ -25,6 +27,13 @@ public class OperatorCommandMap {
      * @Inject public void setupMyCommands( OperatorInterface operatorInterface, MyCommand myCommand) {
      * operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand); }
      */
+
+    @Inject
+    public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
+            TankDriveWithJoysticksCommand simpleTank) {
+        oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
+        oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
+    }
 
     @Inject
     public void setupShiftGearCommand(OperatorInterface oi, ToggleGearCommand shiftGear) {
