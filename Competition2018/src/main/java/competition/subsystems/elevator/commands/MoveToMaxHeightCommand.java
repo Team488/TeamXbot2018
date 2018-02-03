@@ -26,7 +26,7 @@ public class MoveToMaxHeightCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
         if (!elevator.isCalibrated()) {
-            log.info("Elevator uncalibrated");
+            log.warn("THE ELEVATOR WILL NOT BE ABLE TO RUN UNDER AUTOMATIC CONTROL!");
         }
     }
 
