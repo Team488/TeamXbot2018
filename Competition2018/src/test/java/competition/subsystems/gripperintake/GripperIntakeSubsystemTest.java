@@ -8,7 +8,7 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 
 public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
-    
+
     GripperIntakeSubsystem intake;
 
     @Override
@@ -17,7 +17,7 @@ public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
         this.intake = injector.getInstance(GripperIntakeSubsystem.class);
         this.intake.temporaryHack();
     }
-    
+
     @Test
     public void testEject() {
         assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
@@ -26,7 +26,7 @@ public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
         assertTrue(intake.leftMotor.getMotorOutputPercent() > 0);
         assertTrue(intake.rightMotor.getMotorOutputPercent() > 0);
     }
-    
+
     @Test
     public void testIntake() {
         assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
@@ -35,23 +35,25 @@ public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
         assertTrue(intake.leftMotor.getMotorOutputPercent() < 0);
         assertTrue(intake.rightMotor.getMotorOutputPercent() < 0);
     }
-    
+
     @Test
     public void testLeftDominant() {
         assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
         assertEquals(intake.rightMotor.getMotorOutputPercent(), 0, 0.001);
         intake.intakeleftDominant();
-        assertTrue(Math.abs(intake.leftMotor.getMotorOutputPercent()) - Math.abs(intake.rightMotor.getMotorOutputPercent()) >= 0.1);
+        assertTrue(Math.abs(intake.leftMotor.getMotorOutputPercent())
+                - Math.abs(intake.rightMotor.getMotorOutputPercent()) >= 0.1);
     }
-    
+
     @Test
     public void testRightDominant() {
         assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
         assertEquals(intake.rightMotor.getMotorOutputPercent(), 0, 0.001);
         intake.intakerightDominant();
-        assertTrue(Math.abs(intake.rightMotor.getMotorOutputPercent()) - Math.abs(intake.leftMotor.getMotorOutputPercent()) >= 0.1);
+        assertTrue(Math.abs(intake.rightMotor.getMotorOutputPercent())
+                - Math.abs(intake.leftMotor.getMotorOutputPercent()) >= 0.1);
     }
-    
+
     @Test
     public void testStop() {
         intake.setPower(1, 1);

@@ -27,7 +27,7 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
         fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", .4);
         slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", .1);
         currentDeploySpeed = fastDeploySpeed.get();
-        
+
         if (contract.climbDeployReady()) {
             temporaryHack();
         }

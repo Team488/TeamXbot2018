@@ -34,10 +34,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     }
 
     @Inject
-    public DriveSubsystem(
-            CommonLibFactory factory, 
-            XPropertyManager propManager,
-            ElectricalContract2018 contract) {
+    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract) {
         log.info("Creating DriveSubsystem");
 
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);

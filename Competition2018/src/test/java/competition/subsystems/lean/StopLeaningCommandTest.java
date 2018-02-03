@@ -1,4 +1,4 @@
-package competition.subsystems.lean.commands;
+package competition.subsystems.lean;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -6,7 +6,6 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.StopLeaningCommand;
-import xbot.common.injection.BaseWPITest;
 
 public class StopLeaningCommandTest extends BaseCompetitionTest {
 
