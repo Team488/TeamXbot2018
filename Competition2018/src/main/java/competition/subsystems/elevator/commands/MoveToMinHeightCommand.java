@@ -20,7 +20,7 @@ public class MoveToMinHeightCommand extends BaseCommand {
         pid = pf.createPIDManager("Elevator", 0.1, 0, 0);
         pid.setErrorThreshold(0.1);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
