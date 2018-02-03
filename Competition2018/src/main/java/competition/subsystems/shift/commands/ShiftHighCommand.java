@@ -25,9 +25,4 @@ public class ShiftHighCommand extends BaseCommand {
     public void execute() {
 
     }
-
-    public boolean isFinished() {
-        return true;
-    }
-
 }
