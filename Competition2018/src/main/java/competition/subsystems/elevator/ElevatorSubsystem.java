@@ -77,6 +77,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         calibrationOffset = motor.getSelectedSensorPosition(0);
         isCalibrated = true;
     }
+    
+    public void setCalibrate(boolean forceCalibrate) {
+        if (forceCalibrate) {
+            calibrate();
+        }
+        isCalibrated = forceCalibrate;
+    }
+    
+    public boolean isCalibrated() {
+        return isCalibrated;
+    }
 
     /**
      * Directly sets the % power on the elevator motor. If the elevator is uncalibrated, power will be constrained.
@@ -139,10 +150,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         }
 
         return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
-    }
-
-    public boolean isCalibrated() {
-        return isCalibrated;
     }
 
     /**
