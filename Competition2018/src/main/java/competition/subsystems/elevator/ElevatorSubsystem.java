@@ -74,7 +74,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public void temporaryHack() {
         motor = clf.createCANTalon(contract.getElevatorMaster().channel);
         motor.setInverted(contract.getElevatorMaster().inverted);
-        motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         calibrationSensor = clf.createDigitalInput(1);
     }
 
