@@ -3,6 +3,7 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -40,9 +41,14 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupElevatorCommands(OperatorInterface oi, LowerCommand lower, RiseCommand rise) {
+    public void setupElevatorCommands(
+            OperatorInterface oi,
+            LowerCommand lower,
+            RiseCommand rise,
+            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
         oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
+        oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
     }
 
     @Inject

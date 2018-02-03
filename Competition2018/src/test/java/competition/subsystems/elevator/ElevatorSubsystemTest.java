@@ -54,7 +54,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
     public void testTypicalCalibration() {
         // make sure we start uncalibrated at some random height
         ((MockCANTalon) elevator.motor).setPosition(1000);
-        assertTrue(elevator.currentHeight() > 5);
+        assertTrue(elevator.getCurrentHeight() > 5);
         assertFalse(elevator.isCalibrated());
 
         elevator.setPower(-1);
@@ -66,14 +66,14 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         elevator.setPower(-1);
         // verify that the system is now calibrated to the minimum height.
         assertTrue(elevator.isCalibrated());
-        assertEquals(3, elevator.currentHeight(), 0.001);
+        assertEquals(3, elevator.getCurrentHeight(), 0.001);
 
         // have the system raise but the switch still depress - this should not continuously calibrate.
         // With the current hardcoded values, every 100 ticks is one inch of travel.
         ((MockCANTalon) elevator.motor).setPosition(2000);
         elevator.setPower(1);
         assertTrue(elevator.isCalibrated());
-        assertEquals(13, elevator.currentHeight(), 0.001);
+        assertEquals(13, elevator.getCurrentHeight(), 0.001);
     }
 
     private void checkElevatorPower(double power) {
