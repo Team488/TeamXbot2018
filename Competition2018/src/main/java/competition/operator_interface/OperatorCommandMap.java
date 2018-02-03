@@ -45,10 +45,10 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             LowerCommand lower,
             RiseCommand rise,
-            CalibrateElevatorTicksPerInchCommand calibrate) {
+            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
         oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
-        oi.operatorGamepad.getifAvailable(5).whenPressed(calibrate);
+        oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
     }
 
     @Inject
