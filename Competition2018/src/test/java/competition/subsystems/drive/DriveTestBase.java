@@ -23,10 +23,6 @@ public class DriveTestBase extends BaseCompetitionTest {
         pose.updatePeriodicData();
     }
     
-    public void setRobotHeading(double heading) {
-    	pose.setCurrentHeading(heading);
-    }
-    
     public void verifyDrivePositive() {
         assertTrue(((MockCANTalon)drive.leftMaster).getMotorOutputPercent() > 0);
         assertTrue(((MockCANTalon)drive.rightMaster).getMotorOutputPercent() > 0);

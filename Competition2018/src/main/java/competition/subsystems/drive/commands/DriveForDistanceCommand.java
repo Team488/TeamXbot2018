@@ -18,11 +18,9 @@ public class DriveForDistanceCommand extends BaseCommand {
     private final PoseSubsystem poseSubsystem;
     private final DriveSubsystem drive;
     
-    public double leftPower;
-    public double rightPower;
     private double deltaDistance;
     private double targetDistance;
-    private double previousPositionInches;
+    private double startingPosition;
     public final double defaultPValue = 1/80d;
     
     private DoubleProperty deltaDistanceProp;
@@ -62,7 +60,7 @@ public class DriveForDistanceCommand extends BaseCommand {
     
     @Override
     public void initialize() {
-        previousPositionInches = getYDistance();
+        startingPosition = getYDistance();
         
         targetHeading = poseSubsystem.getCurrentHeading();
         
@@ -77,9 +75,10 @@ public class DriveForDistanceCommand extends BaseCommand {
     @Override
     public void execute() {
         double power = travelManager.calculate(targetDistance, getYDistance());
+        double headingPower = calculateHeadingPower();
         
-        leftPower = power - calculateHeadingPower();
-        rightPower = power + calculateHeadingPower();
+        double leftPower = power - headingPower;
+        double rightPower = power + headingPower;
         
         drive.drive(leftPower, rightPower);
     }
@@ -103,9 +102,9 @@ public class DriveForDistanceCommand extends BaseCommand {
     
     @Override
     public void end() {
-        log.info("Ending, PreviousPosition was " + previousPositionInches 
+        log.info("Ending, PreviousPosition was " + startingPosition 
                 + ", Targeted Delta in distance is " + deltaDistance + " Distance traveled is " 
-                + getYDistance());
+                + (deltaDistance - startingPosition));
         drive.stop();
     }
 }

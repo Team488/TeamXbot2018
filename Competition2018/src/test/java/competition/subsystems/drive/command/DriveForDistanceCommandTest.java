@@ -73,7 +73,7 @@ public class DriveForDistanceCommandTest extends DriveTestBase {
         mockIO.setGyroHeading(80);
         command.execute();
 
-        assertTrue(drive.leftMaster.getMotorOutputPercent() < ((MockCANTalon) drive.rightMaster).getMotorOutputPercent());
+        assertTrue(((MockCANTalon) drive.leftMaster).getMotorOutputPercent() < ((MockCANTalon) drive.rightMaster).getMotorOutputPercent());
 
         mockIO.setGyroHeading(100);
         command.execute();
