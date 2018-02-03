@@ -34,7 +34,6 @@ public class DriveForDistanceCommand extends BaseCommand {
     public DriveForDistanceCommand(DriveSubsystem driveSubsystem, XPropertyManager propManager,
             RobotAssertionManager assertionManager, PIDFactory pidFactory, PoseSubsystem pose, CommonLibFactory clf) {
 
-       
         this.drive = driveSubsystem;
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
@@ -42,7 +41,7 @@ public class DriveForDistanceCommand extends BaseCommand {
         headingDrivePid = pidFactory.createPIDManager("Heading module", defaultPValue, 0, 0);
         targetHeading = new ContiguousHeading();
         this.heading = clf.createHeadingModule(headingDrivePid);
-       
+
     }
 
     /**
