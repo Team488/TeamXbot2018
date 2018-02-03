@@ -78,8 +78,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem {
         isCalibrated = true;
     }
     
-    public void setCalibrate(boolean calbrated) {
-        isCalibrated = calbrated;
+    public void setCalibrate(boolean calibrated) {
+        isCalibrated = calibrated;
+        
+        if (calibrated) {
+            calibrate();
+        }
     }
     
     public boolean isCalibrated() {
