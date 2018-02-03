@@ -1,4 +1,4 @@
-package competition.subsystems.gripperdeploy.Commands.tests;
+package competition.subsystems.gripperdeploy.commands.tests;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
