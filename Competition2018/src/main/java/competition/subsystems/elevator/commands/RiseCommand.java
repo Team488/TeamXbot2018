@@ -5,27 +5,24 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
-import xbot.common.command.BaseSubsystem;
 
 @Singleton
 public class RiseCommand extends BaseCommand {
-	
-	ElevatorSubsystem rise;
-	
-	@Inject
-	public RiseCommand(ElevatorSubsystem rise) {
-		this.rise = rise;
-	}
-	
-	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void execute() {
-		rise.rise();
-	}
-	
+
+    ElevatorSubsystem rise;
+
+    @Inject
+    public RiseCommand(ElevatorSubsystem rise) {
+        this.rise = rise;
+    }
+
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
+
+    @Override
+    public void execute() {
+        rise.rise();
+    }
 }

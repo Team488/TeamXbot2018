@@ -6,38 +6,33 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
 public class LowerCommandTest extends BaseCompetitionTest {
 
-	LowerCommand command;
-	ElevatorSubsystem elevator;
-	
-	@Override
-	public void setUp() {
-		// TODO Auto-generated method stub
-		super.setUp();
-		
-		command = injector.getInstance(LowerCommand.class);
-		elevator = injector.getInstance(ElevatorSubsystem.class);
-		elevator.temporaryHack();
-	}
-	
-	@Test
-	public void testSimple() {
-		command.initialize();
-		command.execute();
-	}
-	
-	@Test
-	public void verifyMovingDown() {
-		
-		command.initialize();
-		command.execute();
-		
-		assertTrue(elevator.motor.getMotorOutputPercent() <= 0.1);
-	}
-}
+    LowerCommand command;
+    ElevatorSubsystem elevator;
 
+    @Override
+    public void setUp() {
+        super.setUp();
+
+        command = injector.getInstance(LowerCommand.class);
+        elevator = injector.getInstance(ElevatorSubsystem.class);
+        elevator.temporaryHack();
+    }
+
+    @Test
+    public void testSimple() {
+        command.initialize();
+        command.execute();
+    }
+
+    @Test
+    public void verifyMovingDown() {
+
+        command.initialize();
+        command.execute();
+
+        assertTrue(elevator.motor.getMotorOutputPercent() <= 0.1);
+    }
+}

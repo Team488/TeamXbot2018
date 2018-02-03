@@ -6,35 +6,31 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 
-public class StopCommandTest extends BaseCompetitionTest{
-	
-	StopCommand command;
-	ElevatorSubsystem elevator;
-	
-	@Override
-	public void setUp() {
-		// TODO Auto-generated method stub
-		super.setUp();
-		
-		command = injector.getInstance(StopCommand.class);
-		elevator = injector.getInstance(ElevatorSubsystem.class);
-		elevator.temporaryHack();
-	}
-	
-	@Test
-	public void testSimple() {
-		command.execute();
-	}
-	
-	@Test
-	public void verifyMovingUp() {
-		
-		command.execute();
-		
-		assertTrue(elevator.motor.getMotorOutputPercent() == 0);
-	}
+public class StopCommandTest extends BaseCompetitionTest {
+
+    StopCommand command;
+    ElevatorSubsystem elevator;
+
+    @Override
+    public void setUp() {
+        super.setUp();
+
+        command = injector.getInstance(StopCommand.class);
+        elevator = injector.getInstance(ElevatorSubsystem.class);
+        elevator.temporaryHack();
+    }
+
+    @Test
+    public void testSimple() {
+        command.execute();
+    }
+
+    @Test
+    public void verifyMovingUp() {
+
+        command.execute();
+
+        assertTrue(elevator.motor.getMotorOutputPercent() == 0);
+    }
 }
