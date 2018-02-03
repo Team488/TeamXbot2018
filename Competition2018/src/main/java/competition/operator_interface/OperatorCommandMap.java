@@ -12,6 +12,7 @@ import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -56,10 +57,12 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             LowerCommand lower,
             RiseCommand rise,
-            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks) {
+            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
+            CalibrateElevatorCommand calibrate) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
         oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
+        oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
     }
 
     @Inject
