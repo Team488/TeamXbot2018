@@ -7,29 +7,30 @@ import xbot.common.command.BaseCommand;
 
 public class RetractClimberArmCommand extends BaseCommand {
 
-	ClimberDeploySubsystem deploy;
+    ClimberDeploySubsystem deploy;
 
-	@Inject
-	public RetractClimberArmCommand (ClimberDeploySubsystem deploy) {
-		this.deploy = deploy;
-		this.requires(deploy);
-	}
-	
-	@Override
-	public void initialize() {
-		log.info("Initializing");		
-	}
+    @Inject
+    public RetractClimberArmCommand(ClimberDeploySubsystem deploy) {
+        this.deploy = deploy;
+        this.requires(deploy);
+    }
 
-	@Override
-	public void execute() {
-		deploy.retractClimberArm();
-	}
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
 
-	@Override
-	public boolean isFinished() {
-		return deploy.hitBarHeight();
-	}
-	public void end() {
-		deploy.stopClimberArm();
-	}
+    @Override
+    public void execute() {
+        deploy.retractClimberArm();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return deploy.hitBarHeight();
+    }
+
+    public void end() {
+        deploy.stopClimberArm();
+    }
 }
