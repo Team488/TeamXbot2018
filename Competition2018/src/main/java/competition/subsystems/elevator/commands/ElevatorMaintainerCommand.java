@@ -13,7 +13,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
 
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf) {
-        this.elevator = elevator; 
+        this.elevator = elevator;
         pid = pf.createPIDManager("Elevator", 1, 0, 0);
         pid.setErrorThreshold(0.1);
     }

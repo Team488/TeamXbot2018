@@ -12,7 +12,7 @@ import xbot.common.math.PIDManager;
 public class MoveToMinHeightCommand extends BaseCommand {
 
     ElevatorSubsystem elevator;
-    PIDManager pid; 
+    PIDManager pid;
 
     @Inject
     public MoveToMinHeightCommand(ElevatorSubsystem elevator, PIDFactory pf) {
@@ -35,12 +35,10 @@ public class MoveToMinHeightCommand extends BaseCommand {
             double power = pid.calculate(elevator.getMinHeight(), elevator.getCurrentHeight());
             elevator.setPower(power);
         }
-
     }
 
     @Override
     public boolean isFinished() {
         return pid.isOnTarget();
     }
-
 }

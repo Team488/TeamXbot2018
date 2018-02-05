@@ -42,7 +42,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public XCANTalon motor;
     public XDigitalInput calibrationSensor;
-    
+
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
@@ -80,23 +80,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         calibrationOffset = motor.getSelectedSensorPosition(0);
         isCalibrated = true;
     }
-    
+
     public void setCalibrate(boolean forceCalibrated) {
         isCalibrated = forceCalibrated;
         if (forceCalibrated) {
             calibrate();
         }
-    }
-    
-    public boolean isCalibrated() {
-        return isCalibrated;
-    }
-
-    public void setCalibrate(boolean forceCalibrate) {
-        if (forceCalibrate) {
-            calibrate();
-        }
-        isCalibrated = forceCalibrate;
     }
 
     public boolean isCalibrated() {
@@ -208,15 +197,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         return false;
     }
-    
+
     public double getMaxHeight() {
         return maxHeightInInches.get();
     }
-    
+
     public double getMinHeight() {
         return minHeightInInches.get();
     }
-    
+
     @Override
     public void updatePeriodicData() {
         currentTicks.set(getCurrentTick());
