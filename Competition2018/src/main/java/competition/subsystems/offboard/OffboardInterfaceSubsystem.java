@@ -1,5 +1,6 @@
 package competition.subsystems.offboard;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -21,7 +22,8 @@ import xbot.common.properties.XPropertyManager;
 public class OffboardInterfaceSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(OffboardInterfaceSubsystem.class);
 
-    private static final double INCHES_TO_CM = 2.54;
+    public static final double CM_PER_INCH = 2.54;
+    public static final double METERS_PER_INCH = 0.0254;
     
     private final Queue<OffboardCommunicationPacket> incomingPacketQueue = new LinkedList<>();
     private final int PACKET_QUEUE_MAX_LENGTH = 25;
@@ -55,8 +57,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
             lastRightDriveDistance = rightDriveDistanceInches;
         }
         
-        double leftDriveDeltaCm = (leftDriveDistanceInches - lastLeftDriveDistance) * INCHES_TO_CM;
-        double rightDriveDeltaCm = (rightDriveDistanceInches - lastRightDriveDistance) * INCHES_TO_CM;
+        double leftDriveDeltaCm = (leftDriveDistanceInches - lastLeftDriveDistance) * CM_PER_INCH;
+        double rightDriveDeltaCm = (rightDriveDistanceInches - lastRightDriveDistance) * CM_PER_INCH;
 
         this.lastLeftDriveDistance = leftDriveDistanceInches;
         this.lastRightDriveDistance = rightDriveDistanceInches;
@@ -69,25 +71,16 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
                 OffboardFramePackingUtils.packWheelOdomFrame(leftDriveDeltaCm, rightDriveDeltaCm, timeDelta));
     }
     
-    private void sendOrientationUpdate() {
-        // TODO: Port quaternion code
-        /*Quaternion orientation = poseSubsystem.getImuOrientationQuaternion();
-        rawCommsInterface.sendRaw(
-                OffboardCommsConstants.PACKET_TYPE_ORIENTATION,
-                OffboardFramePackingUtils.packOrientationFrame(orientation.w, orientation.x, orientation.y, orientation.z));*/
-    }
-    
-    private void sendHeadingUpdate() {
-        double heading = poseSubsystem.getCurrentHeading().getValue();
-        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_HEADING, OffboardFramePackingUtils.packHeadingFrame(heading));
-    }
-    
     public void sendSetCurrentCommand(int commandId) {
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, OffboardFramePackingUtils.packSetCommandFrame(commandId));
     }
     
     public Collection<OffboardCommunicationPacket> getPacketQueue() {
-        return Collections.unmodifiableCollection(this.incomingPacketQueue);
+        ArrayList<OffboardCommunicationPacket> queueContents = new ArrayList<>();
+        for(int i = 0; i < this.incomingPacketQueue.size(); i++) {
+            queueContents.add(this.incomingPacketQueue.remove());
+        }
+        return queueContents;
     }
     
     public void clearPacketQueue() {
@@ -97,8 +90,6 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     @Override
     public void updatePeriodicData() {
         sendWheelOdomUpdate();
-        //sendOrientationUpdate();
-        //sendHeadingUpdate();
 
         // TODO: Tune loop? Logging when hit limit?
         int numPacketsDropped = 0;

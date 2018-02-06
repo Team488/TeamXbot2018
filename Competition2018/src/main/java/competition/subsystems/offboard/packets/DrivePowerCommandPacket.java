@@ -1,11 +1,11 @@
 package competition.subsystems.offboard.packets;
 
-public class DriveCommandPacket {
+public class DrivePowerCommandPacket {
     public final int commandId;
     public final double leftPower;
     public final double rightPower;
     
-    private DriveCommandPacket(byte[] packetData) {
+    private DrivePowerCommandPacket(byte[] packetData) {
         this.commandId = packetData[0] & 0xFF;
         this.leftPower = parseSinglePower(packetData[1], packetData[2]);
         this.rightPower = parseSinglePower(packetData[3], packetData[4]);
@@ -16,7 +16,7 @@ public class DriveCommandPacket {
         return total / 3000d;
     }
     
-    public static DriveCommandPacket parse(byte[] packetData) {
-        return new DriveCommandPacket(packetData);
+    public static DrivePowerCommandPacket parse(byte[] packetData) {
+        return new DrivePowerCommandPacket(packetData);
     }
 }

@@ -5,13 +5,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
-import competition.subsystems.offboard.packets.DriveCommandPacket;
+import competition.subsystems.offboard.packets.DrivePowerCommandPacket;
 
 public class OffboardDriveCommandParserTest extends BaseCompetitionTest {
 	
 	@Test
 	public void testSimple() {
-	    DriveCommandPacket packet = DriveCommandPacket.parse(new byte[] {
+	    DrivePowerCommandPacket packet = DrivePowerCommandPacket.parse(new byte[] {
 	        0x01,
 	        (byte)0b00000001, (byte)0b00101100,
 	        (byte)0b11111110, (byte)0b11010100

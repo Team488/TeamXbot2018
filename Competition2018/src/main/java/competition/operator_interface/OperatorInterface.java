@@ -18,10 +18,10 @@ public class OperatorInterface {
     public XFTCGamepad driverGamepad;
     public XFTCGamepad operatorGamepad;
     
-    public final AnalogHIDDescription raiseElevator;
+    /*public final AnalogHIDDescription raiseElevator;
     public final AnalogHIDDescription lowerElevator;
     public final AnalogHIDDescription raiseClimber;
-    public final AnalogHIDDescription lowerClimber;
+    public final AnalogHIDDescription lowerClimber;*/
 
     @Inject
     public OperatorInterface(CommonLibFactory factory, RobotAssertionManager assertionManager) {
@@ -35,7 +35,7 @@ public class OperatorInterface {
         operatorGamepad.setLeftStickYInversion(true);
         operatorGamepad.setRightStickYInversion(true);
         
-        raiseElevator = new AnalogHIDDescription(3, .501, 1.0);
+        /*raiseElevator = new AnalogHIDDescription(3, .501, 1.0);
         operatorGamepad.addAnalogButton(raiseElevator);
         
         lowerElevator = new AnalogHIDDescription(2, .501, 1.0);
@@ -45,6 +45,6 @@ public class OperatorInterface {
         driverGamepad.addAnalogButton(raiseClimber);
         
         lowerClimber = new AnalogHIDDescription(2, .501, 1.0);
-        driverGamepad.addAnalogButton(lowerClimber);
+        driverGamepad.addAnalogButton(lowerClimber);*/
     }
 }

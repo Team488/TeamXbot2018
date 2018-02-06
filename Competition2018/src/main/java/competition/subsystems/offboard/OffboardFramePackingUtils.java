@@ -19,36 +19,9 @@ public class OffboardFramePackingUtils {
         };
     }
     
-    public static byte[] packOrientationFrame(float w, float x, float y, float z) {
-        short wInteger = (short)(w * 10_000);
-        short xInteger = (short)(x * 10_000);
-        short yInteger = (short)(y * 10_000);
-        short zInteger = (short)(z * 10_000);
-        
-        return new byte[] {
-            (byte)(wInteger >>> 8),
-            (byte)(wInteger & 0xFF),
-            (byte)(xInteger >>> 8),
-            (byte)(xInteger & 0xFF),
-            (byte)(yInteger >>> 8),
-            (byte)(yInteger & 0xFF),
-            (byte)(zInteger >>> 8),
-            (byte)(zInteger & 0xFF)
-        };
-    }
-    
     public static byte[] packSetCommandFrame(int commandId) {
         return new byte[] {
             (byte)(commandId & 0xFF)
-        };
-    }
-    
-    public static byte[] packHeadingFrame(double headingDegrees) {
-        short headingInteger = (short)(headingDegrees * 100);
-        
-        return new byte[] {
-            (byte)(headingInteger >>> 8),
-            (byte)(headingInteger & 0xFF)
         };
     }
 }

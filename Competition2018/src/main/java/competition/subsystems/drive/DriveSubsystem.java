@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -70,6 +71,16 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         
         leftMaster.setSensorPhase(true);
         rightMaster.setSensorPhase(true);
+
+        leftMaster.config_kP(0, 0, 0);
+        leftMaster.config_kI(0, 0, 0);
+        leftMaster.config_kD(0, 0, 0);
+        leftMaster.config_kF(0, 0.15, 0);
+
+        rightMaster.config_kP(0, 0, 0);
+        rightMaster.config_kI(0, 0, 0);
+        rightMaster.config_kD(0, 0, 0);
+        rightMaster.config_kF(0, 0.15, 0);
     }
 
     /**
@@ -132,5 +143,11 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     @Override
     public double getTransverseDistance() {
         return 0;
+    }
+    
+    public void driveVelocity(double leftVelocityInchesPerSec, double rightVelocityInchesPerSec) {
+        log.info(leftVelocityInchesPerSec + " =======================================");
+        leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftVelocityInchesPerSec);
+        rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightVelocityInchesPerSec);
     }
 }

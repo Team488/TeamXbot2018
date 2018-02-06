@@ -60,8 +60,8 @@ public class OperatorCommandMap {
             RiseCommand rise,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
             CalibrateElevatorCommand calibrate) {
-        oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
+        //oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
+        //oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
     }
@@ -71,8 +71,8 @@ public class OperatorCommandMap {
             ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm) {
         oi.driverGamepad.getifAvailable(1).whileHeld(extendArm);
         oi.driverGamepad.getifAvailable(2).whileHeld(retractArm);
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
-        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
+        //oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
+        //oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
     }
     
     @Inject

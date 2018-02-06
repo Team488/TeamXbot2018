@@ -28,6 +28,6 @@ public class Robot extends BaseRobot {
         periodicDataSources.add(this.injector.getInstance(DriveSubsystem.class));
         periodicDataSources.add(this.injector.getInstance(PoseSubsystem.class));
         periodicDataSources.add(this.injector.getInstance(OffboardInterfaceSubsystem.class));
-        periodicDataSources.add(this.injector.getInstance(ElevatorSubsystem.class));
+        //periodicDataSources.add(this.injector.getInstance(ElevatorSubsystem.class));
     }
 }
