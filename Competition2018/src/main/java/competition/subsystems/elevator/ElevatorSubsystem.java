@@ -82,9 +82,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void setCalibrate(boolean forceCalibrated) {
-        isCalibrated = forceCalibrated;
         if (forceCalibrated) {
             calibrate();
+        } else {
+            isCalibrated = false;
         }
     }
 
@@ -175,25 +176,20 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      */
 
     boolean isCloseToMaxmumHeight() {
-
         if (getCurrentHeightInInches() >= maxHeightInInches.get() * 0.9) {
             return true;
         }
-
         return false;
-
     }
 
     /**
      * Returns true if the elevator is close to its minimum height.
      */
 
-    boolean isCloseToMinimumHeight() {
-        
+    boolean isCloseToMinimumHeight() {      
         if (getCurrentHeightInInches() < maxHeightInInches.get() * 0.15) {
             return true;
         }
-
         return false;
     }
 
