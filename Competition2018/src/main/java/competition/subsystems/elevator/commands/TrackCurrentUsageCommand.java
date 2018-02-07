@@ -8,7 +8,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class TrackCurrentUsageCommand extends BaseCommand{
-    
+
     ElevatorSubsystem elevator;
     XCANTalon talon;
     double oldCurrent;
@@ -16,58 +16,61 @@ public class TrackCurrentUsageCommand extends BaseCommand{
     double size;
     double total;
     double averageCurrent;
-    double currentTime;
     double targetTime;
+    double currentTime;
+    double initialTime;
     double maxCurrentInAMinute;
-    double minCurrentInAMinute;
-    
-    
+    double minCurrentInAMinute;   
+
+
 
     public TrackCurrentUsageCommand(XPropertyManager propMan,XCANTalon talon, ElevatorSubsystem elevator) {
         this.elevator = elevator;
         this.talon = talon;
-        DoubleProperty averageCurrent = propMan.createPersistentProperty("Average Current", 0);
-        //DoubleProperty
-        
     }
-        
+
 
     @Override
     public void initialize() {
-    oldCurrent = current;
-    size = 1;
-    total = current;
-    targetTime = Timer.getFPGATimestamp()+60;
-    currentTime=Timer.getFPGATimestamp();
-    maxCurrentInAMinute=current;
-    minCurrentInAMinute=current;
+
+        current=talon.getOutputCurrent();
+        size = 1;
+        total = current;
+        initialTime=Timer.getFPGATimestamp();
+        targetTime = initialTime+1;
+        maxCurrentInAMinute=currentTime;
+        minCurrentInAMinute=currentTime;
+
     }
 
 
     @Override
     public void execute() {
-       
-        if (currentTime<targetTime) {
-            
-            current = talon.getOutputCurrent();
-            
-            if(oldCurrent != current) {
-                total = total + current;
-                size = size + 1;
-                
-                if (current > maxCurrentInAMinute) {
-                    maxCurrentInAMinute = current;
-                }
 
-                if (current< minCurrentInAMinute) {
-                    minCurrentInAMinute = current;
-                }
-                
+        currentTime=Timer.getFPGATimestamp();
+
+        while (currentTime<targetTime) {
+
+            current = talon.getOutputCurrent(); 
+            total = total + current;
+            size = size + 1;
+
+            if (currentTime-initialTime >= 60 ) {
+                maxCurrentInAMinute=0;
+                minCurrentInAMinute=0;
+
             }
+            if (current > maxCurrentInAMinute) {
+                maxCurrentInAMinute = current;
+            }
+
+            if (current< minCurrentInAMinute) {
+                minCurrentInAMinute = current;
+            }
+
             averageCurrent = total / size;
-            oldCurrent = current;
-            currentTime=currentTime+1;
         }
-        targetTime=currentTime+60;
+
+        targetTime=currentTime+1;
     }
 }
