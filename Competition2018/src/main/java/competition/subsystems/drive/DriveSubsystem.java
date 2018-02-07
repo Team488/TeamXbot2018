@@ -40,36 +40,44 @@ public class DriveSubsystem extends BaseDriveSubsystem {
 
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
-        leftFollower.follow(leftMaster);
-
-        leftMaster.setInverted(contract.getLeftDriveMaster().inverted);
-        leftFollower.setInverted(contract.getLeftDriveFollower().inverted);
+        configureMotorTeam(
+                "LeftDriveMaster",
+                leftMaster, leftFollower,
+                contract.getLeftDriveMaster().inverted, contract.getLeftDriveFollower().inverted,
+                true);
 
         this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
-        rightFollower.follow(rightMaster);
-
-        rightMaster.setInverted(contract.getRightDriveMaster().inverted);
-        rightFollower.setInverted(contract.getRightDriveFollower().inverted);
+        configureMotorTeam(
+                "RightDriveMaster",
+                rightMaster, rightFollower,
+                contract.getRightDriveMaster().inverted, contract.getRightDriveFollower().inverted,
+                true);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
-
-        leftMaster.setSensorPhase(true);
-        rightMaster.setSensorPhase(true);
 
         leftMaster.createTelemetryProperties("LeftDriveMaster");
         rightMaster.createTelemetryProperties("RightDriveMaster");
 
         leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", 0);
         rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", 0);
+    }
+    
+    private static void configureMotorTeam(
+            String masterName,
+            XCANTalon master, XCANTalon follower,
+            boolean masterInverted, boolean followerInverted,
+            boolean sensorPhase) {
+        follower.follow(master);
 
-        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.setInverted(masterInverted);
+        follower.setInverted(followerInverted);
         
-        leftMaster.setSensorPhase(true);
-        rightMaster.setSensorPhase(true);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.setSensorPhase(sensorPhase);
+        master.createTelemetryProperties(masterName);
     }
 
     /**
