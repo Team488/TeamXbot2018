@@ -99,7 +99,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      *            power percentage in robot scale
      */
     public void setPower(double power) {
-
         boolean sensorHit = calibrationSensor.get();
         calibrationLatch.setValue(sensorHit);
 
@@ -142,7 +141,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         setPower(0);
     }
 
-    public double getCurrentHeight() {
+    public double getCurrentHeightInInches() {
         return ticksToInches(motor.getSelectedSensorPosition(0));
     }
 
@@ -177,7 +176,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     boolean isCloseToMaxmumHeight() {
 
-        if (getCurrentHeight() >= maxHeightInInches.get() * 0.9) {
+        if (getCurrentHeightInInches() >= maxHeightInInches.get() * 0.9) {
             return true;
         }
 
@@ -190,8 +189,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      */
 
     boolean isCloseToMinimumHeight() {
-
-        if (getCurrentHeight() < maxHeightInInches.get() * 0.15) {
+        
+        if (getCurrentHeightInInches() < maxHeightInInches.get() * 0.15) {
             return true;
         }
 
@@ -209,6 +208,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     @Override
     public void updatePeriodicData() {
         currentTicks.set(getCurrentTick());
-        currentHeight.set(getCurrentHeight());
+        currentHeight.set(getCurrentHeightInInches());
     }
 }
