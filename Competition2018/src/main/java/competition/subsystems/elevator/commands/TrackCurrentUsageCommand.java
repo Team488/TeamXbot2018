@@ -1,12 +1,13 @@
 package competition.subsystems.elevator.commands;
 
 import competition.subsystems.elevator.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class TrackAverageCurrentCommand extends BaseCommand{
+public class TrackCurrentUsageCommand extends BaseCommand{
     
     ElevatorSubsystem elevator;
     XCANTalon talon;
@@ -15,10 +16,14 @@ public class TrackAverageCurrentCommand extends BaseCommand{
     double size;
     double total;
     double averageCurrent;
+    double currentTime;
+    double targetTime;
+    double maxCurrentInAMinute;
+    double minCurrentInAMinute;
     
     
 
-    public TrackAverageCurrentCommand(XPropertyManager propMan,XCANTalon talon, ElevatorSubsystem elevator) {
+    public TrackCurrentUsageCommand(XPropertyManager propMan,XCANTalon talon, ElevatorSubsystem elevator) {
         this.elevator = elevator;
         this.talon = talon;
         DoubleProperty averageCurrent = propMan.createPersistentProperty("Average Current", 0);
@@ -32,18 +37,37 @@ public class TrackAverageCurrentCommand extends BaseCommand{
     oldCurrent = current;
     size = 1;
     total = current;
-        
+    targetTime = Timer.getFPGATimestamp()+60;
+    currentTime=Timer.getFPGATimestamp();
+    maxCurrentInAMinute=current;
+    minCurrentInAMinute=current;
     }
+
 
     @Override
     public void execute() {
-        current = talon.getOutputCurrent();
-        
-        if(oldCurrent != current) {
-            total = total + current;
-            size = size + 1;
+       
+        if (currentTime<targetTime) {
+            
+            current = talon.getOutputCurrent();
+            
+            if(oldCurrent != current) {
+                total = total + current;
+                size = size + 1;
+                
+                if (current > maxCurrentInAMinute) {
+                    maxCurrentInAMinute = current;
+                }
+
+                if (current< minCurrentInAMinute) {
+                    minCurrentInAMinute = current;
+                }
+                
+            }
+            averageCurrent = total / size;
+            oldCurrent = current;
+            currentTime=currentTime+1;
         }
-        averageCurrent = total / size;
-        oldCurrent = current;
+        targetTime=currentTime+60;
     }
 }
