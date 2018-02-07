@@ -81,6 +81,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         isCalibrated = true;
     }
 
+    /**
+     * 
+     * @param forceCalibrated - when true, the calibrate method is run and is
+     * calibrated is set to true. when false, is calibrated is set to false
+     */
     public void setCalibrate(boolean forceCalibrated) {
         if (forceCalibrated) {
             calibrate();
@@ -173,6 +178,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     /**
      * Returns true if the elevator is close to its maximum height.
+     * the "0.9" number refers to 90% of the max height so when current height
+     * is equal to or greater than 90% height, isCloseToMaxmumHeight returns
+     *  true
      */
 
     boolean isCloseToMaxmumHeight() {
@@ -184,6 +192,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     /**
      * Returns true if the elevator is close to its minimum height.
+     * the "0.15" number refers to 15% of the total height so when current
+     *  height is equal to or less than 15% height, isCloseToMaxmumHeight 
+     *  returns true
      */
 
     boolean isCloseToMinimumHeight() {      
