@@ -201,7 +201,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     @Override
     public void updatePeriodicData() {
-        currentTicks.set(getCurrentTick());
-        currentHeight.set(getCurrentHeight());
+        if (contract.elevatorReady()) {
+            currentTicks.set(getCurrentTick());
+            currentHeight.set(getCurrentHeight());
+        }
     }
 }
