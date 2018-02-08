@@ -30,7 +30,8 @@ public class SetElevatorTargetHeightTest extends BaseCompetitionTest {
     
     @Test
     public void checkTransaction() {
-        assertEquals(3, elevator.getTargetHeight(), .01);
+        elevator.setTargetHeight(79);
+        assertEquals(79, elevator.getTargetHeight(), .01);
         command.setGoalHeight(10);
         command.initialize();
         command.execute();

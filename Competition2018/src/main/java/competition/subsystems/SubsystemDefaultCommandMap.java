@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.ElectricalContract2018;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
@@ -22,24 +23,41 @@ public class SubsystemDefaultCommandMap {
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
     }
-    
+
     @Inject
-    public void setupClimberDeploySubsystem(ClimberDeploySubsystem climberdeploySubsystem, StopClimberArmCommand command) {
-    	climberdeploySubsystem.setDefaultCommand(command);
+    public void setupClimberDeploySubsystem(
+            ElectricalContract2018 contract, 
+            ClimberDeploySubsystem climberdeploySubsystem,
+            StopClimberArmCommand command) {
+        if (contract.climbDeployReady()) {
+            climberdeploySubsystem.setDefaultCommand(command);
+        }
     }
-    
-    @Inject 
-    public void setupGripperDeploySubsystem(GripperDeploySubsystem gripperdeploySubsystem, GripperStopDeployCommand command) {
-    	gripperdeploySubsystem.setDefaultCommand(command);
-    }
-    
+
     @Inject
-    public void setupLeanSubsystem(LeanSubsystem leanSubsystem, StopLeaningCommand command) {
-    	leanSubsystem.setDefaultCommand(command);
+    public void setupGripperDeploySubsystem(
+            ElectricalContract2018 contract,
+            GripperDeploySubsystem gripperdeploySubsystem,
+            GripperStopDeployCommand command) {
+        if (contract.wristReady()) {
+            gripperdeploySubsystem.setDefaultCommand(command); 
+        }
     }
-    
+
     @Inject
-    public void setupShiftSubsytem(ShiftSubsystem shiftSubsystem, ShiftLowCommand command) {
-    	shiftSubsystem.setDefaultCommand(command);
+    public void setupLeanSubsystem(
+            ElectricalContract2018 contract,
+            LeanSubsystem leanSubsystem, 
+            StopLeaningCommand command) {
+        if (contract.climbLeanReady()) {
+            leanSubsystem.setDefaultCommand(command);
+        }
+    }
+
+    @Inject
+    public void setupShiftSubsytem(
+            ShiftSubsystem shiftSubsystem, 
+            ShiftLowCommand command) {
+        shiftSubsystem.setDefaultCommand(command);
     }
 }

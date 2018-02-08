@@ -10,22 +10,22 @@ import xbot.common.command.BaseCommand;
 @Singleton
 public class GripperEjectCommand extends BaseCommand {
 
-	GripperIntakeSubsystem intake;
-	
-	@Inject
-	public GripperEjectCommand(GripperIntakeSubsystem intake) {
-		this.requires(intake);
-		this.intake = intake;
-	}
-	
-	@Override
-	public void initialize() {
-		log.info("Initializing");
-	}
+    GripperIntakeSubsystem intake;
 
-	@Override
-	public void execute() {
-		intake.eject();
-	}
+    @Inject
+    public GripperEjectCommand(GripperIntakeSubsystem intake) {
+        this.requires(intake);
+        this.intake = intake;
+    }
+
+    @Override
+    public void initialize() {
+        log.info("Initializing");
+    }
+
+    @Override
+    public void execute() {
+        intake.eject();
+    }
 
 }

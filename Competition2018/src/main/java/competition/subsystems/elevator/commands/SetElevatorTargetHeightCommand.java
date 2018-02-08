@@ -1,18 +1,14 @@
 package competition.subsystems.elevator.commands;
 
 import xbot.common.command.BaseSetpointCommand;
-import xbot.common.command.SupportsSetpointLock;
-
 import com.google.inject.Inject;
-
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-
-public class SetElevatorTargetHeightCommand extends BaseSetpointCommand{
+public class SetElevatorTargetHeightCommand extends BaseSetpointCommand {
 
     double height;
     ElevatorSubsystem elevator;
-    
+
     @Inject
     public SetElevatorTargetHeightCommand(ElevatorSubsystem elevator) {
         super(elevator);
@@ -22,19 +18,19 @@ public class SetElevatorTargetHeightCommand extends BaseSetpointCommand{
     public void setGoalHeight(double height) {
         this.height = height;
     }
-  
+
     @Override
     public void initialize() {
+        log.info("Initializing");
         elevator.setTargetHeight(height);
     }
 
     @Override
     public void execute() {
     }
-    
+
     @Override
     public boolean isFinished() {
         return true;
     }
- 
 }
