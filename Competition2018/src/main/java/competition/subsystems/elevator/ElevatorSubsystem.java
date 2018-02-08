@@ -176,34 +176,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
     }
 
-    /**
-     * Returns true if the elevator is close to its maximum height.
-     * the "0.9" number refers to 90% of the max height so when current height
-     * is equal to or greater than 90% height, isCloseToMaxmumHeight returns
-     *  true
-     */
-
-    boolean isCloseToMaxmumHeight() {
-        if (getCurrentHeightInInches() >= maxHeightInInches.get() * 0.9) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns true if the elevator is close to its minimum height.
-     * the "0.15" number refers to 15% of the total height so when current
-     *  height is equal to or less than 15% height, isCloseToMaxmumHeight 
-     *  returns true
-     */
-
-    boolean isCloseToMinimumHeight() {      
-        if (getCurrentHeightInInches() < maxHeightInInches.get() * 0.15) {
-            return true;
-        }
-        return false;
-    }
-
     public double getMaxHeight() {
         return maxHeightInInches.get();
     }

@@ -18,7 +18,6 @@ import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import competition.commandgroups.CollectCubeCommandGroup;
 
 @Singleton
