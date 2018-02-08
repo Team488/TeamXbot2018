@@ -8,7 +8,6 @@ import xbot.common.command.BaseCommand;
 @Singleton
 public class StopElevatorCommand extends BaseCommand {
 
-    double power;
     ElevatorSubsystem elevator;
     
     @Inject
