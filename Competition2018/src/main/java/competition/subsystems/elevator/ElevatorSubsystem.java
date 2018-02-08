@@ -13,6 +13,7 @@ import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
 import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.MathUtils;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -39,6 +40,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty elevatorTargetHeight;
     final DoubleProperty currentTicks;
     final DoubleProperty currentHeight;
+    final BooleanProperty lowerLimitSensor;
 
     public XCANTalon motor;
     public XDigitalInput calibrationSensor;
@@ -55,12 +57,13 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
+        lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
 
         calibrationOffset = 0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
-                calibrate();
+                calibrateHere();
             }
         });
 
@@ -74,19 +77,24 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor = clf.createCANTalon(contract.getElevatorMaster().channel);
         motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        motor.setSensorPhase(true);
+        
+        motor.createTelemetryProperties("ElevatorMotor");
+        
         calibrationSensor = clf.createDigitalInput(1);
     }
 
-    private void calibrate() {
-        calibrationOffset = motor.getSelectedSensorPosition(0);
+    public void calibrateHere() {
+        calibrateAt(motor.getSelectedSensorPosition(0));
+    }
+    
+    public void calibrateAt(double lowestPosition) {
+        calibrationOffset = lowestPosition;
         isCalibrated = true;
     }
-
-    public void setCalibrate(boolean forceCalibrate) {
-        if (forceCalibrate) {
-            calibrate();
-        }
-        isCalibrated = forceCalibrate;
+    
+    public void uncalibrate() {
+        isCalibrated = false;
     }
 
     public boolean isCalibrated() {
@@ -101,7 +109,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      */
     public void setPower(double power) {
 
-        boolean sensorHit = calibrationSensor.get();
+        boolean sensorHit = false; //calibrationSensor.get();
         calibrationLatch.setValue(sensorHit);
 
         // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
@@ -112,6 +120,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         // If the elevator is not calibrated, then maximum power should be constrained.
         if (!isCalibrated) {
             power = MathUtils.constrainDouble(power, -calibrationPower.get(), calibrationPower.get());
+        }
+        
+        if (isCalibrated) {
+            // if we are past the top, no more.
+            //if (getCurrentHeight() > get)
         }
 
         motor.simpleSet(power);
@@ -148,15 +161,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public double getCurrentTick() {
-        return ticksToInches(motor.getSelectedSensorPosition(0));
+        return motor.getSelectedSensorPosition(0);
     }
 
-    public double minHeightInInches() {
-        return ticksToInches(minHeightInInches.get());
+    public double getMinHeightInInches() {
+        return minHeightInInches.get();
     }
 
-    public double maxHeightInInches() {
-        return ticksToInches(maxHeightInInches.get());
+    public double getMaxHeightInInches() {
+        return maxHeightInInches.get();
     }
 
     public void setTickPerInch(double ticksPerInch) {
@@ -203,5 +216,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public void updatePeriodicData() {
         currentTicks.set(getCurrentTick());
         currentHeight.set(getCurrentHeight());
+        motor.updateTelemetryProperties();
+        lowerLimitSensor.set(calibrationSensor.get());
     }
 }

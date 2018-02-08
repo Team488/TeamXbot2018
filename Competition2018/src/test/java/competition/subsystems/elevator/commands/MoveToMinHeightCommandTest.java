@@ -18,7 +18,6 @@ public class MoveToMinHeightCommandTest extends BaseCompetitionTest {
 
         command = injector.getInstance(MoveToMinHeightCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        elevator.temporaryHack();
     }
 
     @Test

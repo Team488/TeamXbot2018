@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.elevator.ElevatorSubsystem;
+import competition.subsystems.elevator.commands.StopElevatorCommand;
 import competition.ElectricalContract2018;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
@@ -22,6 +24,16 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
+    }
+    
+    @Inject
+    public void setupElevatorSubsystem(
+            ElectricalContract2018 contract,
+            ElevatorSubsystem elevator,
+            StopElevatorCommand stop) {
+        if (contract.elevatorReady()) {
+            elevator.setDefaultCommand(stop);
+        }
     }
 
     @Inject

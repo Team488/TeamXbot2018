@@ -18,7 +18,6 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
     public void setUp() {
         super.setUp();
         this.elevator = injector.getInstance(ElevatorSubsystem.class);
-        this.elevator.temporaryHack();
     }
 
     @Test

@@ -18,7 +18,6 @@ public class MoveToMaxHeightCommandTest extends BaseCompetitionTest {
 
         command = injector.getInstance(MoveToMaxHeightCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        elevator.temporaryHack();
     }
 
     @Test

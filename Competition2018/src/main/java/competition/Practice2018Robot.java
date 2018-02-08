@@ -27,12 +27,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean elevatorReady() {
-        return false;
+        return true;
     }
 
     @Override
     public DeviceInfo getElevatorMaster() {
-        return new DeviceInfo(25, false);
+        return new DeviceInfo(25, true);
     }
 
     @Override

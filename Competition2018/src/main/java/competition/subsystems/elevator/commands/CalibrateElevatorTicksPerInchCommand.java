@@ -75,10 +75,17 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
     
     @Override
     public void end() {
-        double minHeightInInches = elevator.minHeightInInches();
-        double maxHeightInInches = elevator.maxHeightInInches();
+        double minHeightInInches = elevator.getMinHeightInInches();
+        double maxHeightInInches = elevator.getMaxHeightInInches();
+        
+        log.info("Largest tick: " + maxTick + ", Smallest tick: " + minTick);
+        
         double ticksPerInch = ((maxTick - minTick) / (maxHeightInInches - minHeightInInches));
+        
+        log.info("Calculated TPI: " + ticksPerInch);
+        
         // some code here to set the ticks per inch on the subsystem
         elevator.setTickPerInch(ticksPerInch);
+        elevator.calibrateAt(minTick);
     }
 }
