@@ -123,8 +123,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         if (isCalibrated) {
-            // if we are past the top, no more.
-            //if (getCurrentHeight() > get)
+            // if we are above the max, only go down.
+            double currentHeight = getCurrentHeight();
+            if (currentHeight > getMaxHeightInInches()) {
+                power = MathUtils.constrainDouble(power, -1, 0);
+            }
+            // if we are below the min, can only go up.
+            if (currentHeight < getMinHeightInInches()) {
+                power = MathUtils.constrainDouble(power, 0, 1);
+            }
         }
 
         motor.simpleSet(power);
