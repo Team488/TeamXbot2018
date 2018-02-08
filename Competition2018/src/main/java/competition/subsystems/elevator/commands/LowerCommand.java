@@ -26,5 +26,4 @@ public class LowerCommand extends BaseCommand {
         lower.lower();
 
     }
-
 }

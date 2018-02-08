@@ -55,8 +55,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
-
-        calibrationOffset = 0;
+        calibrationOffset = 0.0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
@@ -82,11 +81,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         isCalibrated = true;
     }
 
-    public void setCalibrate(boolean forceCalibrate) {
-        if (forceCalibrate) {
+    /**
+     * 
+     * @param forceCalibrated - when true, the calibrate method is run and is
+     * calibrated is set to true. when false, is calibrated is set to false
+     */
+    public void setCalibrate(boolean forceCalibrated) {
+        if (forceCalibrated) {
             calibrate();
+        } else {
+            isCalibrated = false;
         }
-        isCalibrated = forceCalibrate;
     }
 
     public boolean isCalibrated() {
@@ -100,7 +105,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      *            power percentage in robot scale
      */
     public void setPower(double power) {
-
         boolean sensorHit = calibrationSensor.get();
         calibrationLatch.setValue(sensorHit);
 
@@ -143,7 +147,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         setPower(0);
     }
 
-    public double getCurrentHeight() {
+    public double getCurrentHeightInInches() {
         return ticksToInches(motor.getSelectedSensorPosition(0));
     }
 
@@ -172,38 +176,19 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
     }
 
-    /**
-     * Returns true if the elevator is close to its maximum height.
-     */
-
-    boolean isCloseToMaxmumHeight() {
-
-        if (getCurrentHeight() >= maxHeightInInches.get() * 0.9) {
-            return true;
-        }
-
-        return false;
-
+    public double getMaxHeight() {
+        return maxHeightInInches.get();
     }
 
-    /**
-     * Returns true if the elevator is close to its minimum height.
-     */
-
-    boolean isCloseToMinimumHeight() {
-
-        if (getCurrentHeight() < maxHeightInInches.get() * 0.15) {
-            return true;
-        }
-
-        return false;
+    public double getMinHeight() {
+        return minHeightInInches.get();
     }
 
     @Override
     public void updatePeriodicData() {
         if (contract.elevatorReady()) {
             currentTicks.set(getCurrentTick());
-            currentHeight.set(getCurrentHeight());
+            currentHeight.set(getCurrentHeightInInches());
         }
     }
 }
