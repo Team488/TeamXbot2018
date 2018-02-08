@@ -15,6 +15,7 @@ import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -63,7 +64,8 @@ public class OperatorCommandMap {
             CalibrateElevatorCommand calibrate,
             ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand lowish,
-            SetElevatorTargetHeightCommand highish) {
+            SetElevatorTargetHeightCommand highish,
+            CalibrateElevatorHereCommand calibrateHere) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
         oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
@@ -75,6 +77,8 @@ public class OperatorCommandMap {
         
         oi.operatorGamepad.getifAvailable(1).whenPressed(lowish);
         oi.operatorGamepad.getifAvailable(2).whenPressed(highish);
+        
+        oi.operatorGamepad.getifAvailable(9).whenPressed(calibrateHere);
         
         
     }
