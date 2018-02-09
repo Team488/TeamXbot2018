@@ -10,9 +10,12 @@ import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import competition.subsystems.drive.commands.AssistedTankDriveCommand;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
+import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
-import competition.subsystems.elevator.commands.CalibrateElevatorCommand;
+import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorViaStallCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -52,9 +55,26 @@ public class OperatorCommandMap {
     public void setupElevatorCommands(
             OperatorInterface oi,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            CalibrateElevatorCommand calibrate) {
+            CalibrateElevatorViaStallCommand calibrate,
+            ElevatorMaintainerCommand maintainer,
+            SetElevatorTargetHeightCommand lowish,
+            SetElevatorTargetHeightCommand highish,
+            CalibrateElevatorHereCommand calibrateHere) {
+        oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
+        oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
+        oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
         oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
+        
+        lowish.setGoalHeight(20);
+        highish.setGoalHeight(60);
+        
+        oi.operatorGamepad.getifAvailable(1).whenPressed(lowish);
+        oi.operatorGamepad.getifAvailable(2).whenPressed(highish);
+        
+        oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
+        
+        
     }
 
     @Inject
@@ -68,6 +88,6 @@ public class OperatorCommandMap {
     
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(6).whileHeld(collectCube);
+        oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
     }
 }

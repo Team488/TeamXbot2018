@@ -25,11 +25,11 @@ public class GripperDeploySubsystem extends BaseSubsystem {
         gripperDeploySpeed = propMan.createPersistentProperty("gripperDeploySpeed", .5);
 
         if (contract.wristReady()) {
-            temporaryHack();
+            initializeMotor();
         }
     }
 
-    public void temporaryHack() {
+    private void initializeMotor() {
         motor = clf.createCANTalon(contract.getWristMaster().channel);
         motor.setInverted(contract.getWristMaster().inverted);
     }
