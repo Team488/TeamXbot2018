@@ -18,7 +18,6 @@ public class GripperLeftDominantTest extends BaseCompetitionTest {
 
         command = injector.getInstance(GripperLeftDominantCommand.class);
         intake = injector.getInstance(GripperIntakeSubsystem.class);
-        intake.temporaryHack();
     }
 
     @Test

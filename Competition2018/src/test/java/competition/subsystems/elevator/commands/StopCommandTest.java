@@ -17,7 +17,6 @@ public class StopCommandTest extends BaseCompetitionTest {
         super.setUp();
         command = injector.getInstance(StopElevatorCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        elevator.temporaryHack();
     }
 
     @Test

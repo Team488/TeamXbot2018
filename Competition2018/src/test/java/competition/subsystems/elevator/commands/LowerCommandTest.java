@@ -18,7 +18,6 @@ public class LowerCommandTest extends BaseCompetitionTest {
 
         command = injector.getInstance(LowerCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        elevator.temporaryHack();
     }
 
     @Test

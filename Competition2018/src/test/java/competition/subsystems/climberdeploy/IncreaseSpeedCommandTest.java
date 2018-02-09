@@ -18,8 +18,6 @@ public class IncreaseSpeedCommandTest extends BaseCompetitionTest {
 
         deploy = injector.getInstance(ClimberDeploySubsystem.class);
         command = injector.getInstance(IncreaseSpeedCommand.class);
-
-        deploy.temporaryHack();
     }
 
     @Test

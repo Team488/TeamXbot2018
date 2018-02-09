@@ -3,11 +3,13 @@ package competition.subsystems;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.ElectricalContract2018;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.elevator.ElevatorSubsystem;
+import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import competition.subsystems.gripperdeploy.commands.GripperStopDeployCommand;
 import competition.subsystems.lean.LeanSubsystem;
@@ -22,6 +24,16 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
+    }
+    
+    @Inject
+    public void setupElevatorSubsystem(
+            ElectricalContract2018 contract,
+            ElevatorSubsystem elevator,
+            ControlElevatorViaJoystickCommand controlWithJoystick) {
+        if (contract.elevatorReady()) {
+            elevator.setDefaultCommand(controlWithJoystick);
+        }
     }
 
     @Inject
