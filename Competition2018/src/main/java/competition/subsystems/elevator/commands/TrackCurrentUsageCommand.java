@@ -42,7 +42,9 @@ public class TrackCurrentUsageCommand extends BaseCommand{
         minCurrentInAMinute=currentTime;
 
     }
-
+    /**
+     * can calculate the average current within a second and the max and min current within a minute;
+     */
 
     @Override
     public void execute() {
@@ -55,6 +57,7 @@ public class TrackCurrentUsageCommand extends BaseCommand{
             total = total + current;
             size = size + 1;
 
+            //if it is beyond 60 seconds, the max and min number would go to zero; 
             if (currentTime-initialTime >= 60 ) {
                 maxCurrentInAMinute=0;
                 minCurrentInAMinute=0;
