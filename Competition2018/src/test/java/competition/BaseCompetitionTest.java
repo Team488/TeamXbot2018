@@ -16,7 +16,7 @@ public class BaseCompetitionTest extends BaseWPITest {
         protected void configure() {
             super.configure();
 
-            this.bind(ElectricalContract2018.class).to(Practice2018Robot.class);
+            this.bind(ElectricalContract2018.class).to(ImaginaryRobot2018.class);
         }
     }
 

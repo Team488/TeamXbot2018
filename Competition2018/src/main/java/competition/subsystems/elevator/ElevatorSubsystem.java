@@ -68,20 +68,26 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         });
 
         if (contract.elevatorReady()) {
-            temporaryHack();
+            initializeMotor();
+        }
+
+        if (contract.elevatorLowerLimitReady()) {
+            initializeLowerLimit();
         }
 
     }
 
-    public void temporaryHack() {
+    public void initializeMotor() {
         motor = clf.createCANTalon(contract.getElevatorMaster().channel);
         motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
 
         motor.createTelemetryProperties("ElevatorMotor");
+    }
 
-        calibrationSensor = clf.createDigitalInput(1);
+    public void initializeLowerLimit() {
+        calibrationSensor = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
     }
 
     public void calibrateHere() {
@@ -108,12 +114,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      *            power percentage in robot scale
      */
     public void setPower(double power) {
-        boolean sensorHit = calibrationSensor.get();
-        calibrationLatch.setValue(sensorHit);
 
-        // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
-        if (sensorHit) {
-            power = MathUtils.constrainDouble(power, 0, 1);
+        if (contract.elevatorLowerLimitReady()) {
+            boolean sensorHit = calibrationSensor.get();
+            calibrationLatch.setValue(sensorHit);
+
+            // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
+            if (sensorHit) {
+                power = MathUtils.constrainDouble(power, 0, 1);
+            }
         }
 
         // If the elevator is not calibrated, then maximum power should be constrained.
