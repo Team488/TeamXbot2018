@@ -77,7 +77,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     }
 
-    public void initializeMotor() {
+    private void initializeMotor() {
         motor = clf.createCANTalon(contract.getElevatorMaster().channel);
         motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
@@ -86,7 +86,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.createTelemetryProperties("ElevatorMotor");
     }
 
-    public void initializeLowerLimit() {
+    private void initializeLowerLimit() {
         calibrationSensor = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
     }
 

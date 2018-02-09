@@ -19,7 +19,6 @@ public class SetElevatorTargetHeightTest extends BaseCompetitionTest {
         
         command = injector.getInstance(SetElevatorTargetHeightCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        //elevator.temporaryHack();
     }
     
     @Test
