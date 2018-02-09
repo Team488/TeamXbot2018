@@ -70,7 +70,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
         
         // Directly control the elevator with a joystick
 
-        elevator.setPower(oi.operatorGamepad.getRightVector().y);
+        //elevator.setPower(oi.operatorGamepad.getRightVector().y);
     }
     
     @Override
