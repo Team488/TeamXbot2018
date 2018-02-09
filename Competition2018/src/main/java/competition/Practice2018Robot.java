@@ -99,6 +99,16 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public boolean elevatorLowerLimitReady() {
         return false;
     }
+    
+    @Override
+    public boolean elevatorUpperLimitReady() {
+        return false;
+    }
+    
+    @Override
+    public DeviceInfo getElevatorUpperLimit() {
+        return new DeviceInfo(1, false);
+    }
 
     @Override
     public DeviceInfo getElevatorLowerLimit() {
