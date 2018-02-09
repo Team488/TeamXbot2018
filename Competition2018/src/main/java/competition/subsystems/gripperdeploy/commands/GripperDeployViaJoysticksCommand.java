@@ -6,13 +6,13 @@ import competition.operator_interface.OperatorInterface;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
-public class GripperDeployJoysticksCommand extends BaseCommand {
+public class GripperDeployViaJoysticksCommand extends BaseCommand {
     
     final GripperDeploySubsystem gripperDeploySubsystem;
     final OperatorInterface oi;
     
     @Inject
-    public GripperDeployJoysticksCommand (GripperDeploySubsystem gripperDeploySubsystem, OperatorInterface oi) {
+    public GripperDeployViaJoysticksCommand (GripperDeploySubsystem gripperDeploySubsystem, OperatorInterface oi) {
         this.oi = oi;
         this.gripperDeploySubsystem = gripperDeploySubsystem;
         this.requires(gripperDeploySubsystem);
@@ -25,7 +25,6 @@ public class GripperDeployJoysticksCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        double power = oi.operatorGamepad.getLeftVector().y;
-        gripperDeploySubsystem.motor.simpleSet(power);
+        gripperDeploySubsystem.motor.simpleSet(oi.operatorGamepad.getLeftVector().y);
     }
 }
