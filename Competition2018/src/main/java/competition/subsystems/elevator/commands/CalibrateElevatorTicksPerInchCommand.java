@@ -44,7 +44,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
         double tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
-
+        elevator.uncalibrate();
     }
 
     /**

@@ -214,6 +214,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             currentTicks.set(getCurrentTick());
             currentHeight.set(getCurrentHeightInInches());
             motor.updateTelemetryProperties();
+        }
+        
+        if (contract.elevatorLowerLimitReady()) {
             lowerLimitSensor.set(calibrationSensor.get());
         }
     }
