@@ -2,10 +2,11 @@ package competition.subsystems.elevator.commands;
 
 import java.util.HashMap;
 
+import com.google.inject.Inject;
+
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseCommand;
 import xbot.common.controls.actuators.XCANTalon;
-import xbot.common.properties.XPropertyManager;
 
 public class TrackCurrentUsageCommand extends BaseCommand {
 
@@ -15,8 +16,9 @@ public class TrackCurrentUsageCommand extends BaseCommand {
     double currentAveragingWindow;
 
     HashMap<Double, Double> currentHistory;
-
-    public TrackCurrentUsageCommand(XPropertyManager propMan, XCANTalon talon) {
+    
+    @Inject
+    public TrackCurrentUsageCommand(XCANTalon talon) {
         this.talon = talon;
         currentHistory = new HashMap<Double, Double>();
         currentAveragingWindow = 1000;
