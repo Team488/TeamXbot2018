@@ -18,8 +18,6 @@ public class StopClimberArmCommandTest extends BaseCompetitionTest {
 
         deploy = injector.getInstance(ClimberDeploySubsystem.class);
         command = injector.getInstance(StopClimberArmCommand.class);
-
-        deploy.temporaryHack();
     }
 
     @Test

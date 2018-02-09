@@ -9,7 +9,7 @@ import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class CalibrateElevatorCommand extends BaseCommand {
+public class CalibrateElevatorViaStallCommand extends BaseCommand {
     ElevatorSubsystem elevator;
     CommonLibFactory clf;
 
@@ -20,9 +20,9 @@ public class CalibrateElevatorCommand extends BaseCommand {
     boolean atTarget;
 
     @Inject
-    public CalibrateElevatorCommand(XPropertyManager propMan, CommonLibFactory clf) {
+    public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf) {
         this.clf = clf;
-        power = propMan.createPersistentProperty("Elevator Calibration Power", -0.2);
+        power = propMan.createPersistentProperty("Elevator Jamming Calibration Power", -0.2);
         calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
     }
 

@@ -18,8 +18,6 @@ public class DecreaseSpeedCommandTest extends BaseCompetitionTest {
 
         lean = injector.getInstance(LeanSubsystem.class);
         command = injector.getInstance(DecreaseSpeedCommand.class);
-
-        lean.temporaryHack();
     }
 
     @Test

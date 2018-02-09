@@ -17,7 +17,6 @@ public class ExtendClimberArmCommandTest extends BaseCompetitionTest {
         super.setUp();
         deploy = injector.getInstance(ClimberDeploySubsystem.class);
         command = injector.getInstance(ExtendClimberArmCommand.class);
-        deploy.temporaryHack();
     }
 
     @Test
