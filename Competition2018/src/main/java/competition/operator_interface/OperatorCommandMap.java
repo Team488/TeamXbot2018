@@ -77,7 +77,7 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getifAvailable(1).whenPressed(lowish);
         oi.operatorGamepad.getifAvailable(2).whenPressed(highish);
         
-        oi.operatorGamepad.getifAvailable(9).whenPressed(calibrateHere);
+        oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
         
         
     }
@@ -93,6 +93,6 @@ public class OperatorCommandMap {
     
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(10).whileHeld(collectCube);
+        oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
     }
 }
