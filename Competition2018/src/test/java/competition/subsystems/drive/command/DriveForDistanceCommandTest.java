@@ -1,5 +1,6 @@
 package competition.subsystems.drive.command;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -61,23 +62,24 @@ public class DriveForDistanceCommandTest extends DriveTestBase {
 
     @Test
     public void driveStraightTest() {
-        MockRobotIO mockIO = injector.getInstance(MockRobotIO.class);
         DriveForDistanceCommand command = injector.getInstance(DriveForDistanceCommand.class);
 
-        mockIO.setGyroHeading(90);
+        mockRobotIO.setGyroHeading(90);
         command.setDeltaDistance(10);
 
         command.initialize();
         command.execute();
+        
+        assertEquals(drive.leftMaster.getMotorOutputPercent(), drive.rightMaster.getMotorOutputPercent(), 0.001);
 
-        mockIO.setGyroHeading(80);
+        mockRobotIO.setGyroHeading(80);
         command.execute();
 
         assertTrue(((MockCANTalon) drive.leftMaster).getMotorOutputPercent() < ((MockCANTalon) drive.rightMaster).getMotorOutputPercent());
 
-        mockIO.setGyroHeading(100);
+        mockRobotIO.setGyroHeading(100);
         command.execute();
 
-        //assertTrue(((MockCANTalon) drive.rightMaster).getMotorOutputPercent() < ((MockCANTalon) drive.leftMaster).getMotorOutputPercent());
+        assertTrue(((MockCANTalon) drive.rightMaster).getMotorOutputPercent() < ((MockCANTalon) drive.leftMaster).getMotorOutputPercent());
     }
 }
