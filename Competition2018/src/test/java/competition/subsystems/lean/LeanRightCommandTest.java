@@ -18,8 +18,6 @@ public class LeanRightCommandTest extends BaseCompetitionTest {
 
         lean = injector.getInstance(LeanSubsystem.class);
         command = injector.getInstance(LeanRightCommand.class);
-
-        lean.temporaryHack();
     }
 
     @Test

@@ -18,8 +18,6 @@ public class GripperDeployDownCommandTest extends BaseCompetitionTest {
 
         gripperDeploy = injector.getInstance(GripperDeploySubsystem.class);
         command = injector.getInstance(GripperDeployDownCommand.class);
-
-        gripperDeploy.temporaryHack();
     }
 
     @Test

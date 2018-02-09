@@ -29,11 +29,11 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
         lowPower = propMan.createPersistentProperty("Gripper Intake Low Power", 0.25);
 
         if (contract.collectorReady()) {
-            temporaryHack();
+            initializeMotors();
         }
     }
 
-    public void temporaryHack() {
+    private void initializeMotors() {
         rightMotor = clf.createCANTalon(contract.getLeftCollectorMaster().channel);
         rightMotor.setInverted(contract.getLeftCollectorMaster().inverted);
 
