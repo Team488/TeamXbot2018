@@ -44,7 +44,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final BooleanProperty upperLimitSensor;
 
     public XCANTalon motor;
-    public XDigitalInput calibrationSensor;
+    public XDigitalInput lowerLimitSwitch;
+    public XDigitalInput upperLimitSwitch;
 
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -93,11 +94,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     private void initializeLowerLimit() {
-        calibrationSensor = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
+        lowerLimitSwitch = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
     }
     
     private void initializeUpperLimit() {
-        calibrationSensor = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
+        upperLimitSwitch = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
     }
 
     public void calibrateHere() {
@@ -126,7 +127,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public void setPower(double power) {
 
         if (contract.elevatorLowerLimitReady()) {
-            boolean sensorHit = calibrationSensor.get();
+            boolean sensorHit = lowerLimitSwitch.get();
             calibrationLatch.setValue(sensorHit);
 
             // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
@@ -136,12 +137,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         if (contract.elevatorUpperLimitReady()) {
-            boolean sensorHit = calibrationSensor.get();
+            boolean sensorHit = upperLimitSwitch.get();
             calibrationLatch.setValue(sensorHit);
             
             //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
-                power = MathUtils.constrainDouble(power, 0, -1);
+                power = MathUtils.constrainDouble(power, -1, 0);
             }
         }
 
@@ -237,11 +238,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         if (contract.elevatorLowerLimitReady()) {
-            lowerLimitSensor.set(calibrationSensor.get());
+            lowerLimitSensor.set(lowerLimitSwitch.get());
         }
         
         if (contract.elevatorUpperLimitReady()) {
-            upperLimitSensor.set(calibrationSensor.get());
+            upperLimitSensor.set(upperLimitSwitch.get());
         }
     }
 }

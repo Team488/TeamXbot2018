@@ -107,7 +107,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
     
     @Override
     public DeviceInfo getElevatorUpperLimit() {
-        return new DeviceInfo(1, false);
+        return new DeviceInfo(2, false);
     }
 
     @Override
