@@ -8,7 +8,7 @@ import xbot.common.command.BaseCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class MoveElevatorToGivenHeightForTimeCommand extends BaseCommand {
+public class MoveElevatorToHeightAndHoldCommand extends BaseCommand {
     private ElevatorSubsystem elevator;
 
     public DoubleProperty errorThreshold;
@@ -20,7 +20,7 @@ public class MoveElevatorToGivenHeightForTimeCommand extends BaseCommand {
     boolean previouslyAtTarget;
 
     @Inject
-    public MoveElevatorToGivenHeightForTimeCommand(ElevatorSubsystem subsystem, XPropertyManager propMan) {
+    public MoveElevatorToHeightAndHoldCommand(ElevatorSubsystem subsystem, XPropertyManager propMan) {
         this.elevator = subsystem;
         errorThreshold = propMan.createPersistentProperty("Elevator delta height threshold", 0.1);
         stableTimeRequired = propMan.createPersistentProperty("Required time on target for elevator in seconds", 0.5);
