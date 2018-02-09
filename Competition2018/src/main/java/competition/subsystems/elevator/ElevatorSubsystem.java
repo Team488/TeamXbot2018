@@ -59,7 +59,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
         lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
 
-        calibrationOffset = 0;
+        calibrationOffset = 0.0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
@@ -78,21 +78,21 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
-        
+
         motor.createTelemetryProperties("ElevatorMotor");
-        
+
         calibrationSensor = clf.createDigitalInput(1);
     }
 
     public void calibrateHere() {
         calibrateAt(motor.getSelectedSensorPosition(0));
     }
-    
+
     public void calibrateAt(double lowestPosition) {
         calibrationOffset = lowestPosition;
         isCalibrated = true;
     }
-    
+
     public void uncalibrate() {
         isCalibrated = false;
     }
@@ -108,8 +108,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      *            power percentage in robot scale
      */
     public void setPower(double power) {
-
-        boolean sensorHit = false; //calibrationSensor.get();
+        boolean sensorHit = calibrationSensor.get();
         calibrationLatch.setValue(sensorHit);
 
         // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
@@ -121,10 +120,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (!isCalibrated) {
             power = MathUtils.constrainDouble(power, -calibrationPower.get(), calibrationPower.get());
         }
-        
+
         if (isCalibrated) {
             // if we are above the max, only go down.
-            double currentHeight = getCurrentHeight();
+            double currentHeight = getCurrentHeightInInches();
             if (currentHeight > getMaxHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -1, 0);
             }
@@ -163,7 +162,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         setPower(0);
     }
 
-    public double getCurrentHeight() {
+    public double getCurrentHeightInInches() {
         return ticksToInches(motor.getSelectedSensorPosition(0));
     }
 
@@ -192,38 +191,21 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
     }
 
-    /**
-     * Returns true if the elevator is close to its maximum height.
-     */
-
-    boolean isCloseToMaxmumHeight() {
-
-        if (getCurrentHeight() >= maxHeightInInches.get() * 0.9) {
-            return true;
-        }
-
-        return false;
-
+    public double getMaxHeight() {
+        return maxHeightInInches.get();
     }
 
-    /**
-     * Returns true if the elevator is close to its minimum height.
-     */
-
-    boolean isCloseToMinimumHeight() {
-
-        if (getCurrentHeight() < maxHeightInInches.get() * 0.15) {
-            return true;
-        }
-
-        return false;
+    public double getMinHeight() {
+        return minHeightInInches.get();
     }
 
     @Override
     public void updatePeriodicData() {
-        currentTicks.set(getCurrentTick());
-        currentHeight.set(getCurrentHeight());
-        motor.updateTelemetryProperties();
-        lowerLimitSensor.set(calibrationSensor.get());
+        if (contract.elevatorReady()) {
+            currentTicks.set(getCurrentTick());
+            currentHeight.set(getCurrentHeightInInches());
+            motor.updateTelemetryProperties();
+            lowerLimitSensor.set(calibrationSensor.get());
+        }
     }
 }

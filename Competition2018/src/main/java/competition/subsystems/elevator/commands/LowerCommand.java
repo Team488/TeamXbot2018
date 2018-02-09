@@ -27,5 +27,4 @@ public class LowerCommand extends BaseCommand {
         elevator.lower();
 
     }
-
 }
