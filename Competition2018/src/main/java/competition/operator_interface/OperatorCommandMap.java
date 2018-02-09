@@ -14,7 +14,7 @@ import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
-import competition.subsystems.elevator.commands.CalibrateElevatorCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorViaStallCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
@@ -60,7 +60,7 @@ public class OperatorCommandMap {
             LowerCommand lower,
             RiseCommand rise,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            CalibrateElevatorCommand calibrate,
+            CalibrateElevatorViaStallCommand calibrate,
             ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand lowish,
             SetElevatorTargetHeightCommand highish,
