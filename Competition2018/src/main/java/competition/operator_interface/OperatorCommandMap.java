@@ -60,8 +60,6 @@ public class OperatorCommandMap {
             SetElevatorTargetHeightCommand lowish,
             SetElevatorTargetHeightCommand highish,
             CalibrateElevatorHereCommand calibrateHere) {
-        oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
         oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
