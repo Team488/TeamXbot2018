@@ -1,22 +1,23 @@
 package competition.subsystems.elevator.commands;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
+import competition.operator_interface.OperatorInterface;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 
-@Singleton
-public class RiseCommand extends BaseCommand {
+public class ControlElevatorViaJoystickCommand extends BaseCommand {
 
+    OperatorInterface oi;
     ElevatorSubsystem elevator;
-
+    
     @Inject
-    public RiseCommand(ElevatorSubsystem elevator) {
+    public ControlElevatorViaJoystickCommand(ElevatorSubsystem elevator, OperatorInterface oi) {
         this.elevator = elevator;
+        this.oi = oi;
         this.requires(elevator);
     }
-
+    
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -24,6 +25,7 @@ public class RiseCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        elevator.rise();
+        elevator.setPower(oi.operatorGamepad.getRightStickY());
     }
+
 }

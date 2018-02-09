@@ -15,7 +15,6 @@ public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
     public void setUp() {
         super.setUp();
         this.intake = injector.getInstance(GripperIntakeSubsystem.class);
-        this.intake.temporaryHack();
     }
 
     @Test

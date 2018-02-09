@@ -17,7 +17,6 @@ public class AscendClimberCommandTest extends BaseCompetitionTest {
         super.setUp();
         climb = injector.getInstance(ClimbSubsystem.class);
         command = injector.getInstance(AscendClimberCommand.class);
-        climb.temporaryHack();
     }
 
     @Test

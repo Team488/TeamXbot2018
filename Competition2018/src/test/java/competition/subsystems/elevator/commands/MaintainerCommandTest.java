@@ -19,8 +19,7 @@ public class MaintainerCommandTest extends BaseCompetitionTest {
         super.setUp();
         command = injector.getInstance(ElevatorMaintainerCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        elevator.temporaryHack();
-        elevator.setCalibrate(true);
+        elevator.calibrateHere();
     }
     
     @Test
@@ -58,7 +57,7 @@ public class MaintainerCommandTest extends BaseCompetitionTest {
     
     @Test
     public void uncalibratedBehavior() {
-        elevator.setCalibrate(false);
+        elevator.uncalibrate();
         ((MockCANTalon)elevator.motor).setPosition(3700);
         elevator.setTargetHeight(12);
         command.initialize();
