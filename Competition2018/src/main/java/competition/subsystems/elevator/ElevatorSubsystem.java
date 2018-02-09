@@ -95,10 +95,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     private void initializeLowerLimit() {
         lowerLimitSwitch = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
+        lowerLimitSwitch.setInverted(contract.getElevatorLowerLimit().inverted);
     }
     
     private void initializeUpperLimit() {
         upperLimitSwitch = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
+        upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
     }
 
     public void calibrateHere() {
