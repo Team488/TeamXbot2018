@@ -41,6 +41,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty currentTicks;
     final DoubleProperty currentHeight;
     final BooleanProperty lowerLimitSensor;
+    final BooleanProperty upperLimitSensor;
 
     public XCANTalon motor;
     public XDigitalInput calibrationSensor;
@@ -58,6 +59,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
         lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
+        upperLimitSensor = propMan.createEphemeralProperty("Elevator Upper Limit", false);
 
         calibrationOffset = 0.0;
 
@@ -74,6 +76,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorLowerLimitReady()) {
             initializeLowerLimit();
         }
+        
+        if (contract.elevatorUpperLimitReady()) {
+            initializeUpperLimit();
+        }
 
     }
 
@@ -88,6 +94,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     private void initializeLowerLimit() {
         calibrationSensor = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
+    }
+    
+    private void initializeUpperLimit() {
+        calibrationSensor = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
     }
 
     public void calibrateHere() {
@@ -122,6 +132,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, 0, 1);
+            }
+        }
+        
+        if (contract.elevatorUpperLimitReady()) {
+            boolean sensorHit = calibrationSensor.get();
+            calibrationLatch.setValue(sensorHit);
+            
+            //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+            if (sensorHit) {
+                power = MathUtils.constrainDouble(power, 0, -1);
             }
         }
 
@@ -218,6 +238,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         
         if (contract.elevatorLowerLimitReady()) {
             lowerLimitSensor.set(calibrationSensor.get());
+        }
+        
+        if (contract.elevatorUpperLimitReady()) {
+            upperLimitSensor.set(calibrationSensor.get());
         }
     }
 }
