@@ -16,7 +16,7 @@ import xbot.common.logging.RobotAssertionManager;
 public class OperatorInterface {
 
     public XFTCGamepad driverGamepad;
-    public XFTCGamepad operatorGamepad;
+    //public XFTCGamepad operatorGamepad;
     
     /*public final AnalogHIDDescription raiseElevator;
     public final AnalogHIDDescription lowerElevator;
@@ -30,10 +30,10 @@ public class OperatorInterface {
         driverGamepad.setLeftStickYInversion(true);
         driverGamepad.setRightStickYInversion(true);
 
-        operatorGamepad = factory.createGamepad(0, 10);
+        //operatorGamepad = factory.createGamepad(0, 10);
 
-        operatorGamepad.setLeftStickYInversion(true);
-        operatorGamepad.setRightStickYInversion(true);
+        //operatorGamepad.setLeftStickYInversion(true);
+        //operatorGamepad.setRightStickYInversion(true);
         
         /*raiseElevator = new AnalogHIDDescription(3, .501, 1.0);
         operatorGamepad.addAnalogButton(raiseElevator);
