@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
+import competition.subsystems.offboard.commands.NavToTestGoalCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -35,10 +36,9 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
-            TankDriveWithJoysticksCommand simpleTank, DriveAtVelocityCommand driveAtVelocity) {
+            TankDriveWithJoysticksCommand simpleTank) {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
-        oi.driverGamepad.getifAvailable(1).whileHeld(driveAtVelocity);
     }
 
     @Inject
@@ -83,7 +83,8 @@ public class OperatorCommandMap {
     }
     
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube) {
+    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav) {
         oi.driverGamepad.getifAvailable(3).whilePressedNoRestart(acquireCube);
+        oi.driverGamepad.getifAvailable(1).whilePressedNoRestart(testNav);
     }
 }
