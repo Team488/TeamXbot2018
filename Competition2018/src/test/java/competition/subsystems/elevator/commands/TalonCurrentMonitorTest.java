@@ -51,7 +51,15 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
         }
         ((MockCANTalon) talon).setOutputCurrent(24);
         assertTrue(currentMonitor.measureAverageCurrent() == 12.5);
-        assertEquals(25, currentMonitor.currentHistory.size(), 0);
+        assertEquals(24, currentMonitor.currentHistory.size(), 0);
     }
 
+    @Test
+    public void trackPeakCurrentTest() {
+        for (int i=1; i==currentMonitor.currentHistory.size(); i++) {
+            ((MockCANTalon) talon).setOutputCurrent(i);
+            assertEquals(, currentMonitor.peakCurrent(), 1e-5);
+        }
+    }
 }
+
