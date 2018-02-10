@@ -11,7 +11,7 @@ import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
-import competition.subsystems.gripperdeploy.commands.GripperStopDeployCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployViaJoysticksCommand;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.StopLeaningCommand;
 import competition.subsystems.shift.ShiftSubsystem;
@@ -50,7 +50,7 @@ public class SubsystemDefaultCommandMap {
     public void setupGripperDeploySubsystem(
             ElectricalContract2018 contract,
             GripperDeploySubsystem gripperdeploySubsystem,
-            GripperStopDeployCommand command) {
+            GripperDeployViaJoysticksCommand command) {
         if (contract.wristReady()) {
             gripperdeploySubsystem.setDefaultCommand(command); 
         }
