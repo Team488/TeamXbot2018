@@ -11,8 +11,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
-import edu.wpi.first.wpilibj.Timer;
-import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
@@ -37,6 +35,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final DoubleProperty velocityF;
 
     private Map<XCANTalon, MotionRegistration> masterTalons;
+    
+    int updateMotorValuesCounter = 0;
 
     public enum Side {
         Left, Right
@@ -185,12 +185,16 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
     }
     
+    
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
         
-        int secondsSinceStart = (int)(Timer.getFPGATimestamp() / 1000);
-        if (secondsSinceStart % 5 == 0) {
+        updateMotorValuesCounter++;
+        
+        // roughly 5 seconds at 30 Hz
+        if (updateMotorValuesCounter == 150 ) {
+            updateMotorValuesCounter = 0;
             this.updateMotorPidValues(leftMaster);
             this.updateMotorPidValues(rightMaster);
         }
