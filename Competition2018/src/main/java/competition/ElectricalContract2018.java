@@ -20,6 +20,10 @@ public abstract class ElectricalContract2018 {
     public abstract DeviceInfo getRightDriveMaster();
 
     public abstract DeviceInfo getRightDriveFollower();
+    
+    public abstract DeviceInfo getLeftDriveMasterEncoder();
+    
+    public abstract DeviceInfo getRightDriveMasterEncoder();
 
     // Pneumatic Shifters
     public abstract DeviceInfo getShifterSolenoid();
@@ -32,7 +36,11 @@ public abstract class ElectricalContract2018 {
     // Elevator sensor
     public abstract boolean elevatorLowerLimitReady();
     
+    public abstract boolean elevatorUpperLimitReady();
+    
     public abstract DeviceInfo getElevatorLowerLimit();
+    
+    public abstract DeviceInfo getElevatorUpperLimit();
 
     // Wrist Motor
     public abstract boolean wristReady();

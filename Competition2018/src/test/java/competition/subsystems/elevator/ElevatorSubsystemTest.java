@@ -42,10 +42,18 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void testCantLowerIfLimitSwitchPressed() {
-        ((MockDigitalInput) elevator.calibrationSensor).set_value(true);
+    public void testCantLowerIfLowerLimitSwitchPressed() {
+        ((MockDigitalInput) elevator.lowerLimitSwitch).setValue(true);
         elevator.setPower(-1);
 
+        checkElevatorPower(0);
+    }
+    
+    @Test
+    public void testCantRiseIfUpperLimitSwitchPressed() {
+        ((MockDigitalInput) elevator.upperLimitSwitch).setValue(true);
+        elevator.setPower(1);
+        
         checkElevatorPower(0);
     }
 
@@ -61,7 +69,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         assertTrue(elevator.motor.getMotorOutputPercent() > -0.8);
         assertTrue(elevator.motor.getMotorOutputPercent() < -0.1);
 
-        ((MockDigitalInput) elevator.calibrationSensor).set_value(true);
+        ((MockDigitalInput) elevator.lowerLimitSwitch).setValue(true);
         elevator.setPower(-1);
         // verify that the system is now calibrated to the minimum height.
         assertTrue(elevator.isCalibrated());
