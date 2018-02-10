@@ -24,7 +24,6 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
-import competition.subsystems.shift.commands.ToggleGearCommand;
 import competition.commandgroups.CollectCubeCommandGroup;
 
 @Singleton
@@ -99,6 +98,6 @@ public class OperatorCommandMap {
             DriveForDistanceCommand drive5Ft) {
         drive5Ft.setDeltaDistance(60);
         oi.operatorGamepad.getifAvailable(8).whenPressed(drive5Ft);
-        oi.operatorGamepad.getifAvailable(9).whenPressed(nowhere);
+        nowhere.includeOnSmartDashboard();
     }
 }

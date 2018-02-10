@@ -142,7 +142,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSwitch.get();
-
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from
             // rising any further.
             if (sensorHit) {
