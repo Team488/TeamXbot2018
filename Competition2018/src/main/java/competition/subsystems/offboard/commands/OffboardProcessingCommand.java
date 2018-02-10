@@ -1,5 +1,7 @@
 package competition.subsystems.offboard.commands;
 
+import java.util.Collection;
+
 import competition.subsystems.offboard.OffboardCommsConstants;
 import competition.subsystems.offboard.OffboardCommunicationPacket;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
@@ -30,6 +32,7 @@ public abstract class OffboardProcessingCommand extends BaseCommand {
     @Override
     public void initialize() {
         isRemoteFinished = false;
+        subsystem.clearPacketQueue();
         log.info("Sending remote start for command ID " + stringifyCommandId());
         subsystem.sendSetCurrentCommand(commandId);
     }
@@ -38,13 +41,9 @@ public abstract class OffboardProcessingCommand extends BaseCommand {
     
     @Override
     public final void execute() {
-        // TODO: Tune loop? Logging when hit limit?
-        for(int receiveCount = 0; receiveCount < 5; receiveCount++) {
-            OffboardCommunicationPacket packet = subsystem.rawCommsInterface.receiveRaw();
-            if(packet == null) {
-                break;
-            }
-            
+        Collection<OffboardCommunicationPacket> packetQueue = this.subsystem.getPacketQueue();
+        
+        for(OffboardCommunicationPacket packet : packetQueue) {
             if(packet.packetType == OffboardCommsConstants.PACKET_TYPE_COMMAND_FINISHED) {
                 handleCommandFinishedPacket(CommandFinishedPacket.parse(packet.data));
             }
