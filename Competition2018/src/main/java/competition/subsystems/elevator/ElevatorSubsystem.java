@@ -62,10 +62,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
         lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
-        targetScaleHighHeight = propMan.createPersistentProperty("Elevator scale high" , 488);
-        targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid" , 420);
-        targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height" , 100);
-        targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height" , 50);
+        targetScaleHighHeight = propMan.createPersistentProperty("Elevator scale high" , 76.5);
+        targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid" , 64.5);
+        targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height" , 19.0);
+        targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height" , 0.0);
 
         calibrationOffset = 0.0;
 
