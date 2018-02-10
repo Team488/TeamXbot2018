@@ -27,7 +27,7 @@ public class TalonCurrentMonitor {
         return sum / currentHistory.size();
     }
 
-    public double peakCurrent() {
+    public double calculatePeakCurrent() {
         double peakCurrent = 0;
         currentHistory.addFirst(talon.getOutputCurrent());
         if (!currentHistory.isEmpty()) {

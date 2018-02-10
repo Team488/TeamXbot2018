@@ -59,7 +59,7 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
             ((MockCANTalon) talon).setOutputCurrent(i);
         }
         ((MockCANTalon) talon).setOutputCurrent(26);
-        assertEquals(26, currentMonitor.peakCurrent(), 1e-5);
+        assertEquals(26, currentMonitor.calculatePeakCurrent(), 1e-5);
         }
     
     @Test
@@ -68,7 +68,7 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
             ((MockCANTalon) talon).setOutputCurrent(i);
         }
         ((MockCANTalon) talon).setOutputCurrent(25);
-        assertEquals(25, currentMonitor.peakCurrent(), 1e-5);
+        assertEquals(25, currentMonitor.calculatePeakCurrent(), 1e-5);
         }
     
     @Test
@@ -77,7 +77,7 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
             ((MockCANTalon) talon).setOutputCurrent(i);
         }
         ((MockCANTalon) talon).setOutputCurrent(24);
-        assertEquals(24, currentMonitor.peakCurrent(), 1e-5);
+        assertEquals(24, currentMonitor.calculatePeakCurrent(), 1e-5);
         }
     }
 
