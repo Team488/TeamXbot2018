@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,7 +29,14 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final DoubleProperty leftTicksPerFiveFeet;
     private final DoubleProperty rightTicksPerFiveFeet;
 
+    private final DoubleProperty velocityP;
+    private final DoubleProperty velocityI;
+    private final DoubleProperty velocityD;
+    private final DoubleProperty velocityF;
+
     private Map<XCANTalon, MotionRegistration> masterTalons;
+    
+    int updateMotorValuesCounter = 0;
 
     public enum Side {
         Left, Right
@@ -38,38 +46,66 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract) {
         log.info("Creating DriveSubsystem");
 
+        // Default is for 2018 robot design
+        // SRX counts edges rather than ticks, so the 1024-count sensor is read as 4096 per rev
+        // (4096 native units/encoder rev) * (3 encoder rev/wheel rev) / (4pi inches/wheel rev) ~= 977.847970356605
+        final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
+        final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
+        leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", defaultDriveTicksPer5Feet);
+        rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", defaultDriveTicksPer5Feet);
+
+        velocityP = propManager.createPersistentProperty("Drive velocity control P", 0);
+        velocityI = propManager.createPersistentProperty("Drive velocity control I", 0);
+        velocityD = propManager.createPersistentProperty("Drive velocity control D", 0);
+        velocityF = propManager.createPersistentProperty("Drive velocity control F", 0);
+        
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
-        leftFollower.follow(leftMaster);
-
-        leftMaster.setInverted(contract.getLeftDriveMaster().inverted);
-        leftFollower.setInverted(contract.getLeftDriveFollower().inverted);
+        configureMotorTeam(
+                "LeftDriveMaster",
+                leftMaster, 
+                leftFollower,
+                contract.getLeftDriveMaster().inverted, 
+                contract.getLeftDriveFollower().inverted,
+                contract.getLeftDriveMasterEncoder().inverted);
 
         this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
-        rightFollower.follow(rightMaster);
-
-        rightMaster.setInverted(contract.getRightDriveMaster().inverted);
-        rightFollower.setInverted(contract.getRightDriveFollower().inverted);
+        configureMotorTeam(
+                "RightDriveMaster",
+                rightMaster, 
+                rightFollower,
+                contract.getRightDriveMaster().inverted, 
+                contract.getRightDriveFollower().inverted,
+                contract.getRightDriveMasterEncoder().inverted);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
+    }
+    
+    private void configureMotorTeam(
+            String masterName,
+            XCANTalon master, XCANTalon follower,
+            boolean masterInverted, boolean followerInverted,
+            boolean sensorPhase) {
+        follower.follow(master);
 
-        leftMaster.setSensorPhase(true);
-        rightMaster.setSensorPhase(true);
-
-        leftMaster.createTelemetryProperties("LeftDriveMaster");
-        rightMaster.createTelemetryProperties("RightDriveMaster");
-
-        leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", 0);
-        rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", 0);
-
-        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.setInverted(masterInverted);
+        follower.setInverted(followerInverted);
         
-        leftMaster.setSensorPhase(contract.getLeftDriveMasterEncoder().inverted);
-        rightMaster.setSensorPhase(contract.getRightDriveMasterEncoder().inverted);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.setSensorPhase(sensorPhase);
+        master.createTelemetryProperties(masterName);
+        
+        this.updateMotorPidValues(master);
+    }
+    
+    private void updateMotorPidValues(XCANTalon motor) {
+        motor.config_kP(0, this.velocityP.get(), 0);
+        motor.config_kI(0, this.velocityI.get(), 0);
+        motor.config_kD(0, this.velocityD.get(), 0);
+        motor.config_kF(0, this.velocityF.get(), 0);
     }
 
     /**
@@ -113,6 +149,15 @@ public class DriveSubsystem extends BaseDriveSubsystem {
             return 0;
         }
     }
+    
+    /**
+     * Returns the velocity of the specified side in inches per second.
+     */
+    public double getVelocity(Side side) {
+        double motorNativeVelocity = (side == Side.Left ? leftMaster : rightMaster).getSelectedSensorVelocity(0);
+        double nativeUnitsPerSecond = motorNativeVelocity * 10;
+        return nativeUnitsPerSecond / this.getSideTicksPerInch(side);
+    }
 
     @Override
     protected Map<XCANTalon, MotionRegistration> getAllMasterTalons() {
@@ -132,5 +177,26 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     @Override
     public double getTransverseDistance() {
         return 0;
+    }
+    
+    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {        
+        // Talon SRX measures in native units per 100ms, so values in seconds are divided by 10
+        leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
+        rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+    }
+    
+    
+    @Override
+    public void updatePeriodicData() {
+        super.updatePeriodicData();
+        
+        updateMotorValuesCounter++;
+        
+        // roughly 5 seconds at 30 Hz
+        if (updateMotorValuesCounter == 150 ) {
+            updateMotorValuesCounter = 0;
+            this.updateMotorPidValues(leftMaster);
+            this.updateMotorPidValues(rightMaster);
+        }
     }
 }
