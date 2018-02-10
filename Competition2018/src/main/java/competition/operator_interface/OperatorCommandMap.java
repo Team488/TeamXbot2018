@@ -24,6 +24,7 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 import competition.commandgroups.CollectCubeCommandGroup;
+import competition.subsystems.elevator.ElevatorSubsystem;
 
 @Singleton
 public class OperatorCommandMap {
@@ -64,18 +65,25 @@ public class OperatorCommandMap {
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
             CalibrateElevatorViaStallCommand calibrate,
             ElevatorMaintainerCommand maintainer,
-            SetElevatorTargetHeightCommand lowish,
-            SetElevatorTargetHeightCommand highish,
-            CalibrateElevatorHereCommand calibrateHere) {
+            SetElevatorTargetHeightCommand targetScaleHighHeight,
+            SetElevatorTargetHeightCommand targetScaleMidHeight,
+            SetElevatorTargetHeightCommand targetSwitchDropHeight,
+            SetElevatorTargetHeightCommand targetPickUpHeight,
+            CalibrateElevatorHereCommand calibrateHere,
+            ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
         oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
         
-        lowish.setGoalHeight(20);
-        highish.setGoalHeight(60);
+        targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
+        targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
+        targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
+        targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
         
-        oi.operatorGamepad.getifAvailable(1).whenPressed(lowish);
-        oi.operatorGamepad.getifAvailable(2).whenPressed(highish);
+        oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
+        oi.operatorGamepad.getifAvailable(2).whenPressed(targetSwitchDropHeight);
+        oi.operatorGamepad.getifAvailable(3).whenPressed(targetScaleMidHeight);
+        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
         
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
         
