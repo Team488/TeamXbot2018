@@ -36,6 +36,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final DoubleProperty velocityF;
 
     private Map<XCANTalon, MotionRegistration> masterTalons;
+    
+    int updateMotorValuesCounter = 0;
 
     public enum Side {
         Left, Right
@@ -62,17 +64,21 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
         configureMotorTeam(
                 "LeftDriveMaster",
-                leftMaster, leftFollower,
-                contract.getLeftDriveMaster().inverted, contract.getLeftDriveFollower().inverted,
-                true);
+                leftMaster, 
+                leftFollower,
+                contract.getLeftDriveMaster().inverted, 
+                contract.getLeftDriveFollower().inverted,
+                contract.getLeftDriveMasterEncoder().inverted);
 
         this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
         configureMotorTeam(
                 "RightDriveMaster",
-                rightMaster, rightFollower,
-                contract.getRightDriveMaster().inverted, contract.getRightDriveFollower().inverted,
-                true);
+                rightMaster, 
+                rightFollower,
+                contract.getRightDriveMaster().inverted, 
+                contract.getRightDriveFollower().inverted,
+                contract.getRightDriveMasterEncoder().inverted);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
@@ -89,7 +95,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         master.setInverted(masterInverted);
         follower.setInverted(followerInverted);
         
-        master.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         master.setSensorPhase(sensorPhase);
         master.createTelemetryProperties(masterName);
         
@@ -174,13 +180,23 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         return 0;
     }
     
-    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {
-        // TODO: ideally, we should only do this occasionally.
-        this.updateMotorPidValues(leftMaster);
-        this.updateMotorPidValues(rightMaster);
-        
+    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {        
         // Talon SRX measures in native units per 100ms, so values in seconds are divided by 10
         leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
         rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+    }
+    
+    @Override
+    public void updatePeriodicData() {
+        super.updatePeriodicData();
+        
+        updateMotorValuesCounter++;
+        
+        // roughly 5 seconds at 30 Hz
+        if (updateMotorValuesCounter == 150 ) {
+            updateMotorValuesCounter = 0;
+            this.updateMotorPidValues(leftMaster);
+            this.updateMotorPidValues(rightMaster);
+        }
     }
 }

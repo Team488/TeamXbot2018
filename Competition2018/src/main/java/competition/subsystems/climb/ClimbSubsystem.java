@@ -27,7 +27,7 @@ public class ClimbSubsystem extends BaseSubsystem {
         decendSpeed = propMan.createPersistentProperty("decendSpeed", -.1);
 
         if (contract.climbReady()) {
-            temporaryHack();
+            initializeMotor();
         }
     }
 
@@ -35,7 +35,7 @@ public class ClimbSubsystem extends BaseSubsystem {
      * Should only be called directly by test code. Temporary workaround to deal with the
      * "too-many-CAN-errors-crashes-robot" situation.
      */
-    public void temporaryHack() {
+    private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbMaster().channel);
         motor.setInverted(contract.getClimbMaster().inverted);
     }

@@ -29,11 +29,11 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
         currentDeploySpeed = fastDeploySpeed.get();
 
         if (contract.climbDeployReady()) {
-            temporaryHack();
+            initializeMotor();
         }
     }
 
-    public void temporaryHack() {
+    private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbDeployMaster().channel);
         motor.setInverted(contract.getClimbDeployMaster().inverted);
     }

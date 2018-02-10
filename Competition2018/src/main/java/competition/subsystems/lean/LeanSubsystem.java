@@ -30,11 +30,11 @@ public class LeanSubsystem extends BaseSubsystem {
         currentLeanSpeed = fastLeanSpeed.get();
 
         if (contract.climbLeanReady()) {
-            temporaryHack();
+            initializeMotor();
         }
     }
 
-    public void temporaryHack() {
+    private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbLeanMaster().channel);
         motor.setInverted(contract.getClimbLeanMaster().inverted);
     }

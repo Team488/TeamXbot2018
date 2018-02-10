@@ -20,22 +20,16 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
     OperatorInterface oi;
 
     /**
-     * This command needs to require all possible subsystems - while calibrating the elevator we DO NOT WANT
-     * ANYTHING ELSE TO MOVE.
+     * This command needs to require all possible subsystems - while calibrating the elevator we DO NOT WANT ANYTHING
+     * ELSE TO MOVE.
      */
     @Inject
-    public CalibrateElevatorTicksPerInchCommand(
-            ElevatorSubsystem elevator,
-            DriveSubsystem drive,
-            GripperDeploySubsystem wrist,
-            GripperIntakeSubsystem intake,
-            LeanSubsystem leaner,
-            ClimbSubsystem climber,
-            ClimberDeploySubsystem climbDeploy,
-            OperatorInterface oi) {
+    public CalibrateElevatorTicksPerInchCommand(ElevatorSubsystem elevator, DriveSubsystem drive,
+            GripperDeploySubsystem wrist, GripperIntakeSubsystem intake, LeanSubsystem leaner, ClimbSubsystem climber,
+            ClimberDeploySubsystem climbDeploy, OperatorInterface oi) {
         this.elevator = elevator;
-        this.oi=oi;
-        
+        this.oi = oi;
+
         this.requires(elevator);
         this.requires(drive);
         this.requires(wrist);
@@ -50,7 +44,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
         double tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
-
+        elevator.uncalibrate();
     }
 
     /**
@@ -67,18 +61,25 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
         if (tick < minTick) {
             minTick = tick;
         }
-        
+
         // Directly control the elevator with a joystick
 
         //elevator.setPower(oi.operatorGamepad.getRightVector().y);
     }
-    
+
     @Override
     public void end() {
-        double minHeightInInches = elevator.minHeightInInches();
-        double maxHeightInInches = elevator.maxHeightInInches();
+        double minHeightInInches = elevator.getMinHeightInInches();
+        double maxHeightInInches = elevator.getMaxHeightInInches();
+        
+        log.info("Largest tick: " + maxTick + ", Smallest tick: " + minTick);
+        
         double ticksPerInch = ((maxTick - minTick) / (maxHeightInInches - minHeightInInches));
+        
+        log.info("Calculated TPI: " + ticksPerInch);
+        
         // some code here to set the ticks per inch on the subsystem
         elevator.setTickPerInch(ticksPerInch);
+        elevator.calibrateAt(minTick);
     }
 }

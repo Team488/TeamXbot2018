@@ -13,15 +13,19 @@ import competition.subsystems.drive.commands.AssistedTankDriveCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityCommand;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
+import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.LowerCommand;
 import competition.subsystems.elevator.commands.RiseCommand;
-import competition.subsystems.elevator.commands.CalibrateElevatorCommand;
+import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorViaStallCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.shift.commands.ShiftHighCommand;
+import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import competition.commandgroups.CollectCubeCommandGroup;
 
 @Singleton
@@ -42,30 +46,43 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupShiftGearCommand(OperatorInterface oi, ToggleGearCommand shiftGear) {
-        oi.driverGamepad.getifAvailable(6).whenPressed(shiftGear);
+    public void setupShiftGearCommand(
+            OperatorInterface oi, 
+            ShiftHighCommand shiftHigh,
+            ShiftLowCommand shiftLow) {
+        
+        oi.driverGamepad.getifAvailable(5).whenPressed(shiftLow);
+        oi.driverGamepad.getifAvailable(6).whenPressed(shiftHigh);
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, GripperDeployDownCommand down, GripperDeployUpCommand up,
-            GripperEjectCommand eject, GripperIntakeCommand intake) {
-        //oi.operatorGamepad.getifAvailable(3).whileHeld(up);
-        //oi.operatorGamepad.getifAvailable(2).whileHeld(down);
-        //oi.operatorGamepad.getifAvailable(4).whenPressed(eject);
-        //oi.operatorGamepad.getifAvailable(1).whileHeld(intake);
+    public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject, GripperIntakeCommand intake) {
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileActive(eject);
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileActive(intake);
     }
 
     @Inject
     public void setupElevatorCommands(
             OperatorInterface oi,
-            LowerCommand lower,
-            RiseCommand rise,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            CalibrateElevatorCommand calibrate) {
-        /*oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
+            CalibrateElevatorViaStallCommand calibrate,
+            ElevatorMaintainerCommand maintainer,
+            SetElevatorTargetHeightCommand lowish,
+            SetElevatorTargetHeightCommand highish,
+            CalibrateElevatorHereCommand calibrateHere) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
-        oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);*/
+        oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
+        oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
+        
+        lowish.setGoalHeight(20);
+        highish.setGoalHeight(60);
+        
+        oi.operatorGamepad.getifAvailable(1).whenPressed(lowish);
+        oi.operatorGamepad.getifAvailable(2).whenPressed(highish);
+        
+        oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
+        
+        
     }
 
     @Inject
@@ -86,5 +103,6 @@ public class OperatorCommandMap {
     public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav) {
         oi.driverGamepad.getifAvailable(3).whilePressedNoRestart(acquireCube);
         oi.driverGamepad.getifAvailable(1).whilePressedNoRestart(testNav);
+        oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
     }
 }
