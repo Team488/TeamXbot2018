@@ -10,19 +10,18 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
-public class MoveElevatorToHeightAndHoldCommandTest extends BaseCompetitionTest {
+public class MoveElevatorToHeightAndStabilizeCommandTest extends BaseCompetitionTest {
     ElevatorSubsystem elevator;
-    MoveElevatorToHeightAndHoldCommand command;
+    MoveElevatorToHeightAndStabilizeCommand command;
     MockTimer mockTimer;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        command = injector.getInstance(MoveElevatorToHeightAndHoldCommand.class);
+        command = injector.getInstance(MoveElevatorToHeightAndStabilizeCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
         mockTimer = injector.getInstance(MockTimer.class);
-        elevator.temporaryHack();
     }
 
     @Test
