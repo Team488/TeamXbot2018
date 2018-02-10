@@ -70,8 +70,7 @@ public class OperatorCommandMap {
             SetElevatorTargetHeightCommand targetSwitchDropHeight,
             SetElevatorTargetHeightCommand targetPickUpHeight,
             CalibrateElevatorHereCommand calibrateHere,
-            ElevatorSubsystem elevatorSubsystem,
-            CalibrateElevatorHereCommand calibrateHere) {
+            ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
         oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
