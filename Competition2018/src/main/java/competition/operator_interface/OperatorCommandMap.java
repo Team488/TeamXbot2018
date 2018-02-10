@@ -53,27 +53,20 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, GripperDeployDownCommand down, GripperDeployUpCommand up,
-            GripperEjectCommand eject, GripperIntakeCommand intake) {
-        /*oi.operatorGamepad.getifAvailable(3).whileHeld(up);
-        oi.operatorGamepad.getifAvailable(2).whileHeld(down);
-        oi.operatorGamepad.getifAvailable(4).whenPressed(eject);
-        oi.operatorGamepad.getifAvailable(1).whileHeld(intake);*/
+    public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject, GripperIntakeCommand intake) {
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileActive(eject);
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileActive(intake);
     }
 
     @Inject
     public void setupElevatorCommands(
             OperatorInterface oi,
-            LowerCommand lower,
-            RiseCommand rise,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
             CalibrateElevatorViaStallCommand calibrate,
             ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand lowish,
             SetElevatorTargetHeightCommand highish,
             CalibrateElevatorHereCommand calibrateHere) {
-        oi.operatorGamepad.getAnalogIfAvailable(oi.raiseElevator).whileActive(rise);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.lowerElevator).whileActive(lower);
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
         oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
