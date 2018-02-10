@@ -46,10 +46,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
     final BooleanProperty upperLimitSensor;
-    private final DoubleProperty targetScaleHighHeight;
-    private final DoubleProperty targetScaleMidHeight;
-    private final DoubleProperty targetSwitchDropHeight;
-    private final DoubleProperty targetPickUpHeight;
     final DoubleProperty peakCurrentLimit;
     final DoubleProperty peakCurrentDuration;
     final DoubleProperty continuousCurrentLimit;
@@ -71,11 +67,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
         lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
-        targetScaleHighHeight = propMan.createPersistentProperty("Elevator scale high", 76.5);
-        targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid", 64.5);
-        targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height", 19.0);
-        targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height", 3.0);
-
         upperLimitSensor = propMan.createEphemeralProperty("Elevator Upper Limit", false);
         targetScaleHighHeight = propMan.createPersistentProperty("Elevator scale high", 76.5);
         targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid", 64.5);
@@ -112,10 +103,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
-        
-        motor.configPeakCurrentLimit((int)peakCurrentLimit.get(), 0);
-        motor.configPeakCurrentDuration((int)peakCurrentDuration.get(), 0);
-        motor.configContinuousCurrentLimit((int)continuousCurrentLimit.get(), 0);
+
+        motor.configPeakCurrentLimit((int) peakCurrentLimit.get(), 0);
+        motor.configPeakCurrentDuration((int) peakCurrentDuration.get(), 0);
+        motor.configContinuousCurrentLimit((int) continuousCurrentLimit.get(), 0);
         motor.enableCurrentLimit(true);
 
         motor.createTelemetryProperties("ElevatorMotor");
@@ -170,7 +161,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSwitch.get();
-
 
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from
             // rising any further.
