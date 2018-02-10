@@ -106,20 +106,14 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         }
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SCORING_PLACEMENT, OffboardFramePackingUtils.packScoringPlacement(total));
     }
-    public void sendSetCurrentCommand(int commandId) {
-        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, OffboardFramePackingUtils.packSetCommandFrame(commandId));
+    
     public void clearPacketQueue() {
         this.incomingPacketQueue.clear();
-
     }
     
-    
-
     @Override
     public void updatePeriodicData() {
         sendWheelOdomUpdate();
-        sendOrientationUpdate();
-        sendHeadingUpdate();
         sendScoringPlacement();
 
         // TODO: Tune loop? Logging when hit limit?
