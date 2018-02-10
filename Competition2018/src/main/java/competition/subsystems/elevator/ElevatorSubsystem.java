@@ -77,7 +77,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorLowerLimitReady()) {
             initializeLowerLimit();
         }
-        
+
         if (contract.elevatorUpperLimitReady()) {
             initializeUpperLimit();
         }
@@ -97,7 +97,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         lowerLimitSwitch = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
         lowerLimitSwitch.setInverted(contract.getElevatorLowerLimit().inverted);
     }
-    
+
     private void initializeUpperLimit() {
         upperLimitSwitch = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
         upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
@@ -133,16 +133,18 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             boolean sensorHit = lowerLimitSwitch.get();
             calibrationLatch.setValue(sensorHit);
 
-            // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
+            // If the lower-bound sensor is hit, then we need to prevent the mechanism from
+            // lowering any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, 0, 1);
             }
         }
-        
+
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSwitch.get();
-            
-            //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+
+            // If the upper-bound sensor is hit, then we need to prevent the mechanism from
+            // rising any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, -1, 0);
             }
@@ -238,11 +240,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             currentHeight.set(getCurrentHeightInInches());
             motor.updateTelemetryProperties();
         }
-        
+
         if (contract.elevatorLowerLimitReady()) {
             lowerLimitSensor.set(lowerLimitSwitch.get());
         }
-        
+
         if (contract.elevatorUpperLimitReady()) {
             upperLimitSensor.set(upperLimitSwitch.get());
         }
