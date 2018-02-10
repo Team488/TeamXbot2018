@@ -68,8 +68,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         
-        leftMaster.setSensorPhase(true);
-        rightMaster.setSensorPhase(true);
+        leftMaster.setSensorPhase(contract.getLeftDriveMasterEncoder().inverted);
+        rightMaster.setSensorPhase(contract.getRightDriveMasterEncoder().inverted);
     }
 
     /**
