@@ -3,6 +3,8 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.autonomous.DriveNowhereCommand;
+import competition.subsystems.autonomous.DriveToTargetCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -94,5 +96,11 @@ public class OperatorCommandMap {
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
         oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
+    }
+    
+    @Inject
+    public void setupAutonomousCommands(OperatorInterface oi, DriveNowhereCommand nowhere, DriveToTargetCommand toTarget) {
+        oi.operatorGamepad.getifAvailable(8).whenPressed(toTarget);
+        oi.operatorGamepad.getifAvailable(9).whenPressed(nowhere);
     }
 }

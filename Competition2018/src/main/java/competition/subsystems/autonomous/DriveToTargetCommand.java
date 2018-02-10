@@ -2,17 +2,20 @@ package competition.subsystems.autonomous;
 
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import xbot.common.command.BaseCommand;
+import xbot.common.properties.DoubleProperty;
 
-public class Drive5FtForwardCommand extends BaseCommand {
+public class DriveToTargetCommand extends BaseCommand {
 
+    DoubleProperty deltaDistance;
+    
     DriveForDistanceCommand driveForDistance;
 
     @Override
     public void initialize() {
         /**
-         * 60 is the target distance in inches
+         * deltaDistance is in inches
          */
-        driveForDistance.setDeltaDistance(60);
+        driveForDistance.setDeltaDistance(deltaDistance.get());
         driveForDistance.initialize();
     }
 
