@@ -20,6 +20,10 @@ public abstract class ElectricalContract2018 {
     public abstract DeviceInfo getRightDriveMaster();
 
     public abstract DeviceInfo getRightDriveFollower();
+    
+    public abstract DeviceInfo getLeftDriveMasterEncoder();
+    
+    public abstract DeviceInfo getRightDriveMasterEncoder();
 
     // Pneumatic Shifters
     public abstract DeviceInfo getShifterSolenoid();
