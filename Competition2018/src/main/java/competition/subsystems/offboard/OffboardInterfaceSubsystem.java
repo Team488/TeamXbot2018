@@ -136,8 +136,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         
         if (numPacketsDropped > 0 && this.getCurrentCommand() != null) {
             // TODO: this.getCurrentCommand() instanceof OffboardProcessingCommand
-            log.warn(numPacketsDropped + 
-            		" offboard comms packets dropped from queue while command is running;"
+            log.warn(numPacketsDropped 
+            		+ " offboard comms packets dropped from queue while command is running;"
             		+ " all commands running on the offboard subsystem should process incoming packets.");
         }
     }
