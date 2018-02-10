@@ -35,6 +35,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private double calibrationOffset;
     private final Latch calibrationLatch;
 
+    final DoubleProperty powerNearLowLimit;
+    final DoubleProperty powerNearHighLimit;
+    final DoubleProperty heightNearHighLimit;
+    final DoubleProperty heightNearLowLimit;
     final DoubleProperty maxHeightInInches;
     final DoubleProperty minHeightInInches;
     final DoubleProperty elevatorTargetHeight;
@@ -51,6 +55,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
+        heightNearLowLimit = propMan.createPersistentProperty("Elevator Height Near Low Limit", getMinHeightInInches()+10);
+        heightNearHighLimit = propMan.createPersistentProperty("Elevator Height Near High Limit", getMaxHeightInInches()-10);
+        powerNearLowLimit = propMan.createPersistentProperty("Max Power Near Low Limit", -0.3);
+        powerNearHighLimit = propMan.createEphemeralProperty("Max Power Near High Limit", 0.3);
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
         elevatorTicksPerInch = propMan.createPersistentProperty("ElevatorTicksPerInch", 100);
         calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
@@ -164,8 +172,29 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
                 power = MathUtils.constrainDouble(power, 0, 1);
             }
         }
+        if(getCurrentHeightInInches() < getHeightNearLowLimit()) {
+            power = MathUtils.constrainDouble(power, getPowerNearLowLimit(), 1);
+        }
+        if(getCurrentHeightInInches() > getHeightNearHighLimit()) {
+            power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
+        }
 
         motor.simpleSet(power);
+    }
+   
+    public double getPowerNearLowLimit() {
+        return powerNearLowLimit.get();
+    }
+    public double getPowerNearHighLimit() {
+        return powerNearHighLimit.get();
+    }
+    
+    public double getHeightNearLowLimit() {
+        return heightNearLowLimit.get();
+    }
+    
+    public double getHeightNearHighLimit() {
+        return heightNearHighLimit.get();
     }
 
     public void setTargetHeight(double height) {

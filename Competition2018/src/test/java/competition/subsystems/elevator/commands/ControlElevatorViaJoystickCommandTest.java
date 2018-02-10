@@ -6,10 +6,12 @@ import org.junit.Test;
 
 import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
+//import competition.subsystems.elevator.ElevatorSubsystem;
 
 public class ControlElevatorViaJoystickCommandTest extends BaseElevatorTest {
 
     ControlElevatorViaJoystickCommand command;
+    //ElevatorSubsystem elevator;
     
     @Override
     public void setUp() {
@@ -38,7 +40,7 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorTest {
             ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
             System.out.println(power);
-            assertEquals(power, elevator.motor.getMotorOutputPercent(), 0.001);
+            elevator. = 50;
         }
     }
 }
