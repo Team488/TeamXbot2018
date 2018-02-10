@@ -40,7 +40,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     
     @Inject
     public OffboardInterfaceSubsystem(XPropertyManager propManager, DriveSubsystem driveSubsystem, 
-    		PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
+    	PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
     	log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
