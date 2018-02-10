@@ -43,6 +43,12 @@ public class OffboardFramePackingUtils {
         };
     }
     
+    public static byte[] packScoringPlacement(int sequence) {
+    	return new byte[] {
+    		(byte)(sequence & 0xFF)	
+    	};
+    }
+    
     public static byte[] packHeadingFrame(double headingDegrees) {
         short headingInteger = (short)(headingDegrees * 100);
         

@@ -12,4 +12,5 @@ public class OffboardCommsConstants {
 
     public static final byte PACKET_TYPE_DRIVE_COMMAND = 0x05;
     public static final byte PACKET_TYPE_COMMAND_FINISHED = 0x07;
+    public static final byte PACKET_TYPE_SCORING_PLACEMENT = 0x08;
 }

@@ -1,5 +1,7 @@
 package competition.subsystems.offboard;
 
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
@@ -8,6 +10,7 @@ import com.google.inject.Singleton;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Timer;
+import openrio.powerup.MatchData;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.properties.XPropertyManager;
@@ -68,14 +71,38 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_HEADING, OffboardFramePackingUtils.packHeadingFrame(heading));
     }
     
+    private void sendScoringPlacement() {
+    	//Sequence - Near, Scale, Far
+        //Left - 1, Right - 0
+        ArrayList<Integer> sequence = new ArrayList<Integer>();
+        for(MatchData.GameFeature feature: MatchData.GameFeature.values()) {
+        	if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.LEFT)) {
+        		sequence.add(0);
+        	}
+        	else if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.RIGHT)) {
+        		sequence.add(1);
+        	}
+        	else {
+        		//Insert Error Message as it is unknown
+        	}
+        }
+        int total = 0;
+        for (Integer i : sequence) { 
+            total = 10*total + i;
+        }
+        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SCORING_PLACEMENT, OffboardFramePackingUtils.packScoringPlacement(total));
+    }
     public void sendSetCurrentCommand(int commandId) {
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, OffboardFramePackingUtils.packSetCommandFrame(commandId));
     }
+    
+    
 
     @Override
     public void updatePeriodicData() {
         sendWheelOdomUpdate();
         sendOrientationUpdate();
         sendHeadingUpdate();
+        sendScoringPlacement();
     }
 }
