@@ -46,9 +46,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
     final BooleanProperty upperLimitSensor;
-    final DoubleProperty peakCurrentLimit;
-    final DoubleProperty peakCurrentDuration;
-    final DoubleProperty continuousCurrentLimit;
+    final DoubleProperty elevatorPeakCurrentLimit;
+    final DoubleProperty elevatorPeakCurrentDuration;
+    final DoubleProperty elevatorContinuousCurrentLimit;
 
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
@@ -72,9 +72,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid", 64.5);
         targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height", 19.0);
         targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height", 3.0);
-        peakCurrentLimit = propMan.createPersistentProperty("Peak current limit", 35);
-        peakCurrentDuration = propMan.createPersistentProperty("Peak current duration", 200);
-        continuousCurrentLimit = propMan.createPersistentProperty("Continuous current limit", 30);
+        elevatorPeakCurrentLimit = propMan.createPersistentProperty("Elevator peak current limit", 35);
+        elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
+        elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
 
         calibrationOffset = 0.0;
 
@@ -104,9 +104,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
 
-        motor.configPeakCurrentLimit((int) peakCurrentLimit.get(), 0);
-        motor.configPeakCurrentDuration((int) peakCurrentDuration.get(), 0);
-        motor.configContinuousCurrentLimit((int) continuousCurrentLimit.get(), 0);
+        motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+        motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+        motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         motor.enableCurrentLimit(true);
 
         motor.createTelemetryProperties("ElevatorMotor");
