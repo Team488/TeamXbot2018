@@ -18,8 +18,6 @@ public class StopLeaningCommandTest extends BaseCompetitionTest {
 
         lean = injector.getInstance(LeanSubsystem.class);
         command = injector.getInstance(StopLeaningCommand.class);
-
-        lean.temporaryHack();
     }
 
     @Test

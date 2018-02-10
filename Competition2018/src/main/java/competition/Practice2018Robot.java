@@ -27,12 +27,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean elevatorReady() {
-        return false;
+        return true;
     }
 
     @Override
     public DeviceInfo getElevatorMaster() {
-        return new DeviceInfo(25, false);
+        return new DeviceInfo(25, true);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getLeftCollectorMaster() {
-        return new DeviceInfo(34, false);
+        return new DeviceInfo(24, false);
     }
 
     @Override
@@ -93,6 +93,26 @@ public class Practice2018Robot extends ElectricalContract2018 {
     @Override
     public DeviceInfo getShifterSolenoid() {
         return new DeviceInfo(1, false);
+    }
+
+    @Override
+    public boolean elevatorLowerLimitReady() {
+        return true;
+    }
+    
+    @Override
+    public boolean elevatorUpperLimitReady() {
+        return true;
+    }
+    
+    @Override
+    public DeviceInfo getElevatorUpperLimit() {
+        return new DeviceInfo(0, true);
+    }
+
+    @Override
+    public DeviceInfo getElevatorLowerLimit() {
+        return new DeviceInfo(1, true);
     }
 
 }

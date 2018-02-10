@@ -33,5 +33,4 @@ public class SetElevatorTargetHeightCommand extends BaseSetpointCommand {
     public boolean isFinished() {
         return true;
     }
-
 }

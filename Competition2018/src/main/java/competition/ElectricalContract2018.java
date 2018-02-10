@@ -28,6 +28,15 @@ public abstract class ElectricalContract2018 {
     public abstract boolean elevatorReady();
 
     public abstract DeviceInfo getElevatorMaster();
+    
+    // Elevator sensor
+    public abstract boolean elevatorLowerLimitReady();
+    
+    public abstract boolean elevatorUpperLimitReady();
+    
+    public abstract DeviceInfo getElevatorLowerLimit();
+    
+    public abstract DeviceInfo getElevatorUpperLimit();
 
     // Wrist Motor
     public abstract boolean wristReady();
