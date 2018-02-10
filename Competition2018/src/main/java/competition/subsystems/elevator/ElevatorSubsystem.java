@@ -8,6 +8,7 @@ import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.controls.sensors.TalonCurrentMonitor;
 import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
@@ -25,6 +26,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final ElectricalContract2018 contract;
     final DoubleProperty elevatorPower;
     final DoubleProperty elevatorTicksPerInch;
+    
 
     /**
      * If our elevator is uncalibrated, we don't allow large power inputs.
@@ -46,6 +48,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
+    
+    TalonCurrentMonitor currentMonitor;
 
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -246,5 +250,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorUpperLimitReady()) {
             upperLimitSensor.set(upperLimitSwitch.get());
         }
+    }
+    
+    public double getPeakCurrent() {
+        return currentMonitor.calculatePeakCurrent();
+    }
+    public double getAverageCurrent() {
+        return currentMonitor.calculateAverageCurrent();
     }
 }

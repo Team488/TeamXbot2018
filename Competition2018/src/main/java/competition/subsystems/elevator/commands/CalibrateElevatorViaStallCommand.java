@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseCommand;
+import xbot.common.controls.sensors.TalonCurrentMonitor;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -15,15 +16,21 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
 
     DoubleProperty power;
     DoubleProperty calibrationTime; // In milliseconds
+    DoubleProperty calibrationCurrentThreshold;
+    DoubleProperty goodCurrentRange;
 
     double targetTime;
     boolean atTarget;
+
 
     @Inject
     public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf) {
         this.clf = clf;
         power = propMan.createPersistentProperty("Elevator Jamming Calibration Power", -0.2);
         calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
+        calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
+        goodCurrentRange = propMan.createPersistentProperty("Right Averaging Current Range", 15);
+        this.requires(elevator);
     }
 
     @Override
@@ -41,7 +48,10 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
 
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() > targetTime;
+        return Timer.getFPGATimestamp() > targetTime 
+                || elevator.getPeakCurrent() < calibrationCurrentThreshold.get()
+                || elevator.getAverageCurrent() > goodCurrentRange.get();
+
     }
 
     @Override
