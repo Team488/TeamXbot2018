@@ -101,7 +101,7 @@ public class DriveForDistanceCommand extends BaseCommand {
     @Override
     public void end() {
         log.info("Ending, PreviousPosition was " + startingPosition + ", Targeted Delta in distance is " + deltaDistance
-                + " Distance traveled is " + (deltaDistance - startingPosition));
+                + " Distance travelled is " + (getYDistance() - startingPosition));
         drive.stop();
     }
 }

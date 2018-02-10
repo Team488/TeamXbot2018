@@ -142,7 +142,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             boolean sensorHit = lowerLimitSwitch.get();
             calibrationLatch.setValue(sensorHit);
 
-            // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
+            // If the lower-bound sensor is hit, then we need to prevent the mechanism from
+            // lowering any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, 0, 1);
             }
@@ -151,7 +152,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSwitch.get();
 
-            // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+
+            // If the upper-bound sensor is hit, then we need to prevent the mechanism from
+            // rising any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, -1, 0);
             }
