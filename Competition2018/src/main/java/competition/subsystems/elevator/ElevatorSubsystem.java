@@ -45,9 +45,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
+    final BooleanProperty upperLimitSensor;
 
     public XCANTalon motor;
-    public XDigitalInput calibrationSensor;
+    public XDigitalInput lowerLimitSwitch;
+    public XDigitalInput upperLimitSwitch;
 
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -67,6 +69,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height" , 19.0);
         targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height" , 0.0);
 
+        upperLimitSensor = propMan.createEphemeralProperty("Elevator Upper Limit", false);
+
         calibrationOffset = 0.0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -82,6 +86,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorLowerLimitReady()) {
             initializeLowerLimit();
         }
+        
+        if (contract.elevatorUpperLimitReady()) {
+            initializeUpperLimit();
+        }
 
     }
 
@@ -95,7 +103,13 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     private void initializeLowerLimit() {
-        calibrationSensor = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
+        lowerLimitSwitch = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
+        lowerLimitSwitch.setInverted(contract.getElevatorLowerLimit().inverted);
+    }
+    
+    private void initializeUpperLimit() {
+        upperLimitSwitch = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
+        upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
     }
 
     public void calibrateHere() {
@@ -103,6 +117,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void calibrateAt(double lowestPosition) {
+        log.info("Calibrating elevator with lowest position of " + lowestPosition);
         calibrationOffset = lowestPosition;
         isCalibrated = true;
     }
@@ -124,12 +139,21 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public void setPower(double power) {
 
         if (contract.elevatorLowerLimitReady()) {
-            boolean sensorHit = calibrationSensor.get();
+            boolean sensorHit = lowerLimitSwitch.get();
             calibrationLatch.setValue(sensorHit);
 
             // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, 0, 1);
+            }
+        }
+        
+        if (contract.elevatorUpperLimitReady()) {
+            boolean sensorHit = upperLimitSwitch.get();
+            
+            //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+            if (sensorHit) {
+                power = MathUtils.constrainDouble(power, -1, 0);
             }
         }
 
@@ -225,7 +249,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         if (contract.elevatorLowerLimitReady()) {
-            lowerLimitSensor.set(calibrationSensor.get());
+            lowerLimitSensor.set(lowerLimitSwitch.get());
+        }
+        
+        if (contract.elevatorUpperLimitReady()) {
+            upperLimitSensor.set(upperLimitSwitch.get());
         }
     }
     

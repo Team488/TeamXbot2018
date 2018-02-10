@@ -20,6 +20,8 @@ import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.shift.commands.ShiftHighCommand;
+import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
 import xbot.common.properties.DoubleProperty;
 import competition.commandgroups.CollectCubeCommandGroup;
@@ -43,8 +45,13 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupShiftGearCommand(OperatorInterface oi, ToggleGearCommand shiftGear) {
-        oi.driverGamepad.getifAvailable(6).whenPressed(shiftGear);
+    public void setupShiftGearCommand(
+            OperatorInterface oi, 
+            ShiftHighCommand shiftHigh,
+            ShiftLowCommand shiftLow) {
+        
+        oi.driverGamepad.getifAvailable(5).whenPressed(shiftLow);
+        oi.driverGamepad.getifAvailable(6).whenPressed(shiftHigh);
     }
 
     @Inject
