@@ -40,8 +40,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     
     @Inject
     public OffboardInterfaceSubsystem(XPropertyManager propManager, DriveSubsystem driveSubsystem, 
-    		PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
-    	log.info("Creating");
+            PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
+        log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
         this.poseSubsystem = poseSubsystem;
@@ -76,7 +76,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     
     public void sendSetCurrentCommand(int commandId) {
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, 
-        		OffboardFramePackingUtils.packSetCommandFrame(commandId));
+                OffboardFramePackingUtils.packSetCommandFrame(commandId));
     }
     
     public Collection<OffboardCommunicationPacket> getPacketQueue() {
@@ -88,26 +88,26 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     }
     
     private void sendScoringPlacement() {
-    	//Sequence - Near, Scale, Far
+        //Sequence - Near, Scale, Far
         //Left - 1, Right - 0
         ArrayList<Integer> sequence = new ArrayList<Integer>();
         for(MatchData.GameFeature feature: MatchData.GameFeature.values()) {
-        	if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.LEFT)) {
-        		sequence.add(0);
-        	}
-        	else if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.RIGHT)) {
-        		sequence.add(1);
-        	}
-        	else {
-        		//Insert Error Message as it is unknown
-        	}
+            if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.LEFT)) {
+                sequence.add(0);
+            }
+            else if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.RIGHT)) {
+                sequence.add(1);
+            }
+            else {
+                //Insert Error Message as it is unknown
+            }
         }
         int total = 0;
         for (Integer i : sequence) { 
             total = 10*total + i;
         }
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SCORING_PLACEMENT,
-        		OffboardFramePackingUtils.packScoringPlacement(total));
+                OffboardFramePackingUtils.packScoringPlacement(total));
     }
     
     public void clearPacketQueue() {
@@ -137,8 +137,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         if (numPacketsDropped > 0 && this.getCurrentCommand() != null) {
             // TODO: this.getCurrentCommand() instanceof OffboardProcessingCommand
             log.warn(numPacketsDropped 
-            		+ " offboard comms packets dropped from queue while command is running;"
-            		+ " all commands running on the offboard subsystem should process incoming packets.");
+                    + " offboard comms packets dropped from queue while command is running;"
+                    + " all commands running on the offboard subsystem should process incoming packets.");
         }
     }
 }

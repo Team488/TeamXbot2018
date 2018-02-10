@@ -21,22 +21,22 @@ public class OffboardFramePackingUtils {
     
     public static byte[] packSetCommandFrame(int commandId) {
         return new byte[] {
-        		(byte)(commandId & 0xFF)
+                (byte)(commandId & 0xFF)
         };
     }
     
     public static byte[] packScoringPlacement(int sequence) {
-    	return new byte[] {
-    			(byte)(sequence & 0xFF)	
-    	};
+        return new byte[] {
+                (byte)(sequence & 0xFF)    
+        };
     }
     
     public static byte[] packHeadingFrame(double headingDegrees) {
         short headingInteger = (short)(headingDegrees * 100);
         
         return new byte[] {
-        		(byte)(headingInteger >>> 8),
-        		(byte)(headingInteger & 0xFF)
+                (byte)(headingInteger >>> 8),
+                (byte)(headingInteger & 0xFF)
         };
     }
 }
