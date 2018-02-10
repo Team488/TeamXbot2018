@@ -13,6 +13,7 @@ import xbot.common.properties.XPropertyManager;
 public class CalibrateElevatorViaStallCommand extends BaseCommand {
     ElevatorSubsystem elevator;
     CommonLibFactory clf;
+    TalonCurrentMonitor currentMonitor;
 
     DoubleProperty power;
     DoubleProperty calibrationTime; // In milliseconds
@@ -29,7 +30,6 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
         power = propMan.createPersistentProperty("Elevator Jamming Calibration Power", -0.2);
         calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
         calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
-        goodCurrentRange = propMan.createPersistentProperty("Right Averaging Current Range", 15);
         this.requires(elevator);
     }
 
@@ -43,15 +43,15 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        elevator.setPower(power.get());
+            currentMonitor.updateCurrent();
+            elevator.setPower(power.get());
+            
     }
 
     @Override
     public boolean isFinished() {
         return Timer.getFPGATimestamp() > targetTime 
-                || elevator.getPeakCurrent() < calibrationCurrentThreshold.get()
-                || elevator.getAverageCurrent() > goodCurrentRange.get();
-
+                || elevator.getPeakCurrent() < calibrationCurrentThreshold.get();
     }
 
     @Override
