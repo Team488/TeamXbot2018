@@ -26,7 +26,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         elevator.stop();
         checkElevatorPower(0);
     }
-    
+
     @Test
     public void rise() {
         assertEquals(elevator.motor.getMotorOutputPercent(), 0, 0.001);
@@ -48,12 +48,12 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
 
         checkElevatorPower(0);
     }
-    
+
     @Test
     public void testCantRiseIfUpperLimitSwitchPressed() {
         ((MockDigitalInput) elevator.upperLimitSwitch).setValue(true);
         elevator.setPower(1);
-        
+
         checkElevatorPower(0);
     }
 
@@ -75,7 +75,8 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         assertTrue(elevator.isCalibrated());
         assertEquals(3, elevator.getCurrentHeightInInches(), 0.001);
 
-        // have the system raise but the switch still depress - this should not continuously calibrate.
+        // have the system raise but the switch still depress - this should not
+        // continuously calibrate.
         // With the current hardcoded values, every 100 ticks is one inch of travel.
         ((MockCANTalon) elevator.motor).setPosition(2000);
         elevator.setPower(1);
