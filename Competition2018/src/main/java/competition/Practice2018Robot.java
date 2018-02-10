@@ -119,12 +119,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
     
     @Override
     public DeviceInfo getElevatorUpperLimit() {
-        return new DeviceInfo(0, true);
+        return new DeviceInfo(1, true);
     }
 
     @Override
     public DeviceInfo getElevatorLowerLimit() {
-        return new DeviceInfo(1, true);
+        return new DeviceInfo(0, true);
     }
 
 }
