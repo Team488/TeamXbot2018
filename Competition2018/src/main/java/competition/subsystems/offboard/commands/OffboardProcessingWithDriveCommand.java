@@ -36,7 +36,7 @@ public abstract class OffboardProcessingWithDriveCommand extends OffboardProcess
                 // TODO: Log occasionally
                 double leftVelocityInchesPerSecond = drivePacket.leftVelocityMetersPerSecond / OffboardInterfaceSubsystem.METERS_PER_INCH;
                 double rightVelocityInchesPerSecond = drivePacket.rightVelocityMetersPerSecond / OffboardInterfaceSubsystem.METERS_PER_INCH;
-                this.driveSubsystem.driveVelocity(leftVelocityInchesPerSecond, rightVelocityInchesPerSecond);
+                this.driveSubsystem.driveTankVelocity(leftVelocityInchesPerSecond, rightVelocityInchesPerSecond);
             }
             else {
                 log.warn("Received \"drive velocity command\" packet for command which is not currently running");
