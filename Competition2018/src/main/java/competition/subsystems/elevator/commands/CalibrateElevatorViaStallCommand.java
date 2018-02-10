@@ -11,28 +11,35 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 public class CalibrateElevatorViaStallCommand extends BaseCommand {
-    ElevatorSubsystem elevator;
+    final ElevatorSubsystem elevator;
     CommonLibFactory clf;
     TalonCurrentMonitor currentMonitor;
 
     DoubleProperty power;
     DoubleProperty calibrationTime; // In milliseconds
-    DoubleProperty calibrationCurrentThreshold;
+    //DoubleProperty calibrationCurrentThreshold;
     DoubleProperty goodCurrentRange;
 
     double targetTime;
     boolean atTarget;
+    double threshold;
 
 
     @Inject
-    public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf) {
+    public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf, ElevatorSubsystem elevator, TalonCurrentMonitor currentMonitor) {
         this.clf = clf;
         power = propMan.createPersistentProperty("Elevator Jamming Calibration Power", -0.2);
         calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
-        calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
+       // calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
+        this.elevator = elevator;
+        this.currentMonitor = currentMonitor;
         this.requires(elevator);
     }
-
+    
+    public void setCalibrationCurrentThreshold(double threshold) {
+        this.threshold=threshold;
+    }
+    
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -43,15 +50,15 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
 
     @Override
     public void execute() {
-            currentMonitor.updateCurrent();
             elevator.setPower(power.get());
+            currentMonitor.updateCurrent();
+            currentMonitor.calculatePeakCurrent();
             
     }
-
     @Override
     public boolean isFinished() {
-        return Timer.getFPGATimestamp() > targetTime 
-                || elevator.getPeakCurrent() < calibrationCurrentThreshold.get();
+        return /*Timer.getFPGATimestamp() > targetTime 
+                ||*/ elevator.getPeakCurrent() > threshold;
     }
 
     @Override
