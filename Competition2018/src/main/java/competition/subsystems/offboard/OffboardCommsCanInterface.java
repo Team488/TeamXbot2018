@@ -35,7 +35,7 @@ public class OffboardCommsCanInterface implements XOffboardCommsInterface {
         
         try {
             byte[] resultBytes = CANJNI.FRCNetCommCANSessionMuxReceiveMessage(messageIdIntBuffer, 
-            	OffboardCommsConstants.CAN_ARBID_ROOT_AND_SOURCE_MASK, timeStamp);
+            		OffboardCommsConstants.CAN_ARBID_ROOT_AND_SOURCE_MASK, timeStamp);
             
             int messageId = messageIdIntBuffer.get();
             byte packetType = (byte)(messageId & (~OffboardCommsConstants.CAN_ARBID_ROOT_AND_SOURCE_MASK));

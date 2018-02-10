@@ -39,5 +39,4 @@ public class OffboardFramePackingUtils {
         		(byte)(headingInteger & 0xFF)
         };
     }
-
 }

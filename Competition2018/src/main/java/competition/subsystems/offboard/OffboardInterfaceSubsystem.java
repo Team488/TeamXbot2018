@@ -28,7 +28,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     public static final double METERS_PER_INCH = 0.0254;
     
     private final Queue<OffboardCommunicationPacket> incomingPacketQueue = new LinkedList<>();
-    private final int PACKET_QUEUE_MAX_LENGTH = 25;
+    private static final int PACKET_QUEUE_MAX_LENGTH = 25;
     
     private final DriveSubsystem driveSubsystem;
     private final PoseSubsystem poseSubsystem;
@@ -40,7 +40,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     
     @Inject
     public OffboardInterfaceSubsystem(XPropertyManager propManager, DriveSubsystem driveSubsystem, 
-    	PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
+    		PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
     	log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
