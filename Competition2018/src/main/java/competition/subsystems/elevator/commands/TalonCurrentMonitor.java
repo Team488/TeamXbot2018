@@ -6,18 +6,18 @@ import xbot.common.controls.actuators.XCANTalon;
 public class TalonCurrentMonitor {
 
     XCANTalon talon;
-    final int CURRENT_AVERAGING_WINDOW;
+    final int current_averaging_window;
     ArrayDeque<Double> currentHistory;
 
     public TalonCurrentMonitor(XCANTalon talon) {
         this.talon = talon;
         currentHistory = new ArrayDeque<Double>();
-        CURRENT_AVERAGING_WINDOW = 25;
+        current_averaging_window = 25;
     }
 
     public double measureAverageCurrent() {
         currentHistory.addFirst(talon.getOutputCurrent());
-        if (currentHistory.size() > CURRENT_AVERAGING_WINDOW) {
+        if (currentHistory.size() > current_averaging_window) {
             currentHistory.removeLast();
         }
         double sum = 0;
@@ -29,6 +29,7 @@ public class TalonCurrentMonitor {
 
     public double peakCurrent() {
         double peakCurrent = 0;
+        currentHistory.addFirst(talon.getOutputCurrent());
         if (!currentHistory.isEmpty()) {
             for (Double current : currentHistory) {
                 if (peakCurrent < current) {

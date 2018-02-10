@@ -1,7 +1,6 @@
 package competition.subsystems.elevator.commands;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
 
     @Test
     public void overAveragingWindowTest() {
-        for (int i = 1; i <= currentMonitor.CURRENT_AVERAGING_WINDOW; i++) {
+        for (int i = 1; i <= currentMonitor.current_averaging_window; i++) {
             ((MockCANTalon) talon).setOutputCurrent(i);
             currentMonitor.measureAverageCurrent();
         }
@@ -34,7 +33,7 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
     
     @Test
     public void atAveragingWindowTest() {
-        for (int i = 1; i <= currentMonitor.CURRENT_AVERAGING_WINDOW - 1; i++) {
+        for (int i = 1; i <= currentMonitor.current_averaging_window - 1; i++) {
             ((MockCANTalon) talon).setOutputCurrent(i);
             currentMonitor.measureAverageCurrent();
         }
@@ -45,21 +44,41 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
     
     @Test
     public void underAveragingWindowTest() {
-        for (int i = 1; i <= currentMonitor.CURRENT_AVERAGING_WINDOW - 2; i++) {
+        for (int i = 1; i <= currentMonitor.current_averaging_window - 2; i++) {
             ((MockCANTalon) talon).setOutputCurrent(i);
             currentMonitor.measureAverageCurrent();
         }
         ((MockCANTalon) talon).setOutputCurrent(24);
-        assertTrue(currentMonitor.measureAverageCurrent() == 12.5);
+        assertEquals(12.5, currentMonitor.measureAverageCurrent(), 1e-5);
         assertEquals(24, currentMonitor.currentHistory.size(), 0);
     }
 
     @Test
-    public void trackPeakCurrentTest() {
-        for (int i=1; i==currentMonitor.currentHistory.size(); i++) {
+    public void trackPeakCurrentOverAveragingWindowTest() {
+        for (int i = 1; i <= currentMonitor.current_averaging_window; i++) {
             ((MockCANTalon) talon).setOutputCurrent(i);
-            assertEquals(, currentMonitor.peakCurrent(), 1e-5);
+        }
+        ((MockCANTalon) talon).setOutputCurrent(26);
+        assertEquals(26, currentMonitor.peakCurrent(), 1e-5);
+        }
+    
+    @Test
+    public void trackPeakCurrentEqualAveragingWindowTest() {
+        for (int i = 1; i <= currentMonitor.current_averaging_window; i++) {
+            ((MockCANTalon) talon).setOutputCurrent(i);
+        }
+        ((MockCANTalon) talon).setOutputCurrent(25);
+        assertEquals(25, currentMonitor.peakCurrent(), 1e-5);
+        }
+    
+    @Test
+    public void trackPeakCurrentUnderAveragingWindowTest() {
+        for (int i = 1; i <= currentMonitor.current_averaging_window; i++) {
+            ((MockCANTalon) talon).setOutputCurrent(i);
+        }
+        ((MockCANTalon) talon).setOutputCurrent(24);
+        assertEquals(24, currentMonitor.peakCurrent(), 1e-5);
         }
     }
-}
+
 
