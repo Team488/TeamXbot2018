@@ -1,6 +1,10 @@
 package competition.subsystems.elevator;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -34,14 +38,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
+    
+    private Supplier<Boolean> lowerLimitSupplier;
+    private Supplier<Boolean> upperLimitSupplier;
 
     final DoubleProperty maxHeightInInches;
     final DoubleProperty minHeightInInches;
     final DoubleProperty elevatorTargetHeight;
     final DoubleProperty currentTicks;
     final DoubleProperty currentHeight;
-    final BooleanProperty lowerLimitSensor;
-    final BooleanProperty upperLimitSensor;
+    final BooleanProperty lowerLimitProp;
+    final BooleanProperty upperLimitProp;
 
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
@@ -59,8 +66,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
-        lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
-        upperLimitSensor = propMan.createEphemeralProperty("Elevator Upper Limit", false);
+        lowerLimitProp = propMan.createEphemeralProperty("Elevator Lower Limit", false);
+        upperLimitProp = propMan.createEphemeralProperty("Elevator Upper Limit", false);
 
         calibrationOffset = 0.0;
 
@@ -82,6 +89,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             initializeUpperLimit();
         }
 
+        if (contract.elevatorUsesTalonLimits()) {
+            initializeTalonLimits();
+        }
     }
 
     private void initializeMotor() {
@@ -96,11 +106,30 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private void initializeLowerLimit() {
         lowerLimitSwitch = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
         lowerLimitSwitch.setInverted(contract.getElevatorLowerLimit().inverted);
+        lowerLimitSupplier = () -> lowerLimitSwitch.get();
     }
     
     private void initializeUpperLimit() {
         upperLimitSwitch = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
         upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
+        upperLimitSupplier = () -> upperLimitSwitch.get();
+    }
+    
+    private void initializeTalonLimits() {
+        // Upper limit
+        motor.configForwardLimitSwitchSource(
+                LimitSwitchSource.FeedbackConnector, 
+                LimitSwitchNormal.NormallyOpen,
+                0);
+        
+        // Lower limit
+        motor.configReverseLimitSwitchSource(
+                LimitSwitchSource.FeedbackConnector, 
+                LimitSwitchNormal.NormallyOpen,
+                0);
+        
+        upperLimitSupplier = () -> motor.isFwdLimitSwitchClosed();
+        lowerLimitSupplier = () -> motor.isRevLimitSwitchClosed(); 
     }
 
     public void calibrateHere() {
@@ -130,7 +159,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public void setPower(double power) {
 
         if (contract.elevatorLowerLimitReady()) {
-            boolean sensorHit = lowerLimitSwitch.get();
+            boolean sensorHit = lowerLimitSupplier.get();
             calibrationLatch.setValue(sensorHit);
 
             // If the lower-bound sensor is hit, then we need to prevent the mechanism from lowering any further.
@@ -140,7 +169,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         if (contract.elevatorUpperLimitReady()) {
-            boolean sensorHit = upperLimitSwitch.get();
+            boolean sensorHit = upperLimitSupplier.get();
             
             //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
@@ -240,11 +269,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         if (contract.elevatorLowerLimitReady()) {
-            lowerLimitSensor.set(lowerLimitSwitch.get());
+            lowerLimitProp.set(lowerLimitSwitch.get());
         }
         
         if (contract.elevatorUpperLimitReady()) {
-            upperLimitSensor.set(upperLimitSwitch.get());
+            upperLimitProp.set(upperLimitSwitch.get());
         }
     }
 }
