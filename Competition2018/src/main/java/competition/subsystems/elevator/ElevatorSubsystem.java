@@ -108,6 +108,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void calibrateAt(double lowestPosition) {
+        log.info("Calibrating elevator with lowest position of " + lowestPosition);
         calibrationOffset = lowestPosition;
         isCalibrated = true;
     }

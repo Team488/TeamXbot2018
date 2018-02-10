@@ -64,16 +64,18 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         configureMotorTeam(
                 "LeftDriveMaster",
                 leftMaster, leftFollower,
-                contract.getLeftDriveMaster().inverted, contract.getLeftDriveFollower().inverted,
-                true);
+                contract.getLeftDriveMaster().inverted, 
+                contract.getLeftDriveFollower().inverted,
+                contract.getLeftDriveMasterEncoder().inverted);
 
         this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
         configureMotorTeam(
                 "RightDriveMaster",
                 rightMaster, rightFollower,
-                contract.getRightDriveMaster().inverted, contract.getRightDriveFollower().inverted,
-                true);
+                contract.getRightDriveMaster().inverted, 
+                contract.getRightDriveFollower().inverted,
+                contract.getRightDriveMasterEncoder().inverted);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
@@ -90,7 +92,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         master.setInverted(masterInverted);
         follower.setInverted(followerInverted);
         
-        master.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         master.setSensorPhase(sensorPhase);
         master.createTelemetryProperties(masterName);
         
