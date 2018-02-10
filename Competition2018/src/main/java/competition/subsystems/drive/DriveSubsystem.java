@@ -63,7 +63,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
         configureMotorTeam(
                 "LeftDriveMaster",
-                leftMaster, leftFollower,
+                leftMaster, 
+                leftFollower,
                 contract.getLeftDriveMaster().inverted, 
                 contract.getLeftDriveFollower().inverted,
                 contract.getLeftDriveMasterEncoder().inverted);
@@ -72,7 +73,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
         configureMotorTeam(
                 "RightDriveMaster",
-                rightMaster, rightFollower,
+                rightMaster, 
+                rightFollower,
                 contract.getRightDriveMaster().inverted, 
                 contract.getRightDriveFollower().inverted,
                 contract.getRightDriveMasterEncoder().inverted);
