@@ -29,6 +29,7 @@ public class OperatorInterface {
 
         driverGamepad.setLeftStickYInversion(true);
         driverGamepad.setRightStickYInversion(true);
+        driverGamepad.setRightStickXInversion(true);
 
         operatorGamepad = factory.createGamepad(0, 10);
 
