@@ -28,8 +28,8 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
             currentMonitor.measureAverageCurrent();
         }
         ((MockCANTalon) talon).setOutputCurrent(26);
-        assertTrue(currentMonitor.measureAverageCurrent() == 14);
-        assertTrue(currentMonitor.currentHistory.size() == 25); 
+        assertEquals(14, currentMonitor.measureAverageCurrent(), 1e-5);
+        assertEquals(25, currentMonitor.currentHistory.size(), 0);
     }
     
     @Test
@@ -39,8 +39,8 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
             currentMonitor.measureAverageCurrent();
         }
         ((MockCANTalon) talon).setOutputCurrent(25);
-        assertTrue(currentMonitor.measureAverageCurrent() == 13);
-        assertTrue(currentMonitor.currentHistory.size() == 25); 
+        assertEquals(13, currentMonitor.measureAverageCurrent(), 1e-5);
+        assertEquals(25, currentMonitor.currentHistory.size(), 0);
     }
     
     @Test
@@ -51,7 +51,7 @@ public class TalonCurrentMonitorTest extends BaseCompetitionTest {
         }
         ((MockCANTalon) talon).setOutputCurrent(24);
         assertTrue(currentMonitor.measureAverageCurrent() == 12.5);
-        assertTrue(currentMonitor.currentHistory.size() == 24); 
+        assertEquals(25, currentMonitor.currentHistory.size(), 0);
     }
 
 }

@@ -17,13 +17,25 @@ public class TalonCurrentMonitor {
 
     public double measureAverageCurrent() {
         currentHistory.addFirst(talon.getOutputCurrent());
-        if(currentHistory.size() > CURRENT_AVERAGING_WINDOW) {
+        if (currentHistory.size() > CURRENT_AVERAGING_WINDOW) {
             currentHistory.removeLast();
         }
         double sum = 0;
-        for(Double current:currentHistory) {
+        for (Double current : currentHistory) {
             sum += current;
         }
         return sum / currentHistory.size();
+    }
+
+    public double peakCurrent() {
+        double peakCurrent = 0;
+        if (!currentHistory.isEmpty()) {
+            for (Double current : currentHistory) {
+                if (peakCurrent < current) {
+                    peakCurrent = current;
+                }
+            }
+        }
+        return peakCurrent;
     }
 }
