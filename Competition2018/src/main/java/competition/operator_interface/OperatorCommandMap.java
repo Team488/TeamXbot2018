@@ -23,7 +23,6 @@ import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
-import xbot.common.properties.DoubleProperty;
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
