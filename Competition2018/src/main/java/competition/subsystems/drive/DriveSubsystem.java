@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
@@ -174,13 +175,20 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         return 0;
     }
     
-    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {
-        // TODO: ideally, we should only do this occasionally.
-        this.updateMotorPidValues(leftMaster);
-        this.updateMotorPidValues(rightMaster);
-        
+    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {        
         // Talon SRX measures in native units per 100ms, so values in seconds are divided by 10
         leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
         rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+    }
+    
+    @Override
+    public void updatePeriodicData() {
+        super.updatePeriodicData();
+        
+        int secondsSinceStart = (int)(Timer.getFPGATimestamp() / 1000);
+        if (secondsSinceStart % 5 == 0) {
+            this.updateMotorPidValues(leftMaster);
+            this.updateMotorPidValues(rightMaster);
+        }
     }
 }
