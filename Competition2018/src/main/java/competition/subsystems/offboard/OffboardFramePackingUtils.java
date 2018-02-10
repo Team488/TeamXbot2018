@@ -21,13 +21,12 @@ public class OffboardFramePackingUtils {
     
     public static byte[] packSetCommandFrame(int commandId) {
         return new byte[] {
-            (byte)(commandId & 0xFF)
+        (byte)(commandId & 0xFF)
         };
     }
     
     public static byte[] packScoringPlacement(int sequence) {
-    	return new byte[] {
-    		(byte)(sequence & 0xFF)	
+    	return new byte[] { (byte)(sequence & 0xFF)	
     	};
     }
     
