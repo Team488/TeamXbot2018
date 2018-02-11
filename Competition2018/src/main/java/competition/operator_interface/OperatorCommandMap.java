@@ -23,6 +23,8 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
+import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -61,7 +63,6 @@ public class OperatorCommandMap {
     public void setupElevatorCommands(
             OperatorInterface oi,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            CalibrateElevatorViaStallCommand calibrate,
             ElevatorUncalibrateCommand uncalibrate,
             ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight,
@@ -72,7 +73,6 @@ public class OperatorCommandMap {
             ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
-        oi.operatorGamepad.getifAvailable(7).whenPressed(calibrate);
         
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
@@ -101,6 +101,15 @@ public class OperatorCommandMap {
     
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
+        oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+    }
+    
+    @Inject
+    public void setupWristCommands(
+            OperatorInterface oi,
+            WristCalibrateCommand calibrate,
+            WristUncalibrateCommand loseCalibration) {
+        oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
+        loseCalibration.includeOnSmartDashboard();
     }
 }

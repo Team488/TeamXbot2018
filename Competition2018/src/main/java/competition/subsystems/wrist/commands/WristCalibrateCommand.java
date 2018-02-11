@@ -5,27 +5,28 @@ import com.google.inject.Inject;
 import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class WristDownCommand extends BaseCommand {
+public class WristCalibrateCommand extends BaseCommand {
 
     WristSubsystem wrist;
-
+    
     @Inject
-    public WristDownCommand(WristSubsystem wrist) {
+    public WristCalibrateCommand(WristSubsystem wrist) {
         this.wrist = wrist;
-        this.requires(wrist);
     }
-
+    
     @Override
     public void initialize() {
         log.info("Initializing");
+        wrist.calibrateHere();
     }
 
     @Override
     public void execute() {
-        wrist.goDown();
+    }
+    
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 
-    public void end() {
-        wrist.stop();
-    }
 }
