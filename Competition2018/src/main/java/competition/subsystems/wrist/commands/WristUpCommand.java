@@ -22,10 +22,10 @@ public class WristUpCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        gripperDeploy.deployUp();
+        gripperDeploy.goUp();
     }
 
     public void end() {
-        gripperDeploy.stopGripper();
+        gripperDeploy.stop();
     }
 }

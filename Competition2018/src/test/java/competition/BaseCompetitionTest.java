@@ -14,6 +14,7 @@ import xbot.common.subsystems.pose.BasePoseSubsystem;
 public class BaseCompetitionTest extends BaseWPITest {
 
     protected OperatorInterface oi;
+    protected ElectricalContract2018 contract;
     
     protected class TestModule extends UnitTestModule {
         @Override
@@ -36,5 +37,6 @@ public class BaseCompetitionTest extends BaseWPITest {
         super.setUp();
         
         oi = injector.getInstance(OperatorInterface.class);
+        contract = injector.getInstance(ElectricalContract2018.class);
     }
 }

@@ -22,6 +22,6 @@ public class WristStopCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        gripperDeploy.stopGripper();
+        gripperDeploy.stop();
     }
 }

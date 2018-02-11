@@ -16,8 +16,8 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource{
-    final DoubleProperty gripperDeploySpeed;
+public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource {
+    final DoubleProperty defaultWristPower;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
 
@@ -29,13 +29,14 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource{
     final DoubleProperty wristUncalibratedPowerProp;
     
     int offset;
+    int upperLimit;
     boolean calibrated = false;
 
     @Inject
     WristSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        gripperDeploySpeed = propMan.createPersistentProperty("gripperDeploySpeed", .5);
+        defaultWristPower = propMan.createPersistentProperty("Wrist Default Power", 1);
         
         currentWristAngleProp = propMan.createEphemeralProperty("Wrist Current Angle", 0.0);
         wristTicksPerDegreeProp = propMan.createPersistentProperty("Wrist ticks per degree", 1);
@@ -45,6 +46,22 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource{
         if (contract.wristReady()) {
             initializeMotor();
         }
+    }
+    
+    public double getUncalibratedPowerFactor() {
+        return wristUncalibratedPowerProp.get();
+    }
+    
+    public double getWristTicksPerDegree() {
+        return wristTicksPerDegreeProp.get();
+    }
+    
+    public int getLowerLimitInTicks() {
+        return offset;
+    }
+    
+    public int getUpperLimitInTicks() {
+        return upperLimit;
     }
 
     private void initializeMotor() {
@@ -76,7 +93,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource{
         
         // calculate the upper limit and set safeties.
         int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
-        int upperLimit = lowestPosition + tickRange;
+        upperLimit = lowestPosition + tickRange;
         
         log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
@@ -105,21 +122,21 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource{
     /**
      * angles the Gripper up
      */
-    public void deployUp() {
-        motor.simpleSet(gripperDeploySpeed.get());
+    public void goUp() {
+        motor.simpleSet(defaultWristPower.get());
     }
 
     /**
      * angles the Gripper down
      */
-    public void deployDown() {
-        motor.simpleSet(-gripperDeploySpeed.get());
+    public void goDown() {
+        motor.simpleSet(-defaultWristPower.get());
     }
 
     /**
      * stops the Gripper
      */
-    public void stopGripper() {
+    public void stop() {
         motor.simpleSet(0);
     }
 

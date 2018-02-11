@@ -31,6 +31,6 @@ public class WristDownCommandTest extends BaseCompetitionTest {
         assertEquals(0.0, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(-0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(-1, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
     }
 }
