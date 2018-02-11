@@ -56,6 +56,16 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public DeviceInfo getWristMaster() {
         return new DeviceInfo(2, false);
     }
+    
+    @Override
+    public DeviceInfo getWristEncoder() {
+        return new DeviceInfo(0, false);
+    }
+    
+    @Override
+    public double getWristMaximumAngle() {
+        return 45;
+    }
 
     @Override
     public boolean collectorReady() {
