@@ -47,12 +47,12 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupGripperDeploySubsystem(
+    public void setupWristSubsystem(
             ElectricalContract2018 contract,
-            WristSubsystem gripperdeploySubsystem,
+            WristSubsystem wristSubsystem,
             WristControlViaJoysticksCommand command) {
         if (contract.wristReady()) {
-            gripperdeploySubsystem.setDefaultCommand(command); 
+            wristSubsystem.setDefaultCommand(command); 
         }
     }
 

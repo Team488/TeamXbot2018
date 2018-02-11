@@ -8,14 +8,14 @@ import xbot.common.command.BaseCommand;
 
 public class WristControlViaJoysticksCommand extends BaseCommand {
     
-    final WristSubsystem gripperDeploySubsystem;
+    final WristSubsystem wrist;
     final OperatorInterface oi;
     
     @Inject
-    public WristControlViaJoysticksCommand (WristSubsystem gripperDeploySubsystem, OperatorInterface oi) {
+    public WristControlViaJoysticksCommand (WristSubsystem wrist, OperatorInterface oi) {
         this.oi = oi;
-        this.gripperDeploySubsystem = gripperDeploySubsystem;
-        this.requires(gripperDeploySubsystem);
+        this.wrist = wrist;
+        this.requires(wrist);
     }
     
     @Override
@@ -25,6 +25,6 @@ public class WristControlViaJoysticksCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        gripperDeploySubsystem.motor.simpleSet(oi.operatorGamepad.getLeftVector().y);
+        wrist.motor.simpleSet(oi.operatorGamepad.getLeftVector().y);
     }
 }
