@@ -20,6 +20,7 @@ import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -100,7 +101,9 @@ public class OperatorCommandMap {
     @Inject
     public void setupWristCommands(
             OperatorInterface oi,
-            WristCalibrateCommand calibrate) {
+            WristCalibrateCommand calibrate,
+            WristUncalibrateCommand loseCalibration) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
+        loseCalibration.includeOnSmartDashboard();
     }
 }

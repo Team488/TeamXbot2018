@@ -77,6 +77,9 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     
     public void uncalibrate() {
         calibrated = false;
+        
+        motor.configForwardSoftLimitEnable(false, 0);
+        motor.configReverseSoftLimitEnable(false, 0);
     }
     
     public boolean getIsCalibrated() {
