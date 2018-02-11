@@ -21,10 +21,7 @@ public class DriveNowhereCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        drive.rightMaster.simpleSet(0);
-        drive.leftMaster.simpleSet(0);
-        drive.rightFollower.simpleSet(0);
-        drive.leftFollower.simpleSet(0);
+        drive.stop();
     }
 
 }
