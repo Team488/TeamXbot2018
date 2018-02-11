@@ -9,14 +9,14 @@ import competition.subsystems.wrist.commands.WristUpCommand;
 
 public class WristUpCommandTest extends BaseCompetitionTest {
 
-    WristSubsystem gripperDeploy;
+    WristSubsystem wrist;
     WristUpCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        gripperDeploy = injector.getInstance(WristSubsystem.class);
+        wrist = injector.getInstance(WristSubsystem.class);
         command = injector.getInstance(WristUpCommand.class);
     }
 
@@ -28,9 +28,9 @@ public class WristUpCommandTest extends BaseCompetitionTest {
 
     @Test
     public void checkDeployUp() {
-        assertEquals(0.0, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.0, wrist.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(1, wrist.motor.getMotorOutputPercent(), 0.001);
     }
 }

@@ -14,13 +14,13 @@ public class CollectCubeCommandGroup extends CommandGroup{
     public CollectCubeCommandGroup(
             ElevatorSubsystem elevator,
             SetElevatorTargetHeightCommand moveToMinHeight,
-            WristDownCommand gripperDeployDown,
+            WristDownCommand wristDown,
             GripperIntakeCommand gripperIntake)
     {
         moveToMinHeight.setGoalHeight(elevator.getMinHeight());
         
         this.addParallel(moveToMinHeight);
-        this.addParallel(gripperDeployDown);
+        this.addParallel(wristDown);
         this.addParallel(gripperIntake);
     }
 }

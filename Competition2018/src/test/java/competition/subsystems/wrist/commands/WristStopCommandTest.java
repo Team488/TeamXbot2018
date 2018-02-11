@@ -9,14 +9,14 @@ import competition.subsystems.wrist.commands.WristStopCommand;
 
 public class WristStopCommandTest extends BaseCompetitionTest {
 
-    WristSubsystem gripperDeploy;
+    WristSubsystem wrist;
     WristStopCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        gripperDeploy = injector.getInstance(WristSubsystem.class);
+        wrist = injector.getInstance(WristSubsystem.class);
         command = injector.getInstance(WristStopCommand.class);
     }
 
@@ -28,10 +28,10 @@ public class WristStopCommandTest extends BaseCompetitionTest {
 
     @Test
     public void checkStopDeploy() {
-        gripperDeploy.deployUp();
-        assertEquals(0.5, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+        wrist.goUp();
+        assertEquals(1, wrist.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(0.0, gripperDeploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.0, wrist.motor.getMotorOutputPercent(), 0.001);
     }
 }

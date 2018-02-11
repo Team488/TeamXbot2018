@@ -7,12 +7,12 @@ import xbot.common.command.BaseCommand;
 
 public class WristStopCommand extends BaseCommand {
 
-    WristSubsystem gripperDeploy;
+    WristSubsystem wrist;
 
     @Inject
-    public WristStopCommand(WristSubsystem gripperDeploy) {
-        this.gripperDeploy = gripperDeploy;
-        this.requires(gripperDeploy);
+    public WristStopCommand(WristSubsystem wrist) {
+        this.wrist = wrist;
+        this.requires(wrist);
     }
 
     @Override
@@ -22,6 +22,6 @@ public class WristStopCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        gripperDeploy.stopGripper();
+        wrist.stop();
     }
 }
