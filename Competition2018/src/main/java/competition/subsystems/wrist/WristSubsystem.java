@@ -78,8 +78,12 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     public void uncalibrate() {
         calibrated = false;
         
-        motor.configForwardSoftLimitEnable(false, 0);
-        motor.configReverseSoftLimitEnable(false, 0);
+        setSoftLimitsEnabled(false);
+    }
+    
+    private void setSoftLimitsEnabled(boolean on) {
+        motor.configReverseSoftLimitEnable(on, 0);
+        motor.configForwardSoftLimitEnable(on, 0);
     }
     
     public boolean getIsCalibrated() {
@@ -92,7 +96,6 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
         calibrated = true;
         
         motor.configReverseSoftLimitThreshold(offset, 0);
-        motor.configReverseSoftLimitEnable(true, 0);
         
         // calculate the upper limit and set safeties.
         int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
@@ -100,7 +103,8 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
-        motor.configForwardSoftLimitEnable(true, 0);
+        
+        setSoftLimitsEnabled(true);
     }
     
     public void calibrateHere() {
