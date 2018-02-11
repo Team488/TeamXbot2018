@@ -16,13 +16,13 @@ import competition.subsystems.elevator.commands.RiseCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorViaStallCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
-import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
-import competition.subsystems.gripperdeploy.commands.GripperDeployUpCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.shift.commands.ToggleGearCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
+import competition.subsystems.wrist.commands.WristUpCommand;
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.subsystems.elevator.ElevatorSubsystem;
 

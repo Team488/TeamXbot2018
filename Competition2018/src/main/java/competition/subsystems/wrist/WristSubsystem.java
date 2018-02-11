@@ -1,4 +1,4 @@
-package competition.subsystems.gripperdeploy;
+package competition.subsystems.wrist;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -11,7 +11,7 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
-public class GripperDeploySubsystem extends BaseSubsystem {
+public class WristSubsystem extends BaseSubsystem {
     final DoubleProperty gripperDeploySpeed;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
@@ -19,7 +19,7 @@ public class GripperDeploySubsystem extends BaseSubsystem {
     public XCANTalon motor;
 
     @Inject
-    GripperDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
+    WristSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
         gripperDeploySpeed = propMan.createPersistentProperty("gripperDeploySpeed", .5);

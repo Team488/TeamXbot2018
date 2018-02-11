@@ -1,18 +1,18 @@
-package competition.subsystems.gripperdeploy.commands;
+package competition.subsystems.wrist.commands;
 
 import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
-import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
+import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class GripperDeployViaJoysticksCommand extends BaseCommand {
+public class WristControlViaJoysticksCommand extends BaseCommand {
     
-    final GripperDeploySubsystem gripperDeploySubsystem;
+    final WristSubsystem gripperDeploySubsystem;
     final OperatorInterface oi;
     
     @Inject
-    public GripperDeployViaJoysticksCommand (GripperDeploySubsystem gripperDeploySubsystem, OperatorInterface oi) {
+    public WristControlViaJoysticksCommand (WristSubsystem gripperDeploySubsystem, OperatorInterface oi) {
         this.oi = oi;
         this.gripperDeploySubsystem = gripperDeploySubsystem;
         this.requires(gripperDeploySubsystem);
