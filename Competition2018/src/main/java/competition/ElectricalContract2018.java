@@ -38,6 +38,8 @@ public abstract class ElectricalContract2018 {
     
     public abstract boolean elevatorUpperLimitReady();
     
+    public abstract boolean elevatorUsesTalonLimits();
+    
     public abstract DeviceInfo getElevatorLowerLimit();
     
     public abstract DeviceInfo getElevatorUpperLimit();
