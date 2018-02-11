@@ -14,8 +14,8 @@ import xbot.common.command.BaseCommand;
 
 public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
-    double maxTick;
-    double minTick;
+    int maxTick;
+    int minTick;
     ElevatorSubsystem elevator;
     OperatorInterface oi;
 
@@ -41,7 +41,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        double tick = elevator.getCurrentTick();
+        int tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
         elevator.uncalibrate();
@@ -53,7 +53,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
     @Override
     public void execute() {
         // Stuff we do on every execute, since we want to read a lot of information
-        double tick = elevator.getCurrentTick();
+        int tick = elevator.getCurrentTick();
         if (tick > maxTick) {
             maxTick = tick;
         }

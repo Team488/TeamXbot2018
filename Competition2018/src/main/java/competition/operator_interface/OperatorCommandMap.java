@@ -14,6 +14,7 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
+import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
@@ -59,6 +60,7 @@ public class OperatorCommandMap {
     public void setupElevatorCommands(
             OperatorInterface oi,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
+            ElevatorUncalibrateCommand uncalibrate,
             ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight,
             SetElevatorTargetHeightCommand targetScaleMidHeight,
@@ -81,6 +83,7 @@ public class OperatorCommandMap {
         
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
         
+        uncalibrate.includeOnSmartDashboard();
         
     }
 
