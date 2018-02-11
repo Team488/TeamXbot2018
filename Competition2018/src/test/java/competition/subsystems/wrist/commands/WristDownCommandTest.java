@@ -1,23 +1,23 @@
-package competition.subsystems.gripperdeploy;
+package competition.subsystems.wrist.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
-import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
-import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
+import competition.subsystems.wrist.WristSubsystem;
+import competition.subsystems.wrist.commands.WristDownCommand;
 
-public class GripperDeployDownCommandTest extends BaseCompetitionTest {
+public class WristDownCommandTest extends BaseCompetitionTest {
 
-    GripperDeploySubsystem gripperDeploy;
-    GripperDeployDownCommand command;
+    WristSubsystem gripperDeploy;
+    WristDownCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        gripperDeploy = injector.getInstance(GripperDeploySubsystem.class);
-        command = injector.getInstance(GripperDeployDownCommand.class);
+        gripperDeploy = injector.getInstance(WristSubsystem.class);
+        command = injector.getInstance(WristDownCommand.class);
     }
 
     @Test

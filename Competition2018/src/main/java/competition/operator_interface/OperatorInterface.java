@@ -18,8 +18,8 @@ public class OperatorInterface {
     public XFTCGamepad driverGamepad;
     public XFTCGamepad operatorGamepad;
     
-    public final AnalogHIDDescription raiseElevator;
-    public final AnalogHIDDescription lowerElevator;
+    public final AnalogHIDDescription gripperIntake;
+    public final AnalogHIDDescription gripperEject;
     public final AnalogHIDDescription raiseClimber;
     public final AnalogHIDDescription lowerClimber;
 
@@ -36,11 +36,11 @@ public class OperatorInterface {
         operatorGamepad.setLeftStickYInversion(true);
         operatorGamepad.setRightStickYInversion(true);
         
-        raiseElevator = new AnalogHIDDescription(3, .501, 1.0);
-        operatorGamepad.addAnalogButton(raiseElevator);
+        gripperIntake = new AnalogHIDDescription(3, .501, 1.0);
+        operatorGamepad.addAnalogButton(gripperIntake);
         
-        lowerElevator = new AnalogHIDDescription(2, .501, 1.0);
-        operatorGamepad.addAnalogButton(lowerElevator);
+        gripperEject = new AnalogHIDDescription(2, .501, 1.0);
+        operatorGamepad.addAnalogButton(gripperEject);
         
         raiseClimber = new AnalogHIDDescription(3, .501, 1.0);
         driverGamepad.addAnalogButton(raiseClimber);

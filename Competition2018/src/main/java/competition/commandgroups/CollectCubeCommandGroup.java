@@ -5,8 +5,8 @@ import com.google.inject.Inject;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
-import competition.subsystems.gripperdeploy.commands.GripperDeployDownCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
 
 public class CollectCubeCommandGroup extends CommandGroup{
     
@@ -14,7 +14,7 @@ public class CollectCubeCommandGroup extends CommandGroup{
     public CollectCubeCommandGroup(
             ElevatorSubsystem elevator,
             SetElevatorTargetHeightCommand moveToMinHeight,
-            GripperDeployDownCommand gripperDeployDown,
+            WristDownCommand gripperDeployDown,
             GripperIntakeCommand gripperIntake)
     {
         moveToMinHeight.setGoalHeight(elevator.getMinHeight());

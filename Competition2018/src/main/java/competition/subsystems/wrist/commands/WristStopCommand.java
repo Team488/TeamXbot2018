@@ -1,16 +1,16 @@
-package competition.subsystems.gripperdeploy.commands;
+package competition.subsystems.wrist.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
+import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class GripperStopDeployCommand extends BaseCommand {
+public class WristStopCommand extends BaseCommand {
 
-    GripperDeploySubsystem gripperDeploy;
+    WristSubsystem gripperDeploy;
 
     @Inject
-    public GripperStopDeployCommand(GripperDeploySubsystem gripperDeploy) {
+    public WristStopCommand(WristSubsystem gripperDeploy) {
         this.gripperDeploy = gripperDeploy;
         this.requires(gripperDeploy);
     }

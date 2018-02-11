@@ -7,9 +7,9 @@ import competition.subsystems.climb.ClimbSubsystem;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.lean.LeanSubsystem;
+import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
@@ -25,7 +25,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
      */
     @Inject
     public CalibrateElevatorTicksPerInchCommand(ElevatorSubsystem elevator, DriveSubsystem drive,
-            GripperDeploySubsystem wrist, GripperIntakeSubsystem intake, LeanSubsystem leaner, ClimbSubsystem climber,
+            WristSubsystem wrist, GripperIntakeSubsystem intake, LeanSubsystem leaner, ClimbSubsystem climber,
             ClimberDeploySubsystem climbDeploy, OperatorInterface oi) {
         this.elevator = elevator;
         this.oi = oi;
