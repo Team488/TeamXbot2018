@@ -91,7 +91,10 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource{
      */
     public void setPower(double power) {
         if (!calibrated) {
-            power = MathUtils.constrainDouble(power, -0.3, 0.3);
+            power = MathUtils.constrainDouble(
+                    power, 
+                    -wristUncalibratedPowerProp.get(), 
+                    wristUncalibratedPowerProp.get());
         }        
         
         motor.simpleSet(power);

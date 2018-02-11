@@ -2,8 +2,6 @@ package competition;
 
 import com.google.inject.Singleton;
 
-import competition.ElectricalContract2018.DeviceInfo;
-
 @Singleton
 public class Practice2018Robot extends ElectricalContract2018 {
 
