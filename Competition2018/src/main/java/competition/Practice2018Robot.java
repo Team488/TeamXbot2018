@@ -127,4 +127,8 @@ public class Practice2018Robot extends ElectricalContract2018 {
         return new DeviceInfo(0, true);
     }
 
+    @Override
+    public boolean elevatorUsesTalonLimits() {
+        return false;
+    }
 }
