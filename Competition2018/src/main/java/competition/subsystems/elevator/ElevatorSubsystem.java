@@ -49,12 +49,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty currentHeight;
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
-    final BooleanProperty lowerLimitSensor;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
-    final BooleanProperty upperLimitSensor;
 
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
