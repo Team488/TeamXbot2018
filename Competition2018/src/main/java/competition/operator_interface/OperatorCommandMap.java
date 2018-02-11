@@ -1,30 +1,28 @@
 package competition.operator_interface;
 
+import javax.naming.ldap.UnsolicitedNotificationListener;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.commandgroups.CollectCubeCommandGroup;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import competition.subsystems.drive.commands.AssistedTankDriveCommand;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
-import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
-import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
-import competition.subsystems.elevator.commands.LowerCommand;
-import competition.subsystems.elevator.commands.RiseCommand;
-import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
-import competition.subsystems.elevator.commands.CalibrateElevatorViaStallCommand;
+import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
+import competition.subsystems.elevator.commands.CalibrateElevatorViaStallCommand;
+import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
+import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
+import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
-import competition.subsystems.shift.commands.ToggleGearCommand;
-import competition.subsystems.wrist.commands.WristDownCommand;
-import competition.subsystems.wrist.commands.WristUpCommand;
-import competition.commandgroups.CollectCubeCommandGroup;
-import competition.subsystems.elevator.ElevatorSubsystem;
 
 @Singleton
 public class OperatorCommandMap {
@@ -64,6 +62,7 @@ public class OperatorCommandMap {
             OperatorInterface oi,
             CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
             CalibrateElevatorViaStallCommand calibrate,
+            ElevatorUncalibrateCommand uncalibrate,
             ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight,
             SetElevatorTargetHeightCommand targetScaleMidHeight,
@@ -87,6 +86,7 @@ public class OperatorCommandMap {
         
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
         
+        uncalibrate.includeOnSmartDashboard();
         
     }
 

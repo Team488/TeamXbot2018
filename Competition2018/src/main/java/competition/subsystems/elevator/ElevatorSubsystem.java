@@ -122,7 +122,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         isCalibrated = true;
         
         motor.configReverseSoftLimitThreshold(lowestPosition, 0);
-        motor.configReverseSoftLimitEnable(true, 0);
         
         // calculate the upper limit and set safeties.
         double inchRange = getMaxHeightInInches() - getMinHeightInInches();
@@ -131,11 +130,18 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         
         log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
-        motor.configForwardSoftLimitEnable(true, 0);
+        
+        setSoftLimitsEnabled(true);
     }
 
     public void uncalibrate() {
         isCalibrated = false;
+        setSoftLimitsEnabled(false);
+    }
+    
+    private void setSoftLimitsEnabled(boolean on) {
+        motor.configReverseSoftLimitEnable(on, 0);
+        motor.configForwardSoftLimitEnable(on, 0);
     }
 
     public boolean isCalibrated() {
