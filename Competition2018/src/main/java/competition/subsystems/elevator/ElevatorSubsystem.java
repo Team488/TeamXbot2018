@@ -116,10 +116,22 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         calibrateAt(motor.getSelectedSensorPosition(0));
     }
 
-    public void calibrateAt(double lowestPosition) {
+    public void calibrateAt(int lowestPosition) {
         log.info("Calibrating elevator with lowest position of " + lowestPosition);
         calibrationOffset = lowestPosition;
         isCalibrated = true;
+        
+        motor.configReverseSoftLimitThreshold(lowestPosition, 0);
+        motor.configReverseSoftLimitEnable(true, 0);
+        
+        // calculate the upper limit and set safeties.
+        double inchRange = getMaxHeightInInches() - getMinHeightInInches();
+        int tickRange = (int)(elevatorTicksPerInch.get() * inchRange);
+        int upperLimit = tickRange + lowestPosition;
+        
+        log.info("Upper limit set at: " + upperLimit);
+        motor.configForwardSoftLimitThreshold(upperLimit, 0);
+        motor.configForwardSoftLimitEnable(true, 0);
     }
 
     public void uncalibrate() {
@@ -210,7 +222,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return ticksToInches(motor.getSelectedSensorPosition(0));
     }
 
-    public double getCurrentTick() {
+    public int getCurrentTick() {
         return motor.getSelectedSensorPosition(0);
     }
 
