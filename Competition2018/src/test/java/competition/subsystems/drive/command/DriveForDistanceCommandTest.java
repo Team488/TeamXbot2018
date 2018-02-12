@@ -6,10 +6,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import competition.subsystems.drive.DriveTestBase;
 import competition.subsystems.drive.DriveSubsystem.Side;
+import competition.subsystems.drive.DriveTestBase;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
-import xbot.common.controls.MockRobotIO;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
 public class DriveForDistanceCommandTest extends DriveTestBase {
