@@ -8,14 +8,13 @@ import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.injection.BaseWPITest;
 import xbot.common.injection.UnitTestModule;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
-import xbot.common.subsystems.drive.MockDriveSubsystem;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
-import xbot.common.subsystems.pose.TestPoseSubsystem;
 
 @Ignore
 public class BaseCompetitionTest extends BaseWPITest {
 
     protected OperatorInterface oi;
+    protected ElectricalContract2018 contract;
     
     protected class TestModule extends UnitTestModule {
         @Override
@@ -38,5 +37,6 @@ public class BaseCompetitionTest extends BaseWPITest {
         super.setUp();
         
         oi = injector.getInstance(OperatorInterface.class);
+        contract = injector.getInstance(ElectricalContract2018.class);
     }
 }
