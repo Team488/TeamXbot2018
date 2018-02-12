@@ -12,6 +12,8 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import competition.subsystems.gripperdeploy.commands.GripperDeployViaJoysticksCommand;
+import competition.subsystems.gripperintake.GripperIntakeSubsystem;
+import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.StopLeaningCommand;
 import competition.subsystems.shift.ShiftSubsystem;
@@ -63,6 +65,16 @@ public class SubsystemDefaultCommandMap {
             StopLeaningCommand command) {
         if (contract.climbLeanReady()) {
             leanSubsystem.setDefaultCommand(command);
+        }
+    }
+
+    @Inject
+    public void setupGripperSubsystem(
+            ElectricalContract2018 contract,
+            GripperIntakeSubsystem gripperSubsystem, 
+            GripperStopCommand command) {
+        if (contract.collectorReady()) {
+            gripperSubsystem.setDefaultCommand(command);
         }
     }
 
