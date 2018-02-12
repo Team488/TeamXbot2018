@@ -16,9 +16,8 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     OperatorInterface oi;
     ElevatorSubsystem elevator;
     PIDManager pid;
-    double startTime;
-    double attemptTime;
-    final DoubleProperty calibrationAttemptTime;
+    double giveUpCalibratingTime;
+    final DoubleProperty elevatorCalibrationAttemptTimeMS;
 
     @Inject
     public ElevatorMaintainerCommand(
@@ -26,7 +25,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             PIDFactory pf, 
             XPropertyManager propMan, 
             OperatorInterface oi) {
-        calibrationAttemptTime = propMan.createPersistentProperty("Calibration attempt time (ms)", 4000);
+        elevatorCalibrationAttemptTimeMS = propMan.createPersistentProperty("Calibration attempt time (ms)", 4000);
         this.elevator = elevator;
         this.requires(elevator);
         this.oi = oi;
@@ -39,8 +38,8 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         log.info("Initializing");
         if (!elevator.isCalibrated()) {
             log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
-            startTime = Timer.getFPGATimestamp();
-            attemptTime = startTime + calibrationAttemptTime.get();
+            giveUpCalibratingTime = Timer.getFPGATimestamp() + elevatorCalibrationAttemptTimeMS.get();
+            log.info("Attempting calibration from " + Timer.getFPGATimestamp() + " until " + giveUpCalibratingTime);
         }
     }
 
@@ -52,7 +51,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         if (elevator.isCalibrated()) {
             maintain = true;
         }
-        else if (Timer.getFPGATimestamp() < attemptTime) {
+        else if (Timer.getFPGATimestamp() < giveUpCalibratingTime) {
             tryToCalibrate = true;
         }
         else {
