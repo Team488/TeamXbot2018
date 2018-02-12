@@ -27,12 +27,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
     
     @Override
     public DeviceInfo getLeftDriveMasterEncoder() {
-        return new DeviceInfo(0, true);
+        return new DeviceInfo(0, false);
     }
     
     @Override
     public DeviceInfo getRightDriveMasterEncoder() {
-        return new DeviceInfo(0, true);
+        return new DeviceInfo(0, false);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean collectorReady() {
-        return false;
+        return true;
     }
 
     @Override
