@@ -57,8 +57,8 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject, GripperIntakeCommand intake) {
-        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileActive(eject);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileActive(intake);
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
     }
 
     @Inject
@@ -100,9 +100,10 @@ public class OperatorCommandMap {
     }
     
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav) {
+    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav, DriveAtVelocityCommand driveAtVel) {
         oi.driverGamepad.getifAvailable(3).whilePressedNoRestart(acquireCube);
         oi.driverGamepad.getifAvailable(1).whilePressedNoRestart(testNav);
-        oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
+        oi.driverGamepad.getifAvailable(2).whilePressedNoRestart(driveAtVel);
+        //oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
     }
 }
