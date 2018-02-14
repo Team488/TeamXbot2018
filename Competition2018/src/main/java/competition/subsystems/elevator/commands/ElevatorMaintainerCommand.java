@@ -61,10 +61,10 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             currentMode = MaintinerMode.Calibrated;
         }
         else if (Timer.getFPGATimestamp() < giveUpCalibratingTime) {
-            tryToCalibrate = true;
+            currentMode = MaintinerMode.Calibrating;
         }
         else {
-            manual = true;
+            currentMode = MaintinerMode.GaveUp;
         }
         
         
@@ -72,10 +72,10 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         if (currentMode == MaintinerMode.Calibrated) {
             elevator.setPower(pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches()));
         }
-        else if (tryToCalibrate) {
-            elevator.setPower(-1);
+        else if (currentMode == MaintinerMode.Calibrating) {
+            elevator.lower();
         }
-        else if (manual) {
+        else if (currentMode == MaintinerMode.GaveUp) {
             elevator.setPower(oi.operatorGamepad.getRightStickY());
         }
     }  
