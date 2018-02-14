@@ -24,8 +24,10 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
 import competition.subsystems.wrist.commands.WristDownCommand;
-import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.wrist.commands.WristUpCommand;
+import competition.subsystems.wrist.commands.WristUncalibrateCommand;
+import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -62,12 +64,19 @@ public class OperatorCommandMap {
     }
 
     @Inject
-
-    public void setupElevatorCommands(OperatorInterface oi, CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
-            SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
-            SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
-            CalibrateElevatorHereCommand calibrateHere, ElevatorSubsystem elevatorSubsystem) {
+    public void setupElevatorCommands(
+            OperatorInterface oi,
+            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
+            ElevatorUncalibrateCommand uncalibrate,
+            ElevatorMaintainerCommand maintainer,
+            SetElevatorTargetHeightCommand targetScaleHighHeight,
+            SetElevatorTargetHeightCommand targetScaleMidHeight,
+            SetElevatorTargetHeightCommand targetSwitchDropHeight,
+            SetElevatorTargetHeightCommand targetPickUpHeight,
+            CalibrateElevatorHereCommand calibrateHere,
+            EnableElevatorCurrentLimitCommand enableCurrentLimit,
+            DisableElevatorCurrentLimitCommand disableCurrentLimit,
+            ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
 
@@ -82,7 +91,11 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
-
+        
+        uncalibrate.includeOnSmartDashboard();
+        
+        enableCurrentLimit.includeOnSmartDashboard();
+        disableCurrentLimit.includeOnSmartDashboard();
     }
 
     @Inject
