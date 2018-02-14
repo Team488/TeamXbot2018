@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
-    
+
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
 
@@ -122,22 +122,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
         upperLimitSupplier = () -> upperLimitSwitch.get();
     }
-    
+
     private void initializeTalonLimits() {
         // Upper limit
-        motor.configForwardLimitSwitchSource(
-                LimitSwitchSource.FeedbackConnector, 
-                LimitSwitchNormal.NormallyOpen,
-                0);
-        
+        motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
         // Lower limit
-        motor.configReverseLimitSwitchSource(
-                LimitSwitchSource.FeedbackConnector, 
-                LimitSwitchNormal.NormallyOpen,
-                0);
-        
+        motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
         upperLimitSupplier = () -> motor.isFwdLimitSwitchClosed();
-        lowerLimitSupplier = () -> motor.isRevLimitSwitchClosed(); 
+        lowerLimitSupplier = () -> motor.isRevLimitSwitchClosed();
     }
 
     public void calibrateHere() {
@@ -148,17 +142,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         log.info("Calibrating elevator with lowest position of " + lowestPosition);
         calibrationOffset = lowestPosition;
         isCalibrated = true;
-        
+
         motor.configReverseSoftLimitThreshold(lowestPosition, 0);
-        
+
         // calculate the upper limit and set safeties.
         double inchRange = getMaxHeightInInches() - getMinHeightInInches();
-        int tickRange = (int)(elevatorTicksPerInch.get() * inchRange);
+        int tickRange = (int) (elevatorTicksPerInch.get() * inchRange);
         int upperLimit = tickRange + lowestPosition;
-        
+
         log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
-        
+
         setSoftLimitsEnabled(true);
     }
 
@@ -166,7 +160,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         isCalibrated = false;
         setSoftLimitsEnabled(false);
     }
-    
+
     private void setSoftLimitsEnabled(boolean on) {
         motor.configReverseSoftLimitEnable(on, 0);
         motor.configForwardSoftLimitEnable(on, 0);
@@ -197,8 +191,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSupplier.get();
-            
-            //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+
+            // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, -1, 0);
             }
