@@ -11,6 +11,7 @@ import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
+import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.StopLeaningCommand;
 import competition.subsystems.shift.ShiftSubsystem;
@@ -72,7 +73,7 @@ public class SubsystemDefaultCommandMap {
     public void setupGripperSubsystem(
             ElectricalContract2018 contract,
             GripperIntakeSubsystem gripperSubsystem, 
-            WristStopCommand command) {
+            GripperStopCommand command) {
         if (contract.collectorReady()) {
             gripperSubsystem.setDefaultCommand(command);
         }
