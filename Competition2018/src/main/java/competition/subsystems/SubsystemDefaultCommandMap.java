@@ -77,7 +77,7 @@ public class SubsystemDefaultCommandMap {
             gripperSubsystem.setDefaultCommand(command);
         }
     }
-
+    
     @Inject
     public void setupShiftSubsytem(
             ShiftSubsystem shiftSubsystem, 

@@ -63,30 +63,24 @@ public class OperatorCommandMap {
 
     @Inject
 
-    public void setupElevatorCommands(
-            OperatorInterface oi,
-            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            ElevatorUncalibrateCommand uncalibrate,
-            ElevatorMaintainerCommand maintainer,
-            SetElevatorTargetHeightCommand targetScaleHighHeight,
-            SetElevatorTargetHeightCommand targetScaleMidHeight,
-            SetElevatorTargetHeightCommand targetSwitchDropHeight,
-            SetElevatorTargetHeightCommand targetPickUpHeight,
-            CalibrateElevatorHereCommand calibrateHere,
-            ElevatorSubsystem elevatorSubsystem) {
+    public void setupElevatorCommands(OperatorInterface oi, CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
+            ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
+            SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
+            SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
+            CalibrateElevatorHereCommand calibrateHere, ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
-        
+
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
         targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
-        
+
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
         oi.operatorGamepad.getifAvailable(2).whenPressed(targetSwitchDropHeight);
         oi.operatorGamepad.getifAvailable(3).whenPressed(targetScaleMidHeight);
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
-        
+
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
 
     }
@@ -104,11 +98,9 @@ public class OperatorCommandMap {
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
         oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
-    
+
     @Inject
-    public void setupWristCommands(
-            OperatorInterface oi,
-            WristCalibrateCommand calibrate,
+    public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
             WristUncalibrateCommand loseCalibration) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
