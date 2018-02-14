@@ -7,16 +7,16 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 
-public class GripperEjectTest extends BaseCompetitionTest {
+public class GripperIntakeCommandTest extends BaseCompetitionTest {
 
-    GripperEjectCommand command;
+    GripperIntakeCommand command;
     GripperIntakeSubsystem intake;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        command = injector.getInstance(GripperEjectCommand.class);
+        command = injector.getInstance(GripperIntakeCommand.class);
         intake = injector.getInstance(GripperIntakeSubsystem.class);
     }
 
@@ -27,12 +27,13 @@ public class GripperEjectTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void verifyMovingOut() {
+    public void verifyMovingIn() {
 
         command.initialize();
         command.execute();
 
-        assertTrue(intake.leftMotor.getMotorOutputPercent() >= 1);
-        assertTrue(intake.rightMotor.getMotorOutputPercent() >= 1);
+        assertTrue(intake.leftMotor.getMotorOutputPercent() <= -1);
+        assertTrue(intake.rightMotor.getMotorOutputPercent() <= -1);
     }
+
 }

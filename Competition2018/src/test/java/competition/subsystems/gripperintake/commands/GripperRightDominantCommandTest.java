@@ -7,7 +7,7 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 
-public class GripperRightDominantTest extends BaseCompetitionTest {
+public class GripperRightDominantCommandTest extends BaseCompetitionTest {
 
     GripperRightDominantCommand command;
     GripperIntakeSubsystem intake;

@@ -6,6 +6,7 @@ import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseRobot;
 import xbot.common.properties.DoubleProperty;
 
@@ -27,5 +28,6 @@ public class Robot extends BaseRobot {
         periodicDataSources.add(this.injector.getInstance(DriveSubsystem.class));
         periodicDataSources.add(this.injector.getInstance(PoseSubsystem.class));
         periodicDataSources.add(this.injector.getInstance(ElevatorSubsystem.class));
+        periodicDataSources.add(this.injector.getInstance(WristSubsystem.class));
     }
 }
