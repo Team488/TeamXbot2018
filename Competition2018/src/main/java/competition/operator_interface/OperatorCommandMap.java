@@ -3,6 +3,8 @@ package competition.operator_interface;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.commandgroups.CollectCubeCommandGroup;
+import competition.subsystems.autonomous.DriveNowhereCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -20,6 +22,10 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
+import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
+import competition.subsystems.wrist.commands.WristUncalibrateCommand;
+import competition.subsystems.wrist.commands.WristUpCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -46,7 +52,7 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, GripperDeployDownCommand down, GripperDeployUpCommand up,
+    public void setupGripperCommands(OperatorInterface oi, WristDownCommand down, WristUpCommand up,
             GripperEjectCommand eject, GripperIntakeCommand intake) {
         /*
          * oi.operatorGamepad.getifAvailable(3).whileHeld(up); oi.operatorGamepad.getifAvailable(2).whileHeld(down);
