@@ -53,7 +53,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
-    final BooleanProperty upperLimitSensor;
     final DoubleProperty elevatorPeakCurrentLimit;
     final DoubleProperty elevatorPeakCurrentDuration;
     final DoubleProperty elevatorContinuousCurrentLimit;
@@ -121,6 +120,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.enableCurrentLimit(true);
 
         motor.createTelemetryProperties("ElevatorMotor");
+    }
+    
+    public void disableCurrentLimit() {
+        motor.enableCurrentLimit(false);
     }
 
     private void initializeLowerLimit() {
