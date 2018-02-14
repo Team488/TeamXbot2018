@@ -8,7 +8,7 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class SetElevatorTargetHeightTest extends BaseCompetitionTest {
+public class SetElevatorTargetHeightCommandTest extends BaseCompetitionTest {
 
     ElevatorSubsystem elevator;
     SetElevatorTargetHeightCommand command;

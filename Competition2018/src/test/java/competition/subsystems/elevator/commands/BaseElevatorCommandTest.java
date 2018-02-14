@@ -3,7 +3,7 @@ package competition.subsystems.elevator.commands;
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class BaseElevatorElevatorTest extends BaseCompetitionTest {
+public class BaseElevatorCommandTest extends BaseCompetitionTest {
 
     protected ElevatorSubsystem elevator;
     
