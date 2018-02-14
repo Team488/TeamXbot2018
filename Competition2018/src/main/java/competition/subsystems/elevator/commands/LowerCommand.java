@@ -9,11 +9,12 @@ import xbot.common.command.BaseCommand;
 @Singleton
 public class LowerCommand extends BaseCommand {
 
-    ElevatorSubsystem lower;
+    ElevatorSubsystem elevator;
 
     @Inject
-    public LowerCommand(ElevatorSubsystem lower) {
-        this.lower = lower;
+    public LowerCommand(ElevatorSubsystem elevator) {
+        this.elevator = elevator;
+        this.requires(elevator);
     }
 
     @Override
@@ -23,8 +24,7 @@ public class LowerCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        lower.lower();
+        elevator.lower();
 
     }
-
 }

@@ -3,13 +3,15 @@ package competition.subsystems;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.ElectricalContract2018;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
+import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
+import competition.subsystems.elevator.ElevatorSubsystem;
+import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
-import competition.subsystems.gripperdeploy.commands.GripperStopDeployCommand;
+import competition.subsystems.gripperdeploy.commands.GripperDeployViaJoysticksCommand;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.StopLeaningCommand;
 import competition.subsystems.shift.ShiftSubsystem;
@@ -20,8 +22,18 @@ public class SubsystemDefaultCommandMap {
     // For setting the default commands on subsystems
 
     @Inject
-    public void setupDriveSubsystem(DriveSubsystem driveSubsystem, TankDriveWithJoysticksCommand command) {
+    public void setupDriveSubsystem(DriveSubsystem driveSubsystem, ArcadeDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
+    }
+    
+    @Inject
+    public void setupElevatorSubsystem(
+            ElectricalContract2018 contract,
+            ElevatorSubsystem elevator,
+            ControlElevatorViaJoystickCommand controlWithJoystick) {
+        if (contract.elevatorReady()) {
+            elevator.setDefaultCommand(controlWithJoystick);
+        }
     }
 
     @Inject
@@ -38,7 +50,7 @@ public class SubsystemDefaultCommandMap {
     public void setupGripperDeploySubsystem(
             ElectricalContract2018 contract,
             GripperDeploySubsystem gripperdeploySubsystem,
-            GripperStopDeployCommand command) {
+            GripperDeployViaJoysticksCommand command) {
         if (contract.wristReady()) {
             gripperdeploySubsystem.setDefaultCommand(command); 
         }

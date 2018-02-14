@@ -14,6 +14,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf) {
         this.elevator = elevator;
+        this.requires(elevator);
         pid = pf.createPIDManager("Elevator", 1, 0, 0);
         pid.setErrorThreshold(0.1);
     }
@@ -21,11 +22,18 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
+        if (!elevator.isCalibrated()) {
+            log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
+        }
     }
 
     @Override
     public void execute() {
-        double power = pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeight());
-        elevator.setPower(power);
+        if (elevator.isCalibrated()) {
+            double power = pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
+            elevator.setPower(power);
+        } else {
+            elevator.stop();
+        }
     }
 }

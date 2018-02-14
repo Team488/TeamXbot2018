@@ -8,15 +8,14 @@ import xbot.common.command.BaseCommand;
 @Singleton
 public class StopElevatorCommand extends BaseCommand {
 
-    double power;
     ElevatorSubsystem elevator;
-    
+
     @Inject
     public StopElevatorCommand(ElevatorSubsystem elevator) {
         this.elevator = elevator;
         this.requires(elevator);
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
