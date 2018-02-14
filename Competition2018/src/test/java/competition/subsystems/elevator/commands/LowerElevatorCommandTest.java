@@ -7,32 +7,31 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class RiseCommandTest extends BaseCompetitionTest {
+public class LowerElevatorCommandTest extends BaseCompetitionTest {
 
-    RiseCommand command;
+    LowerCommand command;
     ElevatorSubsystem elevator;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        command = injector.getInstance(RiseCommand.class);
+        command = injector.getInstance(LowerCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
     }
 
     @Test
     public void testSimple() {
-
         command.initialize();
         command.execute();
     }
 
     @Test
-    public void verifyMovingUp() {
+    public void verifyMovingDown() {
 
         command.initialize();
         command.execute();
 
-        assertTrue(elevator.motor.getMotorOutputPercent() >= 0.1);
+        assertTrue(elevator.motor.getMotorOutputPercent() <= 0.1);
     }
 }

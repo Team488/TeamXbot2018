@@ -7,7 +7,7 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class StopCommandTest extends BaseCompetitionTest {
+public class StopElevatorCommandTest extends BaseCompetitionTest {
 
     StopElevatorCommand command;
     ElevatorSubsystem elevator;
