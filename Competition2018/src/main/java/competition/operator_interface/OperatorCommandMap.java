@@ -22,6 +22,8 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
+import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -67,6 +69,8 @@ public class OperatorCommandMap {
             SetElevatorTargetHeightCommand targetSwitchDropHeight,
             SetElevatorTargetHeightCommand targetPickUpHeight,
             CalibrateElevatorHereCommand calibrateHere,
+            EnableElevatorCurrentLimitCommand enableCurrentLimit,
+            DisableElevatorCurrentLimitCommand disableCurrentLimit,
             ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
         oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
@@ -85,6 +89,8 @@ public class OperatorCommandMap {
         
         uncalibrate.includeOnSmartDashboard();
         
+        enableCurrentLimit.includeOnSmartDashboard();
+        disableCurrentLimit.includeOnSmartDashboard();
     }
 
     @Inject

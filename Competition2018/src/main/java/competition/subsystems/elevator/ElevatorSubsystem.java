@@ -60,6 +60,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
+    
+    int updateMotorValuesCounter = 0;
 
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -120,6 +122,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.enableCurrentLimit(true);
 
         motor.createTelemetryProperties("ElevatorMotor");
+    }
+    
+    public void enableCurrentLimit() {
+        motor.enableCurrentLimit(true);
     }
     
     public void disableCurrentLimit() {
@@ -316,6 +322,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             upperLimitProp.set(upperLimitSwitch.get());
+        }
+        
+        updateMotorValuesCounter++;
+        
+        // roughly 5 seconds at 30 Hz
+        if (updateMotorValuesCounter == 150 ) {
+            updateMotorValuesCounter = 0;
+            motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+            motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+            motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         }
     }
 
