@@ -18,6 +18,7 @@ import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
 import competition.subsystems.wrist.commands.WristControlViaJoysticksCommand;
+import competition.subsystems.wrist.commands.WristStopCommand;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
@@ -77,7 +78,7 @@ public class SubsystemDefaultCommandMap {
             gripperSubsystem.setDefaultCommand(command);
         }
     }
-
+    
     @Inject
     public void setupShiftSubsytem(
             ShiftSubsystem shiftSubsystem, 
