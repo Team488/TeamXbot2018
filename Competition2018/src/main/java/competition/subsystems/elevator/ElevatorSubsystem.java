@@ -55,10 +55,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        heightNearLowLimit = propMan.createPersistentProperty("Elevator Height Near Low Limit", getMinHeightInInches()+10);
-        heightNearHighLimit = propMan.createPersistentProperty("Elevator Height Near High Limit", getMaxHeightInInches()-10);
+        heightNearLowLimit = propMan.createPersistentProperty("Elevator Height Near Low Limit", 13);
+        heightNearHighLimit = propMan.createPersistentProperty("Elevator Height Near High Limit", 70);
         powerNearLowLimit = propMan.createPersistentProperty("Max Power Near Low Limit", -0.3);
-        powerNearHighLimit = propMan.createEphemeralProperty("Max Power Near High Limit", 0.3);
+        powerNearHighLimit = propMan.createPersistentProperty("Max Power Near High Limit", 0.3);
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
         elevatorTicksPerInch = propMan.createPersistentProperty("ElevatorTicksPerInch", 100);
         calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
