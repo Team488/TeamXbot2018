@@ -53,10 +53,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
+    final DoubleProperty elevatorPeakCurrentLimit;
+    final DoubleProperty elevatorPeakCurrentDuration;
+    final DoubleProperty elevatorContinuousCurrentLimit;
 
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
+    
+    int updateMotorValuesCounter = 0;
 
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -76,6 +81,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid", 64.5);
         targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height", 19.0);
         targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height", 3.0);
+        elevatorPeakCurrentLimit = propMan.createPersistentProperty("Elevator peak current limit", 35);
+        elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
+        elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
 
         calibrationOffset = 0.0;
 
@@ -108,7 +116,20 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
 
+        motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+        motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+        motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
+        motor.enableCurrentLimit(true);
+
         motor.createTelemetryProperties("ElevatorMotor");
+    }
+    
+    public void enableCurrentLimit() {
+        motor.enableCurrentLimit(true);
+    }
+    
+    public void disableCurrentLimit() {
+        motor.enableCurrentLimit(false);
     }
 
     private void initializeLowerLimit() {
@@ -295,6 +316,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             upperLimitProp.set(upperLimitSwitch.get());
+        }
+        
+        updateMotorValuesCounter++;
+        
+        // roughly 5 seconds at 30 Hz
+        if (updateMotorValuesCounter == 150 ) {
+            updateMotorValuesCounter = 0;
+            motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+            motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+            motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         }
     }
 
