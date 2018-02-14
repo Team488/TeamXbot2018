@@ -12,6 +12,12 @@ import xbot.common.properties.XPropertyManager;
 import competition.operator_interface.OperatorInterface;
 
 public class ElevatorMaintainerCommand extends BaseCommand {
+    
+    public enum MaintinerMode {
+        Calibrating,
+        GaveUp,
+        Calibrated
+    }
 
     OperatorInterface oi;
     ElevatorSubsystem elevator;
@@ -48,8 +54,11 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         boolean maintain = false;
         boolean manual = false;
         boolean tryToCalibrate = false;
+        
+        MaintinerMode currentMode = MaintinerMode.Calibrating;
+        
         if (elevator.isCalibrated()) {
-            maintain = true;
+            currentMode = MaintinerMode.Calibrated;
         }
         else if (Timer.getFPGATimestamp() < giveUpCalibratingTime) {
             tryToCalibrate = true;
@@ -60,7 +69,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         
         
         
-        if (maintain) {
+        if (currentMode == MaintinerMode.Calibrated) {
             elevator.setPower(pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches()));
         }
         else if (tryToCalibrate) {
