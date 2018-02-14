@@ -6,12 +6,12 @@ import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 
 import xbot.common.command.BaseCommand;
 
-public class GripperEjectCommand extends BaseCommand {
+public class GripperStopCommand extends BaseCommand {
 
     GripperIntakeSubsystem intake;
-
+    
     @Inject
-    public GripperEjectCommand(GripperIntakeSubsystem intake) {
+    public GripperStopCommand(GripperIntakeSubsystem intake) {
         this.requires(intake);
         this.intake = intake;
     }
@@ -23,7 +23,7 @@ public class GripperEjectCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        intake.eject();
+        intake.stop();
     }
 
 }
