@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
-    
+
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
 
@@ -53,10 +53,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
+    final DoubleProperty elevatorPeakCurrentLimit;
+    final DoubleProperty elevatorPeakCurrentDuration;
+    final DoubleProperty elevatorContinuousCurrentLimit;
 
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
+    
+    int updateMotorValuesCounter = 0;
 
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -76,6 +81,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         targetScaleMidHeight = propMan.createPersistentProperty("Elevator scale mid", 64.5);
         targetSwitchDropHeight = propMan.createPersistentProperty("Elevator switch drop height", 19.0);
         targetPickUpHeight = propMan.createPersistentProperty("Elevator pickup height", 3.0);
+        elevatorPeakCurrentLimit = propMan.createPersistentProperty("Elevator peak current limit", 35);
+        elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
+        elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
 
         calibrationOffset = 0.0;
 
@@ -108,7 +116,20 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
 
+        motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+        motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+        motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
+        motor.enableCurrentLimit(true);
+
         motor.createTelemetryProperties("ElevatorMotor");
+    }
+    
+    public void enableCurrentLimit() {
+        motor.enableCurrentLimit(true);
+    }
+    
+    public void disableCurrentLimit() {
+        motor.enableCurrentLimit(false);
     }
 
     private void initializeLowerLimit() {
@@ -122,22 +143,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
         upperLimitSupplier = () -> upperLimitSwitch.get();
     }
-    
+
     private void initializeTalonLimits() {
         // Upper limit
-        motor.configForwardLimitSwitchSource(
-                LimitSwitchSource.FeedbackConnector, 
-                LimitSwitchNormal.NormallyOpen,
-                0);
-        
+        motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
         // Lower limit
-        motor.configReverseLimitSwitchSource(
-                LimitSwitchSource.FeedbackConnector, 
-                LimitSwitchNormal.NormallyOpen,
-                0);
-        
+        motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
         upperLimitSupplier = () -> motor.isFwdLimitSwitchClosed();
-        lowerLimitSupplier = () -> motor.isRevLimitSwitchClosed(); 
+        lowerLimitSupplier = () -> motor.isRevLimitSwitchClosed();
     }
 
     public void calibrateHere() {
@@ -148,17 +163,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         log.info("Calibrating elevator with lowest position of " + lowestPosition);
         calibrationOffset = lowestPosition;
         isCalibrated = true;
-        
+
         motor.configReverseSoftLimitThreshold(lowestPosition, 0);
-        
+
         // calculate the upper limit and set safeties.
         double inchRange = getMaxHeightInInches() - getMinHeightInInches();
-        int tickRange = (int)(elevatorTicksPerInch.get() * inchRange);
+        int tickRange = (int) (elevatorTicksPerInch.get() * inchRange);
         int upperLimit = tickRange + lowestPosition;
-        
+
         log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
-        
+
         setSoftLimitsEnabled(true);
     }
 
@@ -166,7 +181,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         isCalibrated = false;
         setSoftLimitsEnabled(false);
     }
-    
+
     private void setSoftLimitsEnabled(boolean on) {
         motor.configReverseSoftLimitEnable(on, 0);
         motor.configForwardSoftLimitEnable(on, 0);
@@ -197,8 +212,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSupplier.get();
-            
-            //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+
+            // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, -1, 0);
             }
@@ -301,6 +316,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
         if (contract.elevatorUpperLimitReady()) {
             upperLimitProp.set(upperLimitSwitch.get());
+        }
+        
+        updateMotorValuesCounter++;
+        
+        // roughly 5 seconds at 30 Hz
+        if (updateMotorValuesCounter == 150 ) {
+            updateMotorValuesCounter = 0;
+            motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+            motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+            motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         }
     }
 
