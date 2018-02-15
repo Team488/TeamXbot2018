@@ -1,4 +1,4 @@
-package competition.subsystems.climberdeploy;
+package competition.subsystems.climberdeploy.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
