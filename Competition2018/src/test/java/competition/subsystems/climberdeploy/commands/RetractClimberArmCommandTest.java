@@ -1,22 +1,22 @@
-package competition.subsystems.climberdeploy;
+package competition.subsystems.climberdeploy.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
-import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
+import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 
-public class ExtendClimberArmCommandTest extends BaseCompetitionTest {
+public class RetractClimberArmCommandTest extends BaseCompetitionTest {
 
     ClimberDeploySubsystem deploy;
-    ExtendClimberArmCommand command;
+    RetractClimberArmCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
         deploy = injector.getInstance(ClimberDeploySubsystem.class);
-        command = injector.getInstance(ExtendClimberArmCommand.class);
+        command = injector.getInstance(RetractClimberArmCommand.class);
     }
 
     @Test
@@ -26,10 +26,10 @@ public class ExtendClimberArmCommandTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void checkExtendClimberArm() {
+    public void checkRetractClimberArm() {
         assertEquals(0.0, deploy.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(0.4, deploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(-0.4, deploy.motor.getMotorOutputPercent(), 0.001);
     }
 }
