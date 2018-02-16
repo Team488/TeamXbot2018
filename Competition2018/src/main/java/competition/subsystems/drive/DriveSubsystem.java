@@ -108,12 +108,13 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         master.setNeutralMode(NeutralMode.Coast);
         master.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
         
-        master.configPeakOutputForward(0, -0);
-        master.configPeakOutputReverse(1, -1);
+        master.configPeakOutputForward(1, 0);
+        master.configPeakOutputReverse(-1, 0);
         
         //Follower Config
-        follower.configPeakOutputForward(0, -0);
-        follower.configPeakOutputReverse(1, -1);
+        follower.setNeutralMode(NeutralMode.Coast);
+        follower.configPeakOutputForward(1, 0);
+        follower.configPeakOutputReverse(-1, 0);
         
         follower.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);    
     }
