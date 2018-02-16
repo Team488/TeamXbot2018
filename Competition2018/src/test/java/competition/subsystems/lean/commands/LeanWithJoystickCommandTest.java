@@ -32,9 +32,9 @@ public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
     @Test
     public void followJoysticks() {
         command.initialize();
-        
+
         for (int i = -100; i < 100; i++) {
-            double power = (double)i/100;
+            double power = (double) i / 100;
             ((MockFTCGamepad) oi.operatorGamepad).setLeftStick(new XYPair(power, 0));
             command.execute();
             assertEquals(power, lean.motor.getMotorOutputPercent(), 0.001);
