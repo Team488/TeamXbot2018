@@ -11,12 +11,6 @@ public class EncoderFollowerTelemetry extends EncoderFollower {
 	int encoder_tick_count;
 	double wheel_circumference;
 
-	double kp;
-	double ki;
-	double kd;
-	double kv;
-	double ka;
-
 	double last_error;
 	double heading;
 
@@ -28,17 +22,7 @@ public class EncoderFollowerTelemetry extends EncoderFollower {
 	public EncoderFollowerTelemetry(Trajectory traj, XPropertyManager propManager) {
         trajectory = traj;
         positionalError = propManager.createPersistentProperty("EncoderFollower: positional error", 0);
-        last_error = positionalError.get();
     }
-
-	@Override
-	public void configurePIDVA(double kp, double ki, double kd, double kv, double ka) {
-		this.kp = kp;
-		this.ki = ki;
-		this.kd = kd;
-		this.kv = kv;
-		this.ka = ka;
-	}
 
 	@Override
 	public void configureEncoder(int initial_position, int ticks_per_revolution, double wheel_diameter) {
@@ -55,14 +39,7 @@ public class EncoderFollowerTelemetry extends EncoderFollower {
 			Trajectory.Segment seg = trajectory.get(segment);
 			double error = seg.position - distance_covered;
 			positionalError.set(error);
-			double calculated_value = kp * error + // Proportional
-					kd * ((error - last_error) / seg.dt) + // Derivative
-					(kv * seg.velocity + ka * seg.acceleration); // V and A Terms
-			last_error = error;
-			heading = seg.heading;
-			segment++;
-
-			return calculated_value;
+			return error;
 		} else {
 			return 0;
 		}
