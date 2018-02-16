@@ -22,3 +22,4 @@ sysProps.xml
 RemoteSystemsTempFiles/
 /.gradle/
 .project
+/.recommenders/
