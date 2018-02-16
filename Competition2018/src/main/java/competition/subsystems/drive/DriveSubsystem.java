@@ -5,8 +5,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -99,6 +101,19 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         master.createTelemetryProperties(masterName);
         
         this.updateMotorPidValues(master);
+        
+        // Master Config
+        master.setNeutralMode(NeutralMode.Coast);
+        master.overrideLimitSwitchesEnable(false);
+        
+        master.configPeakOutputForward(0, -0);
+        master.configPeakOutputReverse(12, -12);
+        
+        //Follower Config
+        follower.configPeakOutputForward(0, -0);
+        follower.configPeakOutputReverse(12, -12);
+        
+        follower.overrideLimitSwitchesEnable(false);    
     }
     
     private void updateMotorPidValues(XCANTalon motor) {
