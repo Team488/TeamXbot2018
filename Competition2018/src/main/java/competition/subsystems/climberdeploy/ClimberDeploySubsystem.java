@@ -86,4 +86,11 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     public boolean isRetracted() {
         return false;
     }
+    
+    /**
+     * returns current speed of the motor for the climber.
+     */
+    public double getCurrentSpeed() {
+        return motor.getMotorOutputPercent();
+    }
 }

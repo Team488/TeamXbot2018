@@ -1,23 +1,23 @@
-package competition.subsystems.climberdeploy;
+package competition.subsystems.climberdeploy.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
-import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
+import competition.subsystems.climberdeploy.commands.IncreaseSpeedCommand;
 
-public class StopClimberArmCommandTest extends BaseCompetitionTest {
+public class IncreaseSpeedCommandTest extends BaseCompetitionTest {
 
     ClimberDeploySubsystem deploy;
-    StopClimberArmCommand command;
+    IncreaseSpeedCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
         deploy = injector.getInstance(ClimberDeploySubsystem.class);
-        command = injector.getInstance(StopClimberArmCommand.class);
+        command = injector.getInstance(IncreaseSpeedCommand.class);
     }
 
     @Test
@@ -27,11 +27,13 @@ public class StopClimberArmCommandTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void checkStopClimberArm() {
+    public void checkIncreaseSpeed() {
+        deploy.decreaseSpeed();
         deploy.extendClimberArm();
-        assertEquals(0.4, deploy.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.1, deploy.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(0.0, deploy.motor.getMotorOutputPercent(), 0.001);
+        deploy.extendClimberArm();
+        assertEquals(0.4, deploy.motor.getMotorOutputPercent(), 0.001);
     }
 }
