@@ -1,6 +1,5 @@
 package competition.subsystems.elevator.commands;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -8,33 +7,31 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class SetElevatorTargetHeightTest extends BaseCompetitionTest {
+public class LowerElevatorCommandTest extends BaseCompetitionTest {
 
+    LowerCommand command;
     ElevatorSubsystem elevator;
-    SetElevatorTargetHeightCommand command;
-    
+
     @Override
     public void setUp() {
         super.setUp();
-        
-        command = injector.getInstance(SetElevatorTargetHeightCommand.class);
+
+        command = injector.getInstance(LowerCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
     }
-    
+
     @Test
     public void testSimple() {
         command.initialize();
         command.execute();
     }
-    
+
     @Test
-    public void checkTransaction() {
-        elevator.setTargetHeight(79);
-        assertEquals(79, elevator.getTargetHeight(), .01);
-        command.setGoalHeight(10);
+    public void verifyMovingDown() {
+
         command.initialize();
         command.execute();
-        assertEquals(10, elevator.getTargetHeight(), .01);
-        assertTrue(command.isFinished());
+
+        assertTrue(elevator.motor.getMotorOutputPercent() <= 0.1);
     }
 }
