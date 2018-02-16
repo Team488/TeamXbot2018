@@ -1,13 +1,11 @@
 package competition.subsystems.gripperintake.commands;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 
 import xbot.common.command.BaseCommand;
 
-@Singleton
 public class GripperEjectCommand extends BaseCommand {
 
     GripperIntakeSubsystem intake;
