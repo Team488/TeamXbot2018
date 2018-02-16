@@ -242,12 +242,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             if (currentHeight < getMinHeightInInches()) {
                 power = MathUtils.constrainDouble(power, 0, 1);
             }
-        }
-        if(getCurrentHeightInInches() < getHeightNearLowLimit()) {
-            power = MathUtils.constrainDouble(power, getPowerNearLowLimit(), 1);
-        }
-        if(getCurrentHeightInInches() > getHeightNearHighLimit()) {
-            power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
+            if(getCurrentHeightInInches() < getHeightNearLowLimit()) {
+                power = MathUtils.constrainDouble(power, getPowerNearLowLimit(), 1);
+            }
+            if(getCurrentHeightInInches() > getHeightNearHighLimit()) {
+                power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
+            }
         }
 
         motor.simpleSet(power);

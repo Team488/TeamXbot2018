@@ -28,17 +28,17 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorTest {
     public void followsJoystick() {
         assertEquals(0, elevator.motor.getMotorOutputPercent(), 0.001);
 
-        ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, 1));
+        ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, 1));
         command.initialize();
         command.execute();
 
         assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
 
         for (int i = -100; i < 101; i++) {
-            double power = (double) i / 100;
+            double power = (double)i / 100;
             //sets height to 43 inches and tests all powers
             elevator.calibrateAt(-4000);
-            ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));
+            ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
             System.out.println(power);
             System.out.println(elevator.getCurrentHeightInInches());
@@ -51,10 +51,10 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorTest {
     @Test
     public void slowsDownNearTop() {
         for (int i = 30; i < 101; i++) {
-            double power = (double) i / 100;
+            double power = (double)i / 100;
             //sets height to 73 inches and tests powers above .3
             elevator.calibrateAt(-7000);
-            ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));
+            ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
             System.out.println(power);
             System.out.println(elevator.getCurrentHeightInInches());
@@ -67,8 +67,8 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorTest {
     public void slowsDownNearBottom() {
         //height is 3 inches, tests for powers below -.3
         for (int i = -100; i < -30; i++) {
-            double power = (double) i / 100;
-            ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));
+            double power = (double)i / 100;
+            ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
             System.out.println(power);
             System.out.println(elevator.getCurrentHeightInInches());
