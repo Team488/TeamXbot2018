@@ -17,24 +17,26 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
 
     DoubleProperty power;
     DoubleProperty calibrationTime; // In milliseconds
-    //DoubleProperty calibrationCurrentThreshold;
+    DoubleProperty calibrationCurrentThreshold;
     DoubleProperty goodCurrentRange;
 
     double targetTime;
+    double newTime;
     boolean atTarget;
     double threshold;
 
 
     @Inject
-    public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf, ElevatorSubsystem elevator, TalonCurrentMonitor currentMonitor) {
+    public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf, ElevatorSubsystem elevator) {
         this.clf = clf;
         power = propMan.createPersistentProperty("Elevator Jamming Calibration Power", -0.2);
         calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
-       // calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
+        calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
         this.elevator = elevator;
-        this.currentMonitor = currentMonitor;
+        this.currentMonitor = new TalonCurrentMonitor(elevator.motor);
         this.requires(elevator);
     }
+    
     
     public void setCalibrationCurrentThreshold(double threshold) {
         this.threshold=threshold;
@@ -57,8 +59,9 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     }
     @Override
     public boolean isFinished() {
-        return /*Timer.getFPGATimestamp() > targetTime 
-                ||*/ elevator.getPeakCurrent() > threshold;
+        newTime =Timer.getFPGATimestamp();
+        return newTime > targetTime
+                || elevator.getPeakCurrent() > threshold;
     }
 
     @Override
