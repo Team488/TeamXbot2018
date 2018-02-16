@@ -24,6 +24,7 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     double newTime;
     boolean atTarget;
     double threshold;
+    double peakCurrent;
 
 
     @Inject
@@ -53,10 +54,9 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     @Override
     public void execute() {
             elevator.setPower(power.get());
-            currentMonitor.updateCurrent();
-            currentMonitor.calculatePeakCurrent();
-            
+            currentMonitor.updateCurrent();     
     }
+    
     @Override
     public boolean isFinished() {
         newTime =Timer.getFPGATimestamp();
