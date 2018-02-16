@@ -12,7 +12,7 @@ import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
 
-public class MaintainerCommandTest extends BaseCompetitionTest {
+public class MaintainerElevatorCommandTest extends BaseCompetitionTest {
     
     ElevatorSubsystem elevator;
     ElevatorMaintainerCommand command;

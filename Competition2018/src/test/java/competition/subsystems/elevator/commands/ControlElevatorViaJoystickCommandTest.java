@@ -8,7 +8,7 @@ import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
 //import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class ControlElevatorViaJoystickCommandTest extends BaseElevatorTest {
+public class ControlElevatorViaJoystickCommandTest extends BaseElevatorCommandTest {
 
     ControlElevatorViaJoystickCommand command;
 
