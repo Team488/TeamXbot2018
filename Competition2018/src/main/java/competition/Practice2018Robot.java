@@ -47,12 +47,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean wristReady() {
-        return false;
+        return true;
     }
 
     @Override
     public DeviceInfo getWristMaster() {
-        return new DeviceInfo(2, false);
+        return new DeviceInfo(30, false);
     }
     
     @Override

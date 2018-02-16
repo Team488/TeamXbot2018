@@ -36,16 +36,16 @@ public class OperatorInterface {
         operatorGamepad.setLeftStickYInversion(true);
         operatorGamepad.setRightStickYInversion(true);
 
-        gripperIntake = new AnalogHIDDescription(3, .501, 1.0);
+        gripperIntake = new AnalogHIDDescription(3, .75, 1.0);
         operatorGamepad.addAnalogButton(gripperIntake);
 
-        gripperEject = new AnalogHIDDescription(2, .501, 1.0);
+        gripperEject = new AnalogHIDDescription(2, .75, 1.0);
         operatorGamepad.addAnalogButton(gripperEject);
 
-        raiseClimber = new AnalogHIDDescription(3, .501, 1.0);
+        raiseClimber = new AnalogHIDDescription(3, .75, 1.0);
         driverGamepad.addAnalogButton(raiseClimber);
 
-        lowerClimber = new AnalogHIDDescription(2, .501, 1.0);
+        lowerClimber = new AnalogHIDDescription(2, .75, 1.0);
         driverGamepad.addAnalogButton(lowerClimber);
     }
 }
