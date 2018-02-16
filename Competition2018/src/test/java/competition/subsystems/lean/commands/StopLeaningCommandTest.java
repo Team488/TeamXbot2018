@@ -1,23 +1,23 @@
-package competition.subsystems.lean;
+package competition.subsystems.lean.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
-import competition.subsystems.lean.commands.DecreaseSpeedCommand;
+import competition.subsystems.lean.commands.StopLeaningCommand;
 
-public class DecreaseSpeedCommandTest extends BaseCompetitionTest {
+public class StopLeaningCommandTest extends BaseCompetitionTest {
 
     LeanSubsystem lean;
-    DecreaseSpeedCommand command;
+    StopLeaningCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
 
         lean = injector.getInstance(LeanSubsystem.class);
-        command = injector.getInstance(DecreaseSpeedCommand.class);
+        command = injector.getInstance(StopLeaningCommand.class);
     }
 
     @Test
@@ -27,12 +27,11 @@ public class DecreaseSpeedCommandTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void checkDecreaseSpeed() {
+    public void checkStopLeaning() {
         lean.leanRight();
         assertEquals(-0.4, lean.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        lean.leanRight();
-        assertEquals(-0.1, lean.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.0, lean.motor.getMotorOutputPercent(), 0.001);
     }
 }
