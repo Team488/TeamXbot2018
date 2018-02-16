@@ -8,6 +8,8 @@ import org.apache.log4j.Logger;
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -104,16 +106,16 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         
         // Master Config
         master.setNeutralMode(NeutralMode.Coast);
-        master.overrideLimitSwitchesEnable(false);
+        master.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
         
         master.configPeakOutputForward(0, -0);
-        master.configPeakOutputReverse(12, -12);
+        master.configPeakOutputReverse(1, -1);
         
         //Follower Config
         follower.configPeakOutputForward(0, -0);
-        follower.configPeakOutputReverse(12, -12);
+        follower.configPeakOutputReverse(1, -1);
         
-        follower.overrideLimitSwitchesEnable(false);    
+        follower.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);    
     }
     
     private void updateMotorPidValues(XCANTalon motor) {
