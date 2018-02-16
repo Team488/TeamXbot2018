@@ -27,7 +27,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final ElectricalContract2018 contract;
     final DoubleProperty elevatorPower;
     final DoubleProperty elevatorTicksPerInch;
-    
 
     /**
      * If our elevator is uncalibrated, we don't allow large power inputs.
@@ -49,11 +48,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
-    
+
     TalonCurrentMonitor currentMonitor;
 
     @Inject
-    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
+    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract,
+            TalonCurrentMonitor currentMonitor) {
         this.clf = clf;
         this.contract = contract;
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
@@ -66,7 +66,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
         lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
         upperLimitSensor = propMan.createEphemeralProperty("Elevator Upper Limit", false);
-
+        this.currentMonitor = currentMonitor;
+        
         calibrationOffset = 0.0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -82,7 +83,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorLowerLimitReady()) {
             initializeLowerLimit();
         }
-        
+
         if (contract.elevatorUpperLimitReady()) {
             initializeUpperLimit();
         }
@@ -102,7 +103,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         lowerLimitSwitch = clf.createDigitalInput(contract.getElevatorLowerLimit().channel);
         lowerLimitSwitch.setInverted(contract.getElevatorLowerLimit().inverted);
     }
-    
+
     private void initializeUpperLimit() {
         upperLimitSwitch = clf.createDigitalInput(contract.getElevatorUpperLimit().channel);
         upperLimitSwitch.setInverted(contract.getElevatorUpperLimit().inverted);
@@ -143,11 +144,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
                 power = MathUtils.constrainDouble(power, 0, 1);
             }
         }
-        
+
         if (contract.elevatorUpperLimitReady()) {
             boolean sensorHit = upperLimitSwitch.get();
-            
-            //If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
+
+            // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, -1, 0);
             }
@@ -243,23 +244,24 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             currentHeight.set(getCurrentHeightInInches());
             motor.updateTelemetryProperties();
         }
-        
+
         if (contract.elevatorLowerLimitReady()) {
             lowerLimitSensor.set(lowerLimitSwitch.get());
         }
-        
+
         if (contract.elevatorUpperLimitReady()) {
             upperLimitSensor.set(upperLimitSwitch.get());
         }
     }
-    
+
     public double getCurrentTime() {
         return Timer.getFPGATimestamp();
     }
-    
+
     public double getPeakCurrent() {
         return currentMonitor.calculatePeakCurrent();
     }
+
     public double getAverageCurrent() {
         return currentMonitor.calculateAverageCurrent();
     }
