@@ -61,7 +61,7 @@ public class LeanSubsystem extends BaseSubsystem {
     }
 
     /**
-     * stops the climb arm from leaning left
+     * stops the climb arm from leaning
      */
     public void stopLean() {
         motor.simpleSet(0);
@@ -90,5 +90,9 @@ public class LeanSubsystem extends BaseSubsystem {
 
     public void setLeanSpeed(double power) {
         currentLeanSpeed = power;
+    }
+    
+    public double getLeanSpeed() {
+        return motor.getMotorOutputPercent();
     }
 }
