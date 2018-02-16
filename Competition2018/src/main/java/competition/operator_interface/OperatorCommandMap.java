@@ -54,11 +54,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupGripperCommands(OperatorInterface oi, WristDownCommand down, WristUpCommand up,
             GripperEjectCommand eject, GripperIntakeCommand intake) {
-        /*
-         * oi.operatorGamepad.getifAvailable(3).whileHeld(up); oi.operatorGamepad.getifAvailable(2).whileHeld(down);
-         * oi.operatorGamepad.getifAvailable(4).whenPressed(eject);
-         * oi.operatorGamepad.getifAvailable(1).whileHeld(intake);
-         */
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
+        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
     }
 
     @Inject
