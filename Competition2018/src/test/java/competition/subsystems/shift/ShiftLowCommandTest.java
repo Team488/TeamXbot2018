@@ -13,7 +13,7 @@ public class ShiftLowCommandTest extends BaseCompetitionTest {
     ShiftLowCommand shiftLowCommand;
     ShiftSubsystem subsystem;
     MockSolenoid solenoid;
-    
+  
     @Override
     public void setUp() {
         super.setUp();
