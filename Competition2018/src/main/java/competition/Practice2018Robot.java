@@ -2,8 +2,6 @@ package competition;
 
 import com.google.inject.Singleton;
 
-import competition.ElectricalContract2018.DeviceInfo;
-
 @Singleton
 public class Practice2018Robot extends ElectricalContract2018 {
 
@@ -49,12 +47,22 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean wristReady() {
-        return false;
+        return true;
     }
 
     @Override
     public DeviceInfo getWristMaster() {
-        return new DeviceInfo(2, false);
+        return new DeviceInfo(30, false);
+    }
+    
+    @Override
+    public DeviceInfo getWristEncoder() {
+        return new DeviceInfo(0, false);
+    }
+    
+    @Override
+    public double getWristMaximumAngle() {
+        return 45;
     }
 
     @Override
@@ -127,4 +135,8 @@ public class Practice2018Robot extends ElectricalContract2018 {
         return new DeviceInfo(0, true);
     }
 
+    @Override
+    public boolean elevatorUsesTalonLimits() {
+        return false;
+    }
 }

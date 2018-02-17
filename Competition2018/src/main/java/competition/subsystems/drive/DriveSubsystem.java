@@ -5,8 +5,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,7 +45,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final PIDManager rightPidManager;
 
     private Map<XCANTalon, MotionRegistration> masterTalons;
-    
+
     int updateMotorValuesCounter = 0;
 
     public enum Side {
@@ -64,26 +68,16 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         velocityI = propManager.createPersistentProperty("Drive velocity control I", 0);
         velocityD = propManager.createPersistentProperty("Drive velocity control D", 0);
         velocityF = propManager.createPersistentProperty("Drive velocity control F", 0);
-        
+
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
-        configureMotorTeam(
-                "LeftDriveMaster",
-                leftMaster, 
-                leftFollower,
-                contract.getLeftDriveMaster().inverted, 
-                contract.getLeftDriveFollower().inverted,
-                contract.getLeftDriveMasterEncoder().inverted);
+        configureMotorTeam("LeftDriveMaster", leftMaster, leftFollower, contract.getLeftDriveMaster().inverted,
+                contract.getLeftDriveFollower().inverted, contract.getLeftDriveMasterEncoder().inverted);
 
         this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
-        configureMotorTeam(
-                "RightDriveMaster",
-                rightMaster, 
-                rightFollower,
-                contract.getRightDriveMaster().inverted, 
-                contract.getRightDriveFollower().inverted,
-                contract.getRightDriveMasterEncoder().inverted);
+        configureMotorTeam("RightDriveMaster", rightMaster, rightFollower, contract.getRightDriveMaster().inverted,
+                contract.getRightDriveFollower().inverted, contract.getRightDriveMasterEncoder().inverted);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
@@ -93,24 +87,36 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.rightPidManager = new PIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
 
     }
-    
-    private void configureMotorTeam(
-            String masterName,
-            XCANTalon master, XCANTalon follower,
-            boolean masterInverted, boolean followerInverted,
-            boolean sensorPhase) {
+
+    private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,
+            boolean followerInverted, boolean sensorPhase) {
         follower.follow(master);
 
         master.setInverted(masterInverted);
         follower.setInverted(followerInverted);
-        
+
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         master.setSensorPhase(sensorPhase);
         master.createTelemetryProperties(masterName);
-        
+
         this.updateMotorPidValues(master);
+
+        // Master Config
+        master.setNeutralMode(NeutralMode.Coast);
+        master.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+        master.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+
+        master.configPeakOutputForward(1, 0);
+        master.configPeakOutputReverse(-1, 0);
+
+        // Follower Config
+        follower.setNeutralMode(NeutralMode.Coast);
+        follower.configPeakOutputForward(1, 0);
+        follower.configPeakOutputReverse(-1, 0);
+
+        follower.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
     }
-    
+
     private void updateMotorPidValues(XCANTalon motor) {
         motor.config_kP(0, this.velocityP.get(), 0);
         motor.config_kI(0, this.velocityI.get(), 0);
@@ -159,7 +165,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
             return 0;
         }
     }
-    
+
     /**
      * Returns the velocity of the specified side in inches per second.
      */
@@ -204,15 +210,15 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         
         this.drive(leftAccum, rightAccum);
     }
-    
+
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
-        
+
         updateMotorValuesCounter++;
-        
+
         // roughly 5 seconds at 30 Hz
-        if (updateMotorValuesCounter == 150 ) {
+        if (updateMotorValuesCounter == 150) {
             updateMotorValuesCounter = 0;
             this.updateMotorPidValues(leftMaster);
             this.updateMotorPidValues(rightMaster);
