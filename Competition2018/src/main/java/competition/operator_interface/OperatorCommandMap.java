@@ -26,15 +26,14 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
 import competition.subsystems.wrist.commands.WristDownCommand;
-import competition.subsystems.wrist.commands.WristUpCommand;
-import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
-import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.wrist.commands.WristUpCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.PurePursuitCommand;
+import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
+import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -49,21 +48,18 @@ public class OperatorCommandMap {
     @Inject
     public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
             TankDriveWithJoysticksCommand simpleTank,
-            PurePursuitCommand pursuit) {
-        oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
-        oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
-        
-        pursuit.addPoint(new FieldPose(new XYPair(0, 60), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(60, 60), new ContiguousHeading(0)));
-        pursuit.addPoint(new FieldPose(new XYPair(60, 0), new ContiguousHeading(-90)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(-180)));
-        
-        pursuit.includeOnSmartDashboard();
-
+            PurePursuitCommand pursuit,
             ResetDistanceCommand resetDistance,
             SetRobotHeadingCommand setHeading) {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
+        
+        pursuit.addPoint(new FieldPose(new XYPair(0, 90), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(90, 90), new ContiguousHeading(0)));
+        pursuit.addPoint(new FieldPose(new XYPair(90, 0), new ContiguousHeading(-90)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(-180)));
+        
+        pursuit.includeOnSmartDashboard();
         
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
