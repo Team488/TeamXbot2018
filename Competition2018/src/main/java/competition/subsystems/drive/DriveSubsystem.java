@@ -102,7 +102,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
 
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         master.setSensorPhase(sensorPhase);
-        master.createTelemetryProperties(masterName);
+        master.createTelemetryProperties(getPrefix(), masterName);
 
         this.updateMotorPidValues(master);
 
