@@ -18,15 +18,13 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     public XCANTalon rightMotor;
     public XCANTalon leftMotor;
 
-    final DoubleProperty highPower;
-    final DoubleProperty lowPower;
+    final DoubleProperty power;
 
     @Inject
     public GripperIntakeSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        highPower = propMan.createPersistentProperty("Gripper Intake High Power", 1);
-        lowPower = propMan.createPersistentProperty("Gripper Intake Low Power", 0.25);
+        power = propMan.createPersistentProperty("Gripper Intake Power", 1);
 
         if (contract.collectorReady()) {
             initializeMotors();
@@ -53,23 +51,23 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     }
 
     public void eject() {
-        rightMotor.simpleSet(highPower.get());
-        leftMotor.simpleSet(highPower.get());
+        rightMotor.simpleSet(power.get());
+        leftMotor.simpleSet(power.get());
     }
 
     public void intake() {
-        rightMotor.simpleSet(highPower.get() * -1);
-        leftMotor.simpleSet(highPower.get() * -1);
+        rightMotor.simpleSet(power.get() * -1);
+        leftMotor.simpleSet(power.get() * -1);
     }
-
-    public void intakeleftDominant() {
-        rightMotor.simpleSet(lowPower.get() * -1);
-        leftMotor.simpleSet(highPower.get() * -1);
+    
+    public void rotateClockwise() {
+        rightMotor.simpleSet(power.get());
+        leftMotor.simpleSet(power.get() * -1);
     }
-
-    public void intakerightDominant() {
-        rightMotor.simpleSet(highPower.get() * -1);
-        leftMotor.simpleSet(lowPower.get() * -1);
+    
+    public void rotateCounterClockwise() {
+        rightMotor.simpleSet(power.get() * -1);
+        leftMotor.simpleSet(power.get());
     }
 
     public void stop() {
