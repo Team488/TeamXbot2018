@@ -80,12 +80,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorTargetHeight = propMan.createEphemeralProperty("targetHeight", maxHeightInInches.get());
         currentTicks = propMan.createEphemeralProperty("Elevator current ticks", 0.0);
         currentHeight = propMan.createEphemeralProperty("Elevator current height", 0.0);
-<<<<<<< HEAD
-        lowerLimitSensor = propMan.createEphemeralProperty("Elevator Lower Limit", false);
-        upperLimitSensor = propMan.createEphemeralProperty("Elevator Upper Limit", false);
-        this.currentMonitor = currentMonitor;
-        
-=======
+
         lowerLimitProp = propMan.createEphemeralProperty("Elevator Lower Limit", false);
         upperLimitProp = propMan.createEphemeralProperty("Elevator Upper Limit", false);
         targetScaleHighHeight = propMan.createPersistentProperty("Elevator scale high", 76.5);
@@ -96,7 +91,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
 
->>>>>>> master
         calibrationOffset = 0.0;
 
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -223,11 +217,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
 
         if (contract.elevatorUpperLimitReady()) {
-<<<<<<< HEAD
-            boolean sensorHit = upperLimitSwitch.get();
-=======
+
             boolean sensorHit = upperLimitSupplier.get();
->>>>>>> master
+
 
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
@@ -345,7 +337,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
     }
 
-<<<<<<< HEAD
     public double getCurrentTime() {
         return Timer.getFPGATimestamp();
     }
@@ -356,7 +347,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public double getAverageCurrent() {
         return currentMonitor.calculateAverageCurrent();
-=======
+    }
+
     public double getTargetScaleHighHeight() {
         return targetScaleHighHeight.get();
     }
@@ -371,6 +363,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public double getTargetPickUpHeight() {
         return targetPickUpHeight.get();
->>>>>>> master
+
     }
 }
