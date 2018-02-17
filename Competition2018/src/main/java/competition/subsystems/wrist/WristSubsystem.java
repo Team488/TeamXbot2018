@@ -90,21 +90,20 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
         return calibrated;
     }
     
-    public void calibrateAt(int lowestPosition) {
-        log.info("Calibrating wrist at position: " + lowestPosition);
-        offset = lowestPosition;
+    public void calibrateAt(int highestPosition) {
+        log.info("Calibrating wrist at " + highestPosition);
+        upperLimit = highestPosition;
         calibrated = true;
         
-        motor.configReverseSoftLimitThreshold(offset, 0);
-        
-        // calculate the upper limit and set safeties.
-        int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
-        upperLimit = lowestPosition + tickRange;
-        
-        log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
-        
         setSoftLimitsEnabled(true);
+        
+        // calculate lower limit and set safeties
+        int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
+        offset = highestPosition - tickRange;
+        
+        log.info("Lower limit set at: " + offset);
+        motor.configReverseSoftLimitThreshold(offset, 0);
     }
     
     public void calibrateHere() {
