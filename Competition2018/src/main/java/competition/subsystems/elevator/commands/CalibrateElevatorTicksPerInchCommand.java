@@ -41,6 +41,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        log.info("Initializing");
         int tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
@@ -65,7 +66,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
         // Directly control the elevator with a joystick
 
-        elevator.setPower(oi.operatorGamepad.getRightVector().y);
+        elevator.insanelyDangerousSetPower(oi.operatorGamepad.getRightStickY());
     }
 
     @Override
