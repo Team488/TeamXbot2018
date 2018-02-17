@@ -24,11 +24,8 @@ public class AssistedTankDriveCommand extends BaseCommand {
         this.oi = oi;
         this.requires(drive);
         
-        PIDManager headingPid = pf.createPIDManager("DriveHeading", 4, 0, 0);
-        PIDManager decayPid = pf.createPIDManager("DriveDecay", 0, 0, 1);
-        
-        HeadingModule holdHeading = clf.createHeadingModule(headingPid);
-        HeadingModule decayHeading = clf.createHeadingModule(decayPid);
+        HeadingModule holdHeading = clf.createHeadingModule(drive.getRotateToHeadingPid());
+        HeadingModule decayHeading = clf.createHeadingModule(drive.getRotateDecayPid());
         ham = clf.createHeadingAssistModule(holdHeading, decayHeading);
     }
     
