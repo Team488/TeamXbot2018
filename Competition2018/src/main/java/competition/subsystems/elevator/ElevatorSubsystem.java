@@ -2,6 +2,7 @@ package competition.subsystems.elevator;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -17,6 +18,8 @@ import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
 import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.MathUtils;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.StringProperty;
@@ -56,6 +59,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
 
+    final DoubleProperty talonMaxVelocity;
+    final DoubleProperty talonMaxAcceleration;
     final DoubleProperty maxHeightInInches;
     final DoubleProperty minHeightInInches;
     final DoubleProperty elevatorTargetHeight;
@@ -71,15 +76,18 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty elevatorPeakCurrentLimit;
     final DoubleProperty elevatorPeakCurrentDuration;
     final DoubleProperty elevatorContinuousCurrentLimit;
-
+    final PIDPropertyManager motionMagicProperties;
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
     
     int updateMotorValuesCounter = 0;
+    
+    final Latch motionMagicLatch;
 
     @Inject
-    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
+    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract,
+            PIDFactory pf) {
         this.clf = clf;
         this.contract = contract;
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
@@ -99,15 +107,25 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorPeakCurrentLimit = propMan.createPersistentProperty("Elevator peak current limit", 35);
         elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
+        motionMagicProperties = pf.createPIDPropertyManager("Elevator Motion Magic", 0.3, 0, 0, 0.688);
+        talonMaxVelocity = propMan.createPersistentProperty("Elevator max Velocity", 1400);
+        talonMaxAcceleration = propMan.createPersistentProperty("Elevator max Accleration", 1400);
         elevatorRestrictionReasonProp = propMan.createEphemeralProperty("Elevator Restriction Reason", "Waiting to run...");
         calibratedProp = propMan.createEphemeralProperty("Elevator calibrated", false);
 
         calibrationOffset = 0.0;
-
+        
+        
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
                 calibrateHere();
             }
+        });
+        
+        motionMagicLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
+           if (edge == EdgeType.RisingEdge) {
+               configureMotionMagic();
+           }
         });
 
         if (contract.elevatorReady()) {
@@ -219,6 +237,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      *            power percentage in robot scale
      */
     public void setPower(double power) {
+
+        motionMagicLatch.setValue(false);
         ElevatorPowerRestrictionReason reason = ElevatorPowerRestrictionReason.FullPowerAvailable;
 
         if (contract.elevatorLowerLimitReady()) {
@@ -266,7 +286,32 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.simpleSet(power);
         setRestrictionReason(reason);
     }
+    
+    public void insanelyDangerousSetPower(double power) {
+        motor.simpleSet(power);
+    }
 
+    
+    public void configureMotionMagic() {
+        motor.configMotionCruiseVelocity((int)talonMaxVelocity.get(), 0);
+        motor.configMotionAcceleration((int)talonMaxAcceleration.get(), 0);
+        
+        motor.config_kP(0, this.motionMagicProperties.getP(), 0);
+        motor.config_kI(0, this.motionMagicProperties.getI(), 0);
+        motor.config_kD(0, this.motionMagicProperties.getD(), 0);
+        motor.config_kF(0, this.motionMagicProperties.getF(), 0);
+    }
+    
+    public void motionMagicToHeight(double heightInInches) {
+        motionMagicLatch.setValue(true);
+                
+        if (isCalibrated) {
+            double targetTicks = inchesToTicks(heightInInches);
+            
+            motor.set(ControlMode.MotionMagic, targetTicks);
+        }
+    }
+    
     public void setTargetHeight(double height) {
         elevatorTargetHeight.set(height);
     }
@@ -320,6 +365,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
 
         return ((ticks - calibrationOffset) / tpi) + minHeightInInches.get();
+    }
+    
+    private double inchesToTicks(double inches) {
+        return (inches-minHeightInInches.get()) * elevatorTicksPerInch.get() + calibrationOffset;
     }
 
     public double getMaxHeight() {
