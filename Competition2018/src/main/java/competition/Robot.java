@@ -28,6 +28,6 @@ public class Robot extends BaseRobot {
         registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(ElevatorSubsystem.class));
-       // registerPeriodicDataSource(this.injector.getInstance(WristSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(WristSubsystem.class));
     }
 }

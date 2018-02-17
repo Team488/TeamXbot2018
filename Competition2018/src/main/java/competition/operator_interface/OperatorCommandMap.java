@@ -26,6 +26,8 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
 import competition.subsystems.wrist.commands.WristDownCommand;
+import competition.subsystems.wrist.commands.WristUpCommand;
+import xbot.common.properties.ConfigurePropertiesCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.wrist.commands.WristUpCommand;
 import xbot.common.math.ContiguousHeading;
@@ -44,6 +46,16 @@ public class OperatorCommandMap {
      * @Inject public void setupMyCommands( OperatorInterface operatorInterface, MyCommand myCommand) {
      * operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand); }
      */
+    
+    @Inject
+    public void setupMiscCommands(ConfigurePropertiesCommand fastMode,
+            ConfigurePropertiesCommand slowMode) {
+        fastMode.setFastMode(true);
+        slowMode.setFastMode(false);
+        
+        fastMode.includeOnSmartDashboard();
+        slowMode.includeOnSmartDashboard();
+    }
 
     @Inject
     public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
