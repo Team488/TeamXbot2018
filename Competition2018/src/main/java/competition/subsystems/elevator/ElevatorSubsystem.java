@@ -92,9 +92,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorPeakCurrentLimit = propMan.createPersistentProperty("Elevator peak current limit", 35);
         elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
-        motionMagicProperties = pf.createPIDPropertyManager("Elevator Motion Magic", 0.01, 0, 0, 0);
-        talonMaxVelocity = propMan.createPersistentProperty("Elevator max Velocity", 100);
-        talonMaxAcceleration = propMan.createPersistentProperty("Elevator max Accleration", 100);
+        motionMagicProperties = pf.createPIDPropertyManager("Elevator Motion Magic", 0.3, 0, 0, 0.688);
+        talonMaxVelocity = propMan.createPersistentProperty("Elevator max Velocity", 1400);
+        talonMaxAcceleration = propMan.createPersistentProperty("Elevator max Accleration", 1400);
         
         calibrationOffset = 0.0;
         
@@ -268,19 +268,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configMotionCruiseVelocity((int)talonMaxVelocity.get(), 0);
         motor.configMotionAcceleration((int)talonMaxAcceleration.get(), 0);
         
-        // for now setting through web dashboard
-        /*
-        motor.config_kP(0, this.velocityP.get(), 0);
-        motor.config_kI(0, this.velocityI.get(), 0);
-        motor.config_kD(0, this.velocityD.get(), 0);
-        motor.config_kF(0, this.velocityF.get(), 0);*/
+        motor.config_kP(0, this.motionMagicProperties.getP(), 0);
+        motor.config_kI(0, this.motionMagicProperties.getI(), 0);
+        motor.config_kD(0, this.motionMagicProperties.getD(), 0);
+        motor.config_kF(0, this.motionMagicProperties.getF(), 0);
     }
     
     public void motionMagicToHeight(double heightInInches) {
         motionMagicLatch.setValue(true);
-        
-        
-        
+                
         if (isCalibrated) {
             double targetTicks = inchesToTicks(heightInInches);
             
