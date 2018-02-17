@@ -15,8 +15,10 @@ import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
+import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
+import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
@@ -24,10 +26,12 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
 import competition.subsystems.wrist.commands.WristDownCommand;
-import competition.subsystems.wrist.commands.WristUpCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
-import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
-import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
+import competition.subsystems.wrist.commands.WristUpCommand;
+import xbot.common.math.ContiguousHeading;
+import xbot.common.math.FieldPose;
+import xbot.common.math.XYPair;
+import xbot.common.subsystems.drive.PurePursuitCommand;
 
 @Singleton
 public class OperatorCommandMap {
@@ -41,9 +45,17 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
-            TankDriveWithJoysticksCommand simpleTank) {
+            TankDriveWithJoysticksCommand simpleTank,
+            PurePursuitCommand pursuit) {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
+        
+        pursuit.addPoint(new FieldPose(new XYPair(0, 60), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(60, 60), new ContiguousHeading(0)));
+        pursuit.addPoint(new FieldPose(new XYPair(60, 0), new ContiguousHeading(-90)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(-180)));
+        
+        pursuit.includeOnSmartDashboard();
     }
 
     @Inject
