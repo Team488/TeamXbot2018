@@ -16,6 +16,12 @@ public abstract class OffboardProcessingWithDriveCommand extends OffboardProcess
         this.requires(driveSubsystem);
     }
     
+    @Override
+    public void initialize() {
+        super.initialize();
+        this.driveSubsystem.resetVelocityAccum();
+    }
+    
     protected abstract void handleIncomingNonDrivePacket(OffboardCommunicationPacket packet);
     
     @Override

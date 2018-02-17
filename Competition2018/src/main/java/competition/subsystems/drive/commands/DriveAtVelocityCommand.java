@@ -32,4 +32,10 @@ public class DriveAtVelocityCommand extends BaseCommand {
     public void execute() {
         drive.driveTankVelocity(50, 50);
     }
+    
+    @Override
+    public void end() {
+        drive.drive(0, 0);
+        super.end();
+    }
 }

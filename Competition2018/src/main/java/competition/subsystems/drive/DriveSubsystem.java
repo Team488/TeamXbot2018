@@ -14,6 +14,8 @@ import competition.ElectricalContract2018;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.logging.RobotAssertionManager;
+import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
@@ -35,6 +37,9 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final DoubleProperty velocityD;
     private final DoubleProperty velocityF;
 
+    private final PIDManager leftPidManager;
+    private final PIDManager rightPidManager;
+
     private Map<XCANTalon, MotionRegistration> masterTalons;
     
     int updateMotorValuesCounter = 0;
@@ -44,14 +49,14 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract) {
+    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, RobotAssertionManager assertionManager) {
         log.info("Creating DriveSubsystem");
 
         // Default is for 2018 robot design
         // SRX counts edges rather than ticks, so the 1024-count sensor is read as 4096 per rev
         // (4096 native units/encoder rev) * (3 encoder rev/wheel rev) / (4pi inches/wheel rev) ~= 977.847970356605
         final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
-        final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
+        final double defaultDriveTicksPer5Feet = 100281.0;//defaultDriveTicksPerInch * (12 * 5);
         leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", defaultDriveTicksPer5Feet);
         rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", defaultDriveTicksPer5Feet);
 
@@ -83,6 +88,10 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
+        
+        this.leftPidManager = new PIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
+        this.rightPidManager = new PIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
+
     }
     
     private void configureMotorTeam(
@@ -180,10 +189,20 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         return 0;
     }
     
+    public void resetVelocityAccum() {
+        this.leftAccum = 0;
+        this.rightAccum = 0;
+    }
+    
+    private double leftAccum, rightAccum;
     public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {        
         // Talon SRX measures in native units per 100ms, so values in seconds are divided by 10
-        leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
-        rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+        //leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
+        //rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+        leftAccum += this.leftPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Left));
+        rightAccum += this.rightPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Right));
+        
+        this.drive(leftAccum, rightAccum);
     }
     
     @Override
