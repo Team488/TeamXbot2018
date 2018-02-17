@@ -47,6 +47,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
         elevator.uncalibrate();
     }
 
+    
     /**
      * By getting the delta Tick and the delta Height in Inches, we can get Tick per Inches
      */
