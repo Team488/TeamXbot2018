@@ -28,7 +28,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     final BooleanProperty wristCalibratedProp;
     final DoubleProperty wristUncalibratedPowerProp;
     
-    int offset;
+    int lowerLimit;
     int upperLimit;
     boolean calibrated = false;
 
@@ -57,7 +57,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     }
     
     public int getLowerLimitInTicks() {
-        return offset;
+        return lowerLimit;
     }
     
     public int getUpperLimitInTicks() {
@@ -100,10 +100,10 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
         
         // calculate lower limit and set safeties
         int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
-        offset = highestPosition - tickRange;
+        lowerLimit = highestPosition - tickRange;
         
-        log.info("Lower limit set at: " + offset);
-        motor.configReverseSoftLimitThreshold(offset, 0);
+        log.info("Lower limit set at: " + lowerLimit);
+        motor.configReverseSoftLimitThreshold(lowerLimit, 0);
     }
     
     public void calibrateHere() {
