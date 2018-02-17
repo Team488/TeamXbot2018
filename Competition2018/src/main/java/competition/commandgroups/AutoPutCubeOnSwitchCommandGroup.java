@@ -13,14 +13,21 @@ public class AutoPutCubeOnSwitchCommandGroup extends CommandGroup {
     
     @Inject
     public AutoPutCubeOnSwitchCommandGroup(
-            DriveSubsystem drive,
             DriveForDistanceCommand driveToDistance,
             ElevatorSubsystem elevator,
             SetElevatorTargetHeightCommand moveToSwitchHeight,
             GripperEjectCommand deliever
-            
             ) {
+        moveToSwitchHeight.setGoalHeight(elevator.getTargetSwitchDropHeight());
+        /**
+         * 81.5 is the distance the robot with cube,
+         * to the switch in inches
+         */
+        driveToDistance.setDeltaDistance(81.5);
         
+        this.addParallel(moveToSwitchHeight);
+        this.addParallel(driveToDistance);
+        this.addSequential(deliever);
     }
 
 }
