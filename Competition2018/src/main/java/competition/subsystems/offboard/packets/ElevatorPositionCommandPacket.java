@@ -10,23 +10,24 @@ public class ElevatorPositionCommandPacket {
 	public final ElevatorGoal elevatorGoal;
 	
 	public enum ElevatorGoal {
-		Switch, ScaleLow, ScaleMid, ScaleHigh
+		PowerCubeGround, Switch, ScaleLow, ScaleMid, ScaleHigh
 	}
 	
 	public ElevatorPositionCommandPacket(byte[] packetData) {
 		this.commandId = packetData[0] & 0xFF;
 		
 		switch (packetData[1]) {
-			case 1: this.elevatorGoal = ElevatorGoal.Switch;
+			case 1: this.elevatorGoal = ElevatorGoal.PowerCubeGround;
 				break;
-			case 2: this.elevatorGoal = ElevatorGoal.ScaleLow;
+			case 2: this.elevatorGoal = ElevatorGoal.Switch;
 				break;
-			case 3: this.elevatorGoal = ElevatorGoal.ScaleMid;
+			case 3: this.elevatorGoal = ElevatorGoal.ScaleLow;
 				break;
-			case 4: this.elevatorGoal = ElevatorGoal.ScaleHigh;
+			case 4: this.elevatorGoal = ElevatorGoal.ScaleMid;
 				break;
-			default:
-				this.elevatorGoal = null;
+			case 5: this.elevatorGoal = ElevatorGoal.ScaleHigh;
+				break;
+			default: this.elevatorGoal = null;
 				log.error("Elevator goal: " + packetData[1] + " is invalid");
 				break;
 		}
