@@ -65,11 +65,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     
     int updateMotorValuesCounter = 0;
 
-    TalonCurrentMonitor currentMonitor;
-
     @Inject
-    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract,
-            TalonCurrentMonitor currentMonitor) {
+    public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
@@ -337,17 +334,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
     }
 
-    public double getCurrentTime() {
-        return Timer.getFPGATimestamp();
-    }
-
-    public double getPeakCurrent() {
-        return currentMonitor.calculatePeakCurrent();
-    }
-
-    public double getAverageCurrent() {
-        return currentMonitor.calculateAverageCurrent();
-    }
 
     public double getTargetScaleHighHeight() {
         return targetScaleHighHeight.get();
