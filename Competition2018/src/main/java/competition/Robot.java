@@ -25,9 +25,9 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
 
-        periodicDataSources.add(this.injector.getInstance(DriveSubsystem.class));
-        periodicDataSources.add(this.injector.getInstance(PoseSubsystem.class));
-        periodicDataSources.add(this.injector.getInstance(ElevatorSubsystem.class));
-        periodicDataSources.add(this.injector.getInstance(WristSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(ElevatorSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(WristSubsystem.class));
     }
 }
