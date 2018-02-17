@@ -19,45 +19,37 @@ public class ClimbSubsystemTest extends BaseCompetitionTest {
 
     @Test
     public void testAscend() {
-        climbSubsystem.ascend();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() == 0);
         climbSubsystem.ascend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
         
         climbSubsystem.decend();
-        climbSubsystem.ascend();
-        assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
-        
-        climbSubsystem.stop();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
         climbSubsystem.ascend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
     }
 
     @Test
-    public void testDescend() {
-        climbSubsystem.decend();
+    public void testDecend() {
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() == 0);
         climbSubsystem.decend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
         
         climbSubsystem.ascend();
-        climbSubsystem.decend();
-        assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
-        
-        climbSubsystem.stop();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
         climbSubsystem.decend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
     }
 
     @Test
     public void testStop() {
-        climbSubsystem.stop();
-        climbSubsystem.stop();
-        assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);
-        
         climbSubsystem.ascend();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
         climbSubsystem.stop();
         assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);
         
         climbSubsystem.decend();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
         climbSubsystem.stop();
         assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);
     }
