@@ -1,22 +1,28 @@
 package competition.subsystems.drive.commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
+import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 import xbot.common.injection.BaseWPITest;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 import competition.BaseCompetitionTest;
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.RotateToHeadingCommand;
 
 public class RotateToHeadingCommandTest extends BaseCompetitionTest {
     
     RotateToHeadingCommand rotate;
     BasePoseSubsystem pose;
+    DriveSubsystem drive;
 
     @Override
     public void setUp() {
         super.setUp();
         rotate = injector.getInstance(RotateToHeadingCommand.class);
+        drive = injector.getInstance(DriveSubsystem.class);
     }
     
     @Test
@@ -25,12 +31,12 @@ public class RotateToHeadingCommandTest extends BaseCompetitionTest {
         rotate.setGoalHeading(90);
         rotate.initialize();
         rotate.execute();
-        assertEquals(.5, rotate.getRotatePower(), 0.001);
+        assertTrue((drive.leftMaster).getMotorOutputPercent() < (drive.rightMaster).getMotorOutputPercent());
         
         mockRobotIO.setGyroHeading(179);
         rotate.setGoalHeading(-179);
         rotate.execute();
-        assertEquals(.0111111, rotate.getRotatePower(), 0.001);
+        assertTrue((drive.leftMaster).getMotorOutputPercent() < (drive.rightMaster).getMotorOutputPercent());
     }
     
     @Test
@@ -39,11 +45,11 @@ public class RotateToHeadingCommandTest extends BaseCompetitionTest {
         rotate.setGoalHeading(-90);
         rotate.initialize();
         rotate.execute();
-        assertEquals(-.5, rotate.getRotatePower(), 0.001);
+        assertTrue((drive.leftMaster).getMotorOutputPercent() > (drive.rightMaster).getMotorOutputPercent());
         
         mockRobotIO.setGyroHeading(-179);
         rotate.setGoalHeading(179);
         rotate.execute();
-        assertEquals(-.0111111, rotate.getRotatePower(), 0.001);
+        assertTrue((drive.leftMaster).getMotorOutputPercent() > (drive.rightMaster).getMotorOutputPercent());
     }
 }

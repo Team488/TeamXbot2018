@@ -11,38 +11,28 @@ import competition.subsystems.drive.DriveSubsystem;
 public class RotateToHeadingCommand extends BaseCommand{
 
     double goal;
-    double power;
-    double heading;
-    final CommonLibFactory clf;
     final PIDManager pid;
     HeadingModule headingModule;
     DriveSubsystem drive;
     
     @Inject
     public RotateToHeadingCommand(CommonLibFactory clf, PIDFactory pf,  DriveSubsystem drive) {
-        this.clf = clf;
         this.drive = drive;
         pid = pf.createPIDManager("Goal Heading", 1, 0, 0);
-        pid.setErrorThreshold(0.1);
-        headingModule = clf.createHeadingModule(pid); 
-        
+        pid.setErrorThreshold(0.01);
+        headingModule = clf.createHeadingModule(pid);      
     }
 
     @Override
     public void initialize() {
         log.info("Initializing");
-        headingModule.reset();
-        
+        headingModule.reset();  
     }
 
     @Override
     public void execute() {
-        power = headingModule.calculateHeadingPower(goal);
+        double power = headingModule.calculateHeadingPower(goal);
         drive.drive(-power, power);        
-    }
-    
-    public double getRotatePower() {
-        return power;
     }
     
     public void setGoalHeading(double goal) {
