@@ -26,7 +26,6 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     double currentThreshold;
     double peakCurrent;
 
-
     @Inject
     public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf, ElevatorSubsystem elevator) {
         this.clf = clf;
@@ -46,11 +45,11 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
         this.currentThreshold = calibrationCurrentThreshold.get();
         targetTime = Timer.getFPGATimestamp() + calibrationTime.get();
     }
-
+//calibration at; calibration Here; getCurrentHeight
     @Override
     public void execute() {
             elevator.setPower(power.get());
-            currentMonitor.updateCurrent();     
+            currentMonitor.updateCurrent();
     }
     
     @Override
@@ -59,9 +58,13 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
         return newTime > targetTime
                 || currentMonitor.calculatePeakCurrent() > currentThreshold;
     }
-
+    
+// current is not good; get the tick now; read this min tick; put into the formula
     @Override
     public void end() {
+        if (currentMonitor.calculatePeakCurrent() > currentThreshold) {
+            elevator.calibrateHere();
+        }
         elevator.stop();
     }
 
