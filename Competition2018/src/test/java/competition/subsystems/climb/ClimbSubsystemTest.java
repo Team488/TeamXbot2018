@@ -9,30 +9,30 @@ import competition.BaseCompetitionTest;
 
 public class ClimbSubsystemTest extends BaseCompetitionTest {
 
-	ClimbSubsystem climbSubsystem;
+    ClimbSubsystem climbSubsystem;
 
-	@Override
-	public void setUp() {
-		super.setUp();
-		climbSubsystem = injector.getInstance(ClimbSubsystem.class);
-	}
+    @Override
+    public void setUp() {
+        super.setUp();
+        climbSubsystem = injector.getInstance(ClimbSubsystem.class);
+    }
 
-	@Test
-	public void testAscend() {
-		climbSubsystem.ascend();
-		assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
-	}
-	
-	@Test
-	public void testDescend() {
-		climbSubsystem.decend();
-		assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
-	}
-	
-	@Test
-	public void testStop() {
-		climbSubsystem.stop();
-		assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);
-	}
+    @Test
+    public void testAscend() {
+        climbSubsystem.ascend();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
+    }
+
+    @Test
+    public void testDescend() {
+        climbSubsystem.decend();
+        assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
+    }
+
+    @Test
+    public void testStop() {
+        climbSubsystem.stop();
+        assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);
+    }
 
 }
