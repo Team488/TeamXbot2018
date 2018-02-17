@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 import com.google.inject.Inject;
 import xbot.common.math.PIDManager;
+import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import competition.operator_interface.OperatorInterface;
@@ -23,6 +24,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     ElevatorSubsystem elevator;
     PIDManager pid;
     double giveUpCalibratingTime;
+    final BooleanProperty motionMagic;
     final DoubleProperty elevatorCalibrationAttemptTimeMS;
 
     @Inject
@@ -32,6 +34,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             XPropertyManager propMan, 
             OperatorInterface oi) {
         elevatorCalibrationAttemptTimeMS = propMan.createPersistentProperty("Calibration attempt time (ms)", 4000);
+        motionMagic = propMan.createPersistentProperty("Motion Magic Mode", false);
         this.elevator = elevator;
         this.requires(elevator);
         this.oi = oi;
@@ -51,10 +54,6 @@ public class ElevatorMaintainerCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        boolean maintain = false;
-        boolean manual = false;
-        boolean tryToCalibrate = false;
-        
         MaintinerMode currentMode = MaintinerMode.Calibrating;
         
         if (elevator.isCalibrated()) {
@@ -70,7 +69,11 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         
         
         if (currentMode == MaintinerMode.Calibrated) {
-            elevator.setPower(pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches()));
+            if (motionMagic.get() == true) {
+                elevator.motionMagicToHeight(elevator.getTargetHeight());
+            } else {
+                elevator.setPower(pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches()));
+            }            
         }
         else if (currentMode == MaintinerMode.Calibrating) {
             elevator.lower();
@@ -79,4 +82,8 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             elevator.setPower(oi.operatorGamepad.getRightStickY());
         }
     }  
+    
+    public void isMotionMagicMode(boolean x) {
+        motionMagic.set(x);
+    }
 }
