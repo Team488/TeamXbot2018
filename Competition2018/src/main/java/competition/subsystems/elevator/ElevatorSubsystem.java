@@ -22,11 +22,25 @@ import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ElevatorSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
 
+    public enum ElevatorPowerRestrictionReason {
+        FullPowerAvailable,
+        LowerLimitSwitch,
+        UpperLimitSwitch,
+        Uncalibrated,
+        AboveMaxHeight,
+        NearMaxHeight,
+        BelowMinHeight,
+        NearMinHeight,
+    }
+    
+    final StringProperty elevatorRestrictionReasonProp;
+    
     double defaultElevatorPower;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
@@ -54,6 +68,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty currentHeight;
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
+    final BooleanProperty calibratedProp;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
@@ -95,7 +110,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motionMagicProperties = pf.createPIDPropertyManager("Elevator Motion Magic", 0.3, 0, 0, 0.688);
         talonMaxVelocity = propMan.createPersistentProperty("Elevator max Velocity", 1400);
         talonMaxAcceleration = propMan.createPersistentProperty("Elevator max Accleration", 1400);
-        
+        elevatorRestrictionReasonProp = propMan.createEphemeralProperty("Elevator Restriction Reason", "Waiting to run...");
+        calibratedProp = propMan.createEphemeralProperty("Elevator calibrated", false);
+
         calibrationOffset = 0.0;
         
         
@@ -140,6 +157,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.enableCurrentLimit(true);
 
         motor.createTelemetryProperties("ElevatorMotor");
+    }
+    
+    private void setRestrictionReason(ElevatorPowerRestrictionReason reason) {
+        elevatorRestrictionReasonProp.set(reason.toString());
     }
     
     public void enableCurrentLimit() {
@@ -216,8 +237,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
      *            power percentage in robot scale
      */
     public void setPower(double power) {
-        
+
         motionMagicLatch.setValue(false);
+        ElevatorPowerRestrictionReason reason = ElevatorPowerRestrictionReason.FullPowerAvailable;
 
         if (contract.elevatorLowerLimitReady()) {
             boolean sensorHit = lowerLimitSupplier.get();
@@ -227,6 +249,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             // lowering any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, 0, 1);
+                reason = ElevatorPowerRestrictionReason.LowerLimitSwitch;
             }
         }
 
@@ -236,12 +259,14 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
                 power = MathUtils.constrainDouble(power, -1, 0);
+                reason = ElevatorPowerRestrictionReason.UpperLimitSwitch;
             }
         }
 
         // If the elevator is not calibrated, then maximum power should be constrained.
         if (!isCalibrated) {
             power = MathUtils.constrainDouble(power, -calibrationPower.get(), calibrationPower.get());
+            reason = ElevatorPowerRestrictionReason.Uncalibrated;
         }
 
         if (isCalibrated) {
@@ -249,14 +274,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             double currentHeight = getCurrentHeightInInches();
             if (currentHeight > getMaxHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -1, 0);
+                reason = ElevatorPowerRestrictionReason.AboveMaxHeight;
             }
             // if we are below the min, can only go up.
             if (currentHeight < getMinHeightInInches()) {
                 power = MathUtils.constrainDouble(power, 0, 1);
+                reason = ElevatorPowerRestrictionReason.BelowMinHeight;
             }
         }
 
         motor.simpleSet(power);
+        setRestrictionReason(reason);
     }
     
     public void insanelyDangerousSetPower(double power) {
@@ -368,6 +396,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         updateMotorValuesCounter++;
+        calibratedProp.set(isCalibrated);
         
         // roughly 5 seconds at 30 Hz
         if (updateMotorValuesCounter == 150 ) {

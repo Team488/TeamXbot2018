@@ -16,8 +16,6 @@ import competition.subsystems.pose.PoseSubsystem;
 
 public class DriveForDistanceCommand extends BaseCommand {
 
-    private final PIDManager travelManager;
-    private final PIDManager headingDrivePid;
     private final PoseSubsystem poseSubsystem;
     private final DriveSubsystem drive;
     private final HeadingModule heading;
@@ -37,11 +35,9 @@ public class DriveForDistanceCommand extends BaseCommand {
         this.drive = driveSubsystem;
         this.poseSubsystem = pose;
         this.requires(driveSubsystem);
-        this.travelManager = pidFactory.createPIDManager("Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
-        headingDrivePid = pidFactory.createPIDManager("Heading module", defaultPValue, 0, 0);
+        
         targetHeading = new ContiguousHeading();
-        this.heading = clf.createHeadingModule(headingDrivePid);
-
+        this.heading = clf.createHeadingModule(drive.getRotateToHeadingPid());
     }
 
     /**
@@ -80,7 +76,7 @@ public class DriveForDistanceCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double power = travelManager.calculate(targetDistance, getYDistance());
+        double power = drive.getPositionalPid().calculate(targetDistance, getYDistance());
         double headingPower = heading.calculateHeadingPower(targetHeading.getValue());
 
         double leftPower = power - headingPower;
@@ -95,7 +91,7 @@ public class DriveForDistanceCommand extends BaseCommand {
 
     @Override
     public boolean isFinished() {
-        return travelManager.isOnTarget();
+        return drive.getPositionalPid().isOnTarget();
     }
 
     @Override
