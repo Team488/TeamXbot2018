@@ -19,10 +19,13 @@ import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logging.RobotAssertionManager;
+import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
+import xbot.common.subsystems.drive.control_logic.HeadingAssistModule;
+import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
 @Singleton
 public class DriveSubsystem extends BaseDriveSubsystem {
@@ -45,7 +48,11 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final PIDManager rightPidManager;
 
     private Map<XCANTalon, MotionRegistration> masterTalons;
-
+    
+    private final PIDManager positionalPid;
+    private final PIDManager rotateToHeadingPid;
+    private final PIDManager rotateDecayPid;
+    
     int updateMotorValuesCounter = 0;
 
     public enum Side {
@@ -53,8 +60,13 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, RobotAssertionManager assertionManager) {
+    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
         log.info("Creating DriveSubsystem");
+        
+        positionalPid = pf.createPIDManager("Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        rotateToHeadingPid = pf.createPIDManager("DriveHeading", 4, 0, 0);
+        rotateDecayPid = pf.createPIDManager("DriveDecay", 0, 0, 1);
+        
 
         // Default is for 2018 robot design
         // SRX counts edges rather than ticks, so the 1024-count sensor is read as 4096 per rev
@@ -83,8 +95,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
-        this.leftPidManager = new PIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
-        this.rightPidManager = new PIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
+        this.leftPidManager = pf.createPIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
+        this.rightPidManager = pf.createPIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
 
     }
 
@@ -223,5 +235,20 @@ public class DriveSubsystem extends BaseDriveSubsystem {
             this.updateMotorPidValues(leftMaster);
             this.updateMotorPidValues(rightMaster);
         }
+    }
+
+    @Override
+    public PIDManager getPositionalPid() {
+        return positionalPid;
+    }
+
+    @Override
+    public PIDManager getRotateToHeadingPid() {
+        return rotateToHeadingPid;
+    }
+
+    @Override
+    public PIDManager getRotateDecayPid() {
+        return rotateDecayPid;
     }
 }
