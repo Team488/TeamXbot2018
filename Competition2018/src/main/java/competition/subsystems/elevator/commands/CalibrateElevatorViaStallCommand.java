@@ -16,14 +16,14 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     TalonCurrentMonitor currentMonitor;
 
     DoubleProperty power;
-    DoubleProperty calibrationTime; // In milliseconds
+    DoubleProperty calibrationTime; 
     DoubleProperty calibrationCurrentThreshold;
     DoubleProperty goodCurrentRange;
 
     double targetTime;
     double newTime;
     boolean atTarget;
-    double threshold;
+    double currentThreshold;
     double peakCurrent;
 
 
@@ -31,16 +31,11 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     public CalibrateElevatorViaStallCommand(XPropertyManager propMan, CommonLibFactory clf, ElevatorSubsystem elevator) {
         this.clf = clf;
         power = propMan.createPersistentProperty("Elevator Jamming Calibration Power", -0.2);
-        calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (ms)", 4000);
+        calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (s)", 4);
         calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
         this.elevator = elevator;
         this.currentMonitor = new TalonCurrentMonitor(elevator.motor);
         this.requires(elevator);
-    }
-    
-    
-    public void setCalibrationCurrentThreshold(double threshold) {
-        this.threshold=threshold;
     }
     
     @Override
@@ -48,6 +43,7 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
         log.info("Initializing");
         log.info("Current time is: " + Timer.getFPGATimestamp());
         log.info("Calibrating elevator at power" + power.get() + " until: " + targetTime);
+        this.currentThreshold = calibrationCurrentThreshold.get();
         targetTime = Timer.getFPGATimestamp() + calibrationTime.get();
     }
 
@@ -61,7 +57,7 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
     public boolean isFinished() {
         newTime =Timer.getFPGATimestamp();
         return newTime > targetTime
-                || elevator.getPeakCurrent() > threshold;
+                || currentMonitor.calculatePeakCurrent() > currentThreshold;
     }
 
     @Override

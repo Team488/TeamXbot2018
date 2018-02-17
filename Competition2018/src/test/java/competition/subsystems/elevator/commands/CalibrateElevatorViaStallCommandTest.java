@@ -28,27 +28,45 @@ public class CalibrateElevatorViaStallCommandTest extends BaseCompetitionTest {
         command = injector.getInstance(CalibrateElevatorViaStallCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
         currentMonitor = new TalonCurrentMonitor(elevator.motor);
-        talon = clf.createCANTalon(1);
-        // mockTimer = injector.getInstance(MockTimer.class);
+        mockTimer = injector.getInstance(MockTimer.class);
     }
 
     @Test
-    public void calibrationCurrentTest() {
+    public void calibrationCurrentWithPeakCurrentTest() {
 
-        command.setCalibrationCurrentThreshold(20);
+        command.calibrationCurrentThreshold.set(command.currentThreshold);
         command.initialize();
-        
-        ((MockCANTalon) talon).setOutputCurrent(14);
+
+        ((MockCANTalon) elevator.motor).setOutputCurrent(command.currentThreshold - 5);
         command.execute();
         assertFalse(command.isFinished());
-        ((MockCANTalon) talon).setOutputCurrent(20);
+        ((MockCANTalon) elevator.motor).setOutputCurrent(command.currentThreshold);
         command.execute();
         assertFalse(command.isFinished());
-        ((MockCANTalon) talon).setOutputCurrent(24);
+        ((MockCANTalon) elevator.motor).setOutputCurrent(command.currentThreshold + 5);
         command.execute();
         assertTrue(command.isFinished());
 
-        /* || command.newTime> command.targetTime); */
+    }
+
+    @Test
+    public void calibrationCurrentWithTimeTest() {
+        command.initialize();
+
+        ((MockCANTalon) elevator.motor).setOutputCurrent(14);
+        mockTimer.setTimeInSeconds(0);
+        command.execute();
+        assertFalse(command.isFinished());
+        mockTimer.setTimeInSeconds(command.targetTime - 1);
+        command.execute();
+        assertFalse(command.isFinished());
+        mockTimer.setTimeInSeconds(command.targetTime);
+        command.execute();
+        assertFalse(command.isFinished());
+        mockTimer.setTimeInSeconds(command.targetTime + 1);
+        command.execute();
+        assertTrue(command.isFinished());
+
     }
 
 }
