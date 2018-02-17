@@ -63,6 +63,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty currentHeight;
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
+    final BooleanProperty calibratedProp;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
@@ -99,6 +100,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
         elevatorRestrictionReasonProp = propMan.createEphemeralProperty("Elevator Restriction Reason", "Waiting to run...");
+        calibratedProp = propMan.createEphemeralProperty("Elevator calibrated", false);
 
         calibrationOffset = 0.0;
 
@@ -345,6 +347,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
         
         updateMotorValuesCounter++;
+        calibratedProp.set(isCalibrated);
         
         // roughly 5 seconds at 30 Hz
         if (updateMotorValuesCounter == 150 ) {
