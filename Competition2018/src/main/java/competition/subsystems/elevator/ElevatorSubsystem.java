@@ -71,10 +71,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        heightNearLowLimit = propMan.createPersistentProperty("Elevator Height Near Low Limit", 13);
-        heightNearHighLimit = propMan.createPersistentProperty("Elevator Height Near High Limit", 70);
-        powerNearLowLimit = propMan.createPersistentProperty("Max Power Near Low Limit", -0.3);
-        powerNearHighLimit = propMan.createPersistentProperty("Max Power Near High Limit", 0.3);
         elevatorPower = propMan.createPersistentProperty("ElevatorPower", 0.4);
         elevatorTicksPerInch = propMan.createPersistentProperty("ElevatorTicksPerInch", 100);
         calibrationPower = propMan.createPersistentProperty("ElevatorCalibrationPower", 0.2);
@@ -92,6 +88,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         elevatorPeakCurrentLimit = propMan.createPersistentProperty("Elevator peak current limit", 35);
         elevatorPeakCurrentDuration = propMan.createPersistentProperty("Elevator peak current duration", 200);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty("Elevator continuous current limit", 30);
+        heightNearLowLimit = propMan.createPersistentProperty("Elevator Height Near Low Limit", minHeightInInches.get() + 10);
+        heightNearHighLimit = propMan.createPersistentProperty("Elevator Height Near High Limit", maxHeightInInches.get() - 10);
+        powerNearLowLimit = propMan.createPersistentProperty("Max Power Near Low Limit", 0.3);
+        powerNearHighLimit = propMan.createPersistentProperty("Max Power Near High Limit", 0.3);
 
         calibrationOffset = 0.0;
 
@@ -242,10 +242,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             if (currentHeight < getMinHeightInInches()) {
                 power = MathUtils.constrainDouble(power, 0, 1);
             }
-            if(getCurrentHeightInInches() < getHeightNearLowLimit()) {
+            if(getCurrentHeightInInches() < getHeightNearLowLimit() && getCurrentHeightInInches() > getMinHeightInInches()) {
                 power = MathUtils.constrainDouble(power, getPowerNearLowLimit(), 1);
             }
-            if(getCurrentHeightInInches() > getHeightNearHighLimit()) {
+            if(getCurrentHeightInInches() > getHeightNearHighLimit() && getCurrentHeightInInches() < getMaxHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
             }
         }
