@@ -100,6 +100,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.leftPidManager = pf.createPIDManager(getPrefix()+"Drive velocity (local)", 0, 0, 0, 0, 1, -1);
         this.rightPidManager = pf.createPIDManager(getPrefix()+"Drive velocity (local)", 0, 0, 0, 0, 1, -1);
 
+        this.setVoltageRamp(0.15);
     }
 
     private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,

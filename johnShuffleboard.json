@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.3122653316645807,
+  "dividerPosition": 0.3122629582806574,
   "tabPane": [
     {
       "title": "Tab 1",
@@ -484,6 +484,17 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ Min Output",
               "_title": "SmartDashboard/DriveSubsystem/Drive to position/ Min Output"
+            }
+          },
+          "3,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Gabe Command",
+              "_title": "/SmartDashboard/Gabe Command"
             }
           }
         }
