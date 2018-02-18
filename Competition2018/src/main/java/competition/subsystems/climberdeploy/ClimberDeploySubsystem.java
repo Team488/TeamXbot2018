@@ -24,8 +24,8 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     public ClimberDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", .4);
-        slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", .1);
+        fastDeploySpeed = propMan.createPersistentProperty(getPrefix()+"FastDeploySpeed", .4);
+        slowDeploySpeed = propMan.createPersistentProperty(getPrefix()+"SlowDeploySpeed", .1);
         currentDeploySpeed = fastDeploySpeed.get();
 
         if (contract.climbDeployReady()) {
