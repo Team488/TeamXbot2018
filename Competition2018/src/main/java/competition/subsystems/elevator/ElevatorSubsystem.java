@@ -19,6 +19,7 @@ import xbot.common.logic.Latch;
 import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.MathUtils;
 import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDManager;
 import xbot.common.math.PIDPropertyManager;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -80,6 +81,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public XCANTalon motor;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
+    final PIDManager positionalPid;
     
     int updateMotorValuesCounter = 0;
     
@@ -112,7 +114,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         talonMaxAcceleration = propMan.createPersistentProperty(getPrefix()+"Max Accleration", 1400);
         elevatorRestrictionReasonProp = propMan.createEphemeralProperty(getPrefix()+"Restriction Reason", "Waiting to run...");
         calibratedProp = propMan.createEphemeralProperty(getPrefix()+"Calibrated", false);
-
+        positionalPid = pf.createPIDManager(getPrefix()+"Position", 1, 0, 0);
         calibrationOffset = 0.0;
         
         
@@ -421,5 +423,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public double getTargetPickUpHeight() {
         return targetPickUpHeight.get();
+    }
+    
+    public PIDManager getPositionalPid() {
+        return positionalPid;
     }
 }
