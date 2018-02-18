@@ -6,6 +6,10 @@ public class DrivePowerCommandPacket {
     public final double rightPower;
     
     private DrivePowerCommandPacket(byte[] packetData) {
+        if (packetData.length != 5) {
+            throw new IllegalArgumentException();
+        }
+        
         this.commandId = packetData[0] & 0xFF;
         this.leftPower = parseSinglePower(packetData[1], packetData[2]);
         this.rightPower = parseSinglePower(packetData[3], packetData[4]);

@@ -13,4 +13,6 @@ public class OffboardCommsConstants {
     public static final byte PACKET_TYPE_DRIVE_POWER_COMMAND = 0x05;
     public static final byte PACKET_TYPE_DRIVE_VEL_COMMAND = 0x09;
     public static final byte PACKET_TYPE_COMMAND_FINISHED = 0x07;
+
+    public static final byte PACKET_TYPE_DETECTED_CUBE = 0x0B ;
 }
