@@ -424,6 +424,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public double getTargetPickUpHeight() {
         return targetPickUpHeight.get();
     }
+
+    public double getLowerLimitInTicks() {
+        return calibrationOffset;
+    }
     
     public PIDManager getPositionalPid() {
         return positionalPid;
