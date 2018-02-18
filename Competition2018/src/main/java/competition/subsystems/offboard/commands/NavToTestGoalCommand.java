@@ -6,7 +6,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.offboard.OffboardCommunicationPacket;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 
-public class NavToTestGoalCommand extends OffboardProcessingWithDriveCommand {
+public class NavToTestGoalCommand extends OffboardProcessingWithRobotControlCommand {
 
     @Inject
     protected NavToTestGoalCommand(OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem) {

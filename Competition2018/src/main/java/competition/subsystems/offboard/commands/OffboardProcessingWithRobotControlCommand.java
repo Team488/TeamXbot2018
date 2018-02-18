@@ -7,10 +7,10 @@ import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.packets.DrivePowerCommandPacket;
 import competition.subsystems.offboard.packets.DriveVelCommandPacket;
 
-public abstract class OffboardProcessingWithDriveCommand extends OffboardProcessingCommand {
+public abstract class OffboardProcessingWithRobotControlCommand extends OffboardProcessingCommand {
     private final DriveSubsystem driveSubsystem;
     
-    protected OffboardProcessingWithDriveCommand(int commandId, OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem) {
+    protected OffboardProcessingWithRobotControlCommand(int commandId, OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem) {
         super(commandId, offboardSubsystem);
         this.driveSubsystem = driveSubsystem;
         this.requires(driveSubsystem);

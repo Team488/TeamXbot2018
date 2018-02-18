@@ -6,7 +6,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.offboard.OffboardCommunicationPacket;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 
-public class AcquireVisibleCubeCommand extends OffboardProcessingWithDriveCommand {
+public class AcquireVisibleCubeCommand extends OffboardProcessingWithRobotControlCommand {
 
     @Inject
     protected AcquireVisibleCubeCommand(OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem) {
