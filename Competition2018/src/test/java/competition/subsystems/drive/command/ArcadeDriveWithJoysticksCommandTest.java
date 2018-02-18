@@ -11,7 +11,7 @@ import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
 
-public class ArcadeDriveWithJoysticksCommandTest extends BaseCompetitionTest{
+public class ArcadeDriveWithJoysticksCommandTest extends BaseCompetitionTest {
 
     ArcadeDriveWithJoysticksCommand command;
     DriveSubsystem drive;

@@ -30,11 +30,11 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
+        ham.reset();
     }
 
     @Override
     public void execute() {
-
         double translate = oi.driverGamepad.getLeftVector().y;
         double rotate = oi.driverGamepad.getRightVector().x;
                 

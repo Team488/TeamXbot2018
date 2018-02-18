@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.30037546933667086,
+  "dividerPosition": 0.3122653316645807,
   "tabPane": [
     {
       "title": "Tab 1",
@@ -42,7 +42,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/DriveSubsystem/leftDriveTicksPer5Feet",
-              "_title": "/SmartDashboard/DriveSubsystem/leftDriveTicksPer5Feet"
+              "_title": "SmartDashboard/DriveSubsystem/leftDriveTicksPer5Feet"
             }
           },
           "2,2": {
@@ -53,7 +53,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/DriveSubsystem/rightDriveTicksPer5Feet",
-              "_title": "/SmartDashboard/DriveSubsystem/rightDriveTicksPer5Feet"
+              "_title": "SmartDashboard/DriveSubsystem/rightDriveTicksPer5Feet"
             }
           },
           "2,0": {
@@ -120,6 +120,39 @@
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/SetRobotHeadingCommand",
               "_title": "SmartDashboard/SetRobotHeadingCommand"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/DriveDecay/ D",
+              "_title": "SmartDashboard/DriveSubsystem/DriveDecay/ D"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/DriveHeading/ P",
+              "_title": "SmartDashboard/DriveSubsystem/DriveHeading/ P"
+            }
+          },
+          "5,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/DriveHeading/ D",
+              "_title": "SmartDashboard/DriveSubsystem/DriveHeading/ D"
             }
           }
         }
@@ -200,7 +233,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ P",
-              "_title": "/SmartDashboard/ElevatorSubsystem/Position/ P"
+              "_title": "SmartDashboard/ElevatorSubsystem/Position/ P"
             }
           },
           "3,2": {
@@ -211,7 +244,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ D",
-              "_title": "/SmartDashboard/ElevatorSubsystem/Position/ D"
+              "_title": "SmartDashboard/ElevatorSubsystem/Position/ D"
             }
           },
           "4,2": {
@@ -268,7 +301,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/WristSubsystem/Wrist ticks per degree",
-              "_title": "/SmartDashboard/WristSubsystem/Wrist ticks per degree"
+              "_title": "SmartDashboard/WristSubsystem/Wrist ticks per degree"
             }
           },
           "4,0": {
@@ -407,6 +440,50 @@
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/ResetDistanceCommand",
               "_title": "SmartDashboard/ResetDistanceCommand"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ P",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ P"
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ D",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ D"
+            }
+          },
+          "0,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ Max Output",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ Max Output"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ Min Output",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ Min Output"
             }
           }
         }
