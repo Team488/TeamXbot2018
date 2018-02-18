@@ -13,7 +13,7 @@ import competition.subsystems.elevator.commands.ControlElevatorViaJoystickComman
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.lean.LeanSubsystem;
-import competition.subsystems.lean.commands.StopLeaningCommand;
+import competition.subsystems.lean.commands.LeanWithJoystickCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
@@ -28,11 +28,9 @@ public class SubsystemDefaultCommandMap {
     public void setupDriveSubsystem(DriveSubsystem driveSubsystem, ArcadeDriveWithJoysticksCommand command) {
         driveSubsystem.setDefaultCommand(command);
     }
-    
+
     @Inject
-    public void setupElevatorSubsystem(
-            ElectricalContract2018 contract,
-            ElevatorSubsystem elevator,
+    public void setupElevatorSubsystem(ElectricalContract2018 contract, ElevatorSubsystem elevator,
             ControlElevatorViaJoystickCommand controlWithJoystick) {
         if (contract.elevatorReady()) {
             elevator.setDefaultCommand(controlWithJoystick);
@@ -40,39 +38,31 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupClimberDeploySubsystem(
-            ElectricalContract2018 contract, 
-            ClimberDeploySubsystem climberdeploySubsystem,
-            StopClimberArmCommand command) {
+    public void setupClimberDeploySubsystem(ElectricalContract2018 contract,
+            ClimberDeploySubsystem climberdeploySubsystem, StopClimberArmCommand command) {
         if (contract.climbDeployReady()) {
             climberdeploySubsystem.setDefaultCommand(command);
         }
     }
 
     @Inject
-    public void setupWristSubsystem(
-            ElectricalContract2018 contract,
-            WristSubsystem wristSubsystem,
+    public void setupWristSubsystem(ElectricalContract2018 contract, WristSubsystem wristSubsystem,
             WristControlViaJoysticksCommand command) {
         if (contract.wristReady()) {
-            wristSubsystem.setDefaultCommand(command); 
+            wristSubsystem.setDefaultCommand(command);
         }
     }
 
     @Inject
-    public void setupLeanSubsystem(
-            ElectricalContract2018 contract,
-            LeanSubsystem leanSubsystem, 
-            StopLeaningCommand command) {
+    public void setupLeanSubsystem(ElectricalContract2018 contract, LeanSubsystem leanSubsystem,
+            LeanWithJoystickCommand command) {
         if (contract.climbLeanReady()) {
             leanSubsystem.setDefaultCommand(command);
         }
     }
 
     @Inject
-    public void setupGripperSubsystem(
-            ElectricalContract2018 contract,
-            GripperIntakeSubsystem gripperSubsystem, 
+    public void setupGripperSubsystem(ElectricalContract2018 contract, GripperIntakeSubsystem gripperSubsystem,
             GripperStopCommand command) {
         if (contract.collectorReady()) {
             gripperSubsystem.setDefaultCommand(command);
@@ -80,9 +70,7 @@ public class SubsystemDefaultCommandMap {
     }
 
     @Inject
-    public void setupShiftSubsytem(
-            ShiftSubsystem shiftSubsystem, 
-            ShiftLowCommand command) {
+    public void setupShiftSubsytem(ShiftSubsystem shiftSubsystem, ShiftLowCommand command) {
         shiftSubsystem.setDefaultCommand(command);
     }
 }

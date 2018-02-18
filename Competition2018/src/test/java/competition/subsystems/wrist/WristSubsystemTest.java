@@ -44,13 +44,13 @@ public class WristSubsystemTest extends BaseCompetitionTest {
     
     @Test
     public void testCalibrationPoints() {
-        ((MockCANTalon)wrist.motor).setPosition(0);
+        ((MockCANTalon)wrist.motor).setPosition(10);
         wrist.calibrateHere();
         
-        assertEquals(0, wrist.getLowerLimitInTicks(), 0.001);
+        assertEquals(10, wrist.getUpperLimitInTicks(), 0.001);
         assertEquals(
-                contract.getWristMaximumAngle()*wrist.getWristTicksPerDegree(), 
-                wrist.getUpperLimitInTicks(), 
+                wrist.getUpperLimitInTicks() - (contract.getWristMaximumAngle()*wrist.getWristTicksPerDegree()), 
+                wrist.getLowerLimitInTicks(), 
                 0.001);
     }
     

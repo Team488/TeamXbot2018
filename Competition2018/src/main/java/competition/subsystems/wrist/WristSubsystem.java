@@ -28,7 +28,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     final BooleanProperty wristCalibratedProp;
     final DoubleProperty wristUncalibratedPowerProp;
     
-    int offset;
+    int lowerLimit;
     int upperLimit;
     boolean calibrated = false;
 
@@ -36,12 +36,12 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     WristSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        defaultWristPower = propMan.createPersistentProperty("Wrist Default Power", 1);
+        defaultWristPower = propMan.createPersistentProperty(getPrefix()+"Wrist Default Power", 1);
         
-        currentWristAngleProp = propMan.createEphemeralProperty("Wrist Current Angle", 0.0);
-        wristTicksPerDegreeProp = propMan.createPersistentProperty("Wrist ticks per degree", 1);
-        wristCalibratedProp = propMan.createEphemeralProperty("Wrist Calibrated", false);
-        wristUncalibratedPowerProp = propMan.createPersistentProperty("Wrist calibration power", 0.3);
+        currentWristAngleProp = propMan.createEphemeralProperty(getPrefix()+"Wrist Current Angle", 0.0);
+        wristTicksPerDegreeProp = propMan.createPersistentProperty(getPrefix()+"Wrist ticks per degree", 1);
+        wristCalibratedProp = propMan.createEphemeralProperty(getPrefix()+"Wrist Calibrated", false);
+        wristUncalibratedPowerProp = propMan.createPersistentProperty(getPrefix()+"Wrist calibration power", 0.3);
         
         if (contract.wristReady()) {
             initializeMotor();
@@ -57,7 +57,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     }
     
     public int getLowerLimitInTicks() {
-        return offset;
+        return lowerLimit;
     }
     
     public int getUpperLimitInTicks() {
@@ -67,7 +67,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private void initializeMotor() {
         motor = clf.createCANTalon(contract.getWristMaster().channel);
         motor.setInverted(contract.getWristMaster().inverted);
-        motor.createTelemetryProperties("Wrist");
+        motor.createTelemetryProperties(getPrefix(), "Motor");
         
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(contract.getWristEncoder().inverted);
@@ -90,21 +90,28 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
         return calibrated;
     }
     
-    public void calibrateAt(int lowestPosition) {
-        log.info("Calibrating wrist at position: " + lowestPosition);
-        offset = lowestPosition;
+    public void calibrateAt(int highestPosition) {
+        log.info("Calibrating wrist at " + highestPosition);
+        upperLimit = highestPosition;
         calibrated = true;
         
-        motor.configReverseSoftLimitThreshold(offset, 0);
-        
-        // calculate the upper limit and set safeties.
-        int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
-        upperLimit = lowestPosition + tickRange;
-        
-        log.info("Upper limit set at: " + upperLimit);
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
-        
         setSoftLimitsEnabled(true);
+        
+        // calculate lower limit and set safeties
+        int tickRange = (int)(contract.getWristMaximumAngle() * wristTicksPerDegreeProp.get());
+        lowerLimit = highestPosition - tickRange;
+        
+        log.info("Lower limit set at: " + lowerLimit);
+        motor.configReverseSoftLimitThreshold(lowerLimit, 0);
+    }
+    
+    public double getWristAngle() {
+        if (getWristTicksPerDegree() == 0) {
+            return 0;
+        }
+        return ((motor.getSelectedSensorPosition(0) - upperLimit) / getWristTicksPerDegree()) 
+                + contract.getWristMaximumAngle();
     }
     
     public void calibrateHere() {
@@ -158,5 +165,6 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     public void updatePeriodicData() {
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
+        currentWristAngleProp.set(getWristAngle());
     }
 }
