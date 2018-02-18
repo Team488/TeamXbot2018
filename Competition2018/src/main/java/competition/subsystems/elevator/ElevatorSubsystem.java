@@ -293,9 +293,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             }
             if(getCurrentHeightInInches() < getHeightNearLowLimit() && getCurrentHeightInInches() > getMinHeightInInches()) {
                 power = MathUtils.constrainDouble(power, getPowerNearLowLimit(), 1);
+                reason = ElevatorPowerRestrictionReason.NearMinHeight;
             }
             if(getCurrentHeightInInches() > getHeightNearHighLimit() && getCurrentHeightInInches() < getMaxHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
+                reason = ElevatorPowerRestrictionReason.NearMaxHeight;
             }
         }
 
