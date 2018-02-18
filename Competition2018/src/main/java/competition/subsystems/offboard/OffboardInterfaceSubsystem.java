@@ -30,7 +30,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     public static final double METERS_PER_INCH = 0.0254;
     
     private final Queue<OffboardCommunicationPacket> incomingPacketQueue = new LinkedList<>();
-    private final int PACKET_QUEUE_MAX_LENGTH = 25;
+    private static final int PACKET_QUEUE_MAX_LENGTH = 25;
     
     private final DriveSubsystem driveSubsystem;
     private final XOffboardCommsInterface rawCommsInterface;
@@ -46,7 +46,11 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     private DoubleProperty targetCubeZProp;
     
     @Inject
-    public OffboardInterfaceSubsystem(XPropertyManager propManager, DriveSubsystem driveSubsystem, PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
+    public OffboardInterfaceSubsystem(
+                XPropertyManager propManager,
+                DriveSubsystem driveSubsystem,
+                PoseSubsystem poseSubsystem,
+                XOffboardCommsInterface commsInterface) {
         log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
@@ -148,7 +152,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         
         if (numPacketsDropped > 0 && this.getCurrentCommand() != null) {
             // TODO: this.getCurrentCommand() instanceof OffboardProcessingCommand
-            log.warn(numPacketsDropped + " offboard comms packets dropped from queue while command is running; all commands running on the offboard subsystem should process incoming packets.");
+            log.warn(numPacketsDropped + " offboard comms packets dropped from queue while command is running;"
+                    + " all commands running on the offboard subsystem should process incoming packets.");
         }
     }
 }

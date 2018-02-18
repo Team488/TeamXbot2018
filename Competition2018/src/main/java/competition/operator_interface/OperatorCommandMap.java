@@ -145,11 +145,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-    	oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+        oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
     
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVel) {
+    public void setupVisionCommands(
+                OperatorInterface oi,
+                AcquireVisibleCubeCommand acquireCube,
+                NavToTestGoalCommand testNav,
+                DriveAtVelocityInfinitelyCommand driveAtVel) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
         driveAtVel.includeOnSmartDashboard();
