@@ -1,4 +1,4 @@
-package competition.subsystems.drive.commands;
+package competition.subsystems.drive.command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -7,19 +7,20 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
 
-public class AssistedTankDriveCommandTest extends BaseCompetitionTest {
+public class ArcadeDriveWithJoysticksCommandTest extends BaseCompetitionTest {
 
-    AssistedTankDriveCommand command;
+    ArcadeDriveWithJoysticksCommand command;
     DriveSubsystem drive;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        command = injector.getInstance(AssistedTankDriveCommand.class);
+        command = injector.getInstance(ArcadeDriveWithJoysticksCommand.class);
         drive = injector.getInstance(DriveSubsystem.class);
     }
 
@@ -30,13 +31,14 @@ public class AssistedTankDriveCommandTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void weakTest() {
-        // the HeadingAssistModule is already well-tested - we just need to make sure
-        // it's been invoked in some way.
+    public void test() {
         command.initialize();
 
-        ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(0, 1));       
-        ((MockFTCGamepad) oi.driverGamepad).setRightStick(new XYPair(0, 1));
+        assertEquals(0, drive.leftMaster.getMotorOutputPercent(), 0.001);
+        assertEquals(0, drive.rightMaster.getMotorOutputPercent(), 0.001);
+
+
+        ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(1, 1));   
 
         command.execute();
 
@@ -52,5 +54,6 @@ public class AssistedTankDriveCommandTest extends BaseCompetitionTest {
 
         assertEquals(1, drive.leftMaster.getMotorOutputPercent(), 0.001);
         assertTrue(drive.rightMaster.getMotorOutputPercent() < 0.5);
+
     }
 }

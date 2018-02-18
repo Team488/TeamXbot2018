@@ -17,7 +17,7 @@ public class ExperimentMotionMagicCommand extends BaseCommand {
     public ExperimentMotionMagicCommand(ElevatorSubsystem elevator, XPropertyManager propMan) {
         this.elevator = elevator;
         this.requires(elevator);
-        goalHeight = propMan.createPersistentProperty("Experimental MM Goal Height", 3);
+        goalHeight = propMan.createPersistentProperty(getPrefix() + "Experimental MM Goal Height", 3);
     }
     
     @Override
