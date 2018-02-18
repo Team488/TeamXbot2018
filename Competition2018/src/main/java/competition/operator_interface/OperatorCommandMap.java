@@ -79,6 +79,26 @@ public class OperatorCommandMap {
         setHeading.setHeadingToApply(90);
         setHeading.includeOnSmartDashboard();
     }
+    
+    @Inject
+    public void simpleDriveCommandStartToOuterCloseSwitch(PurePursuitCommand pursuit) {
+        pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(1*12, 4*12), new ContiguousHeading(60)));
+        pursuit.addPoint(new FieldPose(new XYPair(1.7*12, 6*12), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(2.3*12, 9.5*12), new ContiguousHeading(120)));
+        pursuit.addPoint(new FieldPose(new XYPair(1.3*12, 12.5*12), new ContiguousHeading(150)));
+        pursuit.addPoint(new FieldPose(new XYPair(-2*12, 13*12), new ContiguousHeading(180)));
+        pursuit.includeOnSmartDashboard("Outer close switch");
+    }
+    @Inject
+    public void simpleDriveCommandStartToInnerCloseSwitch(PurePursuitCommand pursuit) {
+        pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(-1.7*12, 2.6*12), new ContiguousHeading(135)));
+        pursuit.addPoint(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));
+        pursuit.addPoint(new FieldPose(new XYPair(-5.11*12, 9.5*12), new ContiguousHeading(90)));
+
+        pursuit.includeOnSmartDashboard("Inner close switch");
+    }
 
     @Inject
     public void setupShiftGearCommand(OperatorInterface oi, ShiftHighCommand shiftHigh, ShiftLowCommand shiftLow) {
