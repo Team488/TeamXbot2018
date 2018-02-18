@@ -40,6 +40,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         NearMinHeight,
     }
     
+    public enum ElevatorGoal {
+        PickUpHeight, Switch, ScaleLow, ScaleMid, ScaleHigh
+    }
+    
     final StringProperty elevatorRestrictionReasonProp;
     
     double defaultElevatorPower;
