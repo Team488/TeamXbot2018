@@ -1,23 +1,20 @@
 package competition.commandgroups;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
-import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristUpCommand;
 import edu.wpi.first.wpilibj.MockTimer;
+import xbot.common.command.XScheduler;
 
 public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
 
+    XScheduler XScheduler;
     AutoPutCubeOnScaleCommandGroup command;
     DriveSubsystem drive;
     WristSubsystem wrist;
@@ -34,11 +31,14 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         this.mockTimer = injector.getInstance(MockTimer.class);
         this.wrist = injector.getInstance(WristSubsystem.class);
         this.command = injector.getInstance(AutoPutCubeOnScaleCommandGroup.class);
+        this.XScheduler = injector.getInstance(XScheduler.class);
     }
     
     @Test
     public void unityTest() {
-        command.initialize();
+        command.start();
+        XScheduler.run();
+        assertEquals(1, drive.leftMaster.getMotorOutputPercent(), 0.001);
        
     }
     
