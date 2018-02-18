@@ -60,6 +60,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
 
+    final DoubleProperty powerNearLowLimit;
+    final DoubleProperty powerNearHighLimit;
+    final DoubleProperty heightNearHighLimit;
+    final DoubleProperty heightNearLowLimit;
     final DoubleProperty talonMaxVelocity;
     final DoubleProperty talonMaxAcceleration;
     final DoubleProperty maxHeightInInches;
@@ -114,6 +118,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         talonMaxAcceleration = propMan.createPersistentProperty(getPrefix()+"Max Accleration", 1400);
         elevatorRestrictionReasonProp = propMan.createEphemeralProperty(getPrefix()+"Restriction Reason", "Waiting to run...");
         calibratedProp = propMan.createEphemeralProperty(getPrefix()+"Calibrated", false);
+        heightNearLowLimit = propMan.createPersistentProperty(getPrefix()+"Height Near Low Limit", minHeightInInches.get() + 10);
+        heightNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Height Near High Limit", maxHeightInInches.get() - 10);
+        powerNearLowLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near Low Limit", 0.3);
+        powerNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near High Limit", 0.3);
         positionalPid = pf.createPIDManager(getPrefix()+"Position", 1, 0, 0);
         calibrationOffset = 0.0;
         
@@ -283,6 +291,14 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
                 power = MathUtils.constrainDouble(power, 0, 1);
                 reason = ElevatorPowerRestrictionReason.BelowMinHeight;
             }
+            if(getCurrentHeightInInches() < getHeightNearLowLimit() && getCurrentHeightInInches() > getMinHeightInInches()) {
+                power = MathUtils.constrainDouble(power, -getPowerNearLowLimit(), 1);
+                reason = ElevatorPowerRestrictionReason.NearMinHeight;
+            }
+            if(getCurrentHeightInInches() > getHeightNearHighLimit() && getCurrentHeightInInches() < getMaxHeightInInches()) {
+                power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
+                reason = ElevatorPowerRestrictionReason.NearMaxHeight;
+            }
         }
 
         motor.simpleSet(power);
@@ -291,6 +307,21 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     
     public void insanelyDangerousSetPower(double power) {
         motor.simpleSet(power);
+    }
+   
+    public double getPowerNearLowLimit() {
+        return powerNearLowLimit.get();
+    }
+    public double getPowerNearHighLimit() {
+        return powerNearHighLimit.get();
+    }
+    
+    public double getHeightNearLowLimit() {
+        return heightNearLowLimit.get();
+    }
+    
+    public double getHeightNearHighLimit() {
+        return heightNearHighLimit.get();
     }
 
     
@@ -423,6 +454,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public double getTargetPickUpHeight() {
         return targetPickUpHeight.get();
+    }
+
+    public double getLowerLimitInTicks() {
+        return calibrationOffset;
     }
     
     public PIDManager getPositionalPid() {

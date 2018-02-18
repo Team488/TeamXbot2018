@@ -106,6 +106,14 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
         motor.configReverseSoftLimitThreshold(lowerLimit, 0);
     }
     
+    public double getWristAngle() {
+        if (getWristTicksPerDegree() == 0) {
+            return 0;
+        }
+        return ((motor.getSelectedSensorPosition(0) - upperLimit) / getWristTicksPerDegree()) 
+                + contract.getWristMaximumAngle();
+    }
+    
     public void calibrateHere() {
         calibrateAt(motor.getSelectedSensorPosition(0));
     }
@@ -157,5 +165,6 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     public void updatePeriodicData() {
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
+        currentWristAngleProp.set(getWristAngle());
     }
 }
