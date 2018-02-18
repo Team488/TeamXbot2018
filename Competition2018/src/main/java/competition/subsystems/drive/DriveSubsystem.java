@@ -94,8 +94,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
-        this.leftPidManager = pf.createPIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
-        this.rightPidManager = pf.createPIDManager("Drive velocity (local)", propManager, assertionManager, 0, 0, 0, 0, 1, -1);
+        this.leftPidManager = pf.createPIDManager(getPrefix()+"Drive velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.rightPidManager = pf.createPIDManager(getPrefix()+"Drive velocity (local)", 0, 0, 0, 0, 1, -1);
 
     }
 

@@ -18,7 +18,7 @@ public class TargetCubeInfo {
      */
     public final double zInches;
 
-    public TargetCubeInfo(double xInches, double xInches, double xInches) {
+    public TargetCubeInfo(double xInches, double yInches, double zInches) {
         this.xInches = xInches;
         this.yInches = yInches;
         this.zInches = zInches;
