@@ -11,16 +11,13 @@ import competition.subsystems.drive.DriveSubsystem;
 public class RotateToHeadingCommand extends BaseCommand{
 
     double goal;
-    final PIDManager pid;
     HeadingModule headingModule;
     DriveSubsystem drive;
     
     @Inject
     public RotateToHeadingCommand(CommonLibFactory clf, PIDFactory pf,  DriveSubsystem drive) {
         this.drive = drive;
-        pid = pf.createPIDManager("Goal Heading", 1, 0, 0);
-        pid.setErrorThreshold(0.01);
-        headingModule = clf.createHeadingModule(pid);      
+        headingModule = clf.createHeadingModule(drive.getRotateToHeadingPid());  
     }
 
     @Override
