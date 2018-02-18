@@ -7,6 +7,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseRobot;
 import xbot.common.properties.DoubleProperty;
 
@@ -24,10 +25,16 @@ public class Robot extends BaseRobot {
         super.initializeSystems();
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
+        ElectricalContract2018 contract = this.injector.getInstance(ElectricalContract2018.class);
 
-        periodicDataSources.add(this.injector.getInstance(DriveSubsystem.class));
-        periodicDataSources.add(this.injector.getInstance(PoseSubsystem.class));
-        periodicDataSources.add(this.injector.getInstance(OffboardInterfaceSubsystem.class));
-        //periodicDataSources.add(this.injector.getInstance(ElevatorSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(OffboardInterfaceSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
+        if (contract.elevatorReady()) {
+            registerPeriodicDataSource(this.injector.getInstance(ElevatorSubsystem.class)); 
+        }        
+        if (contract.wristReady()) {
+            registerPeriodicDataSource(this.injector.getInstance(WristSubsystem.class));
+        }
     }
 }

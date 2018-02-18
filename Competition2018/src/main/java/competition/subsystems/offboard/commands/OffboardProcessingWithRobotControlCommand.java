@@ -22,30 +22,46 @@ public abstract class OffboardProcessingWithRobotControlCommand extends Offboard
         this.requires(elevatorSubsystem);
     }
     
+    @Override
+    public void initialize() {
+        super.initialize();
+        this.driveSubsystem.resetVelocityAccum();
+    }
+    
     protected abstract void handleIncomingNonDrivePacket(OffboardCommunicationPacket packet);
     
     @Override
     protected void handleIncomingPacket(OffboardCommunicationPacket packet) {
         if(packet.packetType == OffboardCommsConstants.PACKET_TYPE_DRIVE_POWER_COMMAND) {
-            DrivePowerCommandPacket drivePacket = DrivePowerCommandPacket.parse(packet.data);
-            if (drivePacket.commandId == this.commandId) {
-                // TODO: Log occasionally
-                this.driveSubsystem.drive(drivePacket.leftPower, drivePacket.rightPower);
+            try {
+                DrivePowerCommandPacket drivePacket = DrivePowerCommandPacket.parse(packet.data);
+                if (drivePacket.commandId == this.commandId) {
+                    // TODO: Log occasionally
+                    this.driveSubsystem.drive(drivePacket.leftPower, drivePacket.rightPower);
+                }
+                else {
+                    log.warn("Received \"drive power command\" packet for command which is not currently running");
+                }
             }
-            else {
-                log.warn("Received \"drive power command\" packet for command which is not currently running");
+            catch (IllegalArgumentException e) {
+                log.warn("Drive power command packet failed to parse");
             }
         }
         else if(packet.packetType == OffboardCommsConstants.PACKET_TYPE_DRIVE_VEL_COMMAND) {
-            DriveVelCommandPacket drivePacket = DriveVelCommandPacket.parse(packet.data);
-            if (drivePacket.commandId == this.commandId) {
-                // TODO: Log occasionally
-                double leftVelocityInchesPerSecond = drivePacket.leftVelocityMetersPerSecond / OffboardInterfaceSubsystem.METERS_PER_INCH;
-                double rightVelocityInchesPerSecond = drivePacket.rightVelocityMetersPerSecond / OffboardInterfaceSubsystem.METERS_PER_INCH;
-                this.driveSubsystem.driveTankVelocity(leftVelocityInchesPerSecond, rightVelocityInchesPerSecond);
+            try {
+                DriveVelCommandPacket drivePacket = DriveVelCommandPacket.parse(packet.data);
+                if (drivePacket.commandId == this.commandId) {
+                    // TODO: Log occasionally
+                    double leftVelocityInchesPerSecond = drivePacket.leftVelocityMetersPerSecond / OffboardInterfaceSubsystem.METERS_PER_INCH;
+                    double rightVelocityInchesPerSecond = drivePacket.rightVelocityMetersPerSecond / OffboardInterfaceSubsystem.METERS_PER_INCH;
+                    this.driveSubsystem.driveTankVelocity(leftVelocityInchesPerSecond, rightVelocityInchesPerSecond);
+                }
+                else {
+                    log.warn("Received \"drive velocity command\" packet for command which is not currently running");
+                }
             }
-            else {
-                log.warn("Received \"drive velocity command\" packet for command which is not currently running");
+            catch (IllegalArgumentException e) {
+                log.warn("Drive velocity command packet failed to parse");
             }
         }
         else if(packet.packetType == OffboardCommsConstants.PACKET_TYPE_ELEVATOR_POSITION_COMMAND) {

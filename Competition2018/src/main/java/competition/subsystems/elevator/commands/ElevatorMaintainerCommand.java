@@ -3,20 +3,36 @@ package competition.subsystems.elevator.commands;
 import xbot.common.command.BaseCommand;
 import xbot.common.math.PIDFactory;
 import competition.subsystems.elevator.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.Timer;
+
 import com.google.inject.Inject;
 import xbot.common.math.PIDManager;
+import xbot.common.properties.BooleanProperty;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.XPropertyManager;
+import competition.operator_interface.OperatorInterface;
 
 public class ElevatorMaintainerCommand extends BaseCommand {
 
+    public enum MaintinerMode {
+        Calibrating, GaveUp, Calibrated
+    }
+
+    OperatorInterface oi;
     ElevatorSubsystem elevator;
-    PIDManager pid;
+    double giveUpCalibratingTime;
+    final BooleanProperty motionMagicEnabled;
+    final DoubleProperty elevatorCalibrationAttemptTimeMS;
 
     @Inject
-    public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf) {
+    public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf, XPropertyManager propMan,
+            OperatorInterface oi) {
+        elevatorCalibrationAttemptTimeMS = propMan
+                .createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
+        motionMagicEnabled = propMan.createPersistentProperty(getPrefix() + "Motion Magic Enabled", false);
         this.elevator = elevator;
         this.requires(elevator);
-        pid = pf.createPIDManager("Elevator", 1, 0, 0);
-        pid.setErrorThreshold(0.1);
+        this.oi = oi;
     }
 
     @Override
@@ -24,16 +40,38 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         log.info("Initializing");
         if (!elevator.isCalibrated()) {
             log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
+            giveUpCalibratingTime = Timer.getFPGATimestamp() + elevatorCalibrationAttemptTimeMS.get();
+            log.info("Attempting calibration from " + Timer.getFPGATimestamp() + " until " + giveUpCalibratingTime);
         }
     }
 
     @Override
     public void execute() {
+        MaintinerMode currentMode = MaintinerMode.Calibrating;
+
         if (elevator.isCalibrated()) {
-            double power = pid.calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
-            elevator.setPower(power);
+            currentMode = MaintinerMode.Calibrated;
+        } else if (Timer.getFPGATimestamp() < giveUpCalibratingTime) {
+            currentMode = MaintinerMode.Calibrating;
         } else {
-            elevator.stop();
+            currentMode = MaintinerMode.GaveUp;
         }
+
+        if (currentMode == MaintinerMode.Calibrated) {
+            if (motionMagicEnabled.get() == true) {
+                elevator.motionMagicToHeight(elevator.getTargetHeight());
+            } else {
+                elevator.setPower(elevator.getPositionalPid().calculate(elevator.getTargetHeight(),
+                        elevator.getCurrentHeightInInches()));
+            }
+        } else if (currentMode == MaintinerMode.Calibrating) {
+            elevator.lower();
+        } else if (currentMode == MaintinerMode.GaveUp) {
+            elevator.setPower(oi.operatorGamepad.getRightStickY());
+        }
+    }
+
+    public void isMotionMagicMode(boolean x) {
+        motionMagicEnabled.set(x);
     }
 }
