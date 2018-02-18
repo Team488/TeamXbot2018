@@ -33,7 +33,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             PIDFactory pf, 
             XPropertyManager propMan, 
             OperatorInterface oi) {
-        elevatorCalibrationAttemptTimeMS = propMan.createPersistentProperty("Calibration attempt time (ms)", 4000);
+        elevatorCalibrationAttemptTimeMS = propMan.createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
         motionMagic = propMan.createPersistentProperty("Motion Magic Mode", false);
         this.elevator = elevator;
         this.requires(elevator);
