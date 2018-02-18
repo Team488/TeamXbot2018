@@ -36,12 +36,12 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     WristSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        defaultWristPower = propMan.createPersistentProperty("Wrist Default Power", 1);
+        defaultWristPower = propMan.createPersistentProperty(getPrefix()+"Wrist Default Power", 1);
         
-        currentWristAngleProp = propMan.createEphemeralProperty("Wrist Current Angle", 0.0);
-        wristTicksPerDegreeProp = propMan.createPersistentProperty("Wrist ticks per degree", 1);
-        wristCalibratedProp = propMan.createEphemeralProperty("Wrist Calibrated", false);
-        wristUncalibratedPowerProp = propMan.createPersistentProperty("Wrist calibration power", 0.3);
+        currentWristAngleProp = propMan.createEphemeralProperty(getPrefix()+"Wrist Current Angle", 0.0);
+        wristTicksPerDegreeProp = propMan.createPersistentProperty(getPrefix()+"Wrist ticks per degree", 1);
+        wristCalibratedProp = propMan.createEphemeralProperty(getPrefix()+"Wrist Calibrated", false);
+        wristUncalibratedPowerProp = propMan.createPersistentProperty(getPrefix()+"Wrist calibration power", 0.3);
         
         if (contract.wristReady()) {
             initializeMotor();
@@ -67,7 +67,7 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
     private void initializeMotor() {
         motor = clf.createCANTalon(contract.getWristMaster().channel);
         motor.setInverted(contract.getWristMaster().inverted);
-        motor.createTelemetryProperties("Wrist");
+        motor.createTelemetryProperties(getPrefix(), "Motor");
         
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(contract.getWristEncoder().inverted);
