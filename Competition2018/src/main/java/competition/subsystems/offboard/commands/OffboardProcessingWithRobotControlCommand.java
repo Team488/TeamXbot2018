@@ -1,19 +1,25 @@
 package competition.subsystems.offboard.commands;
 
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.offboard.OffboardCommsConstants;
 import competition.subsystems.offboard.OffboardCommunicationPacket;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.packets.DrivePowerCommandPacket;
 import competition.subsystems.offboard.packets.DriveVelCommandPacket;
+import competition.subsystems.offboard.packets.ElevatorPositionCommandPacket;
 
 public abstract class OffboardProcessingWithRobotControlCommand extends OffboardProcessingCommand {
-    private final DriveSubsystem driveSubsystem;
     
-    protected OffboardProcessingWithRobotControlCommand(int commandId, OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem) {
+	private final DriveSubsystem driveSubsystem;
+    private final ElevatorSubsystem elevatorSubsystem;
+	
+    protected OffboardProcessingWithRobotControlCommand(int commandId, OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem) {
         super(commandId, offboardSubsystem);
         this.driveSubsystem = driveSubsystem;
         this.requires(driveSubsystem);
+        this.elevatorSubsystem = elevatorSubsystem;
+        this.requires(elevatorSubsystem);
     }
     
     protected abstract void handleIncomingNonDrivePacket(OffboardCommunicationPacket packet);
@@ -40,6 +46,16 @@ public abstract class OffboardProcessingWithRobotControlCommand extends Offboard
             }
             else {
                 log.warn("Received \"drive velocity command\" packet for command which is not currently running");
+            }
+        }
+        else if(packet.packetType == OffboardCommsConstants.PACKET_TYPE_ELEVATOR_POSITION_COMMAND) {
+            ElevatorPositionCommandPacket elevatorPacket = ElevatorPositionCommandPacket.parse(packet.data);
+            if (elevatorPacket.commandId == this.commandId) {
+                // TODO: Log occasionally
+                this.elevatorSubsystem.setTargetHeight(elevatorPacket.elevatorGoal);
+            }
+            else {
+                log.warn("Received \"set elevator position command\" packet for command which is not currently running");
             }
         }
         else {

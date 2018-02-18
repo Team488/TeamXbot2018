@@ -2,6 +2,8 @@ package competition.subsystems.offboard.packets;
 
 import org.apache.log4j.Logger;
 
+import competition.subsystems.elevator.ElevatorSubsystem.ElevatorGoal;
+
 public class ElevatorPositionCommandPacket {
 	
 	private static Logger log = Logger.getLogger(ElevatorPositionCommandPacket.class);
@@ -9,15 +11,11 @@ public class ElevatorPositionCommandPacket {
 	public final int commandId;
 	public final ElevatorGoal elevatorGoal;
 	
-	public enum ElevatorGoal {
-		PowerCubeGround, Switch, ScaleLow, ScaleMid, ScaleHigh
-	}
-	
 	public ElevatorPositionCommandPacket(byte[] packetData) {
 		this.commandId = packetData[0] & 0xFF;
 		
 		switch (packetData[1]) {
-			case 1: this.elevatorGoal = ElevatorGoal.PowerCubeGround;
+			case 1: this.elevatorGoal = ElevatorGoal.PickUpHeight;
 				break;
 			case 2: this.elevatorGoal = ElevatorGoal.Switch;
 				break;

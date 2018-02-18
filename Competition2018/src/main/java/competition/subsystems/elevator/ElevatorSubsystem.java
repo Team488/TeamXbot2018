@@ -19,7 +19,7 @@ import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ElevatorSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
-
+    
     double defaultElevatorPower;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
@@ -172,6 +172,21 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public void setTargetHeight(double height) {
         elevatorTargetHeight.set(height);
+    }
+    
+    public void setTargetHeight(ElevatorGoal elevatorGoal) {
+    	switch (elevatorGoal) {
+    	    case PickUpHeight: setTargetHeight(targetPickUpHeight.get());
+    	        break;
+    	    case Switch: setTargetHeight(targetSwitchDropHeight.get());
+    	        break;
+    	    case ScaleLow: //No Known Height ATM
+    	        break;
+    	    case ScaleMid: setTargetHeight(targetScaleMidHeight.get());
+    	        break;
+    	    case ScaleHigh: setTargetHeight(targetScaleHighHeight.get());
+    	        break;
+    	}
     }
 
     public double getTargetHeight() {
