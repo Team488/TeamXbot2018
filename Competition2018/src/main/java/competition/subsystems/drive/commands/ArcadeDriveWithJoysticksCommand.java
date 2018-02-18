@@ -35,11 +35,11 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     @Override
     public void execute() {
 
-        double left = oi.driverGamepad.getLeftVector().y;
-        double right = oi.driverGamepad.getLeftVector().x;
-        double yTranslate = (left+right) / 2;
-        double turn = ham.calculateHeadingPower((right-left)/2);
-        driveSubsystem.drive(new XYPair(0, yTranslate), turn);
+        double translate = oi.driverGamepad.getLeftVector().y;
+        double rotate = oi.driverGamepad.getRightVector().x;
+                
+        double turn = ham.calculateHeadingPower(rotate);
+        driveSubsystem.drive(new XYPair(0, translate), turn);
     }
 
 }
