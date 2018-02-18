@@ -33,7 +33,6 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     private final int PACKET_QUEUE_MAX_LENGTH = 25;
     
     private final DriveSubsystem driveSubsystem;
-    private final PoseSubsystem poseSubsystem;
     private final XOffboardCommsInterface rawCommsInterface;
 
     private Double lastWheelOdomSend = null;
@@ -51,14 +50,12 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
-        this.poseSubsystem = poseSubsystem;
         this.rawCommsInterface = commsInterface;
         
         hasTargetCubeProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Has target?", false);
         targetCubeXProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/X", 0);
         targetCubeYProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Y", 0);
-        targetCubeZProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/X", 0);
-
+        targetCubeZProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Z", 0);
     }
     
     private void sendWheelOdomUpdate() {

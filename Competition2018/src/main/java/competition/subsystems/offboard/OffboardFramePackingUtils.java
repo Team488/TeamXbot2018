@@ -5,8 +5,7 @@ public class OffboardFramePackingUtils {
     public static byte[] packWheelOdomFrame(double leftDriveDelta, double rightDriveDelta, double timeDelta) {
         short leftDriveDeltaInteger = (short)(leftDriveDelta * 1_000);
         short rightDriveDeltaInteger = (short)(rightDriveDelta * 1_000);
-        // TODO: check for time overflow
-        // TODO: unsigned
+        // TODO: Make this unsigned
         short timeDeltaInteger = (short)(timeDelta * 10_000);
         
         return new byte[] {

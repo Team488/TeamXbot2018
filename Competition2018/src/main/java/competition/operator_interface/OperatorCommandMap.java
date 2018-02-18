@@ -12,7 +12,7 @@ import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import competition.subsystems.drive.commands.AssistedTankDriveCommand;
-import competition.subsystems.drive.commands.DriveAtVelocityCommand;
+import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
@@ -137,10 +137,10 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
             ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm) {
-        //oi.driverGamepad.getifAvailable(1).whileHeld(extendArm);
-        //oi.driverGamepad.getifAvailable(2).whileHeld(retractArm);
-        //oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
-        //oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
+        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm);
+        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm);
+        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
+        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
     }
 
     @Inject
@@ -149,11 +149,10 @@ public class OperatorCommandMap {
     }
     
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav, DriveAtVelocityCommand driveAtVel) {
-        oi.driverGamepad.getifAvailable(3).whilePressedNoRestart(acquireCube);
-        oi.driverGamepad.getifAvailable(1).whilePressedNoRestart(testNav);
-        oi.driverGamepad.getifAvailable(2).whilePressedNoRestart(driveAtVel);
-        //oi.operatorGamepad.getifAvailable(9).whileHeld(collectCube);
+    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube, NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVel) {
+        acquireCube.includeOnSmartDashboard();
+        testNav.includeOnSmartDashboard();
+        driveAtVel.includeOnSmartDashboard();
     }
 
     @Inject

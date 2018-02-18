@@ -52,6 +52,9 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     
     int updateMotorValuesCounter = 0;
 
+    private double leftAccum;
+    private double rightAccum;
+
     public enum Side {
         Left, Right
     }
@@ -211,11 +214,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.rightAccum = 0;
     }
     
-    private double leftAccum, rightAccum;
-    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {        
-        // Talon SRX measures in native units per 100ms, so values in seconds are divided by 10
-        //leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
-        //rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {
         leftAccum += this.leftPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Left));
         rightAccum += this.rightPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Right));
         
