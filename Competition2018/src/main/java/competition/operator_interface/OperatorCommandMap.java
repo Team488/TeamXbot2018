@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.subsystems.autonomous.DriveNowhereCommand;
+import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
