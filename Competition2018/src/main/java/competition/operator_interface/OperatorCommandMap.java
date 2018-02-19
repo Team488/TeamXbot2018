@@ -90,14 +90,29 @@ public class OperatorCommandMap {
         pursuit.addPoint(new FieldPose(new XYPair(-2*12, 13*12), new ContiguousHeading(180)));
         pursuit.includeOnSmartDashboard("Outer close switch");
     }
+    
     @Inject
     public void simpleDriveCommandStartToInnerCloseSwitch(PurePursuitCommand pursuit) {
         pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(-1.7*12, 2.6*12), new ContiguousHeading(135)));
+        pursuit.addPoint(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
         pursuit.addPoint(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));
         pursuit.addPoint(new FieldPose(new XYPair(-5.11*12, 9.5*12), new ContiguousHeading(90)));
 
         pursuit.includeOnSmartDashboard("Inner close switch");
+    }
+    
+    @Inject
+    public void simpleDriveCommandStartToInnerFarSwitch(PurePursuitCommand pursuit) {
+        pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(-1.35*12, 2.5*12), new ContiguousHeading(127.5)));
+        pursuit.addPoint(new FieldPose(new XYPair(-5.35*12, 3*12), new ContiguousHeading(160)));
+        pursuit.addPoint(new FieldPose(new XYPair(-7.35*12, 4*12), new ContiguousHeading(180)));
+        pursuit.addPoint(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
+        pursuit.addPoint(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
+        pursuit.addPoint(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
+        pursuit.addPoint(new FieldPose(new XYPair(-14.6*12, 9.5*12), new ContiguousHeading(90)));
+
+        pursuit.includeOnSmartDashboard("Inner far switch");
     }
 
     @Inject
