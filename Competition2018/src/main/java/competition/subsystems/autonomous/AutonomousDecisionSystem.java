@@ -18,8 +18,11 @@ import xbot.common.math.XYPair;
 @Singleton
 public class AutonomousDecisionSystem extends BaseSubsystem {
 
+    GameDataSource gameData;
+    
     @Inject
-    public AutonomousDecisionSystem() {
+    public AutonomousDecisionSystem(GameDataSource gameData) {
+        this.gameData = gameData;
     }
     
     public Supplier<List<FieldPose>> getAutoPath() {
@@ -27,7 +30,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     }
     
     private List<FieldPose> chooseBestPath() {
-        OwnedSide targetSide = MatchData.getOwnedSide(GameFeature.SWITCH_NEAR);
+        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SWITCH_NEAR);
         
         switch (targetSide) {
         case LEFT:
