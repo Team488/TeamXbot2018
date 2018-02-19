@@ -6,6 +6,7 @@ import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.control_logic.HeadingAssistModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
@@ -36,7 +37,7 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     @Override
     public void execute() {
         double translate = oi.driverGamepad.getLeftVector().y;
-        double rotate = oi.driverGamepad.getRightVector().x;
+        double rotate = MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x);
                 
         double turn = ham.calculateHeadingPower(rotate);
         driveSubsystem.drive(new XYPair(0, translate), turn);
