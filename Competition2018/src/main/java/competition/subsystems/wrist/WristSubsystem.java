@@ -128,7 +128,11 @@ public class WristSubsystem extends BaseSubsystem implements PeriodicDataSource 
                     power, 
                     -wristUncalibratedPowerProp.get(), 
                     wristUncalibratedPowerProp.get());
-        }        
+        } else {
+            if (power < 0) {
+                power /= 5;
+            }
+        }
         
         motor.simpleSet(power);
     }

@@ -1,4 +1,4 @@
-package competition.subsystems.autonomous;
+package competition.subsystems.autonomous.commands;
 
 import com.google.inject.Inject;
 

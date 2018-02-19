@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.subsystems.autonomous.DriveNowhereCommand;
+import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -19,18 +19,16 @@ import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitComma
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
+import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
-import competition.subsystems.wrist.commands.WristDownCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
-import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
-import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
-import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
-import competition.subsystems.wrist.commands.WristUpCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -68,10 +66,10 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
         
-        pursuit.addPoint(new FieldPose(new XYPair(0, 90), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(90, 90), new ContiguousHeading(0)));
-        pursuit.addPoint(new FieldPose(new XYPair(90, 0), new ContiguousHeading(-90)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(-180)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(-45, 90), new ContiguousHeading(180)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 135), new ContiguousHeading(-90)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(-90)));
         
         pursuit.includeOnSmartDashboard();
         
@@ -88,10 +86,13 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, WristDownCommand down, WristUpCommand up,
+    public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
+            GripperRotateCounterClockwiseCommand counterClockwise,
             GripperEjectCommand eject, GripperIntakeCommand intake) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
+        oi.operatorGamepad.getifAvailable(7).whileHeld(counterClockwise);
+        oi.operatorGamepad.getifAvailable(8).whileHeld(clockwise);
     }
 
     @Inject
@@ -142,7 +143,7 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+        //oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
 
     @Inject
