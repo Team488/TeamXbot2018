@@ -18,13 +18,15 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     public XCANTalon rightMotor;
     public XCANTalon leftMotor;
 
-    final DoubleProperty power;
+    final DoubleProperty highPower;
+    final DoubleProperty lowPower;
 
     @Inject
     public GripperIntakeSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        power = propMan.createPersistentProperty(getPrefix()+"Intake Power", 1);
+        highPower = propMan.createPersistentProperty(getPrefix()+"High Power", 1);
+        lowPower = propMan.createPersistentProperty(getPrefix()+"Low Power", 0.3);
 
         if (contract.collectorReady()) {
             initializeMotors();
@@ -42,7 +44,7 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     /**
      * Directly controls motor power
      * 
-     * @param power
+     * @param highPower
      *            -1 intakes, +1 ejects
      */
     public void setPower(double rightPower, double leftPower) {
@@ -51,23 +53,23 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     }
 
     public void eject() {
-        rightMotor.simpleSet(power.get());
-        leftMotor.simpleSet(power.get());
+        rightMotor.simpleSet(lowPower.get());
+        leftMotor.simpleSet(lowPower.get());
     }
 
     public void intake() {
-        rightMotor.simpleSet(power.get() * -1);
-        leftMotor.simpleSet(power.get() * -1);
+        rightMotor.simpleSet(highPower.get() * -1);
+        leftMotor.simpleSet(highPower.get() * -1);
     }
     
     public void rotateClockwise() {
-        rightMotor.simpleSet(power.get());
-        leftMotor.simpleSet(power.get() * -1);
+        rightMotor.simpleSet(highPower.get());
+        leftMotor.simpleSet(highPower.get() * -1);
     }
     
     public void rotateCounterClockwise() {
-        rightMotor.simpleSet(power.get() * -1);
-        leftMotor.simpleSet(power.get());
+        rightMotor.simpleSet(highPower.get() * -1);
+        leftMotor.simpleSet(highPower.get());
     }
 
     public void stop() {
