@@ -23,22 +23,25 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     }
     
     public Supplier<List<FieldPose>> getAutoPath() {
-        // currently assumes we are on the right side of the field
+        return this::chooseBestPath;
+    }
+    
+    private List<FieldPose> chooseBestPath() {
         OwnedSide targetSide = MatchData.getOwnedSide(GameFeature.SWITCH_NEAR);
         
         switch (targetSide) {
         case LEFT:
             log.info("Creating path to Left Switch");
-            return () -> createPathToLeftSwitch();
+            return createPathToLeftSwitch();
         case RIGHT:
             log.info("Creating path to Right Switch");
-            return () -> createPathToRightSwitch();
+            return createPathToRightSwitch();
         case UNKNOWN:
             log.warn("Jaci's library could not parse which side to visit in auto. Going nowhere");
-            return () -> createPathToNowhere();
+            return createPathToNowhere();
         default: 
             log.warn("Somehow no idea where to go. Going nowhere.");
-            return () -> createPathToNowhere();
+            return createPathToNowhere();
         }
     }
     
