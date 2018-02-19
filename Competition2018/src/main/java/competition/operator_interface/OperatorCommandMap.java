@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.subsystems.autonomous.DriveNowhereCommand;
+import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -68,10 +68,10 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
         
-        pursuit.addPoint(new FieldPose(new XYPair(0, 90), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(90, 90), new ContiguousHeading(0)));
-        pursuit.addPoint(new FieldPose(new XYPair(90, 0), new ContiguousHeading(-90)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(-180)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(-45, 90), new ContiguousHeading(180)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 135), new ContiguousHeading(-90)));
+        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(-90)));
         
         pursuit.includeOnSmartDashboard();
         

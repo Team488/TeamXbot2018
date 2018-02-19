@@ -24,7 +24,7 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     public GripperIntakeSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        power = propMan.createPersistentProperty("Gripper Intake Power", 1);
+        power = propMan.createPersistentProperty(getPrefix()+"Intake Power", 1);
 
         if (contract.collectorReady()) {
             initializeMotors();

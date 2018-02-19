@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -22,8 +21,6 @@ import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
-import xbot.common.subsystems.drive.control_logic.HeadingAssistModule;
-import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
 @Singleton
 public class DriveSubsystem extends BaseDriveSubsystem {
@@ -58,9 +55,9 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
         log.info("Creating DriveSubsystem");
         
-        positionalPid = pf.createPIDManager("Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
-        rotateToHeadingPid = pf.createPIDManager("DriveHeading", 4, 0, 0);
-        rotateDecayPid = pf.createPIDManager("DriveDecay", 0, 0, 1);
+        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        rotateToHeadingPid = pf.createPIDManager(getPrefix()+"DriveHeading", 4, 0, 0);
+        rotateDecayPid = pf.createPIDManager(getPrefix()+"DriveDecay", 0, 0, 1);
         
 
         // Default is for 2018 robot design
@@ -68,15 +65,15 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         // (4096 native units/encoder rev) * (3 encoder rev/wheel rev) / (4pi inches/wheel rev) ~= 977.847970356605
         final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
         final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
-        leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet",
+        leftTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"leftDriveTicksPer5Feet",
                 defaultDriveTicksPer5Feet);
-        rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet",
+        rightTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"rightDriveTicksPer5Feet",
                 defaultDriveTicksPer5Feet);
 
-        velocityP = propManager.createPersistentProperty("Drive velocity control P", 0);
-        velocityI = propManager.createPersistentProperty("Drive velocity control I", 0);
-        velocityD = propManager.createPersistentProperty("Drive velocity control D", 0);
-        velocityF = propManager.createPersistentProperty("Drive velocity control F", 0);
+        velocityP = propManager.createPersistentProperty(getPrefix()+"Velocity control P", 0);
+        velocityI = propManager.createPersistentProperty(getPrefix()+"Velocity control I", 0);
+        velocityD = propManager.createPersistentProperty(getPrefix()+"Velocity control D", 0);
+        velocityF = propManager.createPersistentProperty(getPrefix()+"Velocity control F", 0);
 
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
@@ -91,6 +88,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
+        
+        this.setVoltageRamp(0.15);
     }
 
     private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,
@@ -102,7 +101,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
 
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         master.setSensorPhase(sensorPhase);
-        master.createTelemetryProperties(masterName);
+        master.createTelemetryProperties(getPrefix(), masterName);
 
         this.updateMotorPidValues(master);
 
