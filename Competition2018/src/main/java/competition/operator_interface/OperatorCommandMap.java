@@ -19,18 +19,16 @@ import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitComma
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
+import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
-import competition.subsystems.wrist.commands.WristDownCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
-import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
-import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
-import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
-import competition.subsystems.wrist.commands.WristUpCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -88,10 +86,13 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, WristDownCommand down, WristUpCommand up,
+    public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
+            GripperRotateCounterClockwiseCommand counterClockwise,
             GripperEjectCommand eject, GripperIntakeCommand intake) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
+        oi.operatorGamepad.getifAvailable(7).whileHeld(counterClockwise);
+        oi.operatorGamepad.getifAvailable(8).whileHeld(clockwise);
     }
 
     @Inject
@@ -142,7 +143,7 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+        //oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
 
     @Inject
