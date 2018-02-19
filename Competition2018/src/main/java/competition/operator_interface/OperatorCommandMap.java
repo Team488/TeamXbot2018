@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
+import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
@@ -62,7 +63,8 @@ public class OperatorCommandMap {
             TankDriveWithJoysticksCommand simpleTank,
             PurePursuitCommand pursuit,
             ResetDistanceCommand resetDistance,
-            SetRobotHeadingCommand setHeading) {
+            SetRobotHeadingCommand setHeading,
+            DynamicScoreOnSwitchCommandGroup dynamicScore) {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
         
@@ -76,6 +78,8 @@ public class OperatorCommandMap {
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
         setHeading.includeOnSmartDashboard();
+        
+        dynamicScore.includeOnSmartDashboard();
     }
 
     @Inject
