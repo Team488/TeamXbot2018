@@ -28,7 +28,9 @@ import competition.subsystems.gripperintake.commands.GripperRotateClockwiseComma
 import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
+import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
@@ -152,9 +154,22 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
-            WristUncalibrateCommand loseCalibration) {
+            WristUncalibrateCommand loseCalibration,
+            WristMaintainerCommand maintain,
+            SetWristAngleCommand low,
+            SetWristAngleCommand medium,
+            SetWristAngleCommand high) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
+        
+        low.setGoalAngle(0);
+        medium.setGoalAngle(45);
+        high.setGoalAngle(90);
+        
+        oi.operatorGamepad.getPovIfAvailable(270).whenPressed(maintain);
+        oi.operatorGamepad.getPovIfAvailable(0).whenPressed(high);
+        oi.operatorGamepad.getPovIfAvailable(90).whenPressed(medium);
+        oi.operatorGamepad.getPovIfAvailable(180).whenPressed(low);
     }
 
     @Inject
