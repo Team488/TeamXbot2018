@@ -15,7 +15,7 @@ public class CompetitionModule extends RobotModule {
         super.configure();
         this.bind(BasePoseSubsystem.class).to(PoseSubsystem.class);
         this.bind(BaseDriveSubsystem.class).to(DriveSubsystem.class);
-        this.bind(ElectricalContract2018.class).to(Practice2018Robot.class);
+        this.bind(ElectricalContract2018.class).to(Competition2018Robot.class);
         this.bind(GameDataSource.class).to(RealGameDataAdapter.class);
     }
 }
