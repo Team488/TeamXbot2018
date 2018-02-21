@@ -132,6 +132,21 @@ public class OperatorCommandMap {
 
         pursuit.includeOnSmartDashboard("Outer close scale");
     }
+    
+    @Inject
+    public void simpleDriveCommandStartToOuterFarScale(PurePursuitCommand pursuit) {
+        pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(1.65*12, 6*12), new ContiguousHeading(60)));
+        pursuit.addPoint(new FieldPose(new XYPair(1.65*12, 15*12), new ContiguousHeading(90)));
+        pursuit.addPoint(new FieldPose(new XYPair(.65*12, 19*12), new ContiguousHeading(120)));
+        pursuit.addPoint(new FieldPose(new XYPair(-1.35*12, 20*12), new ContiguousHeading(155)));
+        pursuit.addPoint(new FieldPose(new XYPair(-7.35*12, 19*12), new ContiguousHeading(210)));
+        pursuit.addPoint(new FieldPose(new XYPair(-12.35*12, 18*12), new ContiguousHeading(155)));
+        pursuit.addPoint(new FieldPose(new XYPair(-14.85*12, 19*12), new ContiguousHeading(120)));
+        pursuit.addPoint(new FieldPose(new XYPair(-15.85*12, 22.5*12), new ContiguousHeading(90)));
+
+        pursuit.includeOnSmartDashboard("Outer far scale");
+    }
 
     @Inject
     public void setupShiftGearCommand(OperatorInterface oi, ShiftHighCommand shiftHigh, ShiftLowCommand shiftLow) {
