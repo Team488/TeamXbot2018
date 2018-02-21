@@ -47,7 +47,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean wristReady() {
-        return false;
+        return true;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
     
     @Override
     public double getWristMaximumAngle() {
-        return 45;
+        return 90;
     }
 
     @Override
