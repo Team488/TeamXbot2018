@@ -1,5 +1,7 @@
 package competition.subsystems.offboard;
 
+import java.util.ArrayList;
+
 public class OffboardFramePackingUtils {
     
     public static byte[] packWheelOdomFrame(double leftDriveDelta, double rightDriveDelta, double timeDelta) {
@@ -25,18 +27,15 @@ public class OffboardFramePackingUtils {
         };
     }
     
-    public static byte[] packScoringPlacement(int sequence) {
-        return new byte[] {
+    public static byte[] packScoringPlacement(ArrayList<Integer> scoringPlacement) {
+    	int sequence = 0;
+    	for(int i = 0; i < 3; i++) {
+    		int scoring = (scoringPlacement.get(i) << (2-i));
+    		sequence = (scoring | sequence);
+    	}
+    	return new byte[] {
                 (byte)(sequence & 0xFF)    
         };
     }
     
-    public static byte[] packHeadingFrame(double headingDegrees) {
-        short headingInteger = (short)(headingDegrees * 100);
-        
-        return new byte[] {
-                (byte)(headingInteger >>> 8),
-                (byte)(headingInteger & 0xFF)
-        };
-    }
 }

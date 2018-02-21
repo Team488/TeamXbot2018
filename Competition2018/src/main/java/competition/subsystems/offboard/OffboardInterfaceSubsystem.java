@@ -93,21 +93,17 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         ArrayList<Integer> sequence = new ArrayList<Integer>();
         for(MatchData.GameFeature feature: MatchData.GameFeature.values()) {
             if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.LEFT)) {
-                sequence.add(0);
+                sequence.add(1);
             }
             else if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.RIGHT)) {
-                sequence.add(1);
+                sequence.add(0);
             }
             else {
                 //Insert Error Message as it is unknown
             }
         }
-        int total = 0;
-        for (Integer i : sequence) { 
-            total = 10*total + i;
-        }
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SCORING_PLACEMENT,
-                OffboardFramePackingUtils.packScoringPlacement(total));
+                OffboardFramePackingUtils.packScoringPlacement(sequence));
     }
     
     public void clearPacketQueue() {
