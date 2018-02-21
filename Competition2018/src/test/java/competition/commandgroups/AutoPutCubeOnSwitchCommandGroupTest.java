@@ -7,45 +7,43 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
-import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
 import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.command.XScheduler;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
-public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
+public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
 
-    XScheduler xScheduler;
-    AutoPutCubeOnScaleCommandGroup command;
     DriveSubsystem drive;
-    WristSubsystem wrist;
+    AutoPutCubeOnSwitchCommandGroup command;
     ElevatorSubsystem elevator;
+    ElevatorMaintainerCommand maintainer;
     GripperIntakeSubsystem intake;
     MockTimer mockTimer;
-    ElevatorMaintainerCommand maintainerCommand;
+    WristSubsystem wrist;
+    XScheduler xScheduler;
     
     @Override
     public void setUp() {
         super.setUp();
         this.drive = injector.getInstance(DriveSubsystem.class);
+        this.command = injector.getInstance(AutoPutCubeOnSwitchCommandGroup.class);
         this.elevator = injector.getInstance(ElevatorSubsystem.class);
         this.intake = injector.getInstance(GripperIntakeSubsystem.class);
+        this.maintainer = injector.getInstance(ElevatorMaintainerCommand.class);
         this.mockTimer = injector.getInstance(MockTimer.class);
         this.wrist = injector.getInstance(WristSubsystem.class);
-        this.command = injector.getInstance(AutoPutCubeOnScaleCommandGroup.class);
         this.xScheduler = injector.getInstance(XScheduler.class);
-        this.maintainerCommand = injector.getInstance(ElevatorMaintainerCommand.class);
     }
     
     @Test
-    public void unityTest() { 
+    public void unityTest() {
         command.start();
         elevator.calibrateHere();
-        maintainerCommand.start();
+        maintainer.start();
         
         xScheduler.run();
         xScheduler.run();
@@ -60,7 +58,7 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         /**
          * 100 is the conversion for ticks to inches, and 300 the ticks for 3 ft
          */
-        ((MockCANTalon) elevator.motor).setPosition((int)(elevator.getTargetScaleHighHeight() * 100) - 300);
+        ((MockCANTalon) elevator.motor).setPosition((int)(elevator.getTargetSwitchDropHeight() * 100) - 300);
         mockTimer.advanceTimeInSecondsBy(1000);
         
         xScheduler.run();
@@ -71,15 +69,8 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         
         xScheduler.run();
         
-        assertTrue(command.elevatorToScale.isFinished());
+        assertTrue(command.elevatorToSwitch.isFinished());
         assertTrue(command.driveToDistance.isFinished());
         
-        xScheduler.run();
-        xScheduler.run();
-        xScheduler.run();
-        
-        assertEquals(1, intake.leftMotor.getMotorOutputPercent(), 0.001);
-        assertEquals(1, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
-    
 }

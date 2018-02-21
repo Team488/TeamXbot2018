@@ -11,24 +11,30 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoPutCubeOnSwitchCommandGroup extends CommandGroup {
     
+    public DriveForDistanceCommand driveToDistance;
+    public MoveElevatorToHeightAndStabilizeCommand elevatorToSwitch;
+    
     @Inject
     public AutoPutCubeOnSwitchCommandGroup(
             DriveForDistanceCommand driveToDistance,
             ElevatorSubsystem elevator,
-            MoveElevatorToHeightAndStabilizeCommand moveToSwitchHeight,
-            GripperEjectCommand deliever,
+            GripperEjectCommand delivery,
+            MoveElevatorToHeightAndStabilizeCommand elevatorToSwitch,
             WristUpCommand wristUp) {
-        elevator.setTargetHeight(elevator.getTargetSwitchDropHeight());
+        elevatorToSwitch.setTargetHeight(elevator.getTargetSwitchDropHeight());
         /**
          * 81.5 is the distance the robot with cube,
          * to the switch in inches
          */
         driveToDistance.setDeltaDistance(81.5);
         
-        this.addParallel(moveToSwitchHeight);
+        this.driveToDistance = driveToDistance;
+        this.elevatorToSwitch = elevatorToSwitch;
+        
+        this.addParallel(elevatorToSwitch);
         this.addParallel(driveToDistance);
         this.addSequential(wristUp);
-        this.addSequential(deliever);
+        this.addSequential(delivery);
     }
 
 }
