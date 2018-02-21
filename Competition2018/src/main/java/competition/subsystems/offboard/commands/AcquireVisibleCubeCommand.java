@@ -16,6 +16,5 @@ public class AcquireVisibleCubeCommand extends OffboardProcessingWithDriveComman
     @Override
     protected void handleIncomingNonDrivePacket(OffboardCommunicationPacket packet) {
         // Intentionally left blank; nothing to do
-
     }
 }

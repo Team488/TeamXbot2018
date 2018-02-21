@@ -38,6 +38,8 @@ public abstract class ElectricalContract2018 {
     
     public abstract boolean elevatorUpperLimitReady();
     
+    public abstract boolean elevatorUsesTalonLimits();
+    
     public abstract DeviceInfo getElevatorLowerLimit();
     
     public abstract DeviceInfo getElevatorUpperLimit();
@@ -46,6 +48,10 @@ public abstract class ElectricalContract2018 {
     public abstract boolean wristReady();
 
     public abstract DeviceInfo getWristMaster();
+    
+    public abstract DeviceInfo getWristEncoder();
+    
+    public abstract double getWristMaximumAngle();
 
     // Collector Motors
     public abstract boolean collectorReady();

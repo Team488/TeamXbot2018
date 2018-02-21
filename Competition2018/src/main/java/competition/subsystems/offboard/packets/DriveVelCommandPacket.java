@@ -6,6 +6,10 @@ public class DriveVelCommandPacket {
     public final double rightVelocityMetersPerSecond;
     
     private DriveVelCommandPacket(byte[] packetData) {
+        if (packetData.length != 5) {
+            throw new IllegalArgumentException();
+        }
+        
         this.commandId = packetData[0] & 0xFF;
         this.leftVelocityMetersPerSecond = parseSingleVelocity(packetData[1], packetData[2]);
         this.rightVelocityMetersPerSecond = parseSingleVelocity(packetData[3], packetData[4]);

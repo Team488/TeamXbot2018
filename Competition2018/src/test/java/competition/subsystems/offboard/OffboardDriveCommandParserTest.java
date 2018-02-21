@@ -7,8 +7,7 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.offboard.packets.DrivePowerCommandPacket;
 
-public class OffboardDriveCommandParserTest extends BaseCompetitionTest {
-    
+public class OffboardDriveCommandParserTest extends BaseCompetitionTest {    
     @Test
     public void testSimple() {
         DrivePowerCommandPacket packet = DrivePowerCommandPacket.parse(new byte[] {

@@ -5,15 +5,19 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
-import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.math.MathUtils;
+import xbot.common.math.PIDFactory;
+import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
@@ -30,83 +34,86 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final DoubleProperty leftTicksPerFiveFeet;
     private final DoubleProperty rightTicksPerFiveFeet;
 
-    private final DoubleProperty velocityP;
-    private final DoubleProperty velocityI;
-    private final DoubleProperty velocityD;
-    private final DoubleProperty velocityF;
+    private final PIDManager leftVelocityPidManager;
+    private final PIDManager rightVelocityPidManager;
 
     private Map<XCANTalon, MotionRegistration> masterTalons;
     
-    int updateMotorValuesCounter = 0;
+    private final PIDManager positionalPid;
+    private final PIDManager rotateToHeadingPid;
+    private final PIDManager rotateDecayPid;
+
+    private double leftAccum;
+    private double rightAccum;
 
     public enum Side {
         Left, Right
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract) {
+    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
         log.info("Creating DriveSubsystem");
+        
+        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        rotateToHeadingPid = pf.createPIDManager(getPrefix()+"DriveHeading", 4, 0, 0);
+        rotateDecayPid = pf.createPIDManager(getPrefix()+"DriveDecay", 0, 0, 1);
+        
 
         // Default is for 2018 robot design
         // SRX counts edges rather than ticks, so the 1024-count sensor is read as 4096 per rev
         // (4096 native units/encoder rev) * (3 encoder rev/wheel rev) / (4pi inches/wheel rev) ~= 977.847970356605
         final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
         final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
-        leftTicksPerFiveFeet = propManager.createPersistentProperty("leftDriveTicksPer5Feet", defaultDriveTicksPer5Feet);
-        rightTicksPerFiveFeet = propManager.createPersistentProperty("rightDriveTicksPer5Feet", defaultDriveTicksPer5Feet);
+        leftTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"leftDriveTicksPer5Feet",
+                defaultDriveTicksPer5Feet);
+        rightTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"rightDriveTicksPer5Feet",
+                defaultDriveTicksPer5Feet);
 
-        velocityP = propManager.createPersistentProperty("Drive velocity control P", 0);
-        velocityI = propManager.createPersistentProperty("Drive velocity control I", 0);
-        velocityD = propManager.createPersistentProperty("Drive velocity control D", 0);
-        velocityF = propManager.createPersistentProperty("Drive velocity control F", 0);
-        
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
-        configureMotorTeam(
-                "LeftDriveMaster",
-                leftMaster, 
-                leftFollower,
-                contract.getLeftDriveMaster().inverted, 
-                contract.getLeftDriveFollower().inverted,
-                contract.getLeftDriveMasterEncoder().inverted);
+        configureMotorTeam("LeftDriveMaster", leftMaster, leftFollower, contract.getLeftDriveMaster().inverted,
+                contract.getLeftDriveFollower().inverted, contract.getLeftDriveMasterEncoder().inverted);
 
         this.rightMaster = factory.createCANTalon(contract.getRightDriveMaster().channel);
         this.rightFollower = factory.createCANTalon(contract.getRightDriveFollower().channel);
-        configureMotorTeam(
-                "RightDriveMaster",
-                rightMaster, 
-                rightFollower,
-                contract.getRightDriveMaster().inverted, 
-                contract.getRightDriveFollower().inverted,
-                contract.getRightDriveMasterEncoder().inverted);
+        configureMotorTeam("RightDriveMaster", rightMaster, rightFollower, contract.getRightDriveMaster().inverted,
+                contract.getRightDriveFollower().inverted, contract.getRightDriveMasterEncoder().inverted);
 
         masterTalons = new HashMap<XCANTalon, BaseDriveSubsystem.MotionRegistration>();
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
+        
+        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
+
+        this.setVoltageRamp(0.15);
     }
-    
-    private void configureMotorTeam(
-            String masterName,
-            XCANTalon master, XCANTalon follower,
-            boolean masterInverted, boolean followerInverted,
-            boolean sensorPhase) {
+
+    private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,
+            boolean followerInverted, boolean sensorPhase) {
         follower.follow(master);
 
         master.setInverted(masterInverted);
         follower.setInverted(followerInverted);
-        
+
         master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         master.setSensorPhase(sensorPhase);
-        master.createTelemetryProperties(masterName);
-        
-        this.updateMotorPidValues(master);
-    }
-    
-    private void updateMotorPidValues(XCANTalon motor) {
-        motor.config_kP(0, this.velocityP.get(), 0);
-        motor.config_kI(0, this.velocityI.get(), 0);
-        motor.config_kD(0, this.velocityD.get(), 0);
-        motor.config_kF(0, this.velocityF.get(), 0);
+        master.createTelemetryProperties(getPrefix(), masterName);
+
+        // Master Config
+        master.setNeutralMode(NeutralMode.Coast);
+        master.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+        master.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+
+        master.configPeakOutputForward(1, 0);
+        master.configPeakOutputReverse(-1, 0);
+
+        // Follower Config
+        follower.setNeutralMode(NeutralMode.Coast);
+        follower.configPeakOutputForward(1, 0);
+        follower.configPeakOutputReverse(-1, 0);
+
+        follower.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
     }
 
     /**
@@ -150,7 +157,7 @@ public class DriveSubsystem extends BaseDriveSubsystem {
             return 0;
         }
     }
-    
+
     /**
      * Returns the velocity of the specified side in inches per second.
      */
@@ -180,23 +187,38 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         return 0;
     }
     
-    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {        
-        // Talon SRX measures in native units per 100ms, so values in seconds are divided by 10
-        leftMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Left) * leftInchesPerSecond / 10d);
-        rightMaster.set(ControlMode.Velocity, getSideTicksPerInch(Side.Right) * rightInchesPerSecond / 10d);
+    public void resetVelocityAccum() {
+        this.leftAccum = 0;
+        this.rightAccum = 0;
     }
     
+    public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {
+        leftAccum += this.leftVelocityPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Left));
+        rightAccum += this.rightVelocityPidManager.calculate(rightInchesPerSecond, getVelocity(Side.Right));
+
+        leftAccum = MathUtils.constrainDoubleToRobotScale(leftAccum);
+        rightAccum = MathUtils.constrainDoubleToRobotScale(rightAccum);
+        
+        this.drive(leftAccum, rightAccum);
+    }
+
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
-        
-        updateMotorValuesCounter++;
-        
-        // roughly 5 seconds at 30 Hz
-        if (updateMotorValuesCounter == 150 ) {
-            updateMotorValuesCounter = 0;
-            this.updateMotorPidValues(leftMaster);
-            this.updateMotorPidValues(rightMaster);
-        }
+    }
+
+    @Override
+    public PIDManager getPositionalPid() {
+        return positionalPid;
+    }
+
+    @Override
+    public PIDManager getRotateToHeadingPid() {
+        return rotateToHeadingPid;
+    }
+
+    @Override
+    public PIDManager getRotateDecayPid() {
+        return rotateDecayPid;
     }
 }

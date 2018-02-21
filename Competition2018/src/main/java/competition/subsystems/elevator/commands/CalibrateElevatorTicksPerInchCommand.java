@@ -7,15 +7,15 @@ import competition.subsystems.climb.ClimbSubsystem;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import competition.subsystems.gripperdeploy.GripperDeploySubsystem;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.lean.LeanSubsystem;
+import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
-    double maxTick;
-    double minTick;
+    int maxTick;
+    int minTick;
     ElevatorSubsystem elevator;
     OperatorInterface oi;
 
@@ -25,7 +25,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
      */
     @Inject
     public CalibrateElevatorTicksPerInchCommand(ElevatorSubsystem elevator, DriveSubsystem drive,
-            GripperDeploySubsystem wrist, GripperIntakeSubsystem intake, LeanSubsystem leaner, ClimbSubsystem climber,
+            WristSubsystem wrist, GripperIntakeSubsystem intake, LeanSubsystem leaner, ClimbSubsystem climber,
             ClimberDeploySubsystem climbDeploy, OperatorInterface oi) {
         this.elevator = elevator;
         this.oi = oi;
@@ -41,19 +41,21 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        double tick = elevator.getCurrentTick();
+        log.info("Initializing");
+        int tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
         elevator.uncalibrate();
     }
 
+    
     /**
      * By getting the delta Tick and the delta Height in Inches, we can get Tick per Inches
      */
     @Override
     public void execute() {
         // Stuff we do on every execute, since we want to read a lot of information
-        double tick = elevator.getCurrentTick();
+        int tick = elevator.getCurrentTick();
         if (tick > maxTick) {
             maxTick = tick;
         }
@@ -64,7 +66,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
         // Directly control the elevator with a joystick
 
-        //elevator.setPower(oi.operatorGamepad.getRightVector().y);
+        elevator.insanelyDangerousSetPower(oi.operatorGamepad.getRightStickY());
     }
 
     @Override
