@@ -18,9 +18,9 @@ public class TargetCubePacket {
             double rosYMeters = parseSingleDim(packetData[3], packetData[4]);
             double rosZMeters = parseSingleDim(packetData[5], packetData[6]);
             this.targetInfo = new TargetCubeInfo(
-                    -yMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
-                    xMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
-                    zMeters / OffboardInterfaceSubsystem.METERS_PER_INCH);
+                    -rosYMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
+                    rosXMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
+                    rosZMeters / OffboardInterfaceSubsystem.METERS_PER_INCH);
         }
         else {
             this.targetInfo = null;

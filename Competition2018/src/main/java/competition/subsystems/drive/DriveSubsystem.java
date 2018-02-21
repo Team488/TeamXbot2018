@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
@@ -14,10 +13,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
-import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
-import xbot.common.logging.RobotAssertionManager;
+import xbot.common.math.MathUtils;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
 import xbot.common.properties.DoubleProperty;
@@ -36,21 +34,14 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final DoubleProperty leftTicksPerFiveFeet;
     private final DoubleProperty rightTicksPerFiveFeet;
 
-    private final DoubleProperty velocityP;
-    private final DoubleProperty velocityI;
-    private final DoubleProperty velocityD;
-    private final DoubleProperty velocityF;
-
-    private final PIDManager leftPidManager;
-    private final PIDManager rightPidManager;
+    private final PIDManager leftVelocityPidManager;
+    private final PIDManager rightVelocityPidManager;
 
     private Map<XCANTalon, MotionRegistration> masterTalons;
     
     private final PIDManager positionalPid;
     private final PIDManager rotateToHeadingPid;
     private final PIDManager rotateDecayPid;
-    
-    int updateMotorValuesCounter = 0;
 
     private double leftAccum;
     private double rightAccum;
@@ -78,11 +69,6 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         rightTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"rightDriveTicksPer5Feet",
                 defaultDriveTicksPer5Feet);
 
-        velocityP = propManager.createPersistentProperty(getPrefix()+"Velocity control P", 0);
-        velocityI = propManager.createPersistentProperty(getPrefix()+"Velocity control I", 0);
-        velocityD = propManager.createPersistentProperty(getPrefix()+"Velocity control D", 0);
-        velocityF = propManager.createPersistentProperty(getPrefix()+"Velocity control F", 0);
-
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
         configureMotorTeam("LeftDriveMaster", leftMaster, leftFollower, contract.getLeftDriveMaster().inverted,
@@ -97,8 +83,8 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
-        this.leftPidManager = pf.createPIDManager(getPrefix()+"Drive velocity (local)", 0, 0, 0, 0, 1, -1);
-        this.rightPidManager = pf.createPIDManager(getPrefix()+"Drive velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
 
         this.setVoltageRamp(0.15);
     }
@@ -114,8 +100,6 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         master.setSensorPhase(sensorPhase);
         master.createTelemetryProperties(getPrefix(), masterName);
 
-        this.updateMotorPidValues(master);
-
         // Master Config
         master.setNeutralMode(NeutralMode.Coast);
         master.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
@@ -130,13 +114,6 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         follower.configPeakOutputReverse(-1, 0);
 
         follower.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
-    }
-
-    private void updateMotorPidValues(XCANTalon motor) {
-        motor.config_kP(0, this.velocityP.get(), 0);
-        motor.config_kI(0, this.velocityI.get(), 0);
-        motor.config_kD(0, this.velocityD.get(), 0);
-        motor.config_kF(0, this.velocityF.get(), 0);
     }
 
     /**
@@ -216,8 +193,11 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     }
     
     public void driveTankVelocity(double leftInchesPerSecond, double rightInchesPerSecond) {
-        leftAccum += this.leftPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Left));
-        rightAccum += this.rightPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Right));
+        leftAccum += this.leftVelocityPidManager.calculate(leftInchesPerSecond, getVelocity(Side.Left));
+        rightAccum += this.rightVelocityPidManager.calculate(rightInchesPerSecond, getVelocity(Side.Right));
+
+        leftAccum = MathUtils.constrainDoubleToRobotScale(leftAccum);
+        rightAccum = MathUtils.constrainDoubleToRobotScale(rightAccum);
         
         this.drive(leftAccum, rightAccum);
     }
@@ -225,15 +205,6 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
-
-        updateMotorValuesCounter++;
-
-        // roughly 5 seconds at 30 Hz
-        if (updateMotorValuesCounter == 150) {
-            updateMotorValuesCounter = 0;
-            this.updateMotorPidValues(leftMaster);
-            this.updateMotorPidValues(rightMaster);
-        }
     }
 
     @Override

@@ -9,6 +9,8 @@ public class CommandFinishedPacket {
             throw new IllegalArgumentException();
         }
         
+        // "& 0xFF" is needed to interpret byte as unsigned rather than signed:
+        // https://stackoverflow.com/questions/7401550/how-to-convert-int-to-unsigned-byte-and-back
         this.commandId = packetData[0] & 0xFF;
         this.statusCode = packetData[1] & 0xff;
     }
