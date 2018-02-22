@@ -25,27 +25,66 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         this.gameData = gameData;
     }
     
-    public Supplier<List<FieldPose>> getAutoPathToSwitch() {
-        return this::chooseBestPathToSwitch;
+    public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
+        return () -> chooseBestPathToFeature(feature);
     }
     
-    private List<FieldPose> chooseBestPathToSwitch() {
-        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SWITCH_NEAR);
+    private List<FieldPose> chooseBestPathToFeature(GameFeature feature) {
+        OwnedSide targetSide = gameData.getOwnedSide(feature);
         
-        switch (targetSide) {
-        case LEFT:
-            log.info("Creating path to Left Switch");
-            return createPathToLeftSwitch();
-        case RIGHT:
-            log.info("Creating path to Right Switch");
-            return createPathToRightSwitch();
-        case UNKNOWN:
-            log.warn("Jaci's library could not parse which side to visit in auto. Going nowhere");
-            return createPathToNowhere();
-        default: 
-            log.warn("Somehow no idea where to go. Going nowhere.");
-            return createPathToNowhere();
+        switch (feature) {
+        case SWITCH_NEAR:
+            switch (targetSide) {
+            case LEFT:
+                log.info("Creating path to Left Switch");
+                return createPathToLeftSwitch();
+            case RIGHT:
+                log.info("Creating path to Right Switch");
+                return createPathToRightSwitch();
+            case UNKNOWN:
+                log.warn("Jaci's library could not parse which Switch side to visit in auto. Going nowhere");
+                return createPathToNowhere();
+            default: 
+                log.warn("Somehow no idea where to go. Going nowhere.");
+                return createPathToNowhere();
+            }
+        case SCALE:
+            switch (targetSide) {
+            case LEFT:
+                log.info("Creating path to Left Scale");
+                return createPathToLeftScale();
+            case RIGHT:
+                log.info("Creating path to Right Scale");
+                return createPathToRightScale();
+            case UNKNOWN:
+                log.warn("Jaci's library could not parse which Scale side to visit in auto. Going nowhere");
+                return createPathToNowhere();
+            default: 
+                log.warn("Somehow no idea where to go. Going nowhere.");
+                return createPathToNowhere();
+            }
+            default: 
+                log.warn("Somehow no idea where to go. Going nowhere.");
+                return createPathToNowhere();
         }
+        
+        
+    }
+    
+    public List<FieldPose> createPathToRightScale() {
+        ArrayList<FieldPose> points = new ArrayList<FieldPose>();
+        points.add(new FieldPose(new XYPair(0*12, 11*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-2*12, 22*12), new ContiguousHeading(120)));
+        return points;
+    }
+    
+    public List<FieldPose> createPathToLeftScale() {
+        ArrayList<FieldPose> points = new ArrayList<FieldPose>();
+        points.add(new FieldPose(new XYPair(0*12, 18*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-16*12, 18*12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16*12, 18*12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16*12, 22*12), new ContiguousHeading(90)));
+        return points;
     }
     
     public List<FieldPose> createPathToRightSwitch() {

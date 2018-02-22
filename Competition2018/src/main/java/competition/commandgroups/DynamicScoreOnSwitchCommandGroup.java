@@ -7,6 +7,7 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
+import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.subsystems.drive.PurePursuitCommand;
 
@@ -23,7 +24,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToSwitch());
+        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
         
         setWristDown.setGoalAngle(0);
         setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
