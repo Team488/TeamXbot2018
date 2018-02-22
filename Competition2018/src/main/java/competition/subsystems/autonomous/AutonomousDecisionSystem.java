@@ -25,11 +25,11 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         this.gameData = gameData;
     }
     
-    public Supplier<List<FieldPose>> getAutoPath() {
-        return this::chooseBestPath;
+    public Supplier<List<FieldPose>> getAutoPathToSwitch() {
+        return this::chooseBestPathToSwitch;
     }
     
-    private List<FieldPose> chooseBestPath() {
+    private List<FieldPose> chooseBestPathToSwitch() {
         OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SWITCH_NEAR);
         
         switch (targetSide) {
@@ -48,26 +48,26 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         }
     }
     
-    private List<FieldPose> createPathToRightSwitch() {
+    public List<FieldPose> createPathToRightSwitch() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
-        points.add(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));
+        /*points.add(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
+        points.add(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));*/
         points.add(new FieldPose(new XYPair(-5.11*12, 9.5*12), new ContiguousHeading(90)));
         
         return points;
     }
     
-    private List<FieldPose> createPathToLeftSwitch() {
+    public List<FieldPose> createPathToLeftSwitch() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-1.35*12, 2.5*12), new ContiguousHeading(127.5)));
-        points.add(new FieldPose(new XYPair(-5.35*12, 3*12), new ContiguousHeading(160)));
+        //points.add(new FieldPose(new XYPair(-1.35*12, 2.5*12), new ContiguousHeading(127.5)));
+        //points.add(new FieldPose(new XYPair(-5.35*12, 3*12), new ContiguousHeading(160)));
         points.add(new FieldPose(new XYPair(-7.35*12, 4*12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
-        points.add(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
-        points.add(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
+        //points.add(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
+        //points.add(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
+        //points.add(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
         points.add(new FieldPose(new XYPair(-14.6*12, 9.5*12), new ContiguousHeading(90)));
 
         return points;
