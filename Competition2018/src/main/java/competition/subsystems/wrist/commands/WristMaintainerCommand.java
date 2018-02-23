@@ -9,8 +9,8 @@ import xbot.common.math.PIDManager;
 
 public class WristMaintainerCommand extends BaseCommand {
 
-    WristSubsystem wrist;
-    PIDManager pid;
+    public final WristSubsystem wrist;
+    public final PIDManager pid;
     
     @Inject
     public WristMaintainerCommand(WristSubsystem wrist, PIDFactory pf) {
@@ -23,7 +23,7 @@ public class WristMaintainerCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing");
+        log.info("Initializing with distance " + wrist.getTargetAngle() + " degrees");
     }
 
     @Override

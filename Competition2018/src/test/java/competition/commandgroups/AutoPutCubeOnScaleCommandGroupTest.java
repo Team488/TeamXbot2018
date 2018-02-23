@@ -1,21 +1,19 @@
 package competition.commandgroups;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
-import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
+import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.command.XScheduler;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
+import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
 
@@ -25,8 +23,10 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
     WristSubsystem wrist;
     ElevatorSubsystem elevator;
     GripperIntakeSubsystem intake;
+    BasePoseSubsystem pose;
     MockTimer mockTimer;
     ElevatorMaintainerCommand maintainerCommand;
+    WristMaintainerCommand wristMaintainer;
     
     @Override
     public void setUp() {
@@ -34,18 +34,22 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         this.drive = injector.getInstance(DriveSubsystem.class);
         this.elevator = injector.getInstance(ElevatorSubsystem.class);
         this.intake = injector.getInstance(GripperIntakeSubsystem.class);
+        this.pose = injector.getInstance(BasePoseSubsystem.class);
         this.mockTimer = injector.getInstance(MockTimer.class);
         this.wrist = injector.getInstance(WristSubsystem.class);
         this.command = injector.getInstance(AutoPutCubeOnScaleCommandGroup.class);
         this.xScheduler = injector.getInstance(XScheduler.class);
         this.maintainerCommand = injector.getInstance(ElevatorMaintainerCommand.class);
+        this.wristMaintainer = injector.getInstance(WristMaintainerCommand.class);
     }
     
     @Test
     public void unityTest() { 
         command.start();
         elevator.calibrateHere();
+        wrist.calibrateHere();
         maintainerCommand.start();
+        wristMaintainer.start();
         
         xScheduler.run();
         xScheduler.run();
@@ -55,8 +59,10 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
         assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
         
-        ((MockCANTalon) drive.rightMaster).setPosition(243);
-        ((MockCANTalon) drive.leftMaster).setPosition(243);
+        ((MockCANTalon) drive.rightMaster).setPosition((int)(243*(drive.rightTicksPerFiveFt()/60)));
+        ((MockCANTalon) drive.leftMaster).setPosition((int)(243*(drive.leftTicksPerFiveFt()/60)));
+        pose.updatePeriodicData();
+        
         /**
          * 100 is the conversion for ticks to inches, and 300 the ticks for 3 ft
          */
@@ -70,16 +76,17 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         mockTimer.advanceTimeInSecondsBy(1000);
         
         xScheduler.run();
+        xScheduler.run();
+        xScheduler.run();
         
-        assertTrue(command.elevatorToScale.isFinished());
-        assertTrue(command.driveToDistance.isFinished());
+        assertEquals(-0.3, wrist.motor.getMotorOutputPercent(), 0.001);
         
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
         
-        assertEquals(1, intake.leftMotor.getMotorOutputPercent(), 0.001);
-        assertEquals(1, intake.rightMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.3, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.3, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
     
 }

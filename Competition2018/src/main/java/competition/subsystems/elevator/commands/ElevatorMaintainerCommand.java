@@ -37,7 +37,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing");
+        log.info("Initializing with distance " + elevator.getTargetHeight() + " inches");
         if (!elevator.isCalibrated()) {
             log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
             giveUpCalibratingTime = Timer.getFPGATimestamp() + elevatorCalibrationAttemptTimeMS.get();
