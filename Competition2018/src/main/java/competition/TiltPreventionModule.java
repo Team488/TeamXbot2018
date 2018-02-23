@@ -21,32 +21,34 @@ public class TiltPreventionModule extends RobotModule{
     DriveSubsystem drive;
     double goodPoint;
     double goodHeading;
-    DoubleProperty yThrehold;
-    DoubleProperty headingThrehold;
+    DoubleProperty pitchThrehold;
 
 
     @Inject
     public TiltPreventionModule(PoseSubsystem pose, DriveSubsystem drive,XPropertyManager propManager) {
         this.pose = pose;
         this.drive = drive;
-        yThrehold = propManager.createPersistentProperty("Y-ThreholdForPreventingTilt", 10);
-        headingThrehold = propManager.createPersistentProperty("HeadingThreholdForPreventingTilt", 0);
+        pitchThrehold = propManager.createPersistentProperty("Absolute Value of Pitch Threhold", 10);
     }
 
-    
     @Inject
-    public FieldPose preventTilt(XYPair point, ContiguousHeading heading) {
-        if(point.y > yThrehold.get() && headingThrehold.get() == heading.getValue() ) {
-            return();
+    public void preventTilt (double yMaxPositiveSpeed , double yMaxNegativeSpeed) {
+        
+        if (pose.getRobotPitch() > pitchThrehold.get()) {
+
+            yMaxPositiveSpeed = 0 ;
         }
-        if (!headingThrehold.get() == heading.getValue()) {
-            return ("Prevent Tilt Test does not apply, the input heading should be equal to the current heading");
+
+        if(pose.getRobotPitch() < -pitchThrehold.get()) {
+            
+            yMaxNegativeSpeed = 0 ;
         }
         
-        return ();
-        
-     
+        if(-pitchThrehold.get() <= pose.getRobotPitch() && pose.getRobotPitch() <= pitchThrehold.get()) {
+            
+            yMaxPositiveSpeed = 1;
+            yMaxNegativeSpeed = -1;
+            
+        }
     }
-
 }
-
