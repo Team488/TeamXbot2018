@@ -12,6 +12,7 @@ import competition.subsystems.offboard.commands.NavToTestGoalCommand;
 import competition.subsystems.offboard.data.TargetCubeInfo;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.commandgroups.CollectCubeCommandGroup;
+import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
@@ -28,18 +29,18 @@ import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitComma
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
+import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
+import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
-import competition.subsystems.wrist.commands.WristDownCommand;
+import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
-import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
-import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
-import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
-import competition.subsystems.wrist.commands.WristUpCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -74,7 +75,8 @@ public class OperatorCommandMap {
             TankDriveWithJoysticksCommand simpleTank,
             PurePursuitCommand pursuit,
             ResetDistanceCommand resetDistance,
-            SetRobotHeadingCommand setHeading) {
+            SetRobotHeadingCommand setHeading,
+            DynamicScoreOnSwitchCommandGroup dynamicScore) {
         oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
         oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
         
@@ -88,6 +90,8 @@ public class OperatorCommandMap {
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
         setHeading.includeOnSmartDashboard();
+        
+        dynamicScore.includeOnSmartDashboard();
     }
 
     @Inject
@@ -98,10 +102,13 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, WristDownCommand down, WristUpCommand up,
+    public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
+            GripperRotateCounterClockwiseCommand counterClockwise,
             GripperEjectCommand eject, GripperIntakeCommand intake) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
+        oi.operatorGamepad.getifAvailable(7).whileHeld(counterClockwise);
+        oi.operatorGamepad.getifAvailable(8).whileHeld(clockwise);
     }
 
     @Inject
@@ -152,7 +159,7 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+        //oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
     
     @Inject
@@ -185,9 +192,22 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
-            WristUncalibrateCommand loseCalibration) {
+            WristUncalibrateCommand loseCalibration,
+            WristMaintainerCommand maintain,
+            SetWristAngleCommand low,
+            SetWristAngleCommand medium,
+            SetWristAngleCommand high) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
+        
+        low.setGoalAngle(0);
+        medium.setGoalAngle(45);
+        high.setGoalAngle(90);
+        
+        oi.operatorGamepad.getPovIfAvailable(270).whenPressed(maintain);
+        oi.operatorGamepad.getPovIfAvailable(0).whenPressed(high);
+        oi.operatorGamepad.getPovIfAvailable(90).whenPressed(medium);
+        oi.operatorGamepad.getPovIfAvailable(180).whenPressed(low);
     }
 
     @Inject

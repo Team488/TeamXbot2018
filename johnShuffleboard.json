@@ -10,7 +10,65 @@
         "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
-        "tiles": {}
+        "tiles": {
+          "1,1": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Drive to local cube",
+              "_title": "SmartDashboard/Drive to local cube"
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/X",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/X"
+            }
+          },
+          "2,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Y",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Y"
+            }
+          },
+          "2,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Z",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Z"
+            }
+          }
+        }
       }
     },
     {
@@ -293,15 +351,26 @@
               "_title": "SmartDashboard/WristSubsystem/Motor"
             }
           },
-          "0,1": {
+          "2,3": {
             "size": [
-              2,
+              1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/WristSubsystem/Wrist ticks per degree",
-              "_title": "SmartDashboard/WristSubsystem/Wrist ticks per degree"
+              "_source0": "network_table:///SmartDashboard/GripperIntakeSubsystem/High Power",
+              "_title": "SmartDashboard/GripperIntakeSubsystem/High Power"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/GripperIntakeSubsystem/Low Power",
+              "_title": "SmartDashboard/GripperIntakeSubsystem/Low Power"
             }
           },
           "4,0": {
@@ -311,8 +380,8 @@
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/WristSubsystem/Wrist Calibrated",
-              "_title": "SmartDashboard/WristSubsystem/Wrist Calibrated",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Calibrated",
+              "_title": "SmartDashboard/WristSubsystem/Calibrated",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
             }
@@ -324,8 +393,30 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/WristSubsystem/Wrist Current Angle",
-              "_title": "SmartDashboard/WristSubsystem/Wrist Current Angle"
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Current Angle",
+              "_title": "SmartDashboard/WristSubsystem/Current Angle"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Target Angle",
+              "_title": "SmartDashboard/WristSubsystem/Target Angle"
+            }
+          },
+          "0,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Ticks per degree",
+              "_title": "/SmartDashboard/WristSubsystem/Ticks per degree"
             }
           }
         }
