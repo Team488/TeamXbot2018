@@ -25,6 +25,6 @@ public class WristControlViaJoysticksCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        wrist.motor.simpleSet(oi.operatorGamepad.getLeftVector().y);
+        wrist.setPower(oi.operatorGamepad.getLeftVector().y);
     }
 }

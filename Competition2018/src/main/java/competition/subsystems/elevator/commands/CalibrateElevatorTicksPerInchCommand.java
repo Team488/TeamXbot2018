@@ -41,12 +41,14 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        log.info("Initializing");
         int tick = elevator.getCurrentTick();
         maxTick = tick;
         minTick = tick;
         elevator.uncalibrate();
     }
 
+    
     /**
      * By getting the delta Tick and the delta Height in Inches, we can get Tick per Inches
      */
@@ -64,7 +66,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
 
         // Directly control the elevator with a joystick
 
-        elevator.setPower(oi.operatorGamepad.getRightVector().y);
+        elevator.insanelyDangerousSetPower(oi.operatorGamepad.getRightStickY());
     }
 
     @Override

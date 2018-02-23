@@ -2,7 +2,11 @@ package competition;
 
 import org.junit.Ignore;
 
+import competition.subsystems.offboard.MockOffboardCommsInterface;
+import competition.subsystems.offboard.XOffboardCommsInterface;
 import competition.operator_interface.OperatorInterface;
+import competition.subsystems.autonomous.GameDataSource;
+import competition.subsystems.autonomous.MockGameDataAdapter;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import xbot.common.injection.BaseWPITest;
@@ -22,9 +26,10 @@ public class BaseCompetitionTest extends BaseWPITest {
             super.configure();
 
             this.bind(ElectricalContract2018.class).to(ImaginaryRobot2018.class);
-            
             this.bind(BasePoseSubsystem.class).to(PoseSubsystem.class);
             this.bind(BaseDriveSubsystem.class).to(DriveSubsystem.class);
+            this.bind(XOffboardCommsInterface.class).to(MockOffboardCommsInterface.class);
+            this.bind(GameDataSource.class).to(MockGameDataAdapter.class);
         }
     }
 

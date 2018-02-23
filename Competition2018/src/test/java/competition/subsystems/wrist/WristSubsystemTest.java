@@ -23,13 +23,13 @@ public class WristSubsystemTest extends BaseCompetitionTest {
         wrist.calibrateHere();
         verifyWristPower(0);
         wrist.goUp();
-        verifyWristPower(1);
+        verifyWristPower(wrist.getMaximumAllowedPower());
         wrist.goDown();
-        verifyWristPower(-1);
+        verifyWristPower(-wrist.getMaximumAllowedPower());
         wrist.stop();
         verifyWristPower(0);
-        wrist.setPower(0.48743847);
-        verifyWristPower(0.48743847);
+        wrist.setPower(0.129898);
+        verifyWristPower(0.129898);
     }
     
     @Test
@@ -39,18 +39,18 @@ public class WristSubsystemTest extends BaseCompetitionTest {
         
         wrist.calibrateHere();
         wrist.setPower(0.7);
-        verifyWristPower(0.7);
+        verifyWristPower(wrist.getMaximumAllowedPower());
     }
     
     @Test
     public void testCalibrationPoints() {
-        ((MockCANTalon)wrist.motor).setPosition(0);
+        ((MockCANTalon)wrist.motor).setPosition(10);
         wrist.calibrateHere();
         
-        assertEquals(0, wrist.getLowerLimitInTicks(), 0.001);
+        assertEquals(10, wrist.getUpperLimitInTicks(), 0.001);
         assertEquals(
-                contract.getWristMaximumAngle()*wrist.getWristTicksPerDegree(), 
-                wrist.getUpperLimitInTicks(), 
+                wrist.getUpperLimitInTicks() - (contract.getWristMaximumAngle()*wrist.getWristTicksPerDegree()), 
+                wrist.getLowerLimitInTicks(), 
                 0.001);
     }
     

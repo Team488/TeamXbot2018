@@ -35,7 +35,7 @@ public class AssistedTankDriveCommandTest extends BaseCompetitionTest {
         // it's been invoked in some way.
         command.initialize();
 
-        ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(0, 1));
+        ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(0, 1));       
         ((MockFTCGamepad) oi.driverGamepad).setRightStick(new XYPair(0, 1));
 
         command.execute();
