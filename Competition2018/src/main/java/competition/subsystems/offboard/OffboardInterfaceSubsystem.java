@@ -117,22 +117,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     }
     
     private void sendScoringPlacement() {
-        //Sequence - Near, Scale, Far
-        //Left - 1, Right - 0
-        ArrayList<Integer> sequence = new ArrayList<Integer>();
-        for(MatchData.GameFeature feature: MatchData.GameFeature.values()) {
-            if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.LEFT)) {
-                sequence.add(1);
-            }
-            else if(MatchData.getOwnedSide(feature).equals(MatchData.OwnedSide.RIGHT)) {
-                sequence.add(0);
-            }
-            else {
-                //Insert Error Message as it is unknown
-            }
-        }
         rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SCORING_PLACEMENT,
-                OffboardFramePackingUtils.packScoringPlacement(sequence));
+                OffboardFramePackingUtils.packScoringPlacement());
     }
     
     public void clearPacketQueue() {
