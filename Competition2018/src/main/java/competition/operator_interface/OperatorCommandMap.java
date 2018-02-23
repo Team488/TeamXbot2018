@@ -1,8 +1,16 @@
 package competition.operator_interface;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.offboard.OffboardInterfaceSubsystem;
+import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
+import competition.subsystems.offboard.commands.NavToTestGoalCommand;
+import competition.subsystems.offboard.data.TargetCubeInfo;
+import competition.subsystems.pose.PoseSubsystem;
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
@@ -11,6 +19,7 @@ import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import competition.subsystems.drive.commands.AssistedTankDriveCommand;
+import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
@@ -37,6 +46,7 @@ import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.properties.ConfigurePropertiesCommand;
 import xbot.common.subsystems.drive.PurePursuitCommand;
+import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -150,6 +160,34 @@ public class OperatorCommandMap {
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
         //oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+    }
+    
+    @Inject
+    public void setupVisionCommands(
+                OperatorInterface oi,
+                AcquireVisibleCubeCommand acquireCube,
+                NavToTestGoalCommand testNav,
+                DriveAtVelocityInfinitelyCommand driveAtVel,
+                PurePursuitCommand driveToLocalCubeCommand,
+                OffboardInterfaceSubsystem offboardSubsystem,
+                PoseSubsystem poseSubsystem) {
+        acquireCube.includeOnSmartDashboard();
+        testNav.includeOnSmartDashboard();
+        driveAtVel.includeOnSmartDashboard();
+
+        driveToLocalCubeCommand.setMode(PursuitMode.Relative);
+        driveToLocalCubeCommand.setPointSupplier(() -> {
+            TargetCubeInfo targetCube = offboardSubsystem.getTargetCube();
+            if(targetCube == null) {
+                return null;
+            }
+            double headingDelta = Math.toDegrees(Math.atan2(targetCube.xInches, targetCube.yInches));
+
+            FieldPose targetPose = new FieldPose(new XYPair(targetCube.xInches, targetCube.yInches), new ContiguousHeading(90 - headingDelta));
+            return Arrays.asList(targetPose);
+        });
+        
+        driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
     }
 
     @Inject
