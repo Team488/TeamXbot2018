@@ -121,6 +121,8 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
         log.info("Lower limit set at: " + lowerLimit);
         motor.configReverseSoftLimitThreshold(lowerLimit, 0);
+        
+        setTargetAngle(getTargetAngle());
     }
 
     public double getWristAngle() {
