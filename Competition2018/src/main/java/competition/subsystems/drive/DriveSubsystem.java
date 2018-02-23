@@ -222,11 +222,11 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         return rotateDecayPid;
     }
     
-    public double leftTicksPerFiveFt() {
+    public double getLeftTicksPerFiveFt() {
         return leftTicksPerFiveFeet.get();
     }
     
-    public double rightTicksPerFiveFt() {
+    public double getRightTicksPerFiveFt() {
         return rightTicksPerFiveFeet.get();
     }
 }
