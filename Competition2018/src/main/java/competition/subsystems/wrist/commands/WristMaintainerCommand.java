@@ -27,6 +27,11 @@ public class WristMaintainerCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
+        
+        if (wrist.getIsCalibrated()) {
+            log.info("Setting current angle as desired angle");
+            wrist.setTargetAngle(wrist.getWristAngle());
+        }
     }
 
     @Override
