@@ -24,5 +24,10 @@ public class ReleasePawlCommand extends BaseCommand{
     public void execute() {
         climb.releasePawl();
     }
+    
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 
 }
