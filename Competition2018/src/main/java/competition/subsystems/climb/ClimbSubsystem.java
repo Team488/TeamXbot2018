@@ -64,11 +64,11 @@ public class ClimbSubsystem extends BaseSubsystem {
         motor.simpleSet(0);
     }
     
-    public void releasePaul() {
+    public void releasePawl() {
         solenoid.setOn(false);
     }
     
-    public void engagePaul() {
+    public void engagePawl() {
         solenoid.setOn(true);
     }
 }

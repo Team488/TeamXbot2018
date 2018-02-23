@@ -5,12 +5,12 @@ import com.google.inject.Inject;
 import competition.subsystems.climb.ClimbSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class ReleasePaulCommand extends BaseCommand{
+public class ReleasePawlCommand extends BaseCommand{
     
     ClimbSubsystem climb;
     
     @Inject
-    public ReleasePaulCommand(ClimbSubsystem climb) {
+    public ReleasePawlCommand(ClimbSubsystem climb) {
         this.climb = climb;
         this.requires(climb);
     }
@@ -22,7 +22,7 @@ public class ReleasePaulCommand extends BaseCommand{
     
     @Override
     public void execute() {
-        climb.releasePaul();
+        climb.releasePawl();
     }
 
 }
