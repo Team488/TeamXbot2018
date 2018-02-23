@@ -28,10 +28,9 @@ public class WristMaintainerCommandTest extends BaseCompetitionTest {
     
     @Test
     public void testMaintain() {
-        wrist.setTargetAngle(45);
         wrist.calibrateHere();
-        
         command.initialize();
+        wrist.setTargetAngle(45);
         command.execute();
         
         assertEquals(-wrist.getMaximumAllowedPower(), wrist.motor.getMotorOutputPercent(), 0.001);

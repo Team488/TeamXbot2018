@@ -226,6 +226,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
 
         setSoftLimitsEnabled(true);
+        
+        setTargetHeight(getCurrentHeightInInches());
     }
 
     public void uncalibrate() {
