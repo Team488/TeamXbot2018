@@ -134,7 +134,7 @@ public class OperatorCommandMap {
     }
     
     @Inject
-    public void simpleDriveCommandStartToOuterFarScale(PurePursuitCommand pursuit) {
+    public void simpleDriveCommandStartToInnerFarScale(PurePursuitCommand pursuit) {
         pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
         pursuit.addPoint(new FieldPose(new XYPair(1.65*12, 6*12), new ContiguousHeading(60)));
         pursuit.addPoint(new FieldPose(new XYPair(1.65*12, 15*12), new ContiguousHeading(90)));
@@ -145,7 +145,7 @@ public class OperatorCommandMap {
         pursuit.addPoint(new FieldPose(new XYPair(-14.85*12, 19*12), new ContiguousHeading(120)));
         pursuit.addPoint(new FieldPose(new XYPair(-15.85*12, 22.5*12), new ContiguousHeading(90)));
 
-        pursuit.includeOnSmartDashboard("Outer far scale");
+        pursuit.includeOnSmartDashboard("Inner far scale");
     }
 
     @Inject
