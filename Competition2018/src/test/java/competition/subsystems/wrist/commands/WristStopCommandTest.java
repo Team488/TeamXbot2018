@@ -29,7 +29,7 @@ public class WristStopCommandTest extends BaseCompetitionTest {
     @Test
     public void checkStopDeploy() {
         wrist.goUp();
-        assertEquals(1, wrist.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(wrist.getMaximumAllowedPower(), wrist.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
         assertEquals(0.0, wrist.motor.getMotorOutputPercent(), 0.001);

@@ -17,6 +17,5 @@ public class AcquireVisibleCubeCommand extends OffboardProcessingWithRobotContro
     @Override
     protected void handleIncomingNonDrivePacket(OffboardCommunicationPacket packet) {
         // Intentionally left blank; nothing to do
-
     }
 }

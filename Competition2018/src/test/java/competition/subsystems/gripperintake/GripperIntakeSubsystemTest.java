@@ -34,23 +34,21 @@ public class GripperIntakeSubsystemTest extends BaseCompetitionTest {
         assertTrue(intake.leftMotor.getMotorOutputPercent() < 0);
         assertTrue(intake.rightMotor.getMotorOutputPercent() < 0);
     }
-
+    
     @Test
-    public void testLeftDominant() {
-        assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
+    public void testRotateClockwise() {
         assertEquals(intake.rightMotor.getMotorOutputPercent(), 0, 0.001);
-        intake.intakeleftDominant();
-        assertTrue(Math.abs(intake.leftMotor.getMotorOutputPercent())
-                - Math.abs(intake.rightMotor.getMotorOutputPercent()) >= 0.1);
+        assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
+        intake.rotateClockwise();
+        assertEquals(0, intake.rightMotor.getMotorOutputPercent() + intake.leftMotor.getMotorOutputPercent(), 0.001);
     }
-
+    
     @Test
-    public void testRightDominant() {
-        assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
+    public void testRotateCounterClockwise() {
         assertEquals(intake.rightMotor.getMotorOutputPercent(), 0, 0.001);
-        intake.intakerightDominant();
-        assertTrue(Math.abs(intake.rightMotor.getMotorOutputPercent())
-                - Math.abs(intake.leftMotor.getMotorOutputPercent()) >= 0.1);
+        assertEquals(intake.leftMotor.getMotorOutputPercent(), 0, 0.001);
+        intake.rotateCounterClockwise();
+        assertEquals(0, intake.rightMotor.getMotorOutputPercent() + intake.leftMotor.getMotorOutputPercent(), 0.001);
     }
 
     @Test

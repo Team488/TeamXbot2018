@@ -1,36 +1,37 @@
 package competition.subsystems.wrist.commands;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristUpCommand;
 
-public class WristUpCommandTest extends BaseCompetitionTest {
+public class SetWristAngleCommandTest extends BaseCompetitionTest {
 
+    SetWristAngleCommand command;
     WristSubsystem wrist;
-    WristUpCommand command;
-
+    
     @Override
     public void setUp() {
         super.setUp();
-
+        command = injector.getInstance(SetWristAngleCommand.class);
         wrist = injector.getInstance(WristSubsystem.class);
-        command = injector.getInstance(WristUpCommand.class);
     }
-
+    
     @Test
     public void simpleTest() {
         command.initialize();
         command.execute();
     }
-
+    
     @Test
-    public void checkDeployUp() {
-        assertEquals(0.0, wrist.motor.getMotorOutputPercent(), 0.001);
+    public void canSet() {
+        assertEquals(90, wrist.getTargetAngle(), 0.001);
+        
+        command.setGoalAngle(33);
         command.initialize();
-        command.execute();
-        assertEquals(wrist.getMaximumAllowedPower(), wrist.motor.getMotorOutputPercent(), 0.001);
+        
+        assertEquals(33, wrist.getTargetAngle(), 0.001);
     }
 }

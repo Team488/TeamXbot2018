@@ -4,12 +4,12 @@ import competition.subsystems.offboard.OffboardCommsConstants;
 
 public class TargetCubeInfo {
     /**
-     * The front-back component of the position
+     * The left-right component of the position
      */
     public final double xInches;
     
     /**
-     * The left-right component of the position
+     * The front-back component of the position
      */
     public final double yInches;
     

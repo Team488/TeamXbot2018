@@ -14,13 +14,13 @@ public class TargetCubePacket {
         boolean hasTarget = packetData[0] != 0;
         
         if(hasTarget) {
-            double xMeters = parseSingleDim(packetData[1], packetData[2]);
-            double yMeters = parseSingleDim(packetData[3], packetData[4]);
-            double zMeters = parseSingleDim(packetData[5], packetData[6]);
+            double rosXMeters = parseSingleDim(packetData[1], packetData[2]);
+            double rosYMeters = parseSingleDim(packetData[3], packetData[4]);
+            double rosZMeters = parseSingleDim(packetData[5], packetData[6]);
             this.targetInfo = new TargetCubeInfo(
-                    xMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
-                    yMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
-                    zMeters / OffboardInterfaceSubsystem.METERS_PER_INCH);
+                    -rosYMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
+                    rosXMeters / OffboardInterfaceSubsystem.METERS_PER_INCH,
+                    rosZMeters / OffboardInterfaceSubsystem.METERS_PER_INCH);
         }
         else {
             this.targetInfo = null;

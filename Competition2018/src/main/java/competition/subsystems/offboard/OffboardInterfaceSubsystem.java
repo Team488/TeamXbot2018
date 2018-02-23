@@ -18,6 +18,7 @@ import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
+import xbot.common.logic.WatchdogTimer;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -25,15 +26,14 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class OffboardInterfaceSubsystem extends BaseSubsystem implements PeriodicDataSource {
     private static Logger log = Logger.getLogger(OffboardInterfaceSubsystem.class);
-
+    
     public static final double CM_PER_INCH = 2.54;
     public static final double METERS_PER_INCH = 0.0254;
     
     private final Queue<OffboardCommunicationPacket> incomingPacketQueue = new LinkedList<>();
-    private final int PACKET_QUEUE_MAX_LENGTH = 25;
+    private static final int PACKET_QUEUE_MAX_LENGTH = 25;
     
     private final DriveSubsystem driveSubsystem;
-    private final PoseSubsystem poseSubsystem;
     private final XOffboardCommsInterface rawCommsInterface;
 
     private Double lastWheelOdomSend = null;
@@ -46,19 +46,32 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     private DoubleProperty targetCubeYProp;
     private DoubleProperty targetCubeZProp;
     
+    private WatchdogTimer watchdog;
+    
     @Inject
-    public OffboardInterfaceSubsystem(XPropertyManager propManager, DriveSubsystem driveSubsystem, PoseSubsystem poseSubsystem, XOffboardCommsInterface commsInterface) {
+    public OffboardInterfaceSubsystem(
+                XPropertyManager propManager,
+                DriveSubsystem driveSubsystem,
+                PoseSubsystem poseSubsystem,
+                XOffboardCommsInterface commsInterface) {
         log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
-        this.poseSubsystem = poseSubsystem;
         this.rawCommsInterface = commsInterface;
         
         hasTargetCubeProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Has target?", false);
         targetCubeXProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/X", 0);
         targetCubeYProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Y", 0);
-        targetCubeZProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/X", 0);
-
+        targetCubeZProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Z", 0);
+        
+        watchdog = new WatchdogTimer(
+            3.0,
+            () -> log.info("Connected"),
+            () -> {
+                log.info("Disconnected");
+                this.targetCube = null;
+                updateProps();
+            });
     }
     
     private void sendWheelOdomUpdate() {
@@ -108,10 +121,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
             try {
                 TargetCubePacket cubePacket = TargetCubePacket.parse(packet.data);
                 this.targetCube = cubePacket.targetInfo;
-                this.hasTargetCubeProp.set(this.targetCube != null);
-                this.targetCubeXProp.set(this.targetCube == null ? 0 : this.targetCube.xInches);
-                this.targetCubeYProp.set(this.targetCube == null ? 0 : this.targetCube.yInches);
-                this.targetCubeZProp.set(this.targetCube == null ? 0 : this.targetCube.zInches);
+                updateProps();
             }
             catch (IllegalArgumentException e) {
                 log.warn("Detected cube packet failed to parse");
@@ -120,6 +130,13 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         }
         
         return false;
+    }
+    
+    private void updateProps() {
+        this.hasTargetCubeProp.set(this.targetCube != null);
+        this.targetCubeXProp.set(this.targetCube == null ? 0 : this.targetCube.xInches);
+        this.targetCubeYProp.set(this.targetCube == null ? 0 : this.targetCube.yInches);
+        this.targetCubeZProp.set(this.targetCube == null ? 0 : this.targetCube.zInches);
     }
     
     public TargetCubeInfo getTargetCube() {
@@ -138,6 +155,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
                 break;
             }
             
+            watchdog.kick();
+            
             if(handlePacketIfPossible(packet)) {
                 continue;
             }
@@ -151,7 +170,10 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         
         if (numPacketsDropped > 0 && this.getCurrentCommand() != null) {
             // TODO: this.getCurrentCommand() instanceof OffboardProcessingCommand
-            log.warn(numPacketsDropped + " offboard comms packets dropped from queue while command is running; all commands running on the offboard subsystem should process incoming packets.");
+            log.warn(numPacketsDropped + " offboard comms packets dropped from queue while command is running;"
+                    + " all commands running on the offboard subsystem should process incoming packets.");
         }
+        
+        watchdog.check();
     }
 }
