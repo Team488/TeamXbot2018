@@ -27,7 +27,7 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
     MockTimer mockTimer;
     ElevatorMaintainerCommand maintainerCommand;
     WristMaintainerCommand wristMaintainer;
-    
+
     @Override
     public void setUp() {
         super.setUp();
@@ -42,51 +42,51 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         this.maintainerCommand = injector.getInstance(ElevatorMaintainerCommand.class);
         this.wristMaintainer = injector.getInstance(WristMaintainerCommand.class);
     }
-    
+
     @Test
-    public void unityTest() { 
+    public void unityTest() {
         command.start();
         elevator.calibrateHere();
         wrist.calibrateHere();
         maintainerCommand.start();
         wristMaintainer.start();
-        
+
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
-        
+
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.rightMaster.getMotorOutputPercent(), 0.001);
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
         assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
-        
-        ((MockCANTalon) drive.rightMaster).setPosition((int)(243*(drive.rightTicksPerFiveFt()/60)));
-        ((MockCANTalon) drive.leftMaster).setPosition((int)(243*(drive.leftTicksPerFiveFt()/60)));
+
+        ((MockCANTalon) drive.rightMaster).setPosition((int) (243 * (drive.rightTicksPerFiveFt() / 60)));
+        ((MockCANTalon) drive.leftMaster).setPosition((int) (243 * (drive.leftTicksPerFiveFt() / 60)));
         pose.updatePeriodicData();
-        
+
         /**
          * 100 is the conversion for ticks to inches, and 300 the ticks for 3 ft
          */
-        ((MockCANTalon) elevator.motor).setPosition((int)(elevator.getTargetScaleHighHeight() * 100) - 300);
+        ((MockCANTalon) elevator.motor).setPosition((int) (elevator.getTargetScaleHighHeight() * 100) - 300);
         mockTimer.advanceTimeInSecondsBy(1000);
-        
+
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
-        
+
         mockTimer.advanceTimeInSecondsBy(1000);
-        
+
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
-        
+
         assertEquals(-0.3, wrist.motor.getMotorOutputPercent(), 0.001);
-        
+
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
-        
+
         assertEquals(0.3, intake.leftMotor.getMotorOutputPercent(), 0.001);
         assertEquals(0.3, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
-    
+
 }

@@ -4,9 +4,7 @@ import com.google.inject.Inject;
 
 import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import xbot.common.command.BaseCommand;
 import xbot.common.command.BaseSetpointCommand;
-import xbot.common.command.SetpointSystemTest;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 

@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
     
-    public SetWristAngleCommand wristSet;
-    
     @Inject
     public AutoPutCubeOnScaleCommandGroup(
             DriveForDistanceCommand driveToDistance,
@@ -27,8 +25,6 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
          */
         driveToDistance.setDeltaDistance(243);
         wristSet.setGoalAngle(0);
-        
-        this.wristSet = wristSet;
         
         this.addParallel(driveToDistance);
         this.addParallel(elevatorToScale);
