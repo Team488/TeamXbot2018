@@ -26,6 +26,14 @@ public class LeanWithJoystickCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        leanSubsystem.setPower(oi.operatorGamepad.getLeftVector().x);
+        double power = 0;
+        if (oi.operatorGamepad.getPOV() == 90) {
+            power = 1;
+        }
+        if (oi.operatorGamepad.getPOV() == 270) {
+            power = -1;
+        }
+        
+        leanSubsystem.setPower(power);
     }
 }

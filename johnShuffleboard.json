@@ -315,6 +315,50 @@
               "_source0": "network_table:///SmartDashboard/ElevatorMaintainerCommand/Motion Magic Enabled",
               "_title": "SmartDashboard/ElevatorMaintainerCommand/Motion Magic Enabled"
             }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Continuous current limit",
+              "_title": "SmartDashboard/ElevatorSubsystem/Continuous current limit"
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Peak current limit",
+              "_title": "SmartDashboard/ElevatorSubsystem/Peak current limit"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Restriction Reason",
+              "_title": "SmartDashboard/ElevatorSubsystem/Restriction Reason"
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/TargetHeight",
+              "_title": "SmartDashboard/ElevatorSubsystem/TargetHeight"
+            }
           }
         }
       }
