@@ -75,5 +75,5 @@ public abstract class ElectricalContract2018 {
 
     public abstract DeviceInfo getClimbMaster();
     
-    public abstract DeviceInfo getPaulSolenoid();
+    public abstract DeviceInfo getPawlSolenoid();
 }

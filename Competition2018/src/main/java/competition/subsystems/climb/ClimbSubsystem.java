@@ -25,7 +25,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        solenoid = clf.createSolenoid(contract.getPaulSolenoid().channel);
+        solenoid = clf.createSolenoid(contract.getPawlSolenoid().channel);
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
         decendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
 

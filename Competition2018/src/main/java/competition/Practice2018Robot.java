@@ -141,7 +141,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
     
     @Override
-    public DeviceInfo getPaulSolenoid() {
+    public DeviceInfo getPawlSolenoid() {
         return new DeviceInfo(2, false);
     }
 }
