@@ -163,7 +163,7 @@ public class OperatorCommandMap {
     @Inject
     public void simpleDriveCommandStartToOuterCloseScale(PurePursuitCommand pursuit) {
         pursuit.addPoint(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(1.15*12, 24*12), new ContiguousHeading(157.5)));
+        pursuit.addPoint(new FieldPose(new XYPair(1.15*12, 24*12), new ContiguousHeading(180)));
         pursuit.addPoint(new FieldPose(new XYPair(-2.1*12, 25*12), new ContiguousHeading(180)));
 
         pursuit.includeOnSmartDashboard("Outer close scale");
