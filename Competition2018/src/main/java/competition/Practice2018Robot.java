@@ -24,12 +24,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public DeviceInfo getRightDriveFollower() {
         return new DeviceInfo(20, false);
     }
-    
+
     @Override
     public DeviceInfo getLeftDriveMasterEncoder() {
         return new DeviceInfo(0, false);
     }
-    
+
     @Override
     public DeviceInfo getRightDriveMasterEncoder() {
         return new DeviceInfo(0, false);
@@ -54,12 +54,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public DeviceInfo getWristMaster() {
         return new DeviceInfo(30, false);
     }
-    
+
     @Override
     public DeviceInfo getWristEncoder() {
         return new DeviceInfo(0, false);
     }
-    
+
     @Override
     public double getWristMaximumAngle() {
         return 90;
@@ -119,12 +119,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public boolean elevatorLowerLimitReady() {
         return true;
     }
-    
+
     @Override
     public boolean elevatorUpperLimitReady() {
         return true;
     }
-    
+
     @Override
     public DeviceInfo getElevatorUpperLimit() {
         return new DeviceInfo(1, true);
@@ -139,7 +139,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public boolean elevatorUsesTalonLimits() {
         return false;
     }
-    
+
     @Override
     public DeviceInfo getPawlSolenoid() {
         return new DeviceInfo(2, false);
