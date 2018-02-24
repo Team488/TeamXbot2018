@@ -45,11 +45,11 @@ public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
 
     @Test
     public void unityTest() {
-        command.start();
         wrist.calibrateHere();
         elevator.calibrateHere();
         wristMaintainer.start();
         elevatorMaintainer.start();
+        command.start();
 
         xScheduler.run();
         xScheduler.run();

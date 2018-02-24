@@ -16,9 +16,9 @@ public class AutoPutCubeOnSwitchCommandGroup extends CommandGroup {
             DriveForDistanceCommand driveToDistance,
             ElevatorSubsystem elevator,
             GripperEjectCommand delivery,
-            MoveElevatorToHeightAndStabilizeCommand elevatorToSwitch,
+            MoveElevatorToHeightAndStabilizeCommand elevatorSet,
             SetWristAngleCommand wristSet) {
-        elevatorToSwitch.setTargetHeight(elevator.getTargetSwitchDropHeight());
+        elevatorSet.setTargetHeight(elevator.getTargetSwitchDropHeight());
         /**
          * 81.5 is the distance the robot with cube,
          * to the switch in inches
@@ -26,8 +26,8 @@ public class AutoPutCubeOnSwitchCommandGroup extends CommandGroup {
         driveToDistance.setDeltaDistance(81.5);
         wristSet.setGoalAngle(0);
         
+        this.addParallel(elevatorSet);
         this.addParallel(driveToDistance);
-        this.addParallel(elevatorToSwitch);
         this.addSequential(wristSet);
         this.addSequential(delivery);
     }

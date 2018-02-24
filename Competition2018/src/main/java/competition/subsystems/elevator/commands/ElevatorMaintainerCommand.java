@@ -43,7 +43,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             giveUpCalibratingTime = Timer.getFPGATimestamp() + elevatorCalibrationAttemptTimeMS.get();
             log.info("Attempting calibration from " + Timer.getFPGATimestamp() + " until " + giveUpCalibratingTime);
         } else {
-            log.info("Setting current height as target height");
+            log.info("Setting current height (" + elevator.getCurrentHeightInInches() + " inches) as target height");
             elevator.setTargetHeight(elevator.getCurrentHeightInInches());
         }
     }

@@ -25,7 +25,7 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
     GripperIntakeSubsystem intake;
     BasePoseSubsystem pose;
     MockTimer mockTimer;
-    ElevatorMaintainerCommand maintainerCommand;
+    ElevatorMaintainerCommand elevatorMaintainer;
     WristMaintainerCommand wristMaintainer;
 
     @Override
@@ -39,30 +39,28 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         this.wrist = injector.getInstance(WristSubsystem.class);
         this.command = injector.getInstance(AutoPutCubeOnScaleCommandGroup.class);
         this.xScheduler = injector.getInstance(XScheduler.class);
-        this.maintainerCommand = injector.getInstance(ElevatorMaintainerCommand.class);
+        this.elevatorMaintainer = injector.getInstance(ElevatorMaintainerCommand.class);
         this.wristMaintainer = injector.getInstance(WristMaintainerCommand.class);
     }
 
     @Test
     public void unityTest() {
-        command.start();
         elevator.calibrateHere();
         wrist.calibrateHere();
-        maintainerCommand.start();
+        elevatorMaintainer.start();
         wristMaintainer.start();
+        command.start();
 
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
-
+        
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.rightMaster.getMotorOutputPercent(), 0.001);
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
         assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
-        
 
         ((MockCANTalon) drive.rightMaster).setPosition((int) (243 * (drive.getRightTicksPerFiveFt() / 60)));
         ((MockCANTalon) drive.leftMaster).setPosition((int) (243 * (drive.getLeftTicksPerFiveFt() / 60)));
-
         pose.updatePeriodicData();
 
         /**

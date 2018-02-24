@@ -18,8 +18,8 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
             ElevatorSubsystem elevator,
             SetWristAngleCommand wristSet,
             GripperEjectCommand delivery,
-            SetElevatorTargetHeightCommand elevatorToScale) {
-        elevatorToScale.setGoalHeight(elevator.getTargetScaleHighHeight());
+            SetElevatorTargetHeightCommand elevatorSet) {
+        elevatorSet.setGoalHeight(elevator.getTargetScaleHighHeight());
         /**
          * 243 is the distance the robot is with the cube,
          * to the scale in inches
@@ -27,8 +27,8 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
         driveToDistance.setDeltaDistance(243);
         wristSet.setGoalAngle(0);
         
+        this.addParallel(elevatorSet);
         this.addParallel(driveToDistance);
-        this.addParallel(elevatorToScale);
         this.addSequential(wristSet);
         this.addSequential(delivery); 
     }
