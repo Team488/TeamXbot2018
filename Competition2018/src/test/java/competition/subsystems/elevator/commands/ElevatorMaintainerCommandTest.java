@@ -36,9 +36,9 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
     @Test
     public void checkGoUp() {
         ((MockCANTalon)elevator.motor).setPosition(3700);
-        elevator.setTargetHeight(70);
         elevator.isCalibrated();
         command.initialize();
+        elevator.setTargetHeight(70);
         command.execute();
         assertTrue(elevator.motor.getMotorOutputPercent() > 0);
     }
@@ -46,8 +46,8 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
     @Test
     public void checkGoDown() {
         ((MockCANTalon)elevator.motor).setPosition(3700);
-        elevator.setTargetHeight(12);
         command.initialize();
+        elevator.setTargetHeight(12);
         command.execute();
         assertTrue(elevator.motor.getMotorOutputPercent() < 0);
     }
@@ -75,8 +75,8 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
     public void checkMaintainerMode() {
         elevator.calibrateHere();
         ((MockCANTalon)elevator.motor).setPosition(3700);
-        elevator.setTargetHeight(70);
         command.initialize();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(1, elevator.motor.getMotorOutputPercent(), .01);
     }
@@ -102,6 +102,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         command.execute();
         assertEquals(-.2, elevator.motor.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(1, elevator.motor.getMotorOutputPercent(), .01);
         elevator.uncalibrate();
@@ -122,6 +123,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         command.execute();
         assertEquals(.15, elevator.motor.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(1, elevator.motor.getMotorOutputPercent(), .01);
         elevator.uncalibrate();
@@ -134,9 +136,9 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
     public void checkMotionMagicModeGoUp() {
         command.isMotionMagicMode(true);
         ((MockCANTalon)elevator.motor).setPosition(3700);
-        elevator.setTargetHeight(70);
         elevator.isCalibrated();
         command.initialize();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(6700, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
     }
@@ -145,8 +147,8 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
     public void checkMotionMagicModeGoDown() {
         command.isMotionMagicMode(true);
         ((MockCANTalon)elevator.motor).setPosition(3700);
-        elevator.setTargetHeight(12);
         command.initialize();
+        elevator.setTargetHeight(12);
         command.execute();
         assertEquals(900, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
     }
@@ -166,8 +168,8 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         command.isMotionMagicMode(true);
         elevator.calibrateHere();
         ((MockCANTalon)elevator.motor).setPosition(3700);
-        elevator.setTargetHeight(70);
         command.initialize();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(6700, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
     }
@@ -182,6 +184,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         command.execute();
         assertEquals(-.2, elevator.motor.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(10400, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
         elevator.uncalibrate();
@@ -203,6 +206,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         command.execute();
         assertEquals(.15, elevator.motor.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
+        elevator.setTargetHeight(70);
         command.execute();
         assertEquals(10400, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
         elevator.uncalibrate();
