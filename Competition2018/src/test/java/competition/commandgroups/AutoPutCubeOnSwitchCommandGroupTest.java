@@ -61,8 +61,8 @@ public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
         assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
 
-        ((MockCANTalon) drive.rightMaster).setPosition((int) (81.5 * (drive.rightTicksPerFiveFt() / 60)));
-        ((MockCANTalon) drive.leftMaster).setPosition((int) (81.5 * (drive.leftTicksPerFiveFt() / 60)));
+        ((MockCANTalon) drive.rightMaster).setPosition((int) (81.5 * (drive.getRightTicksPerFiveFt() / 60)));
+        ((MockCANTalon) drive.leftMaster).setPosition((int) (81.5 * (drive.getLeftTicksPerFiveFt() / 60)));
         pose.updatePeriodicData();
         /**
          * 100 is the conversion for ticks to inches, and 300 the ticks for 3 ft

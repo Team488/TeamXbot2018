@@ -58,9 +58,9 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.rightMaster.getMotorOutputPercent(), 0.001);
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
         assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
-
-        ((MockCANTalon) drive.rightMaster).setPosition((int) (243 * (drive.rightTicksPerFiveFt() / 60)));
-        ((MockCANTalon) drive.leftMaster).setPosition((int) (243 * (drive.leftTicksPerFiveFt() / 60)));
+        
+        ((MockCANTalon) drive.rightMaster).setPosition((int) (243 * (drive.getRightTicksPerFiveFt() / 60)));
+        ((MockCANTalon) drive.leftMaster).setPosition((int) (243 * (drive.getLeftTicksPerFiveFt() / 60)));
         pose.updatePeriodicData();
 
         /**

@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
+import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -17,8 +18,8 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
             ElevatorSubsystem elevator,
             SetWristAngleCommand wristSet,
             GripperEjectCommand delivery,
-            MoveElevatorToHeightAndStabilizeCommand elevatorToScale) {
-        elevatorToScale.setTargetHeight(elevator.getTargetScaleHighHeight());
+            SetElevatorTargetHeightCommand elevatorToScale) {
+        elevatorToScale.setGoalHeight(elevator.getTargetScaleHighHeight());
         /**
          * 243 is the distance the robot is with the cube,
          * to the scale in inches

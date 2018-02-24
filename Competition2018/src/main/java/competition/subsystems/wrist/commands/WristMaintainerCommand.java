@@ -9,9 +9,6 @@ import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
 
 public class WristMaintainerCommand extends BaseCommand {
-
-    public final WristSubsystem wrist;
-    public final PIDManager pid;
   
     WristSubsystem wrist;
     PIDManager pid;
