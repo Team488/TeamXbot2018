@@ -87,7 +87,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbLeanMaster() {
-        return new DeviceInfo(5, false);
+        return new DeviceInfo(33, false);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbDeployMaster() {
-        return new DeviceInfo(6, false);
+        return new DeviceInfo(22, false);
     }
 
     @Override
@@ -107,12 +107,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbMaster() {
-        return new DeviceInfo(7, false);
+        return new DeviceInfo(23, false);
     }
 
     @Override
     public DeviceInfo getShifterSolenoid() {
-        return new DeviceInfo(1, false);
+        return new DeviceInfo(0, false);
     }
 
     @Override
@@ -141,7 +141,17 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public DeviceInfo getPawlSolenoid() {
+    public DeviceInfo getElevatorEncoder() {
+        return new DeviceInfo(0, true);
+    }
+
+    @Override
+    public DeviceInfo getPawlSolenoidA() {
+        return new DeviceInfo(1, false);
+    }
+
+    @Override
+    public DeviceInfo getPawlSolenoidB() {
         return new DeviceInfo(2, false);
     }
 }

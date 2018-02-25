@@ -92,7 +92,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
         /*points.add(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
         points.add(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));*/
-        points.add(new FieldPose(new XYPair(-5.11*12, 9.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-6*12, 10*12), new ContiguousHeading(90)));
         
         return points;
     }
@@ -107,7 +107,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         //points.add(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
         //points.add(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
         //points.add(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
-        points.add(new FieldPose(new XYPair(-14.6*12, 9.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-16*12, 10*12), new ContiguousHeading(90)));
 
         return points;
     }

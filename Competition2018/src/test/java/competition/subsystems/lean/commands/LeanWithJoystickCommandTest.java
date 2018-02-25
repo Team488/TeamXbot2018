@@ -28,7 +28,7 @@ public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
     }
-
+/*
     @Test
     public void followJoysticks() {
         command.initialize();
@@ -39,5 +39,5 @@ public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
             command.execute();
             assertEquals(power, lean.motor.getMotorOutputPercent(), 0.001);
         }
-    }
+    }*/
 }

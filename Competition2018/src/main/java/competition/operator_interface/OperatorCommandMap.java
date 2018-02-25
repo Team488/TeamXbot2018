@@ -28,9 +28,11 @@ import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
+import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
+import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
@@ -103,8 +105,6 @@ public class OperatorCommandMap {
             GripperIntakeCommand intake) {
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
         oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
-        oi.operatorGamepad.getifAvailable(7).whileHeld(counterClockwise);
-        oi.operatorGamepad.getifAvailable(8).whileHeld(clockwise);
     }
 
     @Inject
@@ -114,9 +114,12 @@ public class OperatorCommandMap {
             SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
             CalibrateElevatorHereCommand calibrateHere, EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
+            ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
             ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
-        oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
+        oi.operatorGamepad.getifAvailable(6).whenPressed(joysticks);
+        oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
+        oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
@@ -141,12 +144,12 @@ public class OperatorCommandMap {
     public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
             ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl,
             EngagePawlCommand engagePawl, PrepareClimberDeployCommandGroup prepareDeploy) {
-        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm);
-        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm);
-        oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl);
-        oi.driverGamepad.getifAvailable(4).whileHeld(prepareDeploy);
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
-        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
+        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
+        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
+        oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
+        oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
+        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); //axis 3
+        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); //axis 2
     }
 
     @Inject

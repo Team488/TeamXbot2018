@@ -1,6 +1,7 @@
 package competition.subsystems.elevator.commands;
 
 import xbot.common.command.BaseCommand;
+import xbot.common.math.MathUtils;
 import xbot.common.math.PIDFactory;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,6 +24,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     double giveUpCalibratingTime;
     final BooleanProperty motionMagicEnabled;
     final DoubleProperty elevatorCalibrationAttemptTimeMS;
+    double throttle;
 
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf, XPropertyManager propMan,
@@ -37,6 +39,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        elevator.configureMotionMagic();
         log.info("Initializing with distance " + elevator.getTargetHeight() + " inches");
         if (!elevator.isCalibrated()) {
             log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
@@ -64,8 +67,11 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             if (motionMagicEnabled.get() == true) {
                 elevator.motionMagicToHeight(elevator.getTargetHeight());
             } else {
-                elevator.setPower(elevator.getPositionalPid().calculate(elevator.getTargetHeight(),
-                        elevator.getCurrentHeightInInches()));
+                double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
+                double powerDelta = elevator.getVelocityPid().calculate(positionOutput*16, elevator.getVelocityInchesPerSecond());
+                throttle += powerDelta;
+                throttle = MathUtils.constrainDouble(throttle, -0.2, 1);
+                elevator.setPower(throttle);
             }
         } else if (currentMode == MaintinerMode.Calibrating) {
             elevator.lower();

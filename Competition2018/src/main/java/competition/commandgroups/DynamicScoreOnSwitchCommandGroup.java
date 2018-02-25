@@ -28,13 +28,13 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
         
         setWristDown.setGoalAngle(0);
         setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
-        
+        // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
-        this.addParallel(setWristDown);
-        this.addParallel(setElevatorForSwitch);
+        //this.addParallel(setWristDown);
+        //this.addParallel(setElevatorForSwitch);
         this.addSequential(pursuit);
         
         // Score for 1 second
-        this.addSequential(eject, 1);
+        //this.addSequential(eject, 1);
     }
 }
