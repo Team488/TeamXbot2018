@@ -221,4 +221,12 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     public PIDManager getRotateDecayPid() {
         return rotateDecayPid;
     }
+    
+    public double getLeftTicksPerFiveFt() {
+        return leftTicksPerFiveFeet.get();
+    }
+    
+    public double getRightTicksPerFiveFt() {
+        return rightTicksPerFiveFeet.get();
+    }
 }
