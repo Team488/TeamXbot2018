@@ -13,6 +13,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import competition.subsystems.power_state_manager.PowerStateManagerSubsystem;
+import competition.subsystems.power_state_manager.PowerStateResponsiveController;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.MathUtils;
@@ -23,7 +25,7 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
 
 @Singleton
-public class DriveSubsystem extends BaseDriveSubsystem {
+public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResponsiveController {
     private static Logger log = Logger.getLogger(DriveSubsystem.class);
 
     public final XCANTalon leftMaster;
@@ -45,19 +47,28 @@ public class DriveSubsystem extends BaseDriveSubsystem {
 
     private double leftAccum;
     private double rightAccum;
+    
+    private final DoubleProperty voltageRampNormalProp;
+    private final DoubleProperty voltageRampLowBatProp;
+    private final DoubleProperty maxCurrentNormalProp;
+    private final DoubleProperty maxCurrentLowBatProp;
 
     public enum Side {
         Left, Right
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
+    public DriveSubsystem(CommonLibFactory factory, PowerStateManagerSubsystem powerStateManager, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
         log.info("Creating DriveSubsystem");
         
         positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
         rotateToHeadingPid = pf.createPIDManager(getPrefix()+"DriveHeading", 4, 0, 0);
         rotateDecayPid = pf.createPIDManager(getPrefix()+"DriveDecay", 0, 0, 1);
-        
+
+        voltageRampNormalProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (normal)", 0.15);
+        voltageRampLowBatProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (low battery)", 0.5);
+        maxCurrentNormalProp = propManager.createPersistentProperty(getPrefix() + "Current limit (normal)", 0);
+        maxCurrentLowBatProp = propManager.createPersistentProperty(getPrefix() + "Current limit (low-battery)", 10);
 
         // Default is for 2018 robot design
         // SRX counts edges rather than ticks, so the 1024-count sensor is read as 4096 per rev
@@ -86,7 +97,9 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
         this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
 
-        this.setVoltageRamp(0.15);
+        this.setVoltageRamp(voltageRampNormalProp.get());
+        this.setCurrentLimits(0, false);
+        powerStateManager.registerResponsiveController(this);
     }
 
     private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,
@@ -228,5 +241,33 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     
     public double getRightTicksPerFiveFt() {
         return rightTicksPerFiveFeet.get();
+    }
+    
+    private void setCurrentLimitsForBatMode(boolean isLowBatMode) {
+        if (isLowBatMode) {
+            this.setCurrentLimits((int)maxCurrentLowBatProp.get(), true);
+        }
+        else {
+            int maxCurrent = (int)maxCurrentLowBatProp.get();
+            // Setting the normal current limit to 0 will disable current limiting
+            if (maxCurrent > 0) {
+                this.setCurrentLimits(maxCurrent, true);
+            }
+            else {
+                this.setCurrentLimits(0, false);
+            }
+        }
+    }
+    
+    @Override
+    public void onEnterLowBatteryMode() {
+        setCurrentLimitsForBatMode(true);
+        this.setVoltageRamp(voltageRampLowBatProp.get());
+    }
+
+    @Override
+    public void onLeaveLowBatteryMode() {
+        this.setCurrentLimitsForBatMode(false);
+        this.setVoltageRamp(voltageRampNormalProp.get());
     }
 }
