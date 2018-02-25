@@ -22,7 +22,7 @@ public class PowerStateManagerSubsystem extends BaseSubsystem implements Periodi
     
     @Inject
     public PowerStateManagerSubsystem(XPropertyManager propMan) {
-        isLowBatteryModeProp = propMan.createEphemeralProperty("Is low battery mode?", false);
+        isLowBatteryModeProp = propMan.createEphemeralProperty(getPrefix() + "Is low battery mode?", false);
         isLowBatteryModeLatch = new Latch(false, EdgeType.Both, this::onChangeLowBatteryMode);
         
         responsiveControllers = new ArrayList<>();

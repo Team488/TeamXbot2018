@@ -220,6 +220,9 @@ public class OperatorCommandMap {
             LeaveLowBatteryModeCommand leave) {
         oi.driverGamepad.getifAvailable(9).whenPressed(enter);
         oi.driverGamepad.getifAvailable(10).whenPressed(leave);
+        
+        enter.includeOnSmartDashboard();
+        leave.includeOnSmartDashboard();
     }
 
     @Inject

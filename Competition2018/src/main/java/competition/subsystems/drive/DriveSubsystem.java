@@ -243,7 +243,7 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         return rightTicksPerFiveFeet.get();
     }
     
-    private void setCurrentLimitsForBatMode(boolean isLowBatMode) {
+    private void setCurrentLimitsForLowBatMode(boolean isLowBatMode) {
         if (isLowBatMode) {
             this.setCurrentLimits((int)maxCurrentLowBatProp.get(), true);
         }
@@ -261,13 +261,13 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     
     @Override
     public void onEnterLowBatteryMode() {
-        setCurrentLimitsForBatMode(true);
+        setCurrentLimitsForLowBatMode(true);
         this.setVoltageRamp(voltageRampLowBatProp.get());
     }
 
     @Override
     public void onLeaveLowBatteryMode() {
-        this.setCurrentLimitsForBatMode(false);
+        this.setCurrentLimitsForLowBatMode(false);
         this.setVoltageRamp(voltageRampNormalProp.get());
     }
 }
