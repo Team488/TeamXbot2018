@@ -10,6 +10,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
+import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.lean.LeanSubsystem;
@@ -18,6 +19,7 @@ import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
 import competition.subsystems.wrist.commands.WristControlViaJoysticksCommand;
+import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristStopCommand;
 
 @Singleton
@@ -31,9 +33,9 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupElevatorSubsystem(ElectricalContract2018 contract, ElevatorSubsystem elevator,
-            ControlElevatorViaJoystickCommand controlWithJoystick) {
+            ElevatorMaintainerCommand maintain) {
         if (contract.elevatorReady()) {
-            elevator.setDefaultCommand(controlWithJoystick);
+            elevator.setDefaultCommand(maintain);
         }
     }
 
@@ -47,9 +49,9 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupWristSubsystem(ElectricalContract2018 contract, WristSubsystem wristSubsystem,
-            WristControlViaJoysticksCommand command) {
+            WristMaintainerCommand maintain) {
         if (contract.wristReady()) {
-            wristSubsystem.setDefaultCommand(command);
+            wristSubsystem.setDefaultCommand(maintain);
         }
     }
 

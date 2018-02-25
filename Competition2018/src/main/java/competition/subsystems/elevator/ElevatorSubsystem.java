@@ -11,8 +11,10 @@ import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.controls.sensors.TalonCurrentMonitor;
 import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
@@ -232,6 +234,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configForwardSoftLimitThreshold(upperLimit, 0);
 
         setSoftLimitsEnabled(true);
+        
+        setTargetHeight(getCurrentHeightInInches());
     }
 
     public void uncalibrate() {
@@ -272,7 +276,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
 
         if (contract.elevatorUpperLimitReady()) {
+
             boolean sensorHit = upperLimitSupplier.get();
+
 
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
@@ -473,6 +479,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
     }
 
+
     public double getTargetScaleHighHeight() {
         return targetScaleHighHeight.get();
     }
@@ -487,6 +494,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public double getTargetPickUpHeight() {
         return targetPickUpHeight.get();
+
     }
 
     public double getLowerLimitInTicks() {
