@@ -58,7 +58,12 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, PowerStateManagerSubsystem powerStateManager, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
+    public DriveSubsystem(
+            CommonLibFactory factory,
+            PowerStateManagerSubsystem powerStateManager,
+            XPropertyManager propManager,
+            ElectricalContract2018 contract,
+            PIDFactory pf) {
         log.info("Creating DriveSubsystem");
         
         positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
@@ -248,7 +253,7 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
             this.setCurrentLimits((int)maxCurrentLowBatProp.get(), true);
         }
         else {
-            int maxCurrent = (int)maxCurrentLowBatProp.get();
+            int maxCurrent = (int)maxCurrentNormalProp.get();
             // Setting the normal current limit to 0 will disable current limiting
             if (maxCurrent > 0) {
                 this.setCurrentLimits(maxCurrent, true);
