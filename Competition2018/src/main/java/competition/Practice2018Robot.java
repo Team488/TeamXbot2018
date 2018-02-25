@@ -141,12 +141,17 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
-    public DeviceInfo getPawlSolenoid() {
-        return new DeviceInfo(2, false);
+    public DeviceInfo getElevatorEncoder() {
+        return new DeviceInfo(0, true);
     }
 
     @Override
-    public DeviceInfo getElevatorEncoder() {
-        return new DeviceInfo(0, true);
+    public DeviceInfo getPawlSolenoidA() {
+        return new DeviceInfo(1, false);
+    }
+
+    @Override
+    public DeviceInfo getPawlSolenoidB() {
+        return new DeviceInfo(2, false);
     }
 }

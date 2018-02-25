@@ -117,6 +117,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         upperLimitProp = propMan.createEphemeralProperty(getPrefix()+"Upper Limit", false);
         targetScaleHighHeight = propMan.createPersistentProperty(getPrefix()+"Scale high", 76.5);
         targetScaleMidHeight = propMan.createPersistentProperty(getPrefix()+"Scale mid", 64.5);
+        targetScaleLowHeight = propMan.createPersistentProperty(getPrefix()+"Scale low", 60.0);
         targetSwitchDropHeight = propMan.createPersistentProperty(getPrefix()+"Switch drop height", 19.0);
         targetPickUpHeight = propMan.createPersistentProperty(getPrefix()+"Pickup height", 3.0);
         elevatorPeakCurrentLimit = propMan.createPersistentProperty(getPrefix()+"Peak current limit", 35);
