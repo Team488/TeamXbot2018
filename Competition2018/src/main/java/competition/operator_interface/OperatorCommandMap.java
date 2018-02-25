@@ -73,11 +73,8 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
-            TankDriveWithJoysticksCommand simpleTank, PurePursuitCommand pursuit, ResetDistanceCommand resetDistance,
+    public void setupDriveCommands(OperatorInterface oi, PurePursuitCommand pursuit, ResetDistanceCommand resetDistance,
             SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore) {
-        oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
-        oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
 
         pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(90)));
         pursuit.addPoint(new FieldPose(new XYPair(-45, 90), new ContiguousHeading(180)));
@@ -158,13 +155,23 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube,
-            NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVel,
-            PurePursuitCommand driveToLocalCubeCommand, OffboardInterfaceSubsystem offboardSubsystem,
-            PoseSubsystem poseSubsystem) {
+    public void setupVisionCommands(
+                OperatorInterface oi,
+                AcquireVisibleCubeCommand acquireCube,
+                NavToTestGoalCommand testNav,
+                DriveAtVelocityInfinitelyCommand driveAtVelLow,
+                DriveAtVelocityInfinitelyCommand driveAtVelHigh,
+                PurePursuitCommand driveToLocalCubeCommand,
+                OffboardInterfaceSubsystem offboardSubsystem,
+                PoseSubsystem poseSubsystem) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
-        driveAtVel.includeOnSmartDashboard();
+
+        driveAtVelLow.setVelocity(20);
+        driveAtVelLow.includeOnSmartDashboard("Test drive at velocity (low)");
+
+        driveAtVelHigh.setVelocity(50);
+        driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
 
         driveToLocalCubeCommand.setMode(PursuitMode.Relative);
         driveToLocalCubeCommand.setPointSupplier(() -> {
@@ -180,6 +187,8 @@ public class OperatorCommandMap {
         });
 
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
+        oi.driverGamepad.getifAvailable(9).whileHeld(driveToLocalCubeCommand);
+        oi.driverGamepad.getifAvailable(10).whileHeld(driveToLocalCubeCommand);
     }
 
     @Inject
