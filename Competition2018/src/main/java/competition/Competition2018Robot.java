@@ -1,29 +1,35 @@
 package competition;
 
-public class Competition2018Robot extends Practice2018Robot {
+import competition.ElectricalContract2018.DeviceInfo;
 
-    @Override
-    public boolean elevatorReady() {
-        return false;
-    }
+public class Competition2018Robot extends Practice2018Robot {
     
     @Override
-    public boolean elevatorLowerLimitReady() {
-        return false;
+    public DeviceInfo getElevatorMaster() {
+        return new DeviceInfo(25, false);
     }
     
-    @Override
-    public boolean elevatorUpperLimitReady() {
-        return false;
-    }
-    
-    @Override
-    public boolean wristReady() {
-        return false;
+    public DeviceInfo getElevatorEncoder() {
+        return new DeviceInfo(0, false);
     }
     
     @Override
     public DeviceInfo getShifterSolenoid() {
         return new DeviceInfo(0, false);
+    }
+    
+    @Override
+    public boolean climbDeployReady() {
+        return true;
+    }
+    
+    @Override
+    public boolean climbLeanReady() {
+        return true;
+    }
+    
+    @Override
+    public boolean climbReady() {
+        return true;
     }
 }

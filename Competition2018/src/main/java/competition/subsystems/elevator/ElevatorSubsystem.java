@@ -73,6 +73,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty elevatorTargetHeight;
     final DoubleProperty currentTicks;
     final DoubleProperty currentHeight;
+    final DoubleProperty currentVelocity;
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
     final BooleanProperty calibratedProp;
@@ -88,6 +89,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
     final PIDManager positionalPid;
+    final PIDManager velocityPid;
     
     int updateMotorValuesCounter = 0;
     
@@ -124,8 +126,11 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         heightNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Height Near High Limit", maxHeightInInches.get() - 10);
         powerNearLowLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near Low Limit", 0.3);
         powerNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near High Limit", 0.3);
-        positionalPid = pf.createPIDManager(getPrefix()+"Position", 1, 0, 0);
+        positionalPid = pf.createPIDManager(getPrefix()+"Position", 0.1, 0, 0);
+        velocityPid= pf.createPIDManager(getPrefix() + "Velocity", 0.004, 0, 0);
+        currentVelocity = propMan.createEphemeralProperty(getPrefix()+"Current Velocity", 0);
         calibrationOffset = 0.0;
+        
         
         
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -161,14 +166,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor = clf.createCANTalon(contract.getElevatorMaster().channel);
         motor.setInverted(contract.getElevatorMaster().inverted);
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        motor.setSensorPhase(true);
+        motor.setSensorPhase(contract.getElevatorEncoder().inverted
+                );
 
         motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
         motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
         motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         motor.enableCurrentLimit(true);
         
-        motor.configPeakOutputReverse(-.025, 0);
+        motor.configPeakOutputReverse(-0.2, 0);
+        motor.configNominalOutputForward(0.3, 0);
 
         motor.createTelemetryProperties(getPrefix(), "Motor");
     }
@@ -382,6 +389,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public double getCurrentHeightInInches() {
         return ticksToInches(motor.getSelectedSensorPosition(0));
     }
+    
+    public double getVelocityInchesPerSecond() {
+        return motor.getSelectedSensorVelocity(0) * 10 / elevatorTicksPerInch.get(); 
+    }
 
     public int getCurrentTick() {
         return motor.getSelectedSensorPosition(0);
@@ -426,8 +437,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             currentTicks.set(getCurrentTick());
             currentHeight.set(getCurrentHeightInInches());
             motor.updateTelemetryProperties();
+            currentVelocity.set(getVelocityInchesPerSecond());
         }
-
         if (contract.elevatorLowerLimitReady()) {
             lowerLimitProp.set(lowerLimitSwitch.get());
         }
@@ -472,5 +483,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     
     public PIDManager getPositionalPid() {
         return positionalPid;
+    }
+    
+    public PIDManager getVelocityPid() {
+        return velocityPid;
     }
 }

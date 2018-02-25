@@ -23,6 +23,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     double giveUpCalibratingTime;
     final BooleanProperty motionMagicEnabled;
     final DoubleProperty elevatorCalibrationAttemptTimeMS;
+    final DoubleProperty gravityPowerOffset;
 
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf, XPropertyManager propMan,
@@ -30,6 +31,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         elevatorCalibrationAttemptTimeMS = propMan
                 .createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
         motionMagicEnabled = propMan.createPersistentProperty(getPrefix() + "Motion Magic Enabled", false);
+        gravityPowerOffset = propMan.createPersistentProperty(getPrefix() + "Gravity Offset", 0.3);
         this.elevator = elevator;
         this.requires(elevator);
         this.oi = oi;
@@ -37,6 +39,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
 
     @Override
     public void initialize() {
+        elevator.configureMotionMagic();
         log.info("Initializing");
         if (!elevator.isCalibrated()) {
             log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
@@ -65,7 +68,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
                 elevator.motionMagicToHeight(elevator.getTargetHeight());
             } else {
                 elevator.setPower(elevator.getPositionalPid().calculate(elevator.getTargetHeight(),
-                        elevator.getCurrentHeightInInches()));
+                        elevator.getCurrentHeightInInches()) + gravityPowerOffset.get() );
             }
         } else if (currentMode == MaintinerMode.Calibrating) {
             elevator.lower();

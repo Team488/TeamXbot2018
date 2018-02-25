@@ -261,29 +261,7 @@
               "_title": "SmartDashboard/ElevatorSubsystem/Current height"
             }
           },
-          "0,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Max Accleration",
-              "_title": "SmartDashboard/ElevatorSubsystem/Max Accleration"
-            }
-          },
-          "1,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Max Velocity",
-              "_title": "SmartDashboard/ElevatorSubsystem/Max Velocity"
-            }
-          },
-          "2,2": {
+          "3,4": {
             "size": [
               1,
               1
@@ -292,17 +270,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ P",
               "_title": "SmartDashboard/ElevatorSubsystem/Position/ P"
-            }
-          },
-          "3,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ D",
-              "_title": "SmartDashboard/ElevatorSubsystem/Position/ D"
             }
           },
           "4,2": {
@@ -358,6 +325,94 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/TargetHeight",
               "_title": "SmartDashboard/ElevatorSubsystem/TargetHeight"
+            }
+          },
+          "4,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/TargetHeight",
+              "_title": "SmartDashboard/ElevatorSubsystem/TargetHeight"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Pickup height",
+              "_title": "SmartDashboard/ElevatorSubsystem/Pickup height"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Peak current duration",
+              "_title": "SmartDashboard/ElevatorSubsystem/Peak current duration"
+            }
+          },
+          "6,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorMaintainerCommand/Gravity Offset",
+              "_title": "SmartDashboard/ElevatorMaintainerCommand/Gravity Offset"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Current Velocity",
+              "_title": "SmartDashboard/ElevatorSubsystem/Current Velocity"
+            }
+          },
+          "0,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ P",
+              "_title": "SmartDashboard/ElevatorSubsystem/Velocity/ P"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ D",
+              "_title": "SmartDashboard/ElevatorSubsystem/Velocity/ D"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ D",
+              "_title": "SmartDashboard/ElevatorSubsystem/Position/ D"
             }
           }
         }
@@ -621,18 +676,30 @@
               "_title": "SmartDashboard/DriveSubsystem/Drive to position/ Min Output"
             }
           },
-          "3,2": {
+          "0,3": {
             "size": [
               2,
               1
             ],
             "content": {
               "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/Gabe Command",
-              "_title": "/SmartDashboard/Gabe Command"
+              "_source0": "network_table:///SmartDashboard/DynamicScoreOnSwitchCommandGroup",
+              "_title": "SmartDashboard/DynamicScoreOnSwitchCommandGroup"
             }
           }
         }
+      }
+    },
+    {
+      "title": "Tab 6",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {}
       }
     }
   ]
