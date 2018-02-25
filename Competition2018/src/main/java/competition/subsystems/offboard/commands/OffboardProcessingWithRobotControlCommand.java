@@ -11,10 +11,13 @@ import competition.subsystems.offboard.packets.ElevatorPositionCommandPacket;
 
 public abstract class OffboardProcessingWithRobotControlCommand extends OffboardProcessingCommand {
     
-	private final DriveSubsystem driveSubsystem;
+    private final DriveSubsystem driveSubsystem;
     private final ElevatorSubsystem elevatorSubsystem;
-	
-    protected OffboardProcessingWithRobotControlCommand(int commandId, OffboardInterfaceSubsystem offboardSubsystem, DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem) {
+
+    protected OffboardProcessingWithRobotControlCommand(int commandId, 
+            OffboardInterfaceSubsystem offboardSubsystem, 
+            DriveSubsystem driveSubsystem,
+            ElevatorSubsystem elevatorSubsystem) {
         super(commandId, offboardSubsystem);
         this.driveSubsystem = driveSubsystem;
         this.requires(driveSubsystem);

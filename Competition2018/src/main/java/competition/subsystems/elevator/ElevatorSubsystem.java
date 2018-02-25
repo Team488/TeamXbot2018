@@ -30,7 +30,14 @@ import xbot.common.properties.XPropertyManager;
 public class ElevatorSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
 
     public enum ElevatorPowerRestrictionReason {
-        FullPowerAvailable, LowerLimitSwitch, UpperLimitSwitch, Uncalibrated, AboveMaxHeight, NearMaxHeight, BelowMinHeight, NearMinHeight,
+        FullPowerAvailable,
+        LowerLimitSwitch,
+        UpperLimitSwitch,
+        Uncalibrated,
+        AboveMaxHeight,
+        NearMaxHeight,
+        BelowMinHeight,
+        NearMinHeight,
     }
 
     public enum ElevatorGoal {
@@ -73,6 +80,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final BooleanProperty calibratedProp;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
+    private final DoubleProperty targetScaleLowHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
     final DoubleProperty elevatorPeakCurrentLimit;
@@ -105,6 +113,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         upperLimitProp = propMan.createEphemeralProperty(getPrefix() + "Upper Limit", false);
         targetScaleHighHeight = propMan.createPersistentProperty(getPrefix() + "Scale high", 76.5);
         targetScaleMidHeight = propMan.createPersistentProperty(getPrefix() + "Scale mid", 64.5);
+        targetScaleLowHeight = propMan.createPersistentProperty(getPrefix() + "Scale Low", 50);
         targetSwitchDropHeight = propMan.createPersistentProperty(getPrefix() + "Switch drop height", 19.0);
         targetPickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height", 3.0);
         elevatorPeakCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Peak current limit", 35);
@@ -359,7 +368,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             setTargetHeight(targetSwitchDropHeight.get());
             break;
         case ScaleLow: 
-            // No Known Height ATM
+            setTargetHeight(targetScaleLowHeight.get());
             break;
         case ScaleMid:
             setTargetHeight(targetScaleMidHeight.get());
