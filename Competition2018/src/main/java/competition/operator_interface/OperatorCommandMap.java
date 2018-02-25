@@ -73,11 +73,8 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
-            TankDriveWithJoysticksCommand simpleTank, PurePursuitCommand pursuit, ResetDistanceCommand resetDistance,
+    public void setupDriveCommands(OperatorInterface oi, PurePursuitCommand pursuit, ResetDistanceCommand resetDistance,
             SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore) {
-        oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
-        oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
 
         pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(90)));
         pursuit.addPoint(new FieldPose(new XYPair(-45, 90), new ContiguousHeading(180)));
