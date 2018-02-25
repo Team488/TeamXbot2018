@@ -11,6 +11,8 @@ import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
 import competition.subsystems.offboard.data.TargetCubeInfo;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
+import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCommand;
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.PrepareClimberDeployCommandGroup;
@@ -190,8 +192,8 @@ public class OperatorCommandMap {
         });
 
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
-        oi.driverGamepad.getifAvailable(9).whilePressedNoRestart(driveToLocalCubeCommand);
-        oi.driverGamepad.getifAvailable(10).whilePressedNoRestart(driveToLocalCubeCommand);
+        oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
+        oi.driverGamepad.getifAvailable(8).whilePressedNoRestart(driveToLocalCubeCommand);
     }
 
     @Inject
@@ -209,6 +211,15 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getPovIfAvailable(0).whenPressed(high);
         oi.operatorGamepad.getPovIfAvailable(90).whenPressed(medium);
         oi.operatorGamepad.getPovIfAvailable(180).whenPressed(low);
+    }
+
+    @Inject
+    public void setupLowBatteryCommands(
+            OperatorInterface oi,
+            EnterLowBatteryModeCommand enter,
+            LeaveLowBatteryModeCommand leave) {
+        oi.driverGamepad.getifAvailable(9).whenPressed(enter);
+        oi.driverGamepad.getifAvailable(10).whenPressed(leave);
     }
 
     @Inject
