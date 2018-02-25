@@ -25,50 +25,79 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         this.gameData = gameData;
     }
     
-    public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
-        return () -> chooseBestPathToFeature(feature);
+    public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature, boolean onRight) {
+        return () -> chooseBestPathToFeature(feature, onRight);
     }
     
-    private List<FieldPose> chooseBestPathToFeature(GameFeature feature) {
-        OwnedSide targetSide = gameData.getOwnedSide(feature);
+    private List<FieldPose> mirrorPath(List<FieldPose> path) {
+        List<FieldPose> flippedPath = new ArrayList<FieldPose>();
         
+        for (FieldPose pose : path) {
+            flippedPath.add(new FieldPose(
+                    new XYPair(-pose.getPoint().x, pose.getPoint().y),
+                    new ContiguousHeading(pose.getHeading().getValue())
+                )
+            );
+        }
+        
+        return flippedPath;
+    }
+    
+    private List<FieldPose> chooseBestPathToFeature(GameFeature feature, boolean onRight) {
+        OwnedSide targetSide = gameData.getOwnedSide(feature);
+        List<FieldPose> bestPath = createPathToNowhere();
         switch (feature) {
         case SWITCH_NEAR:
             switch (targetSide) {
             case LEFT:
                 log.info("Creating path to Left Switch");
-                return createPathToLeftSwitch();
+                bestPath = createPathToLeftSwitch();
+                break;
             case RIGHT:
                 log.info("Creating path to Right Switch");
-                return createPathToRightSwitch();
+                bestPath = createPathToRightSwitch();
+                break;
             case UNKNOWN:
                 log.warn("Jaci's library could not parse which Switch side to visit in auto. Going nowhere");
-                return createPathToNowhere();
+                bestPath = createPathToNowhere();
+                break;
             default: 
                 log.warn("Somehow no idea where to go. Going nowhere.");
-                return createPathToNowhere();
+                bestPath = createPathToNowhere();
+                break;
             }
+            break;
         case SCALE:
             switch (targetSide) {
             case LEFT:
                 log.info("Creating path to Left Scale");
-                return createPathToLeftScale();
+                bestPath = createPathToLeftScale();
+                break;
             case RIGHT:
                 log.info("Creating path to Right Scale");
-                return createPathToRightScale();
+                bestPath = createPathToRightScale();
+                break;
             case UNKNOWN:
                 log.warn("Jaci's library could not parse which Scale side to visit in auto. Going nowhere");
-                return createPathToNowhere();
+                bestPath = createPathToNowhere();
+                break;
             default: 
                 log.warn("Somehow no idea where to go. Going nowhere.");
-                return createPathToNowhere();
+                bestPath = createPathToNowhere();
+                break;
             }
+            break;
             default: 
                 log.warn("Somehow no idea where to go. Going nowhere.");
-                return createPathToNowhere();
+                bestPath = createPathToNowhere();
+                break;
         }
         
+        if (!onRight) {
+            bestPath = mirrorPath(bestPath);
+        }
         
+        return bestPath;
     }
     
     public List<FieldPose> createPathToRightScale() {
@@ -92,7 +121,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
         /*points.add(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
         points.add(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));*/
-        points.add(new FieldPose(new XYPair(-6*12, 10*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-5.11*12, 9.5*12), new ContiguousHeading(90)));
         
         return points;
     }
@@ -107,7 +136,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         //points.add(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
         //points.add(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
         //points.add(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
-        points.add(new FieldPose(new XYPair(-16*12, 10*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-14.6*12, 9.5*12), new ContiguousHeading(90)));
 
         return points;
     }
