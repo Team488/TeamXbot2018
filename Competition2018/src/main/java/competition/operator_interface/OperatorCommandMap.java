@@ -190,6 +190,8 @@ public class OperatorCommandMap {
         });
 
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
+        oi.driverGamepad.getifAvailable(9).whileHeld(driveToLocalCubeCommand);
+        oi.driverGamepad.getifAvailable(10).whileHeld(driveToLocalCubeCommand);
     }
 
     @Inject
