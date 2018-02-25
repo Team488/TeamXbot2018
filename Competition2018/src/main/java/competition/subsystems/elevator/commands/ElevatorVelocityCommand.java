@@ -30,14 +30,9 @@ public class ElevatorVelocityCommand extends BaseCommand {
     public void execute() {
         
         double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
-        
-        //double demandedSpeed = oi.operatorGamepad.getRightStickY() * 20;
         double powerDelta = elevator.getVelocityPid().calculate(positionOutput*16, elevator.getVelocityInchesPerSecond());
-        
         throttle += powerDelta;
-        
         throttle = MathUtils.constrainDouble(throttle, -0.2, 1);
-        
         elevator.setPower(throttle);
     }
 

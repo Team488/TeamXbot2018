@@ -1,6 +1,7 @@
 package competition.subsystems.elevator.commands;
 
 import xbot.common.command.BaseCommand;
+import xbot.common.math.MathUtils;
 import xbot.common.math.PIDFactory;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,7 +24,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     double giveUpCalibratingTime;
     final BooleanProperty motionMagicEnabled;
     final DoubleProperty elevatorCalibrationAttemptTimeMS;
-    final DoubleProperty gravityPowerOffset;
+    double throttle;
 
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf, XPropertyManager propMan,
@@ -31,7 +32,6 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         elevatorCalibrationAttemptTimeMS = propMan
                 .createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
         motionMagicEnabled = propMan.createPersistentProperty(getPrefix() + "Motion Magic Enabled", false);
-        gravityPowerOffset = propMan.createPersistentProperty(getPrefix() + "Gravity Offset", 0.3);
         this.elevator = elevator;
         this.requires(elevator);
         this.oi = oi;
@@ -67,8 +67,11 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             if (motionMagicEnabled.get() == true) {
                 elevator.motionMagicToHeight(elevator.getTargetHeight());
             } else {
-                elevator.setPower(elevator.getPositionalPid().calculate(elevator.getTargetHeight(),
-                        elevator.getCurrentHeightInInches()) + gravityPowerOffset.get() );
+                double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
+                double powerDelta = elevator.getVelocityPid().calculate(positionOutput*16, elevator.getVelocityInchesPerSecond());
+                throttle += powerDelta;
+                throttle = MathUtils.constrainDouble(throttle, -0.2, 1);
+                elevator.setPower(throttle);
             }
         } else if (currentMode == MaintinerMode.Calibrating) {
             elevator.lower();
