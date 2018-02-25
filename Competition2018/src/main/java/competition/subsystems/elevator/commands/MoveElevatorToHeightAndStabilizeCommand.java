@@ -34,11 +34,12 @@ public class MoveElevatorToHeightAndStabilizeCommand extends BaseSetpointCommand
 
     @Override
     public void initialize() {
-        elevator.setTargetHeight(target);
+        log.info("Initializing at target height" + target);
     }
 
     @Override
     public void execute() {
+        elevator.setTargetHeight(target);
         double error = Math.abs(elevator.getCurrentHeightInInches() - elevator.getTargetHeight());
         if (error <= errorThreshold.get()) {
             if (!previouslyAtTarget) {

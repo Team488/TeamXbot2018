@@ -37,9 +37,10 @@ public class SubsystemDefaultCommandMap {
     @Inject
     public void setupElevatorSubsystem(ElectricalContract2018 contract, ElevatorSubsystem elevator,
             ElevatorMaintainerCommand maintain,
-            StopElevatorCommand stop) {
+            StopElevatorCommand stop,
+            ControlElevatorViaJoystickCommand joysticks) {
         if (contract.elevatorReady()) {
-            elevator.setDefaultCommand(stop);
+            elevator.setDefaultCommand(joysticks);
         }
     }
     
