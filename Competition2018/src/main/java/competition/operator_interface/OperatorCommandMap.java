@@ -158,13 +158,23 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube,
-            NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVel,
-            PurePursuitCommand driveToLocalCubeCommand, OffboardInterfaceSubsystem offboardSubsystem,
-            PoseSubsystem poseSubsystem) {
+    public void setupVisionCommands(
+                OperatorInterface oi,
+                AcquireVisibleCubeCommand acquireCube,
+                NavToTestGoalCommand testNav,
+                DriveAtVelocityInfinitelyCommand driveAtVelLow,
+                DriveAtVelocityInfinitelyCommand driveAtVelHigh,
+                PurePursuitCommand driveToLocalCubeCommand,
+                OffboardInterfaceSubsystem offboardSubsystem,
+                PoseSubsystem poseSubsystem) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
-        driveAtVel.includeOnSmartDashboard();
+
+        driveAtVelLow.setVelocity(20);
+        driveAtVelLow.includeOnSmartDashboard("Test drive at velocity (low)");
+
+        driveAtVelHigh.setVelocity(50);
+        driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
 
         driveToLocalCubeCommand.setMode(PursuitMode.Relative);
         driveToLocalCubeCommand.setPointSupplier(() -> {
