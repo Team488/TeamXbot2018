@@ -201,8 +201,8 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
 
-        low.setGoalAngle(0);
-        medium.setGoalAngle(45);
+        low.setGoalAngle(10);
+        medium.setGoalAngle(60);
         high.setGoalAngle(90);
 
         oi.operatorGamepad.getPovIfAvailable(270).whenPressed(maintain);
