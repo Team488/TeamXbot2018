@@ -1,6 +1,8 @@
 package competition.commandgroups;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
@@ -57,7 +59,7 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.rightMaster.getMotorOutputPercent(), 0.001);
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
-        assertEquals(1, elevator.motor.getMotorOutputPercent(), 0.001);
+        assertTrue("Elevator should be rising", elevator.motor.getMotorOutputPercent() > 0);
 
         ((MockCANTalon) drive.rightMaster).setPosition((int) (243 * (drive.getRightTicksPerFiveFt() / 60)));
         ((MockCANTalon) drive.leftMaster).setPosition((int) (243 * (drive.getLeftTicksPerFiveFt() / 60)));

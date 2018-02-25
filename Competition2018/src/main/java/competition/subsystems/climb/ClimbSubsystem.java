@@ -28,6 +28,9 @@ public class ClimbSubsystem extends BaseSubsystem {
         this.contract = contract;
         solenoidA = clf.createSolenoid(contract.getPawlSolenoidA().channel);
         solenoidB = clf.createSolenoid(contract.getPawlSolenoidB().channel);
+        solenoidA.setInverted(contract.getPawlSolenoidA().inverted);
+        solenoidB.setInverted(contract.getPawlSolenoidB().inverted);
+        
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
         decendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
 
