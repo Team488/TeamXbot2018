@@ -7,26 +7,33 @@ import java.util.function.Supplier;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import openrio.powerup.MatchData;
 import openrio.powerup.MatchData.GameFeature;
 import openrio.powerup.MatchData.OwnedSide;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
+import xbot.common.properties.BooleanProperty;
+import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class AutonomousDecisionSystem extends BaseSubsystem {
 
-    GameDataSource gameData;
+    final GameDataSource gameData;
+    final BooleanProperty robotOnRight;
     
     @Inject
-    public AutonomousDecisionSystem(GameDataSource gameData) {
+    public AutonomousDecisionSystem(GameDataSource gameData, XPropertyManager propMan) {
         this.gameData = gameData;
+        robotOnRight = propMan.createPersistentProperty(getPrefix() + "Robot On Right", true);
     }
     
-    public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature, boolean onRight) {
-        return () -> chooseBestPathToFeature(feature, onRight);
+    public void setRobotPosition(boolean onRight) {
+        robotOnRight.set(onRight);
+    }
+    
+    public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
+        return () -> chooseBestPathToFeature(feature, robotOnRight.get());
     }
     
     private List<FieldPose> mirrorPath(List<FieldPose> path) {
