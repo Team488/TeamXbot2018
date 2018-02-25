@@ -42,24 +42,4 @@ public class ClimberdeploySubsystemTest extends BaseCompetitionTest {
         climberdeploy.retractClimberArm();
         assertEquals(-.4, climberdeploy.getCurrentSpeed(), .01);
     }
-    
-    @Test
-    public void isSpeedDecreasing() {
-        climberdeploy.increaseSpeed();
-        climberdeploy.extendClimberArm();
-        assertEquals(.4, climberdeploy.getCurrentSpeed(), .01);
-        climberdeploy.decreaseSpeed();
-        climberdeploy.extendClimberArm();
-        assertEquals(.1, climberdeploy.getCurrentSpeed(), .01);
-    }
-    
-    @Test
-    public void isSpeedIncreasing() {
-        climberdeploy.decreaseSpeed();
-        climberdeploy.extendClimberArm();
-        assertEquals(.1, climberdeploy.getCurrentSpeed(), .01);
-        climberdeploy.increaseSpeed();
-        climberdeploy.extendClimberArm();
-        assertEquals(.4, climberdeploy.getCurrentSpeed(), .01);
-    }
 }
