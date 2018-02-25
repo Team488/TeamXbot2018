@@ -272,17 +272,6 @@
               "_title": "SmartDashboard/ElevatorSubsystem/Position/ P"
             }
           },
-          "4,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Switch",
-              "_source0": "network_table:///SmartDashboard/ElevatorMaintainerCommand/Motion Magic Enabled",
-              "_title": "SmartDashboard/ElevatorMaintainerCommand/Motion Magic Enabled"
-            }
-          },
           "5,0": {
             "size": [
               2,
@@ -291,7 +280,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Continuous current limit",
-              "_title": "SmartDashboard/ElevatorSubsystem/Continuous current limit"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Continuous current limit"
             }
           },
           "5,1": {
@@ -302,7 +291,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Peak current limit",
-              "_title": "SmartDashboard/ElevatorSubsystem/Peak current limit"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Peak current limit"
             }
           },
           "0,2": {
@@ -313,7 +302,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Restriction Reason",
-              "_title": "SmartDashboard/ElevatorSubsystem/Restriction Reason"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Restriction Reason"
             }
           },
           "3,1": {
@@ -324,29 +313,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/TargetHeight",
-              "_title": "SmartDashboard/ElevatorSubsystem/TargetHeight"
-            }
-          },
-          "4,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/TargetHeight",
-              "_title": "SmartDashboard/ElevatorSubsystem/TargetHeight"
-            }
-          },
-          "3,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Pickup height",
-              "_title": "SmartDashboard/ElevatorSubsystem/Pickup height"
+              "_title": "/SmartDashboard/ElevatorSubsystem/TargetHeight"
             }
           },
           "5,2": {
@@ -357,18 +324,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Peak current duration",
-              "_title": "SmartDashboard/ElevatorSubsystem/Peak current duration"
-            }
-          },
-          "6,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorMaintainerCommand/Gravity Offset",
-              "_title": "SmartDashboard/ElevatorMaintainerCommand/Gravity Offset"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Peak current duration"
             }
           },
           "4,0": {
@@ -379,7 +335,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Current Velocity",
-              "_title": "SmartDashboard/ElevatorSubsystem/Current Velocity"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Current Velocity"
             }
           },
           "0,4": {
@@ -390,18 +346,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ P",
-              "_title": "SmartDashboard/ElevatorSubsystem/Velocity/ P"
-            }
-          },
-          "1,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ D",
-              "_title": "SmartDashboard/ElevatorSubsystem/Velocity/ D"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Velocity/ P"
             }
           },
           "4,4": {
@@ -412,7 +357,29 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ D",
-              "_title": "SmartDashboard/ElevatorSubsystem/Position/ D"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Position/ D"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ D",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Velocity/ D"
+            }
+          },
+          "6,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Max Power Near Low Limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Max Power Near Low Limit"
             }
           }
         }
@@ -684,7 +651,7 @@
             "content": {
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/DynamicScoreOnSwitchCommandGroup",
-              "_title": "SmartDashboard/DynamicScoreOnSwitchCommandGroup"
+              "_title": "/SmartDashboard/DynamicScoreOnSwitchCommandGroup"
             }
           }
         }
