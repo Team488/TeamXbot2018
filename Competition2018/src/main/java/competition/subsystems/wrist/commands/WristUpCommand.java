@@ -20,6 +20,7 @@ public class WristUpCommand extends BaseCommand {
         log.info("Initializing");
     }
 
+    
     @Override
     public void execute() {
         wrist.goUp();

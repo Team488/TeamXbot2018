@@ -40,13 +40,13 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     @Override
     public void initialize() {
         elevator.configureMotionMagic();
-        log.info("Initializing");
+        log.info("Initializing with distance " + elevator.getTargetHeight() + " inches");
         if (!elevator.isCalibrated()) {
             log.warn("ELEVATOR UNCALIBRATED - THIS COMMAND WILL NOT DO ANYTHING!");
             giveUpCalibratingTime = Timer.getFPGATimestamp() + elevatorCalibrationAttemptTimeMS.get();
             log.info("Attempting calibration from " + Timer.getFPGATimestamp() + " until " + giveUpCalibratingTime);
         } else {
-            log.info("Setting current height as target height");
+            log.info("Setting current height (" + elevator.getCurrentHeightInInches() + " inches) as target height");
             elevator.setTargetHeight(elevator.getCurrentHeightInInches());
         }
     }
