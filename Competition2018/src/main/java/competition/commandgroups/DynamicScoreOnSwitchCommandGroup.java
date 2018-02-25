@@ -24,7 +24,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR, false));
+        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR, true));
         
         //setWristDown.setGoalAngle(0);
         //setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
