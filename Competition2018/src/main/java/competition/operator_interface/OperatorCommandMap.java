@@ -1,8 +1,6 @@
 package competition.operator_interface;
 
 import java.util.Arrays;
-import java.util.List;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -23,10 +21,8 @@ import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
-import competition.subsystems.drive.commands.AssistedTankDriveCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;

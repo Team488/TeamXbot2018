@@ -3,7 +3,6 @@ package competition.subsystems.power_state_manager.commands;
 import com.google.inject.Inject;
 
 import competition.subsystems.power_state_manager.PowerStateManagerSubsystem;
-import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class LeaveLowBatteryModeCommand extends BaseCommand {

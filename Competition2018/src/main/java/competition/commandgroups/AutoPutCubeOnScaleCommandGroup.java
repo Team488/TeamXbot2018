@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 
 import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;

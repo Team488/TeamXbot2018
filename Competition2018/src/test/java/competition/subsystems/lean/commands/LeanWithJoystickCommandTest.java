@@ -1,14 +1,10 @@
 package competition.subsystems.lean.commands;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.LeanWithJoystickCommand;
-import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
-import xbot.common.math.XYPair;
 
 public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
 

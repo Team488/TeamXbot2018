@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import competition.BaseCompetitionTest;
 import competition.subsystems.autonomous.AutonomousDecisionSystem;
 import competition.subsystems.autonomous.GameDataSource;
 import competition.subsystems.autonomous.MockGameDataAdapter;

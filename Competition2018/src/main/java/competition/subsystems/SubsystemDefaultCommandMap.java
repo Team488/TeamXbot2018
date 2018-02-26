@@ -21,9 +21,7 @@ import competition.subsystems.lean.commands.LeanWithJoystickCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristControlViaJoysticksCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
-import competition.subsystems.wrist.commands.WristStopCommand;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
