@@ -11,12 +11,12 @@ import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.subsystems.drive.PurePursuitCommand;
 
-public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
+public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
 
     public PurePursuitCommand pursuit;
     
     @Inject
-    public DynamicScoreOnSwitchCommandGroup(
+    public DynamicScoreOnScaleCommandGroup(
             AutonomousDecisionSystem decider,
             ElevatorSubsystem elevator,
             PurePursuitCommand pursuit,
@@ -24,7 +24,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
+        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
         
         //setWristDown.setGoalAngle(0);
         //setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());

@@ -1,7 +1,5 @@
 package competition;
 
-import competition.ElectricalContract2018.DeviceInfo;
-
 public class Competition2018Robot extends Practice2018Robot {
     
     @Override

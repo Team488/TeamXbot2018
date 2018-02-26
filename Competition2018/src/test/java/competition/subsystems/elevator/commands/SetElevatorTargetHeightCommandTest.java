@@ -35,6 +35,5 @@ public class SetElevatorTargetHeightCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
         assertEquals(10, elevator.getTargetHeight(), .01);
-        assertTrue(command.isFinished());
     }
 }

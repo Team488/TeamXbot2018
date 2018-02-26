@@ -112,7 +112,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getShifterSolenoid() {
-        return new DeviceInfo(0, false);
+        return new DeviceInfo(1, false);
     }
 
     @Override
@@ -147,11 +147,11 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getPawlSolenoidA() {
-        return new DeviceInfo(1, false);
+        return new DeviceInfo(2, false);
     }
 
     @Override
     public DeviceInfo getPawlSolenoidB() {
-        return new DeviceInfo(2, false);
+        return new DeviceInfo(3, false);
     }
 }

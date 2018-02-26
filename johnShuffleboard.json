@@ -2,7 +2,7 @@
   "dividerPosition": 0.3122629582806574,
   "tabPane": [
     {
-      "title": "Tab 1",
+      "title": "DriveToCube",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -655,18 +655,6 @@
             }
           }
         }
-      }
-    },
-    {
-      "title": "Tab 6",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {}
       }
     }
   ]

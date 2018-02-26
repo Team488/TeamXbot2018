@@ -27,9 +27,9 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
         driveToDistance.setDeltaDistance(243);
         wristSet.setGoalAngle(0);
         
-        this.addParallel(elevatorSet);
+        this.addParallel(elevatorSet, 1);
         this.addParallel(driveToDistance);
-        this.addSequential(wristSet);
+        this.addSequential(wristSet, 1);
         this.addSequential(delivery); 
     }
 

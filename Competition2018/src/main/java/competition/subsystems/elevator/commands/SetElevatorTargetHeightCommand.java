@@ -21,16 +21,12 @@ public class SetElevatorTargetHeightCommand extends BaseSetpointCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing");
+        log.info("Initializing with target height" + height);
         elevator.setTargetHeight(height);
     }
 
     @Override
     public void execute() {
-    }
-
-    @Override
-    public boolean isFinished() {
-        return true;
+        elevator.setTargetHeight(height);
     }
 }

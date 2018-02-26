@@ -82,8 +82,11 @@ public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
 
         assertEquals(-0.3, wrist.motor.getMotorOutputPercent(), 0.001);
 
+        mockTimer.advanceTimeInSecondsBy(2);
         xScheduler.run();
+        mockTimer.advanceTimeInSecondsBy(2);
         xScheduler.run();
+        mockTimer.advanceTimeInSecondsBy(2);
         xScheduler.run();
 
         assertEquals(0.3, intake.leftMotor.getMotorOutputPercent(), 0.001);
