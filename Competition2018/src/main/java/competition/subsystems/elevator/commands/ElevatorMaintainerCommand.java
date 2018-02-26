@@ -10,7 +10,6 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 
 import com.google.inject.Inject;
-import xbot.common.math.PIDManager;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;

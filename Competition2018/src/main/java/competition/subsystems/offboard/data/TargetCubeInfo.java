@@ -1,7 +1,5 @@
 package competition.subsystems.offboard.data;
 
-import competition.subsystems.offboard.OffboardCommsConstants;
-
 public class TargetCubeInfo {
     /**
      * The left-right component of the position

@@ -11,10 +11,8 @@ import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
-import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
-import xbot.common.controls.sensors.TalonCurrentMonitor;
 import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
