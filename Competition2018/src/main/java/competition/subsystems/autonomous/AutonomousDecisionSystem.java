@@ -52,6 +52,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     
     private List<FieldPose> chooseBestPathToFeature(GameFeature feature, boolean onRight) {
         OwnedSide targetSide = gameData.getOwnedSide(feature);
+        log.info("Target Side is: " + targetSide);
         List<FieldPose> bestPath = createPathToNowhere();
         switch (feature) {
         case SWITCH_NEAR:
@@ -122,16 +123,16 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     public List<FieldPose> createPathToNearbyScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 11*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-2*12, 22*12), new ContiguousHeading(120)));
+        points.add(new FieldPose(new XYPair(-1*12, 20*12), new ContiguousHeading(120)));
         return points;
     }
     
     public List<FieldPose> createPathToDistantScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
-        points.add(new FieldPose(new XYPair(0*12, 18*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-16*12, 18*12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-16*12, 18*12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-16*12, 22*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(0*12, 14*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-16*12, 17*12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16*12, 17*12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-19*12, 20.5*12), new ContiguousHeading(70)));
         return points;
     }
     
@@ -140,7 +141,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
         /*points.add(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
         points.add(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));*/
-        points.add(new FieldPose(new XYPair(-5.11*12, 8.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-6*12, 7.5*12), new ContiguousHeading(90)));
         
         return points;
     }
@@ -151,11 +152,11 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
         //points.add(new FieldPose(new XYPair(-1.35*12, 2.5*12), new ContiguousHeading(127.5)));
         //points.add(new FieldPose(new XYPair(-5.35*12, 3*12), new ContiguousHeading(160)));
-        points.add(new FieldPose(new XYPair(-7.35*12, 4*12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-7.35*12, 2*12), new ContiguousHeading(180)));
         //points.add(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
         //points.add(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
         //points.add(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
-        points.add(new FieldPose(new XYPair(-14.6*12, 8.0*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-15.6*12, 7.5*12), new ContiguousHeading(90)));
 
         return points;
     }
