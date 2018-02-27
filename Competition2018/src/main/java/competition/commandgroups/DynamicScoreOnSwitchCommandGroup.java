@@ -26,8 +26,8 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
         
-        //setWristDown.setGoalAngle(0);
-        //setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
+        setWristDown.setGoalAngle(0);
+        setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
         // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
         //this.addParallel(setWristDown, 1);
@@ -35,6 +35,6 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
         this.addSequential(pursuit);
         
         // Score for 1 second
-        //this.addSequential(eject, 1);
+        this.addSequential(eject, 1);
     }
 }

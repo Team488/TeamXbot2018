@@ -21,13 +21,13 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             ElevatorSubsystem elevator,
             PurePursuitCommand pursuit,
             SetWristAngleCommand setWristDown,
-            SetElevatorTargetHeightCommand setElevatorForSwitch,
+            SetElevatorTargetHeightCommand setElevatorForScale,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
         
-        //setWristDown.setGoalAngle(0);
-        //setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
+        setWristDown.setGoalAngle(0);
+        setElevatorForScale.setGoalHeight(elevator.getTargetScaleHighHeight());
         // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
         //this.addParallel(setWristDown, 1);
@@ -35,6 +35,6 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(pursuit);
         
         // Score for 1 second
-        //this.addSequential(eject, 1);
+        this.addSequential(eject, 1);
     }
 }
