@@ -16,6 +16,7 @@ import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.StopElevatorCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
+import competition.subsystems.gripperintake.commands.GripperViaTriggersCommand;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.LeanWithDpadCommand;
 import competition.subsystems.shift.ShiftSubsystem;
@@ -75,9 +76,9 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupGripperSubsystem(ElectricalContract2018 contract, GripperIntakeSubsystem gripperSubsystem,
-            GripperStopCommand command) {
+            GripperStopCommand command, GripperViaTriggersCommand triggers) {
         if (contract.collectorReady()) {
-            gripperSubsystem.setDefaultCommand(command);
+            gripperSubsystem.setDefaultCommand(triggers);
         }
     }
 

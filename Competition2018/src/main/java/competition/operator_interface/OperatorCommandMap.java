@@ -132,8 +132,6 @@ public class OperatorCommandMap {
     public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
             GripperRotateCounterClockwiseCommand counterClockwise, GripperEjectCommand eject,
             GripperIntakeCommand intake) {
-        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
     }
 
     @Inject
