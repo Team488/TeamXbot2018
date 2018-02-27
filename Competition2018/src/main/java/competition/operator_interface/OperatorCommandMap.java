@@ -14,7 +14,10 @@ import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCo
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.PrepareClimberDeployCommandGroup;
+import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
+import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
+import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climb.commands.EngagePawlCommand;
@@ -70,6 +73,22 @@ public class OperatorCommandMap {
 
         fastMode.includeOnSmartDashboard();
         slowMode.includeOnSmartDashboard();
+    }
+    
+    @Inject
+    public void setupAutoCommands(
+            OperatorInterface oi,
+            ChangeAutoDelayCommand addAutoDelay,
+            ChangeAutoDelayCommand subtractAutoDelay,
+            SelectDynamicScoreOnScaleCommand selectScale,
+            SelectDynamicScoreOnSwitchCommand selectSwitch) {
+        addAutoDelay.setDelayChangeAmount(1);
+        subtractAutoDelay.setDelayChangeAmount(-1);
+        
+        oi.programmerGamepad.getPovIfAvailable(0).whenPressed(addAutoDelay);
+        oi.programmerGamepad.getPovIfAvailable(180).whenPressed(subtractAutoDelay);
+        oi.programmerGamepad.getifAvailable(1).whenPressed(selectSwitch);
+        oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);        
     }
 
     @Inject
