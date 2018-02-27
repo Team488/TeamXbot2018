@@ -8,14 +8,14 @@ import xbot.common.command.BaseCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class LeanWithJoystickCommand extends BaseCommand {
+public class LeanWithDpadCommand extends BaseCommand {
 
     final LeanSubsystem leanSubsystem;
     final OperatorInterface oi;
     final DoubleProperty leanPowerProp;
 
     @Inject
-    public LeanWithJoystickCommand(OperatorInterface oi, LeanSubsystem leanSubsystem, XPropertyManager propMan) {
+    public LeanWithDpadCommand(OperatorInterface oi, LeanSubsystem leanSubsystem, XPropertyManager propMan) {
         this.oi = oi;
         this.leanSubsystem = leanSubsystem;
         this.requires(this.leanSubsystem);

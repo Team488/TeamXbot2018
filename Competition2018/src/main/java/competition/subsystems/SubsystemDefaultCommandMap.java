@@ -17,7 +17,7 @@ import competition.subsystems.elevator.commands.StopElevatorCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.lean.LeanSubsystem;
-import competition.subsystems.lean.commands.LeanWithJoystickCommand;
+import competition.subsystems.lean.commands.LeanWithDpadCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
@@ -67,7 +67,7 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupLeanSubsystem(ElectricalContract2018 contract, LeanSubsystem leanSubsystem,
-            LeanWithJoystickCommand command) {
+            LeanWithDpadCommand command) {
         if (contract.climbLeanReady()) {
             leanSubsystem.setDefaultCommand(command);
         }
