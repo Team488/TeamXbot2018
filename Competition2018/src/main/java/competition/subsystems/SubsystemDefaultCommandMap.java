@@ -38,7 +38,7 @@ public class SubsystemDefaultCommandMap {
             StopElevatorCommand stop,
             ControlElevatorViaJoystickCommand joysticks) {
         if (contract.elevatorReady()) {
-            elevator.setDefaultCommand(joysticks);
+            elevator.setDefaultCommand(maintain);
         }
     }
     
