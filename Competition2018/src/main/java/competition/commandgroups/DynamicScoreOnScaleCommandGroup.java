@@ -9,6 +9,7 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
+import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.subsystems.drive.PurePursuitCommand;
 
 public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
@@ -19,6 +20,7 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
     public DynamicScoreOnScaleCommandGroup(
             AutonomousDecisionSystem decider,
             ElevatorSubsystem elevator,
+            DelayViaSupplierCommand wait,
             PurePursuitCommand pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
@@ -28,6 +30,9 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         
         setWristDown.setGoalAngle(0);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleHighHeight());
+        wait.setDelaySupplier(() -> decider.getDelay());
+        
+        this.addSequential(wait);
         // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
         //this.addParallel(setWristDown, 1);

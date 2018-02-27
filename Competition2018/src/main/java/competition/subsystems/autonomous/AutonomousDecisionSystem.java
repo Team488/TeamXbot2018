@@ -47,6 +47,10 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         autonomousDelay.set(MathUtils.constrainDouble(autonomousDelay.get(), 0, 15));
     }
     
+    public double getDelay() {
+        return autonomousDelay.get();
+    }
+    
     public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
         return () -> chooseBestPathToFeature(feature, robotOnRight.get());
     }
