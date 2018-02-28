@@ -20,7 +20,9 @@ import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
+import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
+import competition.subsystems.drive.commands.FieldOrientedTankDriveCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
@@ -104,21 +106,18 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupDriveCommands(OperatorInterface oi, PurePursuitCommand pursuit, ResetDistanceCommand resetDistance,
-            SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore) {
-
-        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(-45, 90), new ContiguousHeading(180)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 135), new ContiguousHeading(-90)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(-90)));
-
-        pursuit.includeOnSmartDashboard();
+    public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
+            SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
+            FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade) {
 
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
         setHeading.includeOnSmartDashboard();
 
         dynamicScore.includeOnSmartDashboard();
+        
+        oi.driverGamepad.getPovIfAvailable(0).whenPressed(fieldTank);
+        oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
     }
 
     @Inject
