@@ -12,8 +12,10 @@ import openrio.powerup.MatchData.OwnedSide;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
+import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
 import xbot.common.properties.BooleanProperty;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
@@ -21,15 +23,32 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
 
     final GameDataSource gameData;
     final BooleanProperty robotOnRight;
+    final DoubleProperty autonomousDelay;
     
     @Inject
     public AutonomousDecisionSystem(GameDataSource gameData, XPropertyManager propMan) {
         this.gameData = gameData;
         robotOnRight = propMan.createPersistentProperty(getPrefix() + "Robot On Right", true);
+        autonomousDelay = propMan.createPersistentProperty(getPrefix() + "Seconds to Delay Auto", 0.0);
+        
+        constrainDelay();
     }
     
     public void setRobotPosition(boolean onRight) {
         robotOnRight.set(onRight);
+    }
+    
+    public void changeAutoDelay(double amount) {
+        autonomousDelay.set(autonomousDelay.get() + amount);
+        constrainDelay();
+    }
+    
+    private void constrainDelay() {
+        autonomousDelay.set(MathUtils.constrainDouble(autonomousDelay.get(), 0, 15));
+    }
+    
+    public double getDelay() {
+        return autonomousDelay.get();
     }
     
     public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
