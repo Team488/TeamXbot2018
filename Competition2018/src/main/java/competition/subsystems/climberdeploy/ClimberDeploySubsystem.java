@@ -13,9 +13,7 @@ import xbot.common.properties.XPropertyManager;
 @Singleton
 public class ClimberDeploySubsystem extends BaseSubsystem {
 
-    double currentDeploySpeed;
-    final DoubleProperty fastDeploySpeed;
-    final DoubleProperty slowDeploySpeed;
+    final DoubleProperty deploySpeed;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
     public XCANTalon motor;
@@ -24,9 +22,7 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     public ClimberDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        fastDeploySpeed = propMan.createPersistentProperty("fastDeploySpeed", .4);
-        slowDeploySpeed = propMan.createPersistentProperty("slowDeploySpeed", .1);
-        currentDeploySpeed = fastDeploySpeed.get();
+        deploySpeed = propMan.createPersistentProperty(getPrefix()+"Speed", .4);
 
         if (contract.climbDeployReady()) {
             initializeMotor();
@@ -42,14 +38,14 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
      * extends the climber arm
      */
     public void extendClimberArm() {
-        motor.simpleSet(currentDeploySpeed);
+        motor.simpleSet(deploySpeed.get());
     }
 
     /**
      * detracts the climber arm
      */
     public void retractClimberArm() {
-        motor.simpleSet(-currentDeploySpeed);
+        motor.simpleSet(-deploySpeed.get());
     }
 
     /**
@@ -57,20 +53,6 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
      */
     public void stopClimberArm() {
         motor.simpleSet(0);
-    }
-
-    /**
-     * speeds up the arm, regardless of what direction the arm is moving
-     */
-    public void increaseSpeed() {
-        currentDeploySpeed = fastDeploySpeed.get();
-    }
-
-    /**
-     * slows down the arm, regardless of what direction the arm is moving
-     */
-    public void decreaseSpeed() {
-        currentDeploySpeed = slowDeploySpeed.get();
     }
 
     /**

@@ -1,14 +1,10 @@
 package competition.subsystems.lean.commands;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
 import competition.subsystems.lean.commands.LeanWithJoystickCommand;
-import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
-import xbot.common.math.XYPair;
 
 public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
 
@@ -28,7 +24,7 @@ public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
     }
-
+/*
     @Test
     public void followJoysticks() {
         command.initialize();
@@ -39,5 +35,5 @@ public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
             command.execute();
             assertEquals(power, lean.motor.getMotorOutputPercent(), 0.001);
         }
-    }
+    }*/
 }

@@ -4,12 +4,16 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import competition.subsystems.climb.ClimbSubsystem;
+import competition.subsystems.climb.commands.StopClimberCommand;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
+import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
+import competition.subsystems.elevator.commands.StopElevatorCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.lean.LeanSubsystem;
@@ -17,8 +21,7 @@ import competition.subsystems.lean.commands.LeanWithJoystickCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristControlViaJoysticksCommand;
-import competition.subsystems.wrist.commands.WristStopCommand;
+import competition.subsystems.wrist.commands.WristMaintainerCommand;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
@@ -31,9 +34,18 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupElevatorSubsystem(ElectricalContract2018 contract, ElevatorSubsystem elevator,
-            ControlElevatorViaJoystickCommand controlWithJoystick) {
+            ElevatorMaintainerCommand maintain,
+            StopElevatorCommand stop,
+            ControlElevatorViaJoystickCommand joysticks) {
         if (contract.elevatorReady()) {
-            elevator.setDefaultCommand(controlWithJoystick);
+            elevator.setDefaultCommand(joysticks);
+        }
+    }
+    
+    @Inject
+    public void setupClimb(ElectricalContract2018 contract, ClimbSubsystem climb, StopClimberCommand stop) {
+        if (contract.climbReady()) {
+            climb.setDefaultCommand(stop);
         }
     }
 
@@ -47,9 +59,9 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupWristSubsystem(ElectricalContract2018 contract, WristSubsystem wristSubsystem,
-            WristControlViaJoysticksCommand command) {
+            WristMaintainerCommand maintain) {
         if (contract.wristReady()) {
-            wristSubsystem.setDefaultCommand(command);
+            wristSubsystem.setDefaultCommand(maintain);
         }
     }
 

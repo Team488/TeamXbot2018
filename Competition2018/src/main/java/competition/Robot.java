@@ -4,6 +4,7 @@ package competition;
 import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.drive.DriveSubsystem;
+import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
@@ -26,6 +27,7 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(OperatorCommandMap.class);
         ElectricalContract2018 contract = this.injector.getInstance(ElectricalContract2018.class);
 
+        registerPeriodicDataSource(this.injector.getInstance(OffboardInterfaceSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
         if (contract.elevatorReady()) {

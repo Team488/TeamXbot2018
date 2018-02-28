@@ -23,13 +23,13 @@ public class WristSubsystemTest extends BaseCompetitionTest {
         wrist.calibrateHere();
         verifyWristPower(0);
         wrist.goUp();
-        verifyWristPower(1);
+        verifyWristPower(wrist.getMaximumAllowedPower());
         wrist.goDown();
-        verifyWristPower(-1);
+        verifyWristPower(-wrist.getMaximumAllowedPower());
         wrist.stop();
         verifyWristPower(0);
-        wrist.setPower(0.48743847);
-        verifyWristPower(0.48743847);
+        wrist.setPower(0.129898);
+        verifyWristPower(0.129898);
     }
     
     @Test
@@ -39,7 +39,7 @@ public class WristSubsystemTest extends BaseCompetitionTest {
         
         wrist.calibrateHere();
         wrist.setPower(0.7);
-        verifyWristPower(0.7);
+        verifyWristPower(wrist.getMaximumAllowedPower());
     }
     
     @Test

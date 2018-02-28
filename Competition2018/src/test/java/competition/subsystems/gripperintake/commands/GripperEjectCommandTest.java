@@ -1,7 +1,6 @@
 package competition.subsystems.gripperintake.commands;
 
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
@@ -32,7 +31,7 @@ public class GripperEjectCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
 
-        assertTrue(intake.leftMotor.getMotorOutputPercent() >= 1);
-        assertTrue(intake.rightMotor.getMotorOutputPercent() >= 1);
+        assertEquals(0.3, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.3, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
 }

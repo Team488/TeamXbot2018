@@ -2,7 +2,6 @@ package competition.subsystems.elevator.commands;
 
 import com.google.inject.Inject;
 
-import competition.operator_interface.OperatorInterface;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.properties.DoubleProperty;
@@ -17,7 +16,7 @@ public class ExperimentMotionMagicCommand extends BaseCommand {
     public ExperimentMotionMagicCommand(ElevatorSubsystem elevator, XPropertyManager propMan) {
         this.elevator = elevator;
         this.requires(elevator);
-        goalHeight = propMan.createPersistentProperty("Experimental MM Goal Height", 3);
+        goalHeight = propMan.createPersistentProperty(getPrefix() + "Experimental MM Goal Height", 3);
     }
     
     @Override
