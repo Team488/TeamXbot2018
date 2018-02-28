@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.commandgroups.ClimbRetractCommandGroup;
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.PrepareClimberDeployCommandGroup;
@@ -172,13 +173,14 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
             ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl,
-            EngagePawlCommand engagePawl, PrepareClimberDeployCommandGroup prepareDeploy) {
+            EngagePawlCommand engagePawl, PrepareClimberDeployCommandGroup prepareDeploy, ClimbRetractCommandGroup climbRetract) {
         oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
         oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
         oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
         oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
         oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); //axis 3
         oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); //axis 2
+        oi.driverGamepad.getifAvailable(7).whileHeld(climbRetract);
     }
 
     @Inject
