@@ -178,9 +178,8 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
         oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
         oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); //axis 3
+        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(climbRetract); //axis 3
         oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); //axis 2
-        oi.driverGamepad.getifAvailable(7).whileHeld(climbRetract);
     }
 
     @Inject
