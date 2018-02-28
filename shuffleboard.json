@@ -237,7 +237,7 @@
               "_title": "SmartDashboard/ElevatorSubsystem/Motor"
             }
           },
-          "2,0": {
+          "2,2": {
             "size": [
               1,
               1
@@ -380,6 +380,32 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Max Power Near Low Limit",
               "_title": "/SmartDashboard/ElevatorSubsystem/Max Power Near Low Limit"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Upper Limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Upper Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Lower Limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Lower Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           }
         }
