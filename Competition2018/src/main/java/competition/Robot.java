@@ -33,9 +33,10 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(OperatorCommandMap.class);
         ElectricalContract2018 contract = this.injector.getInstance(ElectricalContract2018.class);
 
-        registerPeriodicDataSource(this.injector.getInstance(OffboardInterfaceSubsystem.class));
-        registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(OffboardInterfaceSubsystem.class));
+        
+        registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
         if (contract.elevatorReady()) {
             registerPeriodicDataSource(this.injector.getInstance(ElevatorSubsystem.class)); 
         }        

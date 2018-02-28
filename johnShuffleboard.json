@@ -756,6 +756,28 @@
               "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto",
               "_title": "SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto"
             }
+          },
+          "4,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Properties FastMode",
+              "_title": "SmartDashboard/Properties FastMode"
+            }
+          },
+          "4,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Properties SlowMode",
+              "_title": "SmartDashboard/Properties SlowMode"
+            }
           }
         }
       }
