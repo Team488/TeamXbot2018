@@ -76,6 +76,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
     final BooleanProperty calibratedProp;
+    private final DoubleProperty targetHitVerticalCubeHeight;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetSwitchDropHeight;
@@ -126,6 +127,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         powerNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near High Limit", 0.3);
         positionalPid = pf.createPIDManager(getPrefix()+"Position", 1, 0, 0);
         calibrationOffset = 0.0;
+        targetHitVerticalCubeHeight = propMan.createPersistentProperty(getPrefix() + "Knock vertical cube down height", 8);
         
         
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -446,7 +448,6 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         }
     }
 
-
     public double getTargetScaleHighHeight() {
         return targetScaleHighHeight.get();
     }
@@ -470,5 +471,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     
     public PIDManager getPositionalPid() {
         return positionalPid;
+    }
+    
+    public double getHitVerticalCubeHeight() {
+        return targetHitVerticalCubeHeight.get();
     }
 }
