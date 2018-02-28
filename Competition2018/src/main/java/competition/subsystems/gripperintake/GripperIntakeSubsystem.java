@@ -26,7 +26,7 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
         this.clf = clf;
         this.contract = contract;
         highPower = propMan.createPersistentProperty(getPrefix()+"High Power", 1);
-        lowPower = propMan.createPersistentProperty(getPrefix()+"Low Power", 0.3);
+        lowPower = propMan.createPersistentProperty(getPrefix()+"Low Power", 0.25);
 
         if (contract.collectorReady()) {
             initializeMotors();
