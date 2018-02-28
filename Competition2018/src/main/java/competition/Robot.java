@@ -20,15 +20,21 @@ public class Robot extends BaseRobot {
 
     @Override
     protected void setupInjectionModule() {
+        this.injectionModule = new CompetitionModule(isPracticeRobot());
+    }
+    
+    private boolean isPracticeRobot() {
         File practiceRobotFlag = new File("/home/lvuser/practicerobot.txt");
-        boolean isPracticeRobot = practiceRobotFlag.exists();
-        log.info("Am I a practice robot? " + isPracticeRobot);
-        this.injectionModule = new CompetitionModule(isPracticeRobot);
+        return practiceRobotFlag.exists();
     }
 
     @Override
     protected void initializeSystems() {
         super.initializeSystems();
+        
+        Logger log = Logger.getLogger(Robot.class);
+        log.info("Am I a practice robot? " + isPracticeRobot());
+        
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
         ElectricalContract2018 contract = this.injector.getInstance(ElectricalContract2018.class);
