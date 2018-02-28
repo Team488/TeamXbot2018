@@ -7,24 +7,23 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 
 @Singleton
-public class LowerCommand extends BaseCommand {
+public class RiseElevatorCommand extends BaseCommand {
 
     ElevatorSubsystem elevator;
 
     @Inject
-    public LowerCommand(ElevatorSubsystem elevator) {
+    public RiseElevatorCommand(ElevatorSubsystem elevator) {
         this.elevator = elevator;
         this.requires(elevator);
     }
 
     @Override
     public void initialize() {
-
+        log.info("Initializing");
     }
 
     @Override
     public void execute() {
-        elevator.lower();
-
+        elevator.rise();
     }
 }

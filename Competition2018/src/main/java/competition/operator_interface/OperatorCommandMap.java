@@ -1,33 +1,36 @@
 package competition.operator_interface;
 
 import java.util.Arrays;
-import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.offboard.OffboardInterfaceSubsystem;
-import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
-import competition.subsystems.offboard.commands.NavToTestGoalCommand;
-import competition.subsystems.offboard.data.TargetCubeInfo;
-import competition.subsystems.pose.PoseSubsystem;
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
-import competition.subsystems.autonomous.commands.DriveNowhereCommand;
+import competition.commandgroups.PrepareClimberDeployCommandGroup;
+import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
+import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
+import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
+import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
+import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
+import competition.subsystems.autonomous.selection.SetStartingSideCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
+import competition.subsystems.climb.commands.EngagePawlCommand;
+import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
-import competition.subsystems.drive.commands.AssistedTankDriveCommand;
+import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
-import competition.subsystems.drive.commands.DriveForDistanceCommand;
-import competition.subsystems.drive.commands.TankDriveWithJoysticksCommand;
+import competition.subsystems.drive.commands.FieldOrientedTankDriveCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
+import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
+import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
@@ -35,6 +38,13 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
 import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
+import competition.subsystems.offboard.OffboardInterfaceSubsystem;
+import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
+import competition.subsystems.offboard.commands.NavToTestGoalCommand;
+import competition.subsystems.offboard.data.TargetCubeInfo;
+import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
+import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
@@ -59,39 +69,58 @@ public class OperatorCommandMap {
      * @Inject public void setupMyCommands( OperatorInterface operatorInterface, MyCommand myCommand) {
      * operatorInterface.leftButtons.getifAvailable(1).whenPressed(myCommand); }
      */
-    
+
     @Inject
-    public void setupMiscCommands(ConfigurePropertiesCommand fastMode,
-            ConfigurePropertiesCommand slowMode) {
+    public void setupMiscCommands(ConfigurePropertiesCommand fastMode, ConfigurePropertiesCommand slowMode) {
         fastMode.setFastMode(true);
         slowMode.setFastMode(false);
+
+        fastMode.includeOnSmartDashboard("Properties FastMode");
+        slowMode.includeOnSmartDashboard("Properties SlowMode");
+    }
+    
+    @Inject
+    public void setupAutoCommands(
+            OperatorInterface oi,
+            ChangeAutoDelayCommand addAutoDelay,
+            ChangeAutoDelayCommand subtractAutoDelay,
+            SelectDynamicScoreOnScaleCommand selectScale,
+            SelectDynamicScoreOnSwitchCommand selectSwitch,
+            SelectCrossLineCommand crossLine,
+            SelectDoNothingCommand doNothing,
+            SetStartingSideCommand setLeft,
+            SetStartingSideCommand setRight) {
         
-        fastMode.includeOnSmartDashboard();
-        slowMode.includeOnSmartDashboard();
+        addAutoDelay.setDelayChangeAmount(1);
+        subtractAutoDelay.setDelayChangeAmount(-1);
+        
+        setLeft.setRightSide(false);
+        setRight.setRightSide(true);
+        
+        oi.programmerGamepad.getPovIfAvailable(0).whenPressed(addAutoDelay);
+        oi.programmerGamepad.getPovIfAvailable(180).whenPressed(subtractAutoDelay);
+        oi.programmerGamepad.getPovIfAvailable(90).whenPressed(setRight);
+        oi.programmerGamepad.getPovIfAvailable(270).whenPressed(setLeft);
+        
+        oi.programmerGamepad.getifAvailable(1).whenPressed(selectSwitch);
+        oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);        
+        oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
+        oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
     }
 
     @Inject
-    public void setupDriveCommands(OperatorInterface oi, AssistedTankDriveCommand assistedTank,
-            TankDriveWithJoysticksCommand simpleTank,
-            PurePursuitCommand pursuit,
-            ResetDistanceCommand resetDistance,
-            SetRobotHeadingCommand setHeading,
-            DynamicScoreOnSwitchCommandGroup dynamicScore) {
-        oi.driverGamepad.getifAvailable(9).whenPressed(assistedTank);
-        oi.driverGamepad.getifAvailable(10).whenPressed(simpleTank);
-        
-        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(90)));
-        pursuit.addPoint(new FieldPose(new XYPair(-45, 90), new ContiguousHeading(180)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 135), new ContiguousHeading(-90)));
-        pursuit.addPoint(new FieldPose(new XYPair(0, 45), new ContiguousHeading(-90)));
-        
-        pursuit.includeOnSmartDashboard();
-        
+    public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
+            SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
+            FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade) {
+
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
         setHeading.includeOnSmartDashboard();
-        
+
         dynamicScore.includeOnSmartDashboard();
+        
+        oi.driverGamepad.getPovIfAvailable(0).whenPressed(fieldTank);
+        oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
     }
 
     @Inject
@@ -103,31 +132,23 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
-            GripperRotateCounterClockwiseCommand counterClockwise,
-            GripperEjectCommand eject, GripperIntakeCommand intake) {
-        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperEject).whileHeld(eject);
-        oi.operatorGamepad.getAnalogIfAvailable(oi.gripperIntake).whileHeld(intake);
-        oi.operatorGamepad.getifAvailable(7).whileHeld(counterClockwise);
-        oi.operatorGamepad.getifAvailable(8).whileHeld(clockwise);
+            GripperRotateCounterClockwiseCommand counterClockwise, GripperEjectCommand eject,
+            GripperIntakeCommand intake) {
     }
 
     @Inject
-    public void setupElevatorCommands(
-            OperatorInterface oi,
-            CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
-            ElevatorUncalibrateCommand uncalibrate,
-            ElevatorMaintainerCommand maintainer,
-            SetElevatorTargetHeightCommand targetScaleHighHeight,
-            SetElevatorTargetHeightCommand targetScaleMidHeight,
-            SetElevatorTargetHeightCommand targetSwitchDropHeight,
-            SetElevatorTargetHeightCommand targetPickUpHeight,
-            CalibrateElevatorHereCommand calibrateHere,
-            EnableElevatorCurrentLimitCommand enableCurrentLimit,
-            DisableElevatorCurrentLimitCommand disableCurrentLimit,
-            ExperimentMotionMagicCommand mm,
+    public void setupElevatorCommands(OperatorInterface oi, CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
+            ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
+            SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
+            SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
+            CalibrateElevatorHereCommand calibrateHere, EnableElevatorCurrentLimitCommand enableCurrentLimit,
+            DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
+            ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
             ElevatorSubsystem elevatorSubsystem) {
         oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
-        oi.operatorGamepad.getifAvailable(6).whenPressed(maintainer);
+        oi.operatorGamepad.getifAvailable(6).whenPressed(joysticks);
+        oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
+        oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
@@ -140,9 +161,9 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
-        
+
         uncalibrate.includeOnSmartDashboard();
-        
+
         enableCurrentLimit.includeOnSmartDashboard();
         disableCurrentLimit.includeOnSmartDashboard();
         mm.includeOnSmartDashboard();
@@ -150,60 +171,69 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
-            ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm) {
-        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm);
-        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm);
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileActive(ascend);
-        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileActive(decend);
+            ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl,
+            EngagePawlCommand engagePawl, PrepareClimberDeployCommandGroup prepareDeploy) {
+        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
+        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
+        oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
+        oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
+        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); //axis 3
+        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); //axis 2
     }
 
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        //oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+        // oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
-    
+
     @Inject
     public void setupVisionCommands(
                 OperatorInterface oi,
                 AcquireVisibleCubeCommand acquireCube,
                 NavToTestGoalCommand testNav,
-                DriveAtVelocityInfinitelyCommand driveAtVel,
+                DriveAtVelocityInfinitelyCommand driveAtVelLow,
+                DriveAtVelocityInfinitelyCommand driveAtVelHigh,
                 PurePursuitCommand driveToLocalCubeCommand,
                 OffboardInterfaceSubsystem offboardSubsystem,
                 PoseSubsystem poseSubsystem) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
-        driveAtVel.includeOnSmartDashboard();
+
+        driveAtVelLow.setVelocity(20);
+        driveAtVelLow.includeOnSmartDashboard("Test drive at velocity (low)");
+
+        driveAtVelHigh.setVelocity(50);
+        driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
 
         driveToLocalCubeCommand.setMode(PursuitMode.Relative);
         driveToLocalCubeCommand.setPointSupplier(() -> {
             TargetCubeInfo targetCube = offboardSubsystem.getTargetCube();
-            if(targetCube == null) {
+            if (targetCube == null) {
                 return null;
             }
             double headingDelta = Math.toDegrees(Math.atan2(targetCube.xInches, targetCube.yInches));
 
-            FieldPose targetPose = new FieldPose(new XYPair(targetCube.xInches, targetCube.yInches), new ContiguousHeading(90 - headingDelta));
+            FieldPose targetPose = new FieldPose(new XYPair(targetCube.xInches, targetCube.yInches),
+                    new ContiguousHeading(90 - headingDelta));
             return Arrays.asList(targetPose);
         });
-        
+
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
+        oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
+        oi.driverGamepad.getifAvailable(8).whilePressedNoRestart(driveToLocalCubeCommand);
     }
 
     @Inject
     public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
-            WristUncalibrateCommand loseCalibration,
-            WristMaintainerCommand maintain,
-            SetWristAngleCommand low,
-            SetWristAngleCommand medium,
-            SetWristAngleCommand high) {
+            WristUncalibrateCommand loseCalibration, WristMaintainerCommand maintain, SetWristAngleCommand low,
+            SetWristAngleCommand medium, SetWristAngleCommand high) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
-        
-        low.setGoalAngle(0);
-        medium.setGoalAngle(45);
+
+        low.setGoalAngle(10);
+        medium.setGoalAngle(60);
         high.setGoalAngle(90);
-        
+
         oi.operatorGamepad.getPovIfAvailable(270).whenPressed(maintain);
         oi.operatorGamepad.getPovIfAvailable(0).whenPressed(high);
         oi.operatorGamepad.getPovIfAvailable(90).whenPressed(medium);
@@ -211,10 +241,14 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupAutonomousCommands(OperatorInterface oi, DriveNowhereCommand nowhere,
-            DriveForDistanceCommand drive5Ft) {
-        drive5Ft.setDeltaDistance(60);
-        drive5Ft.includeOnSmartDashboard();
-        nowhere.includeOnSmartDashboard();
+    public void setupLowBatteryCommands(
+            OperatorInterface oi,
+            EnterLowBatteryModeCommand enter,
+            LeaveLowBatteryModeCommand leave) {
+        oi.driverGamepad.getifAvailable(9).whenPressed(enter);
+        oi.driverGamepad.getifAvailable(10).whenPressed(leave);
+        
+        enter.includeOnSmartDashboard();
+        leave.includeOnSmartDashboard();
     }
 }

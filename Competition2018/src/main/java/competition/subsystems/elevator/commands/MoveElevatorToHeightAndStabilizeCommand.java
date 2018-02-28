@@ -4,41 +4,42 @@ import com.google.inject.Inject;
 
 import competition.subsystems.elevator.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import xbot.common.command.BaseCommand;
+import xbot.common.command.BaseSetpointCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
-public class MoveElevatorToHeightAndStabilizeCommand extends BaseCommand {
+public class MoveElevatorToHeightAndStabilizeCommand extends BaseSetpointCommand {
     private ElevatorSubsystem elevator;
 
     public DoubleProperty errorThreshold;
     public DoubleProperty stableTimeRequired;
 
     double initialTime;
-    public int target;
+    public double target;
 
     boolean previouslyAtTarget;
 
     @Inject
     public MoveElevatorToHeightAndStabilizeCommand(ElevatorSubsystem subsystem, XPropertyManager propMan) {
+        super(subsystem);
         this.elevator = subsystem;
         errorThreshold = propMan.createPersistentProperty("Elevator delta height threshold", 0.1);
         stableTimeRequired = propMan.createPersistentProperty("Required time on target for elevator in seconds", 0.5);
         previouslyAtTarget = false;
-        this.requires(subsystem);
     }
 
-    public void setTargetHeight(int height) {
+    public void setTargetHeight(double height) {
         this.target = height;
     }
 
     @Override
     public void initialize() {
-        elevator.setTargetHeight(target);
+        log.info("Initializing at target height" + target);
     }
 
     @Override
     public void execute() {
+        elevator.setTargetHeight(target);
         double error = Math.abs(elevator.getCurrentHeightInInches() - elevator.getTargetHeight());
         if (error <= errorThreshold.get()) {
             if (!previouslyAtTarget) {

@@ -6,7 +6,6 @@ import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logging.RobotAssertionManager;
 import xbot.common.math.ContiguousHeading;
-import xbot.common.math.PIDManager;
 import xbot.common.math.PIDFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;

@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.controls.actuators.XSolenoid;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
@@ -17,12 +18,19 @@ public class ClimbSubsystem extends BaseSubsystem {
     final DoubleProperty decendSpeed;
     CommonLibFactory clf;
     public XCANTalon motor;
+    public XSolenoid solenoidA;
+    public XSolenoid solenoidB;
     ElectricalContract2018 contract;
 
     @Inject
     public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
+        solenoidA = clf.createSolenoid(contract.getPawlSolenoidA().channel);
+        solenoidB = clf.createSolenoid(contract.getPawlSolenoidB().channel);
+        solenoidA.setInverted(contract.getPawlSolenoidA().inverted);
+        solenoidB.setInverted(contract.getPawlSolenoidB().inverted);
+        
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
         decendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
 
@@ -59,5 +67,15 @@ public class ClimbSubsystem extends BaseSubsystem {
      */
     public void stop() {
         motor.simpleSet(0);
+    }
+    
+    public void releasePawl() {
+        solenoidA.setOn(true);
+        solenoidB.setOn(false);
+    }
+    
+    public void engagePawl() {
+        solenoidA.setOn(false);
+        solenoidB.setOn(true);
     }
 }

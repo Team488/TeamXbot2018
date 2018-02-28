@@ -78,7 +78,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         command.initialize();
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(1, elevator.motor.getMotorOutputPercent(), .01);
+        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
     }
     
     @Test
@@ -104,7 +104,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(1, elevator.motor.getMotorOutputPercent(), .01);
+        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
         elevator.uncalibrate();
         mockTimer.advanceTimeInSecondsBy(4000);
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
@@ -125,7 +125,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(1, elevator.motor.getMotorOutputPercent(), .01);
+        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
         elevator.uncalibrate();
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .1));
         command.execute();
@@ -204,8 +204,19 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         mockTimer.advanceTimeInSecondsBy(4000);
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
         command.execute();
+        // Verify that we have given up
         assertEquals(.15, elevator.motor.getMotorOutputPercent(), .01);
+        
         elevator.calibrateHere();
+        ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, 0));
+        elevator.setTargetHeight(70);
+        
+        // Maintainer needs to advance past coast and initialize before
+        // we get back to machine control
+        command.execute();
+        mockTimer.advanceTimeInSecondsBy(1);
+        command.execute();
+        
         elevator.setTargetHeight(70);
         command.execute();
         assertEquals(10400, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);

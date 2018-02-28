@@ -1,12 +1,9 @@
 package competition.subsystems.drive.commands;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
-import xbot.common.injection.BaseWPITest;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
