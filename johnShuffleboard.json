@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.3122629582806574,
+  "dividerPosition": 0.3141426783479349,
   "tabPane": [
     {
       "title": "DriveToCube",
@@ -652,6 +652,109 @@
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/DynamicScoreOnSwitchCommandGroup",
               "_title": "/SmartDashboard/DynamicScoreOnSwitchCommandGroup"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Climb",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "1,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/LeanWithDpadCommand/Power",
+              "_title": "SmartDashboard/LeanWithDpadCommand/Power"
+            }
+          },
+          "1,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ClimberDeploySubsystem/Speed",
+              "_title": "SmartDashboard/ClimberDeploySubsystem/Speed"
+            }
+          },
+          "1,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ClimbSubsystem/AscendSpeed",
+              "_title": "SmartDashboard/ClimbSubsystem/AscendSpeed"
+            }
+          },
+          "1,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ClimbSubsystem/DescendSpeed",
+              "_title": "SmartDashboard/ClimbSubsystem/DescendSpeed"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Auto",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/AutonomousCommandSelector/Current autonomous command name",
+              "_title": "SmartDashboard/AutonomousCommandSelector/Current autonomous command name"
+            }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Robot On Right",
+              "_title": "SmartDashboard/AutonomousDecisionSystem/Robot On Right"
+            }
+          },
+          "1,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto",
+              "_title": "SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto"
             }
           }
         }

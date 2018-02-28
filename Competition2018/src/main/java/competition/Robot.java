@@ -3,6 +3,8 @@ package competition;
 
 import java.io.File;
 
+import org.apache.log4j.Logger;
+
 import competition.operator_interface.OperatorCommandMap;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.drive.DriveSubsystem;
@@ -11,17 +13,16 @@ import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseRobot;
-import xbot.common.properties.DoubleProperty;
 
 public class Robot extends BaseRobot {
 
-    DoubleProperty example;
+    static Logger log = Logger.getLogger(Robot.class);
 
     @Override
     protected void setupInjectionModule() {
         File practiceRobotFlag = new File("/home/lvuser/practicerobot.txt");
         boolean isPracticeRobot = practiceRobotFlag.exists();
-        
+        log.info("Am I a practice robot? " + isPracticeRobot);
         this.injectionModule = new CompetitionModule(isPracticeRobot);
     }
 

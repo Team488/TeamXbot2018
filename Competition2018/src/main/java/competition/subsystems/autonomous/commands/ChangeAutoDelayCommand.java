@@ -14,6 +14,7 @@ public class ChangeAutoDelayCommand extends BaseCommand{
     public ChangeAutoDelayCommand(AutonomousDecisionSystem decider) {
         this.decider = decider;
         delayChangeAmount = 1;
+        this.setRunWhenDisabled(true);
     }
     
     public void setDelayChangeAmount(double delayChangeAmount) {

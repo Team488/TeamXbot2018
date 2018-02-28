@@ -75,8 +75,8 @@ public class OperatorCommandMap {
         fastMode.setFastMode(true);
         slowMode.setFastMode(false);
 
-        fastMode.includeOnSmartDashboard();
-        slowMode.includeOnSmartDashboard();
+        fastMode.includeOnSmartDashboard("Properties FastMode");
+        slowMode.includeOnSmartDashboard("Properties SlowMode");
     }
     
     @Inject
@@ -93,6 +93,9 @@ public class OperatorCommandMap {
         
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
+        
+        setLeft.setRightSide(false);
+        setRight.setRightSide(true);
         
         oi.programmerGamepad.getPovIfAvailable(0).whenPressed(addAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(180).whenPressed(subtractAutoDelay);
