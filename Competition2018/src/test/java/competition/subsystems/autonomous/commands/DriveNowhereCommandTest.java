@@ -12,6 +12,7 @@ public class DriveNowhereCommandTest extends BaseCompetitionTest {
     DriveSubsystem drive;
     DriveNowhereCommand command;
     
+    @Override
     public void setUp() {
         super.setUp();
         
