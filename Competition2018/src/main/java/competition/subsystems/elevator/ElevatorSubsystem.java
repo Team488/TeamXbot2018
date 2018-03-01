@@ -172,7 +172,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.enableCurrentLimit(true);
 
         motor.configPeakOutputReverse(-0.2, 0);
-        motor.configNominalOutputForward(0.3, 0);
+        motor.configNominalOutputForward(0.0, 0);
 
         motor.createTelemetryProperties(getPrefix(), "Motor");
     }
