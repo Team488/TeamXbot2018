@@ -67,10 +67,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     }
 
     public void setTargetAngle(double angle) {
-        if (isWithinSafetyZone()) {
-            angle = Math.min(angle, safetyZoneMaxAngle.get());
-        }
-        
+        angle = modifyAngleForSafeties(angle);
         targetAngle.set(angle);
     }
 
@@ -177,6 +174,14 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     public boolean isWithinSafetyZone() {
         return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
     }
+    
+    public double modifyAngleForSafeties(double angle) {
+        if (isWithinSafetyZone()) {
+            return Math.min(angle, safetyZoneMaxAngle.get());
+        }
+        
+        return angle;
+    }
 
     /**
      * angles the Gripper up
@@ -211,5 +216,10 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
         currentWristAngleProp.set(getWristAngle());
+        
+        if (isWithinSafetyZone()) {
+            double newTargetAngle = modifyAngleForSafeties(getTargetAngle());
+            targetAngle.set(newTargetAngle);
+        }
     }
 }
