@@ -153,6 +153,10 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
         motor.simpleSet(power);
     }
+    
+    public void insanelyDangerousSetPower(double power) {
+        motor.simpleSet(power);
+    }
 
     /**
      * angles the Gripper up
