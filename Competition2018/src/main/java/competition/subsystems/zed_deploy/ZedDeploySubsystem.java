@@ -4,13 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
-import competition.subsystems.offboard.OffboardCommunicationPacket;
 import xbot.common.command.BaseSubsystem;
-import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.actuators.XServo;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
-import xbot.common.logic.Latch;
-import xbot.common.logic.Latch.EdgeType;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
