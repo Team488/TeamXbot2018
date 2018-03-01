@@ -23,6 +23,11 @@ public class ImaginaryRobot2018 extends Practice2018Robot {
     }
     
     @Override
+    public boolean isWristLimitsReady() {
+    	return true;
+    }
+    
+    @Override
     public boolean collectorReady() {
        return true;
     }

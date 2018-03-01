@@ -1,10 +1,13 @@
 package competition.subsystems.wrist;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
+import edu.wpi.first.wpilibj.MockDigitalInput;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
 public class WristSubsystemTest extends BaseCompetitionTest {
@@ -54,7 +57,53 @@ public class WristSubsystemTest extends BaseCompetitionTest {
                 0.001);
     }
     
+    public void testCalibrationViaLimitSwitch() {
+    	wrist.uncalibrate();
+    	((MockCANTalon)wrist.motor).setPosition(10);
+    	
+    	assertFalse("Wrist should not be calibrated now", wrist.getIsCalibrated());
+    	
+    	setLimits(false, true);
+    	
+    	assertTrue("Upper limit pressed", wrist.upperLimitSwitch.get());
+    	
+    	wrist.setPower(1);
+    	verifyWristPower(0);
+    	assertTrue("Wrist now calibrated", wrist.getIsCalibrated());
+    }
+    
+    public void testRespectLimitSwitches() {
+    	setLimits(false, false);
+    	wrist.setPower(1);
+    	verifyWristPower(1);
+    	wrist.setPower(-1);
+    	verifyWristPower(-1);
+    	
+    	setLimits(false, true);
+    	wrist.setPower(1);
+    	verifyWristPower(0);
+    	wrist.setPower(-1);
+    	verifyWristPower(-1);
+    	
+    	setLimits(true, false);
+    	wrist.setPower(1);
+    	verifyWristPower(1);
+    	wrist.setPower(-1);
+    	verifyWristPower(0);
+    	
+    	setLimits(true, true);
+    	wrist.setPower(1);
+    	verifyWristPower(0);
+    	wrist.setPower(-1);
+    	verifyWristPower(0);
+    }
+    
     private void verifyWristPower(double expectedPower) {
         assertEquals(expectedPower, wrist.motor.getMotorOutputPercent(), 0.001);
+    }
+    
+    private void setLimits(boolean lower, boolean upper) {
+    	((MockDigitalInput)wrist.lowerLimitSwitch).setValue(lower);
+    	((MockDigitalInput)wrist.upperLimitSwitch).setValue(upper);
     }
 }
