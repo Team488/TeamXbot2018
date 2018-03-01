@@ -1,37 +1,35 @@
 package competition.subsystems.elevator.commands;
 
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.elevator.ElevatorSubsystem;
 
-public class LowerElevatorCommandTest extends BaseCompetitionTest {
-
-    LowerElevatorCommand command;
+public class ElevatorUncalibrateCommandTest extends BaseCompetitionTest {
     ElevatorSubsystem elevator;
-
+    ElevatorUncalibrateCommand command;
+    
     @Override
     public void setUp() {
         super.setUp();
-
-        command = injector.getInstance(LowerElevatorCommand.class);
+        
         elevator = injector.getInstance(ElevatorSubsystem.class);
+        command = injector.getInstance(ElevatorUncalibrateCommand.class);
     }
-
+    
     @Test
-    public void testSimple() {
+    public void simpleTest() {
         command.initialize();
         command.execute();
     }
-
+    
     @Test
-    public void verifyMovingDown() {
-
+    public void verifyCalibrate() {
         command.initialize();
         command.execute();
-
-        assertTrue(elevator.motor.getMotorOutputPercent() <= 0.1);
+        
+        assertFalse(elevator.isCalibrated());
     }
+
 }

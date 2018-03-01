@@ -9,6 +9,7 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
+import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.subsystems.drive.PurePursuitCommand;
 
 public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
@@ -19,6 +20,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
     public DynamicScoreOnSwitchCommandGroup(
             AutonomousDecisionSystem decider,
             ElevatorSubsystem elevator,
+            DelayViaSupplierCommand wait,
             PurePursuitCommand pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForSwitch,
@@ -26,15 +28,18 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
         
-        //setWristDown.setGoalAngle(0);
-        //setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
+        setWristDown.setGoalAngle(0);
+        setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
+        wait.setDelaySupplier(() -> decider.getDelay());
+        
+        this.addSequential(wait);
         // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
-        //this.addParallel(setWristDown, 1);
-        //this.addParallel(setElevatorForSwitch, 1);
+        this.addParallel(setWristDown, 1);
+        this.addParallel(setElevatorForSwitch, 1);
         this.addSequential(pursuit);
         
         // Score for 1 second
-        //this.addSequential(eject, 1);
+        this.addSequential(eject, 1);
     }
 }

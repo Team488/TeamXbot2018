@@ -15,8 +15,9 @@ import xbot.common.logging.RobotAssertionManager;
 @Singleton
 public class OperatorInterface {
 
-    public XFTCGamepad driverGamepad;
-    public XFTCGamepad operatorGamepad;
+    public final XFTCGamepad driverGamepad;
+    public final XFTCGamepad operatorGamepad;
+    public final XFTCGamepad programmerGamepad;
 
     public final AnalogHIDDescription gripperIntake;
     public final AnalogHIDDescription gripperEject;
@@ -25,16 +26,18 @@ public class OperatorInterface {
 
     @Inject
     public OperatorInterface(CommonLibFactory factory, RobotAssertionManager assertionManager) {
-        driverGamepad = factory.createGamepad(3, 10);
-
+        driverGamepad = factory.createGamepad(0, 10);
         driverGamepad.setLeftStickYInversion(true);
         driverGamepad.setRightStickYInversion(true);
         driverGamepad.setRightStickXInversion(true);
 
-        operatorGamepad = factory.createGamepad(0, 10);
-
+        operatorGamepad = factory.createGamepad(1, 10);
         operatorGamepad.setLeftStickYInversion(true);
         operatorGamepad.setRightStickYInversion(true);
+        
+        programmerGamepad = factory.createGamepad(2, 10);
+        programmerGamepad.setLeftStickYInversion(true);
+        programmerGamepad.setRightStickYInversion(true);        
 
         gripperIntake = new AnalogHIDDescription(3, .75, 1.0);
         operatorGamepad.addAnalogButton(gripperIntake);

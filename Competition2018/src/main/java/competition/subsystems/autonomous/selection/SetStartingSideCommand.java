@@ -13,6 +13,7 @@ public class SetStartingSideCommand extends BaseCommand {
     @Inject
     public SetStartingSideCommand(AutonomousDecisionSystem decider) {
         this.decider = decider;
+        this.setRunWhenDisabled(true);
     }
     
     public void setRightSide(boolean robotOnRightSide) {

@@ -1,255 +1,38 @@
 {
-  "dividerPosition": 0.24,
+  "dividerPosition": 0.3141592920353982,
   "tabPane": [
     {
-      "title": "SmartDashboard",
-      "autoPopulate": true,
-      "autoPopulatePrefix": "SmartDashboard/",
+      "title": "DriveToCube",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
-          "2,5": {
+          "1,1": {
             "size": [
-              1,
+              3,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/rightDriveTicksPer5Feet",
-              "_title": "rightDriveTicksPer5Feet"
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Drive to local cube",
+              "_title": "SmartDashboard/Drive to local cube"
             }
           },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Number Bar",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster voltage",
-              "_title": "LeftDriveMaster voltage",
-              "min": -1.0,
-              "max": 1.0,
-              "center": 0.0,
-              "numTickMarks": 5.0,
-              "showText": true
-            }
-          },
-          "7,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster position",
-              "_title": "LeftDriveMaster position"
-            }
-          },
-          "9,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/maxVelocityInFeet",
-              "_title": "maxVelocityInFeet"
-            }
-          },
-          "12,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/CurrentHeading",
-              "_title": "CurrentHeading"
-            }
-          },
-          "5,3": {
+          "1,2": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Enable time threshold",
-              "_title": "PathfinderHeading Enable time threshold",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "7,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Current roll",
-              "_title": "Current roll"
-            }
-          },
-          "10,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Total distance X",
-              "_title": "Total distance X"
-            }
-          },
-          "8,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Current compass heading",
-              "_title": "Current compass heading"
-            }
-          },
-          "4,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Total distance Y",
-              "_title": "Total distance Y"
-            }
-          },
-          "2,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/DriveBaseWidthInFeet",
-              "_title": "DriveBaseWidthInFeet"
-            }
-          },
-          "4,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Time threshold",
-              "_title": "PathfinderHeading Time threshold"
-            }
-          },
-          "11,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Total Velocity",
-              "_title": "Total Velocity"
-            }
-          },
-          "3,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading D",
-              "_title": "PathfinderHeading D"
-            }
-          },
-          "1,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/RightDriveMaster position",
-              "_title": "RightDriveMaster position"
-            }
-          },
-          "4,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading F",
-              "_title": "PathfinderHeading F"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Is Enabled",
-              "_title": "PathfinderHeading Is Enabled",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/RIO rotated",
-              "_title": "RIO rotated",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "0,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading I",
-              "_title": "PathfinderHeading I"
-            }
-          },
-          "5,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Current pitch",
-              "_title": "Current pitch"
-            }
-          },
-          "9,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading P",
-              "_title": "PathfinderHeading P"
             }
           },
           "2,2": {
@@ -259,96 +42,109 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/wheelDiameterInFeet",
-              "_title": "wheelDiameterInFeet"
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/X",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/X"
             }
           },
-          "1,1": {
+          "2,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Y",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Y"
+            }
+          },
+          "2,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Z",
+              "_title": "SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Z"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Drive",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/LeftDriveMaster",
+              "_title": "SmartDashboard/DriveSubsystem/LeftDriveMaster"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/leftDriveTicksPer5Feet",
+              "_title": "SmartDashboard/DriveSubsystem/leftDriveTicksPer5Feet"
+            }
+          },
+          "2,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/rightDriveTicksPer5Feet",
+              "_title": "SmartDashboard/DriveSubsystem/rightDriveTicksPer5Feet"
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/RightDriveMaster",
+              "_title": "SmartDashboard/DriveSubsystem/RightDriveMaster"
+            }
+          },
+          "0,3": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderP",
-              "_title": "PathfinderP"
+              "_source0": "network_table:///SmartDashboard/PoseSubsystem/CurrentHeading",
+              "_title": "SmartDashboard/PoseSubsystem/CurrentHeading"
             }
           },
-          "4,2": {
+          "2,3": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster temperature",
-              "_title": "LeftDriveMaster temperature"
-            }
-          },
-          "5,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Inherent RIO pitch",
-              "_title": "Inherent RIO pitch"
-            }
-          },
-          "8,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Left drive distance",
-              "_title": "Left drive distance"
-            }
-          },
-          "7,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/leftDriveTicksPer5Feet",
-              "_title": "leftDriveTicksPer5Feet"
-            }
-          },
-          "0,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/RightDriveMaster current",
-              "_title": "RightDriveMaster current"
-            }
-          },
-          "1,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Derivative threshold",
-              "_title": "PathfinderHeading Derivative threshold"
-            }
-          },
-          "3,5": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster velocity",
-              "_title": "LeftDriveMaster velocity"
+              "_source0": "network_table:///SmartDashboard/PoseSubsystem/Total distance X",
+              "_title": "SmartDashboard/PoseSubsystem/Total distance X"
             }
           },
           "3,3": {
@@ -358,30 +154,221 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Max Output",
-              "_title": "PathfinderHeading Max Output"
+              "_source0": "network_table:///SmartDashboard/PoseSubsystem/Total distance Y",
+              "_title": "SmartDashboard/PoseSubsystem/Total distance Y"
             }
           },
-          "6,2": {
+          "2,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/ResetDistanceCommand",
+              "_title": "SmartDashboard/ResetDistanceCommand"
+            }
+          },
+          "0,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/SetRobotHeadingCommand",
+              "_title": "SmartDashboard/SetRobotHeadingCommand"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/DriveDecay/ D",
+              "_title": "SmartDashboard/DriveSubsystem/DriveDecay/ D"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/DriveHeading/ P",
+              "_title": "SmartDashboard/DriveSubsystem/DriveHeading/ P"
+            }
+          },
+          "5,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/DriveHeading/ D",
+              "_title": "SmartDashboard/DriveSubsystem/DriveHeading/ D"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Elevator",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Motor",
+              "_title": "SmartDashboard/ElevatorSubsystem/Motor"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Calibrated",
+              "_title": "SmartDashboard/ElevatorSubsystem/Calibrated",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "3,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/RightDriveMaster temperature",
-              "_title": "RightDriveMaster temperature"
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Current height",
+              "_title": "SmartDashboard/ElevatorSubsystem/Current height"
             }
           },
-          "10,3": {
+          "3,4": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster current",
-              "_title": "LeftDriveMaster current"
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ P",
+              "_title": "SmartDashboard/ElevatorSubsystem/Position/ P"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Continuous current limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Continuous current limit"
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Peak current limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Peak current limit"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Restriction Reason",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Restriction Reason"
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/TargetHeight",
+              "_title": "/SmartDashboard/ElevatorSubsystem/TargetHeight"
+            }
+          },
+          "5,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Peak current duration",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Peak current duration"
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Current Velocity",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Current Velocity"
+            }
+          },
+          "0,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ P",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Velocity/ P"
+            }
+          },
+          "4,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Position/ D",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Position/ D"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Velocity/ D",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Velocity/ D"
             }
           },
           "6,3": {
@@ -390,57 +377,70 @@
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Enable error threshold",
-              "_title": "PathfinderHeading Enable error threshold",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "7,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Robot loop frequency report interval",
-              "_title": "Robot loop frequency report interval"
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Max Power Near Low Limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Max Power Near Low Limit"
             }
           },
-          "8,3": {
+          "2,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Enable derivative threshold",
-              "_title": "PathfinderHeading Enable derivative threshold",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Upper Limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Upper Limit",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
             }
           },
-          "0,3": {
+          "2,1": {
             "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Inherent RIO roll",
-              "_title": "Inherent RIO roll"
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Lower Limit",
+              "_title": "/SmartDashboard/ElevatorSubsystem/Lower Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Wrist",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/WristUncalibrateCommand",
+              "_title": "SmartDashboard/WristUncalibrateCommand"
             }
           },
-          "6,5": {
+          "2,0": {
             "size": [
-              1,
-              1
+              2,
+              2
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Right drive distance",
-              "_title": "Right drive distance"
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Motor",
+              "_title": "SmartDashboard/WristSubsystem/Motor"
             }
           },
           "2,3": {
@@ -450,300 +450,32 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/EncoderTicksPerRev",
-              "_title": "EncoderTicksPerRev"
+              "_source0": "network_table:///SmartDashboard/GripperIntakeSubsystem/High Power",
+              "_title": "SmartDashboard/GripperIntakeSubsystem/High Power"
             }
           },
-          "5,5": {
+          "3,3": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/RightDriveMaster velocity",
-              "_title": "RightDriveMaster velocity"
-            }
-          },
-          "4,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/RightDriveMaster voltage",
-              "_title": "RightDriveMaster voltage"
-            }
-          },
-          "8,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Min Output",
-              "_title": "PathfinderHeading Min Output"
-            }
-          },
-          "3,4": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Error threshold",
-              "_title": "PathfinderHeading Error threshold"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "LiveWindow",
-      "autoPopulate": true,
-      "autoPopulatePrefix": "LiveWindow/",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "0,0": {
-            "size": [
-              3,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "Ungrouped",
-              "_children": [
-                {
-                  "_type": "Speed Controller",
-                  "_source0": "network_table:///LiveWindow/Ungrouped/Talon SRX [21]",
-                  "_title": "Talon SRX [21]",
-                  "controllable": false,
-                  "orientation": "HORIZONTAL"
-                },
-                {
-                  "_type": "Speed Controller",
-                  "_source0": "network_table:///LiveWindow/Ungrouped/Talon SRX [20]",
-                  "_title": "Talon SRX [20]",
-                  "controllable": false,
-                  "orientation": "HORIZONTAL"
-                },
-                {
-                  "_type": "Boolean Box",
-                  "_source0": "network_table:///LiveWindow/Ungrouped/Solenoid[0,1]/Value",
-                  "_title": "Solenoid[0,1]/Value",
-                  "colorWhenTrue": "#7CFC00FF",
-                  "colorWhenFalse": "#8B0000FF"
-                },
-                {
-                  "_type": "Speed Controller",
-                  "_source0": "network_table:///LiveWindow/Ungrouped/Talon SRX [35]",
-                  "_title": "Talon SRX [35]",
-                  "controllable": false,
-                  "orientation": "HORIZONTAL"
-                },
-                {
-                  "_type": "Speed Controller",
-                  "_source0": "network_table:///LiveWindow/Ungrouped/Talon SRX [34]",
-                  "_title": "Talon SRX [34]",
-                  "controllable": false,
-                  "orientation": "HORIZONTAL"
-                }
-              ]
-            }
-          },
-          "3,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "PoseSubsystem",
-              "_children": []
-            }
-          },
-          "5,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "DriveSubsystem",
-              "_children": []
-            }
-          },
-          "7,0": {
-            "size": [
-              2,
-              4
-            ],
-            "content": {
-              "_type": "List Layout",
-              "_title": "ShiftSubsystem",
-              "_children": []
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "drive",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "0,4": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster temperature",
-              "_source1": "network_table:///SmartDashboard/RightDriveMaster temperature",
-              "_title": "Graph (2 sources)",
-              "Visible time": 30.0,
-              "/SmartDashboard/LeftDriveMaster temperature visible": true,
-              "/SmartDashboard/RightDriveMaster temperature visible": true
-            }
-          },
-          "7,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Voltage View",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster voltage",
-              "_title": "SmartDashboard/LeftDriveMaster voltage",
-              "min": 0.0,
-              "max": 5.0,
-              "center": 0.0,
-              "orientation": "HORIZONTAL",
-              "numTickMarks": 5.0
-            }
-          },
-          "0,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Left drive distance",
-              "_title": "SmartDashboard/Left drive distance"
-            }
-          },
-          "0,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Right drive distance",
-              "_title": "SmartDashboard/Right drive distance"
+              "_source0": "network_table:///SmartDashboard/GripperIntakeSubsystem/Low Power",
+              "_title": "SmartDashboard/GripperIntakeSubsystem/Low Power"
             }
           },
           "4,0": {
             "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster velocity",
-              "_source1": "network_table:///SmartDashboard/RightDriveMaster velocity",
-              "_title": "Graph (2 sources)",
-              "Visible time": 30.0,
-              "/SmartDashboard/LeftDriveMaster velocity visible": true,
-              "/SmartDashboard/RightDriveMaster velocity visible": true
-            }
-          },
-          "7,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Voltage View",
-              "_source0": "network_table:///SmartDashboard/RightDriveMaster voltage",
-              "_title": "SmartDashboard/RightDriveMaster voltage",
-              "min": 0.0,
-              "max": 5.0,
-              "center": 0.0,
-              "orientation": "HORIZONTAL",
-              "numTickMarks": 5.0
-            }
-          },
-          "1,2": {
-            "size": [
               1,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Total Velocity",
-              "_title": "SmartDashboard/Total Velocity"
-            }
-          },
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/maxVelocityInFeet",
-              "_title": "SmartDashboard/maxVelocityInFeet"
-            }
-          },
-          "2,2": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_title": "",
-              "majorTickSpace": 45.0,
-              "startAngle": 180.0,
-              "tickMarkRingVisible": true
-            }
-          },
-          "2,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Encoder",
-              "_title": ""
-            }
-          },
-          "4,2": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster position",
-              "_source1": "network_table:///SmartDashboard/RightDriveMaster position",
-              "_title": "Graph (2 sources)",
-              "Visible time": 30.0,
-              "/SmartDashboard/LeftDriveMaster position visible": true,
-              "/SmartDashboard/RightDriveMaster position visible": true
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Calibrated",
+              "_title": "SmartDashboard/WristSubsystem/Calibrated",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           },
           "0,2": {
@@ -753,8 +485,19 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Total distance X",
-              "_title": "/SmartDashboard/Total distance X"
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Current Angle",
+              "_title": "SmartDashboard/WristSubsystem/Current Angle"
+            }
+          },
+          "2,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Target Angle",
+              "_title": "SmartDashboard/WristSubsystem/Target Angle"
             }
           },
           "0,3": {
@@ -764,271 +507,89 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Total distance Y",
-              "_title": "/SmartDashboard/Total distance Y"
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Ticks per degree",
+              "_title": "/SmartDashboard/WristSubsystem/Ticks per degree"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Rabbit",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/PurePursuitCommand",
+              "_title": "SmartDashboard/PurePursuitCommand"
             }
           },
-          "1,3": {
+          "0,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/PurePursuitCommand/Rabbit distance threshold",
+              "_title": "SmartDashboard/PurePursuitCommand/Rabbit distance threshold"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/PurePursuitCommand/Rabbit lookahead (in)",
+              "_title": "SmartDashboard/PurePursuitCommand/Rabbit lookahead (in)"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/PurePursuitCommand/running",
+              "_title": "SmartDashboard/PurePursuitCommand/running",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "3,4": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/CurrentHeading",
-              "_title": "/SmartDashboard/CurrentHeading"
-            }
-          },
-          "3,4": {
-            "size": [
-              1,
-              2
-            ],
-            "content": {
-              "_type": "Relay Widget",
-              "_title": ""
-            }
-          },
-          "7,2": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///Preferences/EncoderTicksPerRev",
-              "_title": "Preferences/EncoderTicksPerRev",
-              "Visible time": 30.0,
-              "Preferences/EncoderTicksPerRev visible": true
+              "_source0": "network_table:///SmartDashboard/PoseSubsystem/Total distance X",
+              "_title": "SmartDashboard/PoseSubsystem/Total distance X"
             }
           },
           "4,4": {
             "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///Preferences/leftDriveTicksPer5Feet",
-              "_source1": "network_table:///Preferences/rightDriveTicksPer5Feet",
-              "_title": "Graph (2 sources)",
-              "Visible time": 30.0,
-              "Preferences/leftDriveTicksPer5Feet visible": true,
-              "Preferences/rightDriveTicksPer5Feet visible": true
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "rotate",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "0,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/FastRollerSpeed",
-              "_title": "Preferences/FastRollerSpeed"
-            }
-          },
-          "0,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/Inherent RIO pitch",
-              "_title": "Preferences/Inherent RIO pitch"
-            }
-          },
-          "0,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/SlowRollerSpeed",
-              "_title": "Preferences/SlowRollerSpeed"
-            }
-          },
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Current compass heading",
-              "_title": "SmartDashboard/Current compass heading"
-            }
-          },
-          "2,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Current pitch",
-              "_title": "SmartDashboard/Current pitch"
-            }
-          },
-          "2,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Current roll",
-              "_title": "SmartDashboard/Current roll"
-            }
-          },
-          "2,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/CurrentHeading",
-              "_title": "SmartDashboard/CurrentHeading"
-            }
-          },
-          "0,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/RIO rotated",
-              "_title": "Preferences/RIO rotated",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "4,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Gyro",
-              "_title": "",
-              "majorTickSpace": 45.0,
-              "startAngle": 180.0,
-              "tickMarkRingVisible": true
-            }
-          },
-          "4,2": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster velocity",
-              "_source1": "network_table:///SmartDashboard/RightDriveMaster velocity",
-              "_title": "Graph (2 sources)",
-              "Visible time": 30.0,
-              "/SmartDashboard/LeftDriveMaster velocity visible": true,
-              "/SmartDashboard/RightDriveMaster velocity visible": true
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "PathFinderHeading-PIDProperty",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {
-          "3,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/PathfinderHeading Enable derivative threshold",
-              "_title": "Preferences/PathfinderHeading Enable derivative threshold",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "3,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/PathfinderHeading Enable error threshold",
-              "_title": "Preferences/PathfinderHeading Enable error threshold",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "3,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/PathfinderHeading Enable time threshold",
-              "_title": "Preferences/PathfinderHeading Enable time threshold",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
-            }
-          },
-          "1,2": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading Error threshold",
-              "_title": "Preferences/PathfinderHeading Error threshold"
-            }
-          },
-          "5,3": {
-            "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading F",
-              "_title": "Preferences/PathfinderHeading F"
-            }
-          },
-          "5,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading I",
-              "_title": "Preferences/PathfinderHeading I"
+              "_source0": "network_table:///SmartDashboard/PoseSubsystem/Total distance Y",
+              "_title": "SmartDashboard/PoseSubsystem/Total distance Y"
             }
           },
           "3,3": {
@@ -1037,44 +598,110 @@
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///Preferences/PathfinderHeading Is Enabled",
-              "_title": "Preferences/PathfinderHeading Is Enabled",
-              "colorWhenTrue": "#7CFC00FF",
-              "colorWhenFalse": "#8B0000FF"
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/PoseSubsystem/CurrentHeading",
+              "_title": "SmartDashboard/PoseSubsystem/CurrentHeading"
             }
           },
-          "1,4": {
+          "3,0": {
             "size": [
               2,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading Max Output",
-              "_title": "Preferences/PathfinderHeading Max Output"
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/SetRobotHeadingCommand",
+              "_title": "SmartDashboard/SetRobotHeadingCommand"
             }
           },
-          "3,4": {
+          "3,1": {
             "size": [
               2,
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading Min Output",
-              "_title": "Preferences/PathfinderHeading Min Output"
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/ResetDistanceCommand",
+              "_title": "SmartDashboard/ResetDistanceCommand"
             }
           },
           "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ P",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ P"
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ D",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ D"
+            }
+          },
+          "0,4": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading P",
-              "_title": "Preferences/PathfinderHeading P"
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ Max Output",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ Max Output"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/DriveSubsystem/Drive to position/ Min Output",
+              "_title": "SmartDashboard/DriveSubsystem/Drive to position/ Min Output"
+            }
+          },
+          "0,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/DynamicScoreOnSwitchCommandGroup",
+              "_title": "/SmartDashboard/DynamicScoreOnSwitchCommandGroup"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Climb",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "1,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/LeanWithDpadCommand/Power",
+              "_title": "SmartDashboard/LeanWithDpadCommand/Power"
             }
           },
           "1,1": {
@@ -1084,8 +711,19 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderHeading Time threshold",
-              "_title": "Preferences/PathfinderHeading Time threshold"
+              "_source0": "network_table:///SmartDashboard/ClimberDeploySubsystem/Speed",
+              "_title": "SmartDashboard/ClimberDeploySubsystem/Speed"
+            }
+          },
+          "1,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ClimbSubsystem/AscendSpeed",
+              "_title": "SmartDashboard/ClimbSubsystem/AscendSpeed"
             }
           },
           "1,3": {
@@ -1095,149 +733,57 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Preferences/PathfinderP",
-              "_title": "Preferences/PathfinderP"
-            }
-          },
-          "1,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading Derivative threshold",
-              "_title": "SmartDashboard/PathfinderHeading Derivative threshold"
-            }
-          },
-          "5,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/PathfinderHeading D",
-              "_title": "SmartDashboard/PathfinderHeading D"
-            }
-          },
-          "6,0": {
-            "size": [
-              1,
-              4
-            ],
-            "content": {
-              "_type": "PID Controller",
-              "_title": ""
+              "_source0": "network_table:///SmartDashboard/ClimbSubsystem/DescendSpeed",
+              "_title": "SmartDashboard/ClimbSubsystem/DescendSpeed"
             }
           }
         }
       }
     },
     {
-      "title": "baseRobot",
+      "title": "Auto",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
         "gridSize": 128.0,
+        "showGrid": true,
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
           "0,0": {
             "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Differential Drivebase",
-              "_title": "",
-              "numberOfWheels": 4,
-              "wheelDiameter": 80.0,
-              "showVectors": true
-            }
-          },
-          "0,2": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Mecanum Drivebase",
-              "_title": "",
-              "showForceVectors": true
-            }
-          },
-          "4,0": {
-            "size": [
               3,
-              2
+              1
             ],
             "content": {
-              "_type": "PDP",
-              "_title": "",
-              "showIndicatorText": true
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/AutonomousCommandSelector/Current autonomous command name",
+              "_title": "SmartDashboard/AutonomousCommandSelector/Current autonomous command name"
             }
           },
-          "4,2": {
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Robot On Right",
+              "_title": "SmartDashboard/AutonomousDecisionSystem/Robot On Right"
+            }
+          },
+          "1,1": {
             "size": [
               2,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///Preferences/DriveBaseWidthInFeet",
-              "_title": "Preferences/DriveBaseWidthInFeet"
-            }
-          },
-          "4,3": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///Preferences/wheelDiameterInFeet",
-              "_title": "Preferences/wheelDiameterInFeet"
-            }
-          },
-          "0,4": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/LeftDriveMaster temperature",
-              "_source1": "network_table:///SmartDashboard/RightDriveMaster temperature",
-              "_title": "Graph (2 sources)",
-              "Visible time": 30.0,
-              "/SmartDashboard/LeftDriveMaster temperature visible": true,
-              "/SmartDashboard/RightDriveMaster temperature visible": true
+              "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto",
+              "_title": "SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto"
             }
           }
         }
-      }
-    },
-    {
-      "title": "Tab 7",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {}
-      }
-    },
-    {
-      "title": "Tab 8",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "tiles": {}
       }
     }
   ]
