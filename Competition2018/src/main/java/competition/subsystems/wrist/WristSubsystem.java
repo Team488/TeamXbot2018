@@ -175,7 +175,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     }
     
     public boolean isWithinSafetyZone() {
-        return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() > this.safetyZoneStartHeight.get();
+        return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
     }
 
     /**
