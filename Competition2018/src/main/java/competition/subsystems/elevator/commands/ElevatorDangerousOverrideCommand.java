@@ -11,12 +11,12 @@ public class ElevatorDangerousOverrideCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        elevator.insanelyDangerousSetPower(oi.driverGamepad.getRightStickY());
+        log.info("Initializing");
     }
 
     @Override
     public void execute() {
-        
+        elevator.insanelyDangerousSetPower(oi.driverGamepad.getRightStickY());
     }
 
 }
