@@ -13,14 +13,14 @@ import xbot.common.command.XScheduler;
 public class ClimbRetractCommandGroupTest extends BaseCompetitionTest{
     
     XScheduler xScheduler;
-    ClimbRetractCommandGroup command;
+    EngageWinchAndLockPawlCommandGroup command;
     ClimbSubsystem climb;
     
     @Override
     public void setUp() {
         super.setUp();
         this.climb = injector.getInstance(ClimbSubsystem.class);
-        this.command = injector.getInstance(ClimbRetractCommandGroup.class);
+        this.command = injector.getInstance(EngageWinchAndLockPawlCommandGroup.class);
         this.xScheduler = injector.getInstance(XScheduler.class);
     }
     
