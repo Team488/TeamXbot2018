@@ -19,6 +19,8 @@ public class GripperStopCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
+        intake.leftMotor.simpleSet(1);
+        intake.rightMotor.simpleSet(1);
     }
 
     @Override
