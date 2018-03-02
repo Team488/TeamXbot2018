@@ -21,7 +21,6 @@ public class Robot extends BaseRobot {
     static Logger log = Logger.getLogger(Robot.class);
     
     AutonomousCommandSelector autonomousCommandSelector;
-    DriveSubsystem drive;
 
     @Override
     protected void setupInjectionModule() {
@@ -43,7 +42,6 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
         autonomousCommandSelector = this.injector.getInstance(AutonomousCommandSelector.class);
-        drive = this.injector.getInstance(DriveSubsystem.class);
         ElectricalContract2018 contract = this.injector.getInstance(ElectricalContract2018.class);
 
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
