@@ -56,7 +56,7 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.properties.ConfigurePropertiesCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand;
+import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
@@ -194,7 +194,7 @@ public class OperatorCommandMap {
                 NavToTestGoalCommand testNav,
                 DriveAtVelocityInfinitelyCommand driveAtVelLow,
                 DriveAtVelocityInfinitelyCommand driveAtVelHigh,
-                PurePursuitCommand driveToLocalCubeCommand,
+                ConfigurablePurePursuitCommand driveToLocalCubeCommand,
                 OffboardInterfaceSubsystem offboardSubsystem,
                 PoseSubsystem poseSubsystem,
                 ExtendRetractZedCommand extendZed,
