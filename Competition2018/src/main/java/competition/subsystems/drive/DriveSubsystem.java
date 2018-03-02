@@ -66,7 +66,7 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
             PIDFactory pf) {
         log.info("Creating DriveSubsystem");
         
-        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.75, -0.75, 3, 1, 0.5);
         rotateToHeadingPid = pf.createPIDManager(getPrefix()+"DriveHeading", 4, 0, 0);
         rotateDecayPid = pf.createPIDManager(getPrefix()+"DriveDecay", 0, 0, 1);
 
@@ -81,9 +81,9 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
         final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
         leftTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"leftDriveTicksPer5Feet",
-                defaultDriveTicksPer5Feet);
+                100281);
         rightTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"rightDriveTicksPer5Feet",
-                defaultDriveTicksPer5Feet);
+                100281);
 
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
@@ -99,8 +99,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
-        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
-        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
+        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
 
         this.setVoltageRamp(voltageRampNormalProp.get());
         this.setCurrentLimits(0, false);

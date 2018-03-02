@@ -31,7 +31,7 @@ public class GripperEjectCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
 
-        assertEquals(0.3, intake.leftMotor.getMotorOutputPercent(), 0.001);
-        assertEquals(0.3, intake.rightMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.25, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0.25, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
 }
