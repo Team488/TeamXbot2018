@@ -6,10 +6,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
+import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.logic.Latch;
+import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -20,22 +24,35 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     final DoubleProperty maximumWristPower;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
+    private final Latch calibrationLatch;
 
     public XCANTalon motor;
+    public XDigitalInput lowerLimitSwitch;
+    public XDigitalInput upperLimitSwitch;
 
     final DoubleProperty currentWristAngleProp;
     final DoubleProperty wristTicksPerDegreeProp;
     final BooleanProperty wristCalibratedProp;
     final DoubleProperty wristUncalibratedPowerProp;
     final DoubleProperty targetAngle;
+    final BooleanProperty lowerLimitProp;
+    final BooleanProperty upperLimitProp;
+
+    private final BooleanProperty safetyZoneEnabled;
+    private final DoubleProperty safetyZoneMaxAngle;
+    private final DoubleProperty safetyZoneStartHeight;
 
     int lowerLimit;
     int upperLimit;
     boolean calibrated = false;
 
+    private final ElevatorSubsystem elevator;
+
     @Inject
-    WristSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
+    WristSubsystem(CommonLibFactory clf, ElevatorSubsystem elevator, XPropertyManager propMan,
+            ElectricalContract2018 contract) {
         this.clf = clf;
+        this.elevator = elevator;
         this.contract = contract;
         maximumWristPower = propMan.createPersistentProperty(getPrefix() + "Maximum Power", 0.3);
 
@@ -44,17 +61,29 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         wristCalibratedProp = propMan.createEphemeralProperty(getPrefix() + "Calibrated", false);
         wristUncalibratedPowerProp = propMan.createPersistentProperty(getPrefix() + "Calibration power", 0.3);
         targetAngle = propMan.createEphemeralProperty(getPrefix() + "Target Angle", contract.getWristMaximumAngle());
+        lowerLimitProp = propMan.createEphemeralProperty(getPrefix() + "Lower Limit", false);
+        upperLimitProp = propMan.createEphemeralProperty(getPrefix() + "Upper Limit", false);
+        safetyZoneEnabled = propMan.createPersistentProperty(getPrefix() + "Safety zone/Is enabled", true);
+        safetyZoneMaxAngle = propMan.createPersistentProperty(getPrefix() + "Safety zone/Max angle", 50);
+        safetyZoneStartHeight = propMan.createPersistentProperty(getPrefix() + "Safety zone/Start height (in)", 40);
 
         if (contract.wristReady()) {
-            initializeMotor();
+            initializeComponents();
         }
+
+        calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
+            if (edge == EdgeType.RisingEdge) {
+                calibrateHere();
+            }
+        });
     }
-    
+
     public double getMaximumAllowedPower() {
         return maximumWristPower.get();
     }
 
     public void setTargetAngle(double angle) {
+        angle = modifyAngleForSafeties(angle);
         targetAngle.set(angle);
     }
 
@@ -78,7 +107,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         return upperLimit;
     }
 
-    private void initializeMotor() {
+    private void initializeComponents() {
         motor = clf.createCANTalon(contract.getWristMaster().channel);
         motor.setInverted(contract.getWristMaster().inverted);
         motor.createTelemetryProperties(getPrefix(), "Motor");
@@ -87,9 +116,19 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.setSensorPhase(contract.getWristEncoder().inverted);
 
         motor.setNeutralMode(NeutralMode.Brake);
-        
+
         motor.configNominalOutputForward(0, 0);
         motor.configNominalOutputReverse(0, 0);
+
+        uncalibrate();
+
+        if (contract.isWristLimitsReady()) {
+            upperLimitSwitch = clf.createDigitalInput(contract.getWristUpperLimit().channel);
+            upperLimitSwitch.setInverted(contract.getWristUpperLimit().inverted);
+
+            lowerLimitSwitch = clf.createDigitalInput(contract.getWristLowerLimit().channel);
+            lowerLimitSwitch.setInverted(contract.getWristLowerLimit().inverted);
+        }
     }
 
     public void uncalibrate() {
@@ -121,7 +160,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
         log.info("Lower limit set at: " + lowerLimit);
         motor.configReverseSoftLimitThreshold(lowerLimit, 0);
-        
+
         setTargetAngle(getTargetAngle());
     }
 
@@ -144,6 +183,18 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
      *            Negative to move down, positive to move up.
      */
     public void setPower(double power) {
+        if (contract.isWristLimitsReady()) {
+            calibrationLatch.setValue(upperLimitSwitch.get());
+
+            if (upperLimitSwitch.get()) {
+                power = MathUtils.constrainDouble(power, -1, 0);
+            }
+
+            if (lowerLimitSwitch.get()) {
+                power = MathUtils.constrainDouble(power, 0, 1);
+            }
+        }
+
         if (!calibrated) {
             power = MathUtils.constrainDouble(power, -wristUncalibratedPowerProp.get(),
                     wristUncalibratedPowerProp.get());
@@ -151,7 +202,23 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
             power = MathUtils.constrainDouble(power, -maximumWristPower.get(), maximumWristPower.get());
         }
 
+        if (isWithinSafetyZone()) {
+            power = MathUtils.constrainDouble(power, -1, 0);
+        }
+
         motor.simpleSet(power);
+    }
+
+    public boolean isWithinSafetyZone() {
+        return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
+    }
+
+    public double modifyAngleForSafeties(double angle) {
+        if (isWithinSafetyZone()) {
+            return Math.min(angle, safetyZoneMaxAngle.get());
+        }
+
+        return angle;
     }
 
     /**
@@ -187,5 +254,12 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
         currentWristAngleProp.set(getWristAngle());
+        lowerLimitProp.set(lowerLimitSwitch.get());
+        upperLimitProp.set(upperLimitSwitch.get());
+
+        if (isWithinSafetyZone()) {
+            double newTargetAngle = modifyAngleForSafeties(getTargetAngle());
+            targetAngle.set(newTargetAngle);
+        }
     }
 }
