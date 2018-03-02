@@ -66,6 +66,21 @@ public class Practice2018Robot extends ElectricalContract2018 {
     }
 
     @Override
+    public boolean isWristLimitsReady() {
+        return false;
+    }
+
+    @Override
+    public DeviceInfo getWristUpperLimit() {
+        return new DeviceInfo(2, true);
+    }
+
+    @Override
+    public DeviceInfo getWristLowerLimit() {
+        return new DeviceInfo(3, true);
+    }
+
+    @Override
     public boolean collectorReady() {
         return true;
     }
@@ -153,5 +168,10 @@ public class Practice2018Robot extends ElectricalContract2018 {
     @Override
     public DeviceInfo getPawlSolenoidB() {
         return new DeviceInfo(3, false);
+    }
+
+    @Override
+    public DeviceInfo getZedDeploy() {
+        return new DeviceInfo(1, false);
     }
 }

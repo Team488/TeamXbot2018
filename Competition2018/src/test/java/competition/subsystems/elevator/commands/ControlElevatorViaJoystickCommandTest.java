@@ -38,7 +38,7 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorCommandTe
     @Test
     public void limitPowerNearTop() {
         command.initialize();
-        for (int i = 30; i < 101; i++) {
+        for (int i = 50; i < 101; i++) {
             double power = (double) i / 100;
             elevator.calibrateAt(-7000);
             ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));

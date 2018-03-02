@@ -26,8 +26,8 @@ public class GripperViaTriggersCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double intakePower = MathUtils.squareAndRetainSign(oi.operatorGamepad.getLeftTrigger());
-        double ejectPower = MathUtils.squareAndRetainSign(-oi.operatorGamepad.getRightTrigger());
+        double intakePower = MathUtils.squareAndRetainSign(-oi.operatorGamepad.getLeftTrigger());
+        double ejectPower = MathUtils.squareAndRetainSign(oi.operatorGamepad.getRightTrigger());
         double totalPower = intakePower + ejectPower;
         intake.setPower(totalPower, totalPower);
     }
