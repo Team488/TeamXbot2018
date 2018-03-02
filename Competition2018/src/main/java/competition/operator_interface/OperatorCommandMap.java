@@ -51,6 +51,7 @@ import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
+import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -195,7 +196,9 @@ public class OperatorCommandMap {
                 DriveAtVelocityInfinitelyCommand driveAtVelHigh,
                 ConfigurablePurePursuitCommand driveToLocalCubeCommand,
                 OffboardInterfaceSubsystem offboardSubsystem,
-                PoseSubsystem poseSubsystem) {
+                PoseSubsystem poseSubsystem,
+                ExtendRetractZedCommand extendZed,
+                ExtendRetractZedCommand retractZed) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
 
@@ -221,6 +224,12 @@ public class OperatorCommandMap {
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
         oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
         oi.driverGamepad.getifAvailable(8).whilePressedNoRestart(driveToLocalCubeCommand);
+
+        extendZed.setIsExtended(true);
+        extendZed.includeOnSmartDashboard("Extend ZED");
+        
+        retractZed.setIsExtended(false);
+        retractZed.includeOnSmartDashboard("Retract ZED");
     }
 
     @Inject

@@ -78,6 +78,9 @@ public abstract class ElectricalContract2018 {
     public abstract DeviceInfo getClimbMaster();
 
     public abstract DeviceInfo getPawlSolenoidA();
-    
+
     public abstract DeviceInfo getPawlSolenoidB();
+
+    // ZED mount
+    public abstract DeviceInfo getZedDeploy();
 }
