@@ -53,6 +53,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
+    
+    private boolean currentLimitState;
 
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
@@ -189,10 +191,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void enableCurrentLimit() {
+        currentLimitState = true;
         motor.enableCurrentLimit(true);
     }
 
     public void disableCurrentLimit() {
+        currentLimitState = false;
         motor.enableCurrentLimit(false);
     }
 
@@ -516,6 +520,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return velocityPid;
     }
     
+    public boolean getCurrentLimitState() {
+        return currentLimitState;
+    }
     
     public double getHitVerticalCubeHeight() {
         return targetHitVerticalCubeHeight.get();
