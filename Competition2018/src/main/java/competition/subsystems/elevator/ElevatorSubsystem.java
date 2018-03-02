@@ -72,6 +72,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
     final BooleanProperty calibratedProp;
+    private final DoubleProperty targetHitVerticalCubeHeight;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
     private final DoubleProperty targetScaleLowHeight;
@@ -130,7 +131,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         velocityPid = pf.createPIDManager(getPrefix() + "Velocity", 0.004, 0, 0);
         currentVelocity = propMan.createEphemeralProperty(getPrefix() + "Current Velocity", 0);
         calibrationOffset = 0.0;
-
+        targetHitVerticalCubeHeight = propMan.createPersistentProperty(getPrefix() + "Knock vertical cube down height", 8);
+        
+        
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
                 calibrateHere();
@@ -172,7 +175,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.enableCurrentLimit(true);
 
         motor.configPeakOutputReverse(-0.2, 0);
-        motor.configNominalOutputForward(0.3, 0);
+        motor.configNominalOutputForward(0.0, 0);
 
         motor.createTelemetryProperties(getPrefix(), "Motor");
     }
@@ -507,5 +510,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     public PIDManager getVelocityPid() {
         return velocityPid;
+    }
+    
+    
+    public double getHitVerticalCubeHeight() {
+        return targetHitVerticalCubeHeight.get();
     }
 }
