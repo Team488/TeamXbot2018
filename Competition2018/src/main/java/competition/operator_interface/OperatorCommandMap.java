@@ -79,32 +79,26 @@ public class OperatorCommandMap {
         fastMode.includeOnSmartDashboard("Properties FastMode");
         slowMode.includeOnSmartDashboard("Properties SlowMode");
     }
-    
+
     @Inject
-    public void setupAutoCommands(
-            OperatorInterface oi,
-            ChangeAutoDelayCommand addAutoDelay,
-            ChangeAutoDelayCommand subtractAutoDelay,
-            SelectDynamicScoreOnScaleCommand selectScale,
-            SelectDynamicScoreOnSwitchCommand selectSwitch,
-            SelectCrossLineCommand crossLine,
-            SelectDoNothingCommand doNothing,
-            SetStartingSideCommand setLeft,
-            SetStartingSideCommand setRight) {
-        
+    public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
+            ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
+            SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
+            SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight) {
+
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
-        
+
         setLeft.setRightSide(false);
         setRight.setRightSide(true);
-        
+
         oi.programmerGamepad.getPovIfAvailable(0).whenPressed(addAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(180).whenPressed(subtractAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(90).whenPressed(setRight);
         oi.programmerGamepad.getPovIfAvailable(270).whenPressed(setLeft);
-        
+
         oi.programmerGamepad.getifAvailable(1).whenPressed(selectSwitch);
-        oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);        
+        oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);
         oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
         oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
     }
@@ -119,7 +113,7 @@ public class OperatorCommandMap {
         setHeading.includeOnSmartDashboard();
 
         dynamicScore.includeOnSmartDashboard();
-        
+
         oi.driverGamepad.getPovIfAvailable(0).whenPressed(fieldTank);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
     }
@@ -142,7 +136,8 @@ public class OperatorCommandMap {
             ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
             SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
-            CalibrateElevatorHereCommand calibrateHere, EnableElevatorCurrentLimitCommand enableCurrentLimit,
+            SetElevatorTargetHeightCommand targetPortalHeight, CalibrateElevatorHereCommand calibrateHere,
+            EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
             ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
             ElevatorSubsystem elevatorSubsystem) {
@@ -155,11 +150,13 @@ public class OperatorCommandMap {
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
         targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
+        targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
 
-        oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
-        oi.operatorGamepad.getifAvailable(2).whenPressed(targetSwitchDropHeight);
-        oi.operatorGamepad.getifAvailable(3).whenPressed(targetScaleMidHeight);
-        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
+        // oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
+        // oi.operatorGamepad.getifAvailable(2).whenPressed(targetScaleHighHeight);
+        oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
+        oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
+        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
 
@@ -178,27 +175,21 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
         oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
         oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); //axis 3
-        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); //axis 2
+        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); // axis 3
+        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); // axis 2
     }
 
     @Inject
     public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        // oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+        oi.operatorGamepad.getifAvailable(1).whileHeld(collectCube);
     }
 
     @Inject
-    public void setupVisionCommands(
-                OperatorInterface oi,
-                AcquireVisibleCubeCommand acquireCube,
-                NavToTestGoalCommand testNav,
-                DriveAtVelocityInfinitelyCommand driveAtVelLow,
-                DriveAtVelocityInfinitelyCommand driveAtVelHigh,
-                ConfigurablePurePursuitCommand driveToLocalCubeCommand,
-                OffboardInterfaceSubsystem offboardSubsystem,
-                PoseSubsystem poseSubsystem,
-                ExtendRetractZedCommand extendZed,
-                ExtendRetractZedCommand retractZed) {
+    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube,
+            NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVelLow,
+            DriveAtVelocityInfinitelyCommand driveAtVelHigh, ConfigurablePurePursuitCommand driveToLocalCubeCommand,
+            OffboardInterfaceSubsystem offboardSubsystem, PoseSubsystem poseSubsystem,
+            ExtendRetractZedCommand extendZed, ExtendRetractZedCommand retractZed) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
 
@@ -227,7 +218,7 @@ public class OperatorCommandMap {
 
         extendZed.setIsExtended(true);
         extendZed.includeOnSmartDashboard("Extend ZED");
-        
+
         retractZed.setIsExtended(false);
         retractZed.includeOnSmartDashboard("Retract ZED");
     }
@@ -250,13 +241,11 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupLowBatteryCommands(
-            OperatorInterface oi,
-            EnterLowBatteryModeCommand enter,
+    public void setupLowBatteryCommands(OperatorInterface oi, EnterLowBatteryModeCommand enter,
             LeaveLowBatteryModeCommand leave) {
         oi.driverGamepad.getifAvailable(9).whenPressed(enter);
         oi.driverGamepad.getifAvailable(10).whenPressed(leave);
-        
+
         enter.includeOnSmartDashboard();
         leave.includeOnSmartDashboard();
     }
