@@ -158,10 +158,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     public List<FieldPose> createPathToNearbySwitchPlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        /*points.add(new FieldPose(new XYPair(-1.7*12, 3*12), new ContiguousHeading(135)));
-        points.add(new FieldPose(new XYPair(-3.4*12, 5.3*12), new ContiguousHeading(135)));*/
         points.add(new FieldPose(new XYPair(-6*12, 7.5*12), new ContiguousHeading(90)));
-        
         return points;
     }
     
@@ -169,14 +166,8 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        //points.add(new FieldPose(new XYPair(-1.35*12, 2.5*12), new ContiguousHeading(127.5)));
-        //points.add(new FieldPose(new XYPair(-5.35*12, 3*12), new ContiguousHeading(160)));
-        points.add(new FieldPose(new XYPair(-7.35*12, 2*12), new ContiguousHeading(180)));
-        //points.add(new FieldPose(new XYPair(-10.35*12, 4*12), new ContiguousHeading(165)));
-        //points.add(new FieldPose(new XYPair(-12.35*12, 5*12), new ContiguousHeading(150)));
-        //points.add(new FieldPose(new XYPair(-13.85*12, 7*12), new ContiguousHeading(120)));
+        points.add(new FieldPose(new XYPair(-7.35*12, 1.5*12), new ContiguousHeading(180)));
         points.add(new FieldPose(new XYPair(-15.6*12, 7.5*12), new ContiguousHeading(90)));
-
         return points;
     }
     

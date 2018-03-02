@@ -54,6 +54,14 @@ public abstract class ElectricalContract2018 {
     public abstract DeviceInfo getWristEncoder();
 
     public abstract double getWristMaximumAngle();
+    
+    // Wrist Sensors
+    
+    public abstract boolean isWristLimitsReady();
+    
+    public abstract DeviceInfo getWristLowerLimit();
+    
+    public abstract DeviceInfo getWristUpperLimit();
 
     // Collector Motors
     public abstract boolean collectorReady();
@@ -78,6 +86,9 @@ public abstract class ElectricalContract2018 {
     public abstract DeviceInfo getClimbMaster();
 
     public abstract DeviceInfo getPawlSolenoidA();
-    
+
     public abstract DeviceInfo getPawlSolenoidB();
+
+    // ZED mount
+    public abstract DeviceInfo getZedDeploy();
 }

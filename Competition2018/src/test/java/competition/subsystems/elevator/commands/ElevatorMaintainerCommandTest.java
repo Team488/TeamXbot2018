@@ -68,7 +68,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         elevator.setTargetHeight(70);
         command.initialize();
         command.execute();
-        assertEquals(-.2, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(-.3, elevator.motor.getMotorOutputPercent(), .01);
     }
     
     @Test
@@ -100,7 +100,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         elevator.uncalibrate();
         command.initialize();
         command.execute();
-        assertEquals(-.2, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(-.3, elevator.motor.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
@@ -182,7 +182,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         elevator.uncalibrate();
         command.initialize();
         command.execute();
-        assertEquals(-.2, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(-.3, elevator.motor.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
