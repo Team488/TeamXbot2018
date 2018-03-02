@@ -12,6 +12,7 @@ import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
+import competition.subsystems.power_state_manager.PowerStateManagerSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseRobot;
 
@@ -47,6 +48,7 @@ public class Robot extends BaseRobot {
 
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(OffboardInterfaceSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(PowerStateManagerSubsystem.class));
         
         registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
         if (contract.elevatorReady()) {

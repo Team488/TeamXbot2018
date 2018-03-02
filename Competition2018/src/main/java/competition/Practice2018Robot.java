@@ -154,4 +154,9 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public DeviceInfo getPawlSolenoidB() {
         return new DeviceInfo(3, false);
     }
+
+    @Override
+    public DeviceInfo getZedDeploy() {
+        return new DeviceInfo(1, false);
+    }
 }

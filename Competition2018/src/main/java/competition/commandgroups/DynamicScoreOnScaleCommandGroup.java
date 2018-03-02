@@ -10,18 +10,18 @@ import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand;
+import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 
 public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
 
-    public PurePursuitCommand pursuit;
+    public ConfigurablePurePursuitCommand pursuit;
     
     @Inject
     public DynamicScoreOnScaleCommandGroup(
             AutonomousDecisionSystem decider,
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
-            PurePursuitCommand pursuit,
+            ConfigurablePurePursuitCommand pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
             GripperEjectCommand eject) {
