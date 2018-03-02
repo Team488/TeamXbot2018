@@ -1,22 +1,22 @@
-package competition.subsystems.climb;
+package competition.subsystems.climb.commands;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.climb.ClimbSubsystem;
-import competition.subsystems.climb.commands.StopClimberCommand;
+import competition.subsystems.climb.commands.AscendClimberCommand;
 
-public class StopClimberCommandTest extends BaseCompetitionTest {
+public class AscendClimberCommandTest extends BaseCompetitionTest {
 
     ClimbSubsystem climb;
-    StopClimberCommand command;
+    AscendClimberCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
         climb = injector.getInstance(ClimbSubsystem.class);
-        command = injector.getInstance(StopClimberCommand.class);
+        command = injector.getInstance(AscendClimberCommand.class);
     }
 
     @Test
@@ -26,12 +26,11 @@ public class StopClimberCommandTest extends BaseCompetitionTest {
     }
 
     @Test
-    public void checkStopClimber() {
-        climb.ascend();
-        assertEquals(1, climb.motor.getMotorOutputPercent(), 0.001);
+    public void checkAscendClimber() {
+        assertEquals(0.0, climb.motor.getMotorOutputPercent(), 0.001);
         command.initialize();
         command.execute();
-        assertEquals(0, climb.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(1, climb.motor.getMotorOutputPercent(), 0.001);
     }
 
 }

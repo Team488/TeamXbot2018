@@ -11,6 +11,7 @@ public class DriveNowhereCommand extends BaseCommand {
 
     @Inject
     public DriveNowhereCommand(DriveSubsystem driveSubsystem) {
+        this.drive = driveSubsystem;
         this.requires(driveSubsystem);
     }
 
