@@ -64,20 +64,20 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public double getWristMaximumAngle() {
         return 90;
     }
-    
+
     @Override
     public boolean isWristLimitsReady() {
-    	return false;
+        return false;
     }
-    
+
     @Override
     public DeviceInfo getWristUpperLimit() {
-    	return new DeviceInfo(2, true);
+        return new DeviceInfo(2, true);
     }
-    
+
     @Override
     public DeviceInfo getWristLowerLimit() {
-    	return new DeviceInfo(3, true);
+        return new DeviceInfo(3, true);
     }
 
     @Override

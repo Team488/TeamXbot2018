@@ -20,13 +20,13 @@ public class WristMaintainerCommand extends BaseCommand {
     final OperatorInterface oi;
     final HumanVsMachineDecider humanVsMachineDecider;
     final CalibrationDecider calibrationDecider;
-    
+
     @Inject
     public WristMaintainerCommand(WristSubsystem wrist, PIDFactory pf, OperatorInterface oi, CommonLibFactory clf) {
         this.wrist = wrist;
         this.oi = oi;
         this.requires(wrist);
-        pid = pf.createPIDManager(getPrefix()+"motor", 0.01, 0, 0);
+        pid = pf.createPIDManager(getPrefix() + "motor", 0.01, 0, 0);
         pid.setMaxOutput(0.3);
         pid.setMinOutput(-0.3);
         this.humanVsMachineDecider = clf.createHumanVsMachineDecider(getPrefix() + "Wrist");
@@ -36,12 +36,12 @@ public class WristMaintainerCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing with distance " + wrist.getTargetAngle() + " degrees");
-        
+
         if (wrist.getIsCalibrated()) {
             log.info("Setting current angle as desired angle");
             wrist.setTargetAngle(wrist.getWristAngle());
         }
-        
+
         humanVsMachineDecider.reset();
         calibrationDecider.reset();
     }
@@ -51,22 +51,23 @@ public class WristMaintainerCommand extends BaseCommand {
         HumanVsMachineMode humanVsMachineMode = HumanVsMachineMode.HumanControl;
         double humanInput = oi.operatorGamepad.getLeftVector().y;
         double power = 0;
-        
+
         CalibrationMode calibrationMode = calibrationDecider.decideMode(wrist.getIsCalibrated());
-        
+
         if (calibrationMode == CalibrationMode.GaveUp) {
-        	// When we've totally given up, give the drivers control. Good luck.
+            // When we've totally given up, give the drivers control. Good luck.
             humanVsMachineMode = HumanVsMachineMode.HumanControl;
         } else if (calibrationMode == CalibrationMode.Attempting) {
-        	// The wrist already restrains power if system uncalibrated, so we just need to raise it with any large power.
-        	wrist.setPower(1);
-        	// We've already decided what to do, so just return.
-        	return;
+            // The wrist already restrains power if system uncalibrated, so we just need to raise it with any large
+            // power.
+            wrist.setPower(1);
+            // We've already decided what to do, so just return.
+            return;
         } else {
-        	// We're calibrated, so let the HvM figure out the best course of action.
+            // We're calibrated, so let the HvM figure out the best course of action.
             humanVsMachineMode = humanVsMachineDecider.getRecommendedMode(humanInput);
         }
-        
+
         switch (humanVsMachineMode) {
         case HumanControl:
             power = humanInput;
@@ -84,8 +85,8 @@ public class WristMaintainerCommand extends BaseCommand {
         default:
             break;
         }
-        
+
         wrist.setPower(power);
     }
-    
+
 }

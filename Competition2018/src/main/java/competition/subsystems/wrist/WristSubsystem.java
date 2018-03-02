@@ -45,11 +45,12 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     int lowerLimit;
     int upperLimit;
     boolean calibrated = false;
-    
+
     private final ElevatorSubsystem elevator;
 
     @Inject
-    WristSubsystem(CommonLibFactory clf, ElevatorSubsystem elevator, XPropertyManager propMan, ElectricalContract2018 contract) {
+    WristSubsystem(CommonLibFactory clf, ElevatorSubsystem elevator, XPropertyManager propMan,
+            ElectricalContract2018 contract) {
         this.clf = clf;
         this.elevator = elevator;
         this.contract = contract;
@@ -69,14 +70,14 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         if (contract.wristReady()) {
             initializeComponents();
         }
-        
+
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
                 calibrateHere();
             }
         });
     }
-    
+
     public double getMaximumAllowedPower() {
         return maximumWristPower.get();
     }
@@ -115,18 +116,18 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.setSensorPhase(contract.getWristEncoder().inverted);
 
         motor.setNeutralMode(NeutralMode.Brake);
-        
+
         motor.configNominalOutputForward(0, 0);
         motor.configNominalOutputReverse(0, 0);
-        
-        uncalibrate();        
-        
+
+        uncalibrate();
+
         if (contract.isWristLimitsReady()) {
-        	upperLimitSwitch = clf.createDigitalInput(contract.getWristUpperLimit().channel);
-        	upperLimitSwitch.setInverted(contract.getWristUpperLimit().inverted);
-        	
-        	lowerLimitSwitch = clf.createDigitalInput(contract.getWristLowerLimit().channel);
-        	lowerLimitSwitch.setInverted(contract.getWristLowerLimit().inverted);
+            upperLimitSwitch = clf.createDigitalInput(contract.getWristUpperLimit().channel);
+            upperLimitSwitch.setInverted(contract.getWristUpperLimit().inverted);
+
+            lowerLimitSwitch = clf.createDigitalInput(contract.getWristLowerLimit().channel);
+            lowerLimitSwitch.setInverted(contract.getWristLowerLimit().inverted);
         }
     }
 
@@ -159,7 +160,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
         log.info("Lower limit set at: " + lowerLimit);
         motor.configReverseSoftLimitThreshold(lowerLimit, 0);
-        
+
         setTargetAngle(getTargetAngle());
     }
 
@@ -182,41 +183,41 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
      *            Negative to move down, positive to move up.
      */
     public void setPower(double power) {
-    	if (contract.isWristLimitsReady()) {
-    		calibrationLatch.setValue(upperLimitSwitch.get());
-    		
-    		if (upperLimitSwitch.get()) {
-    			power = MathUtils.constrainDouble(power, -1, 0);
-    		}
-    		
-    		if (lowerLimitSwitch.get()) {
-    			power = MathUtils.constrainDouble(power, 0, 1);
-    		}
-    	}    	
-    	
+        if (contract.isWristLimitsReady()) {
+            calibrationLatch.setValue(upperLimitSwitch.get());
+
+            if (upperLimitSwitch.get()) {
+                power = MathUtils.constrainDouble(power, -1, 0);
+            }
+
+            if (lowerLimitSwitch.get()) {
+                power = MathUtils.constrainDouble(power, 0, 1);
+            }
+        }
+
         if (!calibrated) {
             power = MathUtils.constrainDouble(power, -wristUncalibratedPowerProp.get(),
                     wristUncalibratedPowerProp.get());
         } else {
             power = MathUtils.constrainDouble(power, -maximumWristPower.get(), maximumWristPower.get());
         }
-        
+
         if (isWithinSafetyZone()) {
             power = MathUtils.constrainDouble(power, -1, 0);
         }
-        
+
         motor.simpleSet(power);
     }
-    
+
     public boolean isWithinSafetyZone() {
         return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
     }
-    
+
     public double modifyAngleForSafeties(double angle) {
         if (isWithinSafetyZone()) {
             return Math.min(angle, safetyZoneMaxAngle.get());
         }
-        
+
         return angle;
     }
 
