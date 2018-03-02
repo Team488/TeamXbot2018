@@ -1,5 +1,7 @@
 package competition.subsystems.elevator.commands;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
@@ -28,6 +30,7 @@ public class EnableElevatorCurrentLimitCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
         
+        assertTrue(elevator.getCurrentLimitState());
     }
     
 }
