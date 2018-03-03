@@ -6,6 +6,7 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 import competition.operator_interface.OperatorCommandMap;
+import competition.operator_interface.RumbleManager;
 import competition.subsystems.SubsystemDefaultCommandMap;
 import competition.subsystems.autonomous.selection.AutonomousCommandSelector;
 import competition.subsystems.drive.DriveSubsystem;
@@ -50,6 +51,7 @@ public class Robot extends BaseRobot {
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(OffboardInterfaceSubsystem.class));
         registerPeriodicDataSource(this.injector.getInstance(PowerStateManagerSubsystem.class));
+        registerPeriodicDataSource(this.injector.getInstance(RumbleManager.class));
         
         registerPeriodicDataSource(this.injector.getInstance(DriveSubsystem.class));
         if (contract.elevatorReady()) {

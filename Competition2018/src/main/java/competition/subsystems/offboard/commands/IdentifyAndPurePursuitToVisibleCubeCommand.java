@@ -8,11 +8,18 @@ public class IdentifyAndPurePursuitToVisibleCubeCommand extends BaseCommandGroup
     private final IdentifyTargetCubeCommand identifyCommand;
     
     @Inject
-    public IdentifyAndPurePursuitToVisibleCubeCommand(IdentifyTargetCubeCommand identify, PurePursuitToVisibleCubeCommand pursue) {
+    public IdentifyAndPurePursuitToVisibleCubeCommand(
+            StopRumbleCommand stopRumble,
+            IdentifyTargetCubeCommand identify,
+            RumbleIfNoTargetAvailableCommand rumble,
+            PurePursuitToVisibleCubeCommand pursue) {
         this.identifyCommand = identify;
         pursue.setTargetCubeSupplier(() -> identify.getChosenTarget());
         
+        // TODO: Don't rumble in auto
+        this.addSequential(stopRumble);
         this.addSequential(identify);
+        this.addSequential(rumble);
         this.addSequential(pursue);
     }
     
