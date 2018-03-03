@@ -54,6 +54,10 @@ public class ClimbSubsystem extends BaseSubsystem {
     public void ascend() {
         motor.simpleSet(ascendSpeed.get());
     }
+    
+    public void ascendLowPower() {
+        motor.simpleSet(ascendSpeed.get() / 5);
+    }
 
     /**
      * moves the winch to let the robot down
