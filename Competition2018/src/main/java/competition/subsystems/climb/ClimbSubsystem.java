@@ -1,5 +1,6 @@
 package competition.subsystems.climb;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -8,6 +9,7 @@ import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.actuators.XSolenoid;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -15,12 +17,13 @@ import xbot.common.properties.XPropertyManager;
 public class ClimbSubsystem extends BaseSubsystem {
 
     final DoubleProperty ascendSpeed;
-    final DoubleProperty decendSpeed;
+    final DoubleProperty descendSpeed;
     CommonLibFactory clf;
     public XCANTalon motor;
     public XSolenoid solenoidA;
     public XSolenoid solenoidB;
     ElectricalContract2018 contract;
+    final DoubleProperty absoluteMaxTicks;
 
     @Inject
     public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
@@ -32,7 +35,9 @@ public class ClimbSubsystem extends BaseSubsystem {
         solenoidB.setInverted(contract.getPawlSolenoidB().inverted);
         
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
-        decendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
+        descendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
+        
+        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 91202);
 
         if (contract.climbReady()) {
             initializeMotor();
@@ -46,24 +51,45 @@ public class ClimbSubsystem extends BaseSubsystem {
     private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbMaster().channel);
         motor.setInverted(contract.getClimbMaster().inverted);
+        
+        motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        motor.setSensorPhase(true);
     }
 
     /**
      * moves the winch to pull the robot up
      **/
     public void ascend() {
-        motor.simpleSet(ascendSpeed.get());
+        setPower(ascendSpeed.get());
     }
     
     public void ascendLowPower() {
-        motor.simpleSet(ascendSpeed.get() / 5);
+        setPower(ascendSpeed.get() / 5);
     }
 
     /**
      * moves the winch to let the robot down
      */
-    public void decend() {
-        motor.simpleSet(decendSpeed.get());
+    public void descend() {
+        setPower(descendSpeed.get());
+    }
+    
+    public int getCurrentTicks() {
+        return motor.getSelectedSensorPosition(0);
+    }
+    
+    public void setPower(double power) {
+        if (getCurrentTicks() < 0) {
+            // too low, don't go down
+            power = MathUtils.constrainDouble(power, 0, 1);
+        }
+        
+        if (getCurrentTicks() >= absoluteMaxTicks.get()) {
+            // too high, don't go up
+            power = MathUtils.constrainDouble(power, -1, 0);
+        }
+        
+        motor.simpleSet(power);
     }
 
     /**

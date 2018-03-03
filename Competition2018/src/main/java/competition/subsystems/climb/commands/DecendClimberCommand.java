@@ -26,7 +26,7 @@ public class DecendClimberCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        climb.decend();
+        climb.descend();
     }
 
 }
