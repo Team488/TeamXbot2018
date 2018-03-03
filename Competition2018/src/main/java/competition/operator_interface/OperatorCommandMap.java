@@ -156,8 +156,8 @@ public class OperatorCommandMap {
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
         targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
 
-        // oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
-        // oi.operatorGamepad.getifAvailable(2).whenPressed(targetScaleHighHeight);
+        
+        oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
         oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
         oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
@@ -181,11 +181,6 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
         oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); // axis 3
         oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); // axis 2
-    }
-
-    @Inject
-    public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        oi.operatorGamepad.getifAvailable(1).whileHeld(collectCube);
     }
 
     @Inject
