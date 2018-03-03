@@ -50,4 +50,9 @@ public class Competition2018Robot extends Practice2018Robot {
     public boolean isWristLimitsReady() {
         return false;
     }
+    
+    @Override
+    public double getWristMaximumAngle() {
+        return 90;
+    }
 }

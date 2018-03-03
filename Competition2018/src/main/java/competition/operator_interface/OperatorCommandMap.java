@@ -185,9 +185,9 @@ public class OperatorCommandMap {
             RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
             DisengageWinchAndReleasePawlCommandGroup descend, EngageWinchAndLockPawlCommandGroup ascend,
             PrepareToClimbCommandGroup prepareToClimb, TotalClimbCommandGroup everythingClimbs) {
-        /*oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
+        oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
         oi.driverGamepad.getifAvailable(2).whileHeld(descend); // b
-        oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
+        /*oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
         oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
         oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
         oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3

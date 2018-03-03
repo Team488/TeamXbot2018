@@ -281,9 +281,11 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
         currentWristAngleProp.set(getWristAngle());
-        //lowerLimitProp.set(lowerLimitSwitch.get());
-        //upperLimitProp.set(upperLimitSwitch.get());
-/*
+        
+        if (contract.isWristLimitsReady()) {
+          lowerLimitProp.set(lowerLimitSwitch.get());
+          upperLimitProp.set(upperLimitSwitch.get());
+        }/*
         if (isWithinSafetyZone()) {
             double newTargetAngle = modifyAngleForSafeties(getTargetAngle());
             targetAngle.set(newTargetAngle);

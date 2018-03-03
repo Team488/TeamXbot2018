@@ -15,6 +15,7 @@ public class IdentifyAndPurePursuitToVisibleCubeCommand extends BaseCommandGroup
             PurePursuitToVisibleCubeCommand pursue) {
         this.identifyCommand = identify;
         pursue.setTargetCubeSupplier(() -> identify.getChosenTarget());
+        rumble.setIsAvailableSupplier(() -> identify.getChosenTarget() != null);
         
         // TODO: Don't rumble in auto
         this.addSequential(stopRumble);

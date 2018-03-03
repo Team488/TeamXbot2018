@@ -29,9 +29,11 @@ public class RumbleIfNoTargetAvailableCommand extends BaseCommand {
     
     @Override
     public void initialize() {
+        log.info("Initializing");
         if (isAvailableSupplier != null) {
             Boolean isAvailable = isAvailableSupplier.get();
             if (isAvailable != true) {
+                log.info("Rumbling");
                 rumbleManager.rumbleDriverGamepad(rumbleIntensity.get(), rumbleTime.get());
             }
         }
