@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.can.CANMessageNotAllowedException;
 import edu.wpi.first.wpilibj.can.CANMessageNotFoundException;
 import edu.wpi.first.wpilibj.can.CANNotInitializedException;
+import edu.wpi.first.wpilibj.util.UncleanStatusException;
 
 public class OffboardCommsCanInterface implements XOffboardCommsInterface {
     static Logger log = Logger.getLogger(OffboardCommsCanInterface.class);
@@ -20,7 +21,14 @@ public class OffboardCommsCanInterface implements XOffboardCommsInterface {
         arbitrationId |= 1 << 8; // This packet came from the RIO
         arbitrationId |= packetType;
         
-        CANJNI.FRCNetCommCANSessionMuxSendMessage(arbitrationId, data, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+        try {
+            CANJNI.FRCNetCommCANSessionMuxSendMessage(arbitrationId, data, CANJNI.CAN_SEND_PERIOD_NO_REPEAT);
+        
+        }
+        catch(CANInvalidBufferException|CANMessageNotAllowedException|CANMessageNotFoundException|CANNotInitializedException|UncleanStatusException ex) {
+            log.error("Exception encountered while sending to CAN device", ex);
+            return ;
+        }
     }
     
     public OffboardCommunicationPacket receiveRaw() {
@@ -47,7 +55,7 @@ public class OffboardCommsCanInterface implements XOffboardCommsInterface {
         catch (CANMessageNotFoundException e) {
             return null;
         }
-        catch(CANInvalidBufferException|CANMessageNotAllowedException|CANNotInitializedException ex) {
+        catch(CANInvalidBufferException|CANMessageNotAllowedException|CANNotInitializedException|UncleanStatusException ex) {
             log.error("Exception encountered while receiving from CAN device", ex);
             return null;
         }
