@@ -17,10 +17,17 @@ import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
+    
+    public enum WristPowerRestrictionReason {
+        FullPowerAvailable, LowerLimitSwitch, UpperLimitSwitch, Uncalibrated, IsWithinSafetyZone
+    }
+    
+    final StringProperty wristRestrictionReasonProp;
     final DoubleProperty maximumWristPower;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
@@ -56,6 +63,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         this.contract = contract;
         maximumWristPower = propMan.createPersistentProperty(getPrefix() + "Maximum Power", 0.3);
 
+        wristRestrictionReasonProp = propMan.createEphemeralProperty(getPrefix() + "Restriction Reason","Waiting to run...");
         currentWristAngleProp = propMan.createEphemeralProperty(getPrefix() + "Current Angle", 0.0);
         wristTicksPerDegreeProp = propMan.createPersistentProperty(getPrefix() + "Ticks per degree", 1);
         wristCalibratedProp = propMan.createEphemeralProperty(getPrefix() + "Calibrated", false);
@@ -128,6 +136,9 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
             lowerLimitSwitch = clf.createDigitalInput(contract.getWristLowerLimit().channel);
             lowerLimitSwitch.setInverted(contract.getWristLowerLimit().inverted);
+        } else {
+            // We don't have any limit switches, so we have to assume we started vertically.
+            calibrateHere();
         }
     }
 
@@ -135,6 +146,10 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         calibrated = false;
 
         setSoftLimitsEnabled(false);
+    }
+    
+    private void setRestrictionReason(WristPowerRestrictionReason reason) {
+        wristRestrictionReasonProp.set(reason.toString());
     }
 
     private void setSoftLimitsEnabled(boolean on) {
@@ -183,30 +198,37 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
      *            Negative to move down, positive to move up.
      */
     public void setPower(double power) {
+        WristPowerRestrictionReason reason = WristPowerRestrictionReason.FullPowerAvailable;
+        
         if (contract.isWristLimitsReady()) {
             calibrationLatch.setValue(upperLimitSwitch.get());
 
             if (upperLimitSwitch.get()) {
                 power = MathUtils.constrainDouble(power, -1, 0);
+                reason = WristPowerRestrictionReason.UpperLimitSwitch;
             }
 
             if (lowerLimitSwitch.get()) {
                 power = MathUtils.constrainDouble(power, 0, 1);
+                reason = WristPowerRestrictionReason.LowerLimitSwitch;
             }
         }
 
         if (!calibrated) {
-            power = MathUtils.constrainDouble(power, -wristUncalibratedPowerProp.get(),
-                    wristUncalibratedPowerProp.get());
+            power = MathUtils.constrainDouble(power, -wristUncalibratedPowerProp.get(), wristUncalibratedPowerProp.get());
+            reason = WristPowerRestrictionReason.Uncalibrated;
         } else {
             power = MathUtils.constrainDouble(power, -maximumWristPower.get(), maximumWristPower.get());
+            reason = WristPowerRestrictionReason.FullPowerAvailable;
         }
 
         if (isWithinSafetyZone()) {
             power = MathUtils.constrainDouble(power, -1, 0);
+            reason = WristPowerRestrictionReason.IsWithinSafetyZone;
         }
 
         motor.simpleSet(power);
+        setRestrictionReason(reason);
     }
 
     public boolean isWithinSafetyZone() {
