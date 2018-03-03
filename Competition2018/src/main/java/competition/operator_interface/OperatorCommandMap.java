@@ -9,6 +9,7 @@ import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
+import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
 import competition.commandgroups.PrepareToClimbCommandGroup;
 import competition.commandgroups.TotalClimbCommandGroup;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
@@ -88,18 +89,21 @@ public class OperatorCommandMap {
     public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
             ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
             SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
-            SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight) {
+            SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
+            SetStartingSideCommand setMiddle) {
 
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
 
-        setLeft.setRightSide(false);
-        setRight.setRightSide(true);
+        setLeft.setStartingLocation(StartingLocations.Left);
+        setRight.setStartingLocation(StartingLocations.Right);
+        setMiddle.setStartingLocation(StartingLocations.Middle);
 
         oi.programmerGamepad.getPovIfAvailable(0).whenPressed(addAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(180).whenPressed(subtractAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(90).whenPressed(setRight);
         oi.programmerGamepad.getPovIfAvailable(270).whenPressed(setLeft);
+        oi.programmerGamepad.getifAvailable(5).whenPressed(setMiddle);
 
         oi.programmerGamepad.getifAvailable(1).whenPressed(selectSwitch);
         oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);

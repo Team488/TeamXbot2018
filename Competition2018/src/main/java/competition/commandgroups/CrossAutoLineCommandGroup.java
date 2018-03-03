@@ -19,7 +19,7 @@ public class CrossAutoLineCommandGroup extends BaseCommandGroup {
             ConfigurablePurePursuitCommand crossLine) {
         
         delay.setDelaySupplier(() -> decider.getDelay());
-        crossLine.addPoint(new FieldPose(new XYPair(0, 9*12), new ContiguousHeading(90)));
+        crossLine.addPoint(new FieldPose(new XYPair(0, 7.5*12), new ContiguousHeading(90)));
         
         this.addSequential(delay);
         this.addSequential(crossLine);
