@@ -28,6 +28,7 @@ import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.ElevatorDangerousOverrideCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
@@ -49,6 +50,7 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
@@ -145,9 +147,12 @@ public class OperatorCommandMap {
             CalibrateElevatorHereCommand calibrateHere, EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
             ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
+            ElevatorDangerousOverrideCommand dangerousOverride,
             ElevatorSubsystem elevatorSubsystem) {
-        oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
-        oi.operatorGamepad.getifAvailable(6).whenPressed(joysticks);
+        
+        calibrateElevatorTicks.includeOnSmartDashboard();
+        
+        oi.operatorGamepad.getifAvailable(5).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
         oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
@@ -235,9 +240,11 @@ public class OperatorCommandMap {
     @Inject
     public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
             WristUncalibrateCommand loseCalibration, WristMaintainerCommand maintain, SetWristAngleCommand low,
-            SetWristAngleCommand medium, SetWristAngleCommand high) {
+            SetWristAngleCommand medium, SetWristAngleCommand high, WristDangerousOverrideCommand danger) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
+        
+        oi.operatorGamepad.getifAvailable(6).whileHeld(danger);
 
         low.setGoalAngle(10);
         medium.setGoalAngle(60);

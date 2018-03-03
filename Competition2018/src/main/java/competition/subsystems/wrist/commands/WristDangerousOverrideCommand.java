@@ -24,7 +24,7 @@ public class WristDangerousOverrideCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        wrist.insanelyDangerousSetPower(oi.driverGamepad.getLeftVector().y);
+        wrist.insanelyDangerousSetPower(oi.operatorGamepad.getLeftVector().y);
     }
     
 }

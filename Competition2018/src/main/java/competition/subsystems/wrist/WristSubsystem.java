@@ -230,6 +230,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     }
     
     public void insanelyDangerousSetPower(double power) {
+        setSoftLimitsEnabled(false);
         motor.simpleSet(power);
     }
 

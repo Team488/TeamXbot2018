@@ -25,7 +25,7 @@ public class ElevatorDangerousOverrideCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        elevator.insanelyDangerousSetPower(oi.driverGamepad.getRightStickY());
+        elevator.insanelyDangerousSetPower(oi.operatorGamepad.getRightStickY());
     }
 
 }
