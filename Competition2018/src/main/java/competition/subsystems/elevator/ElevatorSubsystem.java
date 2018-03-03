@@ -165,6 +165,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorUsesTalonLimits()) {
             initializeTalonLimits();
         }
+        
+        
+        // Brutal hack since we don't trust anything
+        calibrateHere();
     }
 
     private void initializeMotor() {
