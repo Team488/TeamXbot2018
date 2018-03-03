@@ -330,6 +330,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void insanelyDangerousSetPower(double power) {
+        setSoftLimitsEnabled(false);
         motor.simpleSet(power);
     }
 

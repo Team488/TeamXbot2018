@@ -230,6 +230,11 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.simpleSet(power);
         setRestrictionReason(reason);
     }
+    
+    public void insanelyDangerousSetPower(double power) {
+        setSoftLimitsEnabled(false);
+        motor.simpleSet(power);
+    }
 
     public boolean isWithinSafetyZone() {
         return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
