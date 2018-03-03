@@ -1,5 +1,6 @@
 package competition.subsystems.climberdeploy;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -7,6 +8,7 @@ import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
@@ -14,6 +16,7 @@ import xbot.common.properties.XPropertyManager;
 public class ClimberDeploySubsystem extends BaseSubsystem {
 
     final DoubleProperty deploySpeed;
+    final DoubleProperty absoluteMaxTicks;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
     public XCANTalon motor;
@@ -23,7 +26,7 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
         this.clf = clf;
         this.contract = contract;
         deploySpeed = propMan.createPersistentProperty(getPrefix()+"Speed", .4);
-
+        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 80000);
         if (contract.climbDeployReady()) {
             initializeMotor();
         }
@@ -32,6 +35,12 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbDeployMaster().channel);
         motor.setInverted(contract.getClimbDeployMaster().inverted);
+        
+        motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+    }
+    
+    public int getTicks() {
+        return motor.getSelectedSensorPosition(0);
     }
 
     /**
@@ -46,6 +55,20 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
      */
     public void retractClimberArm() {
         motor.simpleSet(-deploySpeed.get());
+    }
+    
+    
+    // Use this once we have a good understanding of limits
+    public void setPower(double power) {
+        if (getTicks() < 0) {
+            power = MathUtils.constrainDouble(power, 0, 1);
+        }
+        
+        if (getTicks() > absoluteMaxTicks.get()) {
+            power = MathUtils.constrainDouble(power, -1, 1);
+        }        
+        
+        motor.simpleSet(power);
     }
 
     /**
