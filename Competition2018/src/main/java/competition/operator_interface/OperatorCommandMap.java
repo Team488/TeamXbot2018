@@ -43,6 +43,8 @@ import competition.subsystems.gripperintake.commands.GripperRotateClockwiseComma
 import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
+import competition.subsystems.offboard.commands.IdentifyAndPurePursuitToVisibleCubeCommand;
+import competition.subsystems.offboard.commands.IdentifyTargetCubeCommand.TimeoutPreset;
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
 import competition.subsystems.offboard.commands.PurePursuitToVisibleCubeCommand;
 import competition.subsystems.offboard.data.TargetCubeInfo;
@@ -203,9 +205,7 @@ public class OperatorCommandMap {
                 NavToTestGoalCommand testNav,
                 DriveAtVelocityInfinitelyCommand driveAtVelLow,
                 DriveAtVelocityInfinitelyCommand driveAtVelHigh,
-                PurePursuitToVisibleCubeCommand driveToLocalCubeCommand,
-                OffboardInterfaceSubsystem offboardSubsystem,
-                PoseSubsystem poseSubsystem,
+                IdentifyAndPurePursuitToVisibleCubeCommand driveToLocalCubeCommand,
                 ExtendRetractZedCommand extendZed,
                 ExtendRetractZedCommand retractZed) {
         acquireCube.includeOnSmartDashboard();
@@ -217,6 +217,7 @@ public class OperatorCommandMap {
         driveAtVelHigh.setVelocity(50);
         driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
 
+        driveToLocalCubeCommand.setTimeoutPreset(TimeoutPreset.Manual);
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
         oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
         oi.driverGamepad.getifAvailable(8).whilePressedNoRestart(driveToLocalCubeCommand);
