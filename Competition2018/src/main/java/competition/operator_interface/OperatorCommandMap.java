@@ -9,6 +9,8 @@ import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
+import competition.commandgroups.PrepareToClimbCommandGroup;
+import competition.commandgroups.TotalClimbCommandGroup;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
@@ -175,13 +177,14 @@ public class OperatorCommandMap {
     @Inject
     public void setupClimberCommands(OperatorInterface oi, ExtendClimberArmCommand extendArm,
             RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
-            DisengageWinchAndReleasePawlCommandGroup decend, EngageWinchAndLockPawlCommandGroup ascend) {
-        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
-        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
-        oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
-        oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); // axis 3
-        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); // axis 2
+            DisengageWinchAndReleasePawlCommandGroup descend, EngageWinchAndLockPawlCommandGroup ascend,
+            PrepareToClimbCommandGroup prepareToClimb, TotalClimbCommandGroup everythingClimbs) {
+        oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
+        oi.driverGamepad.getifAvailable(2).whileHeld(descend); // b
+        oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
+        oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3
     }
 
     @Inject
