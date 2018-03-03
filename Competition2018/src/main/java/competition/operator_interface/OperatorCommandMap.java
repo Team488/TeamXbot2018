@@ -137,7 +137,8 @@ public class OperatorCommandMap {
             ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
             SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
-            CalibrateElevatorHereCommand calibrateHere, EnableElevatorCurrentLimitCommand enableCurrentLimit,
+            SetElevatorTargetHeightCommand targetPortalHeight, CalibrateElevatorHereCommand calibrateHere,
+            EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
             ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
             ElevatorDangerousOverrideCommand dangerousOverride,
@@ -153,11 +154,13 @@ public class OperatorCommandMap {
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
         targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
+        targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
 
+        
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
-        oi.operatorGamepad.getifAvailable(2).whenPressed(targetSwitchDropHeight);
-        oi.operatorGamepad.getifAvailable(3).whenPressed(targetScaleMidHeight);
-        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
+        oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
+        oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
+        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
 
@@ -178,11 +181,6 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
         oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); // axis 3
         oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); // axis 2
-    }
-
-    @Inject
-    public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
-        // oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
     }
 
     @Inject
