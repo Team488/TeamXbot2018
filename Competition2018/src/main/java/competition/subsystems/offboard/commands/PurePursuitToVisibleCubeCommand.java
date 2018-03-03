@@ -2,6 +2,7 @@ package competition.subsystems.offboard.commands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.google.inject.Inject;
 
@@ -24,6 +25,8 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
     private final PoseSubsystem poseSubsystem;
     private final ZedDeploySubsystem zedDeploy;
     
+    private Supplier<TargetCubeInfo> targetSupplier;
+    
     @Inject
     public PurePursuitToVisibleCubeCommand(
             CommonLibFactory clf,
@@ -37,7 +40,12 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
         this.offboardSubsystem = offboardSubsystem;
         this.poseSubsystem = poseSubsystem;
         this.zedDeploy = zedDeploy;
+        
         this.requires(zedDeploy);
+    }
+    
+    public void setTargetCubeSupplier(Supplier<TargetCubeInfo> targetSupplier) {
+        this.targetSupplier = targetSupplier;
     }
     
     @Override
@@ -48,7 +56,7 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
     
     @Override
     protected List<FieldPose> getOriginalPoints() {
-        TargetCubeInfo targetCube = offboardSubsystem.getTargetCube();
+        TargetCubeInfo targetCube = targetSupplier == null ? offboardSubsystem.getTargetCube() : targetSupplier.get();
         if (targetCube == null) {
             return null;
         }
