@@ -8,6 +8,7 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
+import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
 import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
 
@@ -38,7 +39,7 @@ public class ArcadeDriveWithJoysticksCommandTest extends BaseCompetitionTest {
         assertEquals(0, drive.rightMaster.getMotorOutputPercent(), 0.001);
 
 
-        ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(1, 1));   
+        ((MockXboxControllerAdapter) oi.driverGamepad).setLeftStick(new XYPair(1, 1));   
 
         command.execute();
 

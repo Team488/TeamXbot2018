@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 
 import xbot.common.controls.sensors.AnalogHIDButton.AnalogHIDDescription;
 import xbot.common.controls.sensors.XFTCGamepad;
+import xbot.common.controls.sensors.XXboxController;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logging.RobotAssertionManager;
 
@@ -15,21 +16,19 @@ import xbot.common.logging.RobotAssertionManager;
 @Singleton
 public class OperatorInterface {
 
-    public final XFTCGamepad driverGamepad;
+    public final XXboxController driverGamepad;
     public final XFTCGamepad operatorGamepad;
     public final XFTCGamepad programmerGamepad;
 
     public final AnalogHIDDescription gripperIntake;
     public final AnalogHIDDescription gripperEject;
-    public final AnalogHIDDescription driverRightTrigger;
-    public final AnalogHIDDescription driverLeftTrigger;
 
     @Inject
     public OperatorInterface(CommonLibFactory factory, RobotAssertionManager assertionManager) {
-        driverGamepad = factory.createGamepad(0, 10);
-        driverGamepad.setLeftStickYInversion(true);
-        driverGamepad.setRightStickYInversion(true);
-        driverGamepad.setRightStickXInversion(true);
+        driverGamepad = factory.createXboxController(0);
+        //driverGamepad.setLeftStickYInversion(true);
+        //driverGamepad.setRightStickYInversion(true);
+        //driverGamepad.setRightStickXInversion(true);
 
         operatorGamepad = factory.createGamepad(1, 10);
         operatorGamepad.setLeftStickYInversion(true);
@@ -44,11 +43,5 @@ public class OperatorInterface {
 
         gripperEject = new AnalogHIDDescription(2, .75, 1.0);
         operatorGamepad.addAnalogButton(gripperEject);
-
-        driverRightTrigger = new AnalogHIDDescription(3, .75, 1.0);
-        driverGamepad.addAnalogButton(driverRightTrigger);
-
-        driverLeftTrigger = new AnalogHIDDescription(2, .75, 1.0);
-        driverGamepad.addAnalogButton(driverLeftTrigger);
     }
 }

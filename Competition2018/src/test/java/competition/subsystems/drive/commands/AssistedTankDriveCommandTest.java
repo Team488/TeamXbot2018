@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.drive.DriveSubsystem;
-import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
+import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
 import xbot.common.math.XYPair;
 
 public class AssistedTankDriveCommandTest extends BaseCompetitionTest {
@@ -35,8 +35,8 @@ public class AssistedTankDriveCommandTest extends BaseCompetitionTest {
         // it's been invoked in some way.
         command.initialize();
 
-        ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(0, 1));       
-        ((MockFTCGamepad) oi.driverGamepad).setRightStick(new XYPair(0, 1));
+        ((MockXboxControllerAdapter) oi.driverGamepad).setLeftStick(new XYPair(0, 1));       
+        ((MockXboxControllerAdapter) oi.driverGamepad).setRightStick(new XYPair(0, 1));
 
         command.execute();
 

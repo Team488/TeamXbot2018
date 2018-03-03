@@ -57,6 +57,7 @@ import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
+import xbot.common.controls.sensors.XXboxController.XboxButton;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -122,15 +123,15 @@ public class OperatorCommandMap {
 
         dynamicScore.includeOnSmartDashboard();
 
-        oi.driverGamepad.getPovIfAvailable(0).whenPressed(fieldTank);
-        oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
+        oi.driverGamepad.getXboxButton(XboxButton.DPadUp).whenPressed(fieldTank);
+        oi.driverGamepad.getXboxButton(XboxButton.DPadDown).whenPressed(arcade);
     }
 
     @Inject
     public void setupShiftGearCommand(OperatorInterface oi, ShiftHighCommand shiftHigh, ShiftLowCommand shiftLow) {
 
-        oi.driverGamepad.getifAvailable(5).whenPressed(shiftLow);
-        oi.driverGamepad.getifAvailable(6).whenPressed(shiftHigh);
+        oi.driverGamepad.getXboxButton(XboxButton.LeftBumper).whenPressed(shiftLow);
+        oi.driverGamepad.getXboxButton(XboxButton.RightBumper).whenPressed(shiftHigh);
     }
 
     @Inject
@@ -183,12 +184,12 @@ public class OperatorCommandMap {
             RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
             DisengageWinchAndReleasePawlCommandGroup descend, EngageWinchAndLockPawlCommandGroup ascend,
             PrepareToClimbCommandGroup prepareToClimb, TotalClimbCommandGroup everythingClimbs) {
-        oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
-        oi.driverGamepad.getifAvailable(2).whileHeld(descend); // b
-        oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
-        oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
-        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3
+        oi.driverGamepad.getXboxButton(XboxButton.A).whileHeld(ascend);
+        oi.driverGamepad.getXboxButton(XboxButton.B).whileHeld(descend);
+        oi.driverGamepad.getXboxButton(XboxButton.X).whileHeld(retractArm);
+        oi.driverGamepad.getXboxButton(XboxButton.Y).whileHeld(extendArm);
+        oi.driverGamepad.getXboxButton(XboxButton.LeftTrigger).whileHeld(prepareToClimb);
+        oi.driverGamepad.getXboxButton(XboxButton.RightTrigger).whileHeld(everythingClimbs);
     }
 
     @Inject
@@ -218,8 +219,8 @@ public class OperatorCommandMap {
         driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
 
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
-        oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
-        oi.driverGamepad.getifAvailable(8).whilePressedNoRestart(driveToLocalCubeCommand);
+        oi.driverGamepad.getXboxButton(XboxButton.Start).whilePressedNoRestart(driveToLocalCubeCommand);
+        oi.driverGamepad.getXboxButton(XboxButton.Back).whilePressedNoRestart(driveToLocalCubeCommand);
 
         extendZed.setIsExtended(true);
         extendZed.includeOnSmartDashboard("Extend ZED");
@@ -250,8 +251,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupLowBatteryCommands(OperatorInterface oi, EnterLowBatteryModeCommand enter,
             LeaveLowBatteryModeCommand leave) {
-        oi.driverGamepad.getifAvailable(9).whenPressed(enter);
-        oi.driverGamepad.getifAvailable(10).whenPressed(leave);
+        oi.driverGamepad.getXboxButton(XboxButton.LeftStick).whenPressed(enter);
+        oi.driverGamepad.getXboxButton(XboxButton.RightStick).whenPressed(leave);
 
         enter.includeOnSmartDashboard();
         leave.includeOnSmartDashboard();

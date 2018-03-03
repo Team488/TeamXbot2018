@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.subsystems.drive.DriveTestBase;
+import edu.wpi.first.wpilibj.MockXboxControllerAdapter;
 import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import xbot.common.math.XYPair;
 
@@ -29,10 +30,10 @@ public class TankDriveWithJoysticksCommandTest extends DriveTestBase {
         for (int i = -100; i < 101; i++) {
             double power = (double) i / 100;
             command.initialize();
-            ((MockFTCGamepad) oi.driverGamepad).setLeftStick(new XYPair(0, power));
+            ((MockXboxControllerAdapter) oi.driverGamepad).setLeftStick(new XYPair(0, power));
             command.execute();
             assertEquals(power, drive.leftMaster.getMotorOutputPercent(), 0.001);
-            ((MockFTCGamepad) oi.driverGamepad).setRightStick(new XYPair(0, power));
+            ((MockXboxControllerAdapter) oi.driverGamepad).setRightStick(new XYPair(0, power));
             command.execute();
             assertEquals(power, drive.rightMaster.getMotorOutputPercent(), 0.001);
         }
