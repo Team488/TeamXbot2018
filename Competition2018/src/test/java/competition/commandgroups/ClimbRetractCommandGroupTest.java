@@ -30,11 +30,11 @@ public class ClimbRetractCommandGroupTest extends BaseCompetitionTest{
         
         xScheduler.run();
         
-        assertFalse(climb.solenoidA.getAdjusted());
+        assertTrue(climb.solenoidA.getAdjusted());
         
         xScheduler.run();
         
-        assertTrue(climb.solenoidB.getAdjusted());
+        assertFalse(climb.solenoidB.getAdjusted());
         
         assertEquals(1.0, climb.motor.getMotorOutputPercent(), .001);
     }

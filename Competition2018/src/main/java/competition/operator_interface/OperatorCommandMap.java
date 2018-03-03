@@ -5,18 +5,16 @@ import java.util.Arrays;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
+import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
+import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
-import competition.subsystems.climb.commands.AscendClimberCommand;
-import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -167,11 +165,11 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupClimberCommands(OperatorInterface oi, ExtendClimberArmCommand extendArm,
-            RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engageWinch,
+            RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
             DisengageWinchAndReleasePawlCommandGroup decend, EngageWinchAndLockPawlCommandGroup ascend) {
         oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
         oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
-        oi.driverGamepad.getifAvailable(3).whenPressed(engageWinch); // x
+        oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
         oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
         oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); // axis 3
         oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); // axis 2
