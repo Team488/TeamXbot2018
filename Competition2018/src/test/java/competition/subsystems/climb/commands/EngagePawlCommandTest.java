@@ -32,8 +32,8 @@ public class EngagePawlCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
         
-        assertFalse(climb.solenoidA.getAdjusted());
-        assertTrue(climb.solenoidB.getAdjusted());
+        assertTrue(climb.solenoidA.getAdjusted());
+        assertFalse(climb.solenoidB.getAdjusted());
     }
     
 }
