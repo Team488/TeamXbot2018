@@ -37,7 +37,7 @@ public class ClimbSubsystem extends BaseSubsystem {
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
         descendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
         
-        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 91202);
+        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", -91202);
 
         if (contract.climbReady()) {
             initializeMotor();
@@ -54,6 +54,8 @@ public class ClimbSubsystem extends BaseSubsystem {
         
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(true);
+        
+        motor.createTelemetryProperties(getPrefix(), "Motor");
     }
 
     /**
@@ -79,17 +81,26 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
     
     public void setPower(double power) {
-        if (getCurrentTicks() < 0) {
-            // too low, don't go down
+        
+        // positive power climbs
+        // climbing makes the sensor more negative
+        // we start at zero
+        
+        // if we start at zero, then we don't want to allow very much positive motion
+        // if we are too positivce, then we should only allow positive power
+        
+        if (getCurrentTicks() < absoluteMaxTicks.get()) {
+            // too much cable out, don't pay out any more cable, no more descend
             power = MathUtils.constrainDouble(power, 0, 1);
         }
         
-        if (getCurrentTicks() >= absoluteMaxTicks.get()) {
-            // too high, don't go up
+        if (getCurrentTicks() > 100) {
+            // hook getting too close to winch - no more ascend.
             power = MathUtils.constrainDouble(power, -1, 0);
         }
         
         motor.simpleSet(power);
+        motor.updateTelemetryProperties();
     }
 
     /**
