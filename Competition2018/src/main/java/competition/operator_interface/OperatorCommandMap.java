@@ -153,7 +153,7 @@ public class OperatorCommandMap {
             ElevatorDangerousOverrideCommand dangerousOverride,
             ElevatorSubsystem elevatorSubsystem) {
         
-        calibrateElevatorTicks.includeOnSmartDashboard();
+        //calibrateElevatorTicks.includeOnSmartDashboard();
         
         oi.operatorGamepad.getifAvailable(5).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);

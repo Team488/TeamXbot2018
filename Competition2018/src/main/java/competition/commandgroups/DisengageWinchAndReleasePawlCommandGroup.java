@@ -6,8 +6,9 @@ import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import xbot.common.command.BaseCommandGroup;
 
-public class DisengageWinchAndReleasePawlCommandGroup extends CommandGroup{
+public class DisengageWinchAndReleasePawlCommandGroup extends BaseCommandGroup {
     
     @Inject
     public DisengageWinchAndReleasePawlCommandGroup(

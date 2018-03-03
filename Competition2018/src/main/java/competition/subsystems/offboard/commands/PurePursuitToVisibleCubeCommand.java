@@ -23,7 +23,7 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
 
     private final OffboardInterfaceSubsystem offboardSubsystem;
     private final PoseSubsystem poseSubsystem;
-    private final ZedDeploySubsystem zedDeploy;
+    //private final ZedDeploySubsystem zedDeploy;
     
     private Supplier<TargetCubeInfo> targetSupplier;
     
@@ -34,14 +34,14 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
             BaseDriveSubsystem drive,
             OffboardInterfaceSubsystem offboardSubsystem,
             PoseSubsystem poseSubsystem,
-            ZedDeploySubsystem zedDeploy,
+            //ZedDeploySubsystem zedDeploy,
             XPropertyManager propMan) {
         super(clf, pose, drive, propMan);
         this.offboardSubsystem = offboardSubsystem;
         this.poseSubsystem = poseSubsystem;
-        this.zedDeploy = zedDeploy;
+        //this.zedDeploy = zedDeploy;
         
-        this.requires(zedDeploy);
+       // this.requires(zedDeploy);
     }
     
     public void setTargetCubeSupplier(Supplier<TargetCubeInfo> targetSupplier) {
@@ -50,7 +50,7 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
     
     @Override
     public void initialize() {
-        zedDeploy.setIsExtended(true);
+        //zedDeploy.setIsExtended(true);
         super.initialize();
     }
     
