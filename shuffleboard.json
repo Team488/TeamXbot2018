@@ -510,6 +510,32 @@
               "_source0": "network_table:///SmartDashboard/WristSubsystem/Ticks per degree",
               "_title": "/SmartDashboard/WristSubsystem/Ticks per degree"
             }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Upper Limit",
+              "_title": "/SmartDashboard/WristSubsystem/Upper Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Lower Limit",
+              "_title": "/SmartDashboard/WristSubsystem/Lower Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
           }
         }
       }
@@ -781,6 +807,30 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto",
               "_title": "SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Extend ZED",
+              "_title": "/SmartDashboard/Extend ZED"
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "_title": "/SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           }
         }
