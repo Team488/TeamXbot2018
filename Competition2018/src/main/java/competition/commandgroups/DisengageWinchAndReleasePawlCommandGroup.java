@@ -7,10 +7,10 @@ import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class PrepareClimberDeployCommandGroup extends CommandGroup{
+public class DisengageWinchAndReleasePawlCommandGroup extends CommandGroup{
     
     @Inject
-    public PrepareClimberDeployCommandGroup(
+    public DisengageWinchAndReleasePawlCommandGroup(
             AscendClimberCommand ascend,
             ReleasePawlCommand release,
             DecendClimberCommand decend) 
