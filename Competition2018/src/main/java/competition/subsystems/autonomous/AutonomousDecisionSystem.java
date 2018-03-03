@@ -44,6 +44,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     
     public void setRobotPosition(StartingLocations startingLocation) {
         this.startingLocation = startingLocation;
+        robotLocation.set(startingLocation.toString());
     }
     
     public void changeAutoDelay(double amount) {

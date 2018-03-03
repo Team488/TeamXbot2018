@@ -438,7 +438,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Pickup height for exchange zone",
-              "_title": "SmartDashboard/ElevatorSubsystem/Pickup height for exchange zone"
+              "_title": "/SmartDashboard/ElevatorSubsystem/Pickup height for exchange zone"
             }
           }
         }
@@ -885,7 +885,7 @@
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Robot Location",
-              "_title": "SmartDashboard/AutonomousDecisionSystem/Robot Location"
+              "_title": "/SmartDashboard/AutonomousDecisionSystem/Robot Location"
             }
           },
           "1,3": {
@@ -918,7 +918,7 @@
             "content": {
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/ZedDeploySubsystem/Force disable",
-              "_title": "SmartDashboard/ZedDeploySubsystem/Force disable",
+              "_title": "/SmartDashboard/ZedDeploySubsystem/Force disable",
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
             }
