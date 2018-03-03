@@ -41,6 +41,7 @@ import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwi
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
+import competition.subsystems.offboard.commands.PurePursuitToVisibleCubeCommand;
 import competition.subsystems.offboard.data.TargetCubeInfo;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
@@ -184,11 +185,22 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube,
-            NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVelLow,
-            DriveAtVelocityInfinitelyCommand driveAtVelHigh, ConfigurablePurePursuitCommand driveToLocalCubeCommand,
-            OffboardInterfaceSubsystem offboardSubsystem, PoseSubsystem poseSubsystem,
-            ExtendRetractZedCommand extendZed, ExtendRetractZedCommand retractZed) {
+    public void setupCollectCubeCommandGroup(OperatorInterface oi, CollectCubeCommandGroup collectCube) {
+        // oi.operatorGamepad.getifAvailable(7).whileHeld(collectCube);
+    }
+
+    @Inject
+    public void setupVisionCommands(
+                OperatorInterface oi,
+                AcquireVisibleCubeCommand acquireCube,
+                NavToTestGoalCommand testNav,
+                DriveAtVelocityInfinitelyCommand driveAtVelLow,
+                DriveAtVelocityInfinitelyCommand driveAtVelHigh,
+                PurePursuitToVisibleCubeCommand driveToLocalCubeCommand,
+                OffboardInterfaceSubsystem offboardSubsystem,
+                PoseSubsystem poseSubsystem,
+                ExtendRetractZedCommand extendZed,
+                ExtendRetractZedCommand retractZed) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
 
@@ -197,19 +209,6 @@ public class OperatorCommandMap {
 
         driveAtVelHigh.setVelocity(50);
         driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
-
-        driveToLocalCubeCommand.setMode(PursuitMode.Relative);
-        driveToLocalCubeCommand.setPointSupplier(() -> {
-            TargetCubeInfo targetCube = offboardSubsystem.getTargetCube();
-            if (targetCube == null) {
-                return null;
-            }
-            double headingDelta = Math.toDegrees(Math.atan2(targetCube.xInches, targetCube.yInches));
-
-            FieldPose targetPose = new FieldPose(new XYPair(targetCube.xInches, targetCube.yInches),
-                    new ContiguousHeading(90 - headingDelta));
-            return Arrays.asList(targetPose);
-        });
 
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
         oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
