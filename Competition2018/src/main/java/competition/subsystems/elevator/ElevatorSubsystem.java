@@ -74,6 +74,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
     final BooleanProperty calibratedProp;
+    private final DoubleProperty targetExchangeZonePickUpHeight;
     private final DoubleProperty targetHitVerticalCubeHeight;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
@@ -114,6 +115,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         targetScaleLowHeight = propMan.createPersistentProperty(getPrefix() + "Scale low", 60.0);
         targetSwitchDropHeight = propMan.createPersistentProperty(getPrefix() + "Switch drop height", 35);
         targetPickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height", 3.0);
+        targetExchangeZonePickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height for exchange zone", 20.5);
         elevatorPeakCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Peak current limit", 40);
         elevatorPeakCurrentDuration = propMan.createPersistentProperty(getPrefix() + "Peak current duration", 3000);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Continuous current limit", 30);
@@ -328,6 +330,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void insanelyDangerousSetPower(double power) {
+        setSoftLimitsEnabled(false);
         motor.simpleSet(power);
     }
 
@@ -525,4 +528,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public double getHitVerticalCubeHeight() {
         return targetHitVerticalCubeHeight.get();
     }
+    
+    public double getTargetExchangeZonePickUpHeight() {
+        return targetExchangeZonePickUpHeight.get();
+    }
+    
 }

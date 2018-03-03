@@ -32,8 +32,8 @@ public class ReleasePawlCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
         
-        assertTrue(climb.solenoidA.getAdjusted());
-        assertFalse(climb.solenoidB.getAdjusted());
+        assertFalse(climb.solenoidA.getAdjusted());
+        assertTrue(climb.solenoidB.getAdjusted());
     }
     
 }

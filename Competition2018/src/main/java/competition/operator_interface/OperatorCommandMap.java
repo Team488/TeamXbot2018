@@ -6,16 +6,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
+import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
-import competition.commandgroups.PrepareClimberDeployCommandGroup;
+import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
-import competition.subsystems.climb.commands.AscendClimberCommand;
-import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -28,6 +27,7 @@ import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.ElevatorDangerousOverrideCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
@@ -49,6 +49,7 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
@@ -140,9 +141,12 @@ public class OperatorCommandMap {
             EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
             ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
+            ElevatorDangerousOverrideCommand dangerousOverride,
             ElevatorSubsystem elevatorSubsystem) {
-        oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
-        oi.operatorGamepad.getifAvailable(6).whenPressed(joysticks);
+        
+        calibrateElevatorTicks.includeOnSmartDashboard();
+        
+        oi.operatorGamepad.getifAvailable(5).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
         oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
@@ -168,9 +172,9 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
-            ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl,
-            EngagePawlCommand engagePawl, PrepareClimberDeployCommandGroup prepareDeploy) {
+    public void setupClimberCommands(OperatorInterface oi, ExtendClimberArmCommand extendArm,
+            RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
+            DisengageWinchAndReleasePawlCommandGroup decend, EngageWinchAndLockPawlCommandGroup ascend) {
         oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
         oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
         oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
@@ -226,9 +230,11 @@ public class OperatorCommandMap {
     @Inject
     public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
             WristUncalibrateCommand loseCalibration, WristMaintainerCommand maintain, SetWristAngleCommand low,
-            SetWristAngleCommand medium, SetWristAngleCommand high) {
+            SetWristAngleCommand medium, SetWristAngleCommand high, WristDangerousOverrideCommand danger) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
+        
+        oi.operatorGamepad.getifAvailable(6).whileHeld(danger);
 
         low.setGoalAngle(10);
         medium.setGoalAngle(60);
