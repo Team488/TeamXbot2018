@@ -10,14 +10,14 @@ import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 public class GripperStopCommandTest extends BaseCompetitionTest {
 
     GripperStopCommand command;
-    GripperIntakeSubsystem gripper;
+    GripperIntakeSubsystem intake;
     
     @Override
     public void setUp() {
         super.setUp();
         
         command = injector.getInstance(GripperStopCommand.class);
-        gripper = injector.getInstance(GripperIntakeSubsystem.class);
+        intake = injector.getInstance(GripperIntakeSubsystem.class);
     }
     
     @Test
@@ -28,11 +28,14 @@ public class GripperStopCommandTest extends BaseCompetitionTest {
     
     @Test
     public void verifyPower() {
+        intake.leftMotor.simpleSet(1);
+        intake.rightMotor.simpleSet(1);
+        
         command.initialize();
         command.execute();
         
-        assertEquals(0, gripper.leftMotor.getMotorOutputPercent(), 0.001);
-        assertEquals(0, gripper.rightMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(0, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
     
 }
