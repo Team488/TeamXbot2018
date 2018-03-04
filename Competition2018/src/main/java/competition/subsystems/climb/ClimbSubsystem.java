@@ -1,6 +1,8 @@
 package competition.subsystems.climb;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -61,10 +63,20 @@ public class ClimbSubsystem extends BaseSubsystem {
         motor = clf.createCANTalon(contract.getClimbMaster().channel);
         motor.setInverted(contract.getClimbMaster().inverted);
         
+        motor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+        motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
+        
+        motor.configForwardSoftLimitEnable(false, 0);
+        motor.configReverseSoftLimitEnable(false, 0);
+        
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(false);
         
         motor.createTelemetryProperties(getPrefix(), "Motor");
+    }
+    
+    public double percentPayedOut() {
+        return - getCurrentTicks() / absoluteMaxTicks.get(); 
     }
 
     /**

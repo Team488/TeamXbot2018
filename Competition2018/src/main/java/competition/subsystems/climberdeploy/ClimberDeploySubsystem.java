@@ -42,6 +42,10 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     public int getTicks() {
         return motor.getSelectedSensorPosition(0);
     }
+    
+    public double percentExtended() {
+        return getTicks() / absoluteMaxTicks.get();
+    }
 
     /**
      * extends the climber arm
