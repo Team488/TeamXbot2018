@@ -29,7 +29,8 @@ public class DecendClimberCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        if (climb.percentPayedOut() < deploy.percentExtended()) {
+        // If the pay out is too fast compared to the deploy arm, stop for a moment to let the deploy arm catch up.
+        if (climb.percentPayedOut() < deploy.percentExtended() + .2) {
             climb.descend();
         } else {
             climb.stop();
