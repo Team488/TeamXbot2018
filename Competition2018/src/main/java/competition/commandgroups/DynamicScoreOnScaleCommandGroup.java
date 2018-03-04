@@ -35,11 +35,11 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(wait);
         // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
-        this.addParallel(setWristDown, 1);
-        this.addParallel(setElevatorForScale, 1);
+        //this.addParallel(setWristDown, 1);
+        //this.addParallel(setElevatorForScale, 1);
         this.addSequential(pursuit);
         
         // Score for 1 second
-        this.addSequential(eject, 1);
+        //this.addSequential(eject, 1);
     }
 }
