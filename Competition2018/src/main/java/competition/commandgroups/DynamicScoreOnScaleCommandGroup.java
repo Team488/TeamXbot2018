@@ -6,6 +6,7 @@ import competition.subsystems.autonomous.AutonomousDecisionSystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
+import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
@@ -29,7 +30,7 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
             ConfigurablePurePursuitCommand scootForward,
-            GripperEjectCommand eject) {
+            GripperIntakeCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
         scootForward.addPoint(new FieldPose(new XYPair(0, 2), new ContiguousHeading(90)));
@@ -46,7 +47,8 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         
         // Now we've stopped, so put the wrist down and the elevator up
         this.addParallel(setWristDown, 1);
-        this.addSequential(setElevatorForScale, 2.5);
+        setElevatorForScale.changeTimeout(3.5);
+        this.addSequential(setElevatorForScale);
         
         // scoot forward a little
         this.addSequential(scootForward);
