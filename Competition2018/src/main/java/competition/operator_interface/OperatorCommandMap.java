@@ -241,7 +241,7 @@ public class OperatorCommandMap {
         
         oi.operatorGamepad.getifAvailable(5).whileHeld(danger);
 
-        low.setGoalAngle(10);
+        low.setGoalAngle(0);
         medium.setGoalAngle(60);
         high.setGoalAngle(90);
 

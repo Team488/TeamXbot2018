@@ -26,7 +26,7 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
         this.clf = clf;
         this.contract = contract;
         deploySpeed = propMan.createPersistentProperty(getPrefix()+"Speed", .4);
-        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 80000);
+        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 36000);
         if (contract.climbDeployReady()) {
             initializeMotor();
         }
@@ -47,25 +47,25 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
      * extends the climber arm
      */
     public void extendClimberArm() {
-        motor.simpleSet(deploySpeed.get());
+        setPower(deploySpeed.get());
     }
 
     /**
      * detracts the climber arm
      */
     public void retractClimberArm() {
-        motor.simpleSet(-deploySpeed.get());
+        setPower(-deploySpeed.get());
     }
     
     
     // Use this once we have a good understanding of limits
     public void setPower(double power) {
-        if (getTicks() < 0) {
+        /*if (getTicks() < 1000) {
             power = MathUtils.constrainDouble(power, 0, 1);
-        }
+        }*/
         
         if (getTicks() > absoluteMaxTicks.get()) {
-            power = MathUtils.constrainDouble(power, -1, 1);
+            power = MathUtils.constrainDouble(power, -1, 0);
         }        
         
         motor.simpleSet(power);

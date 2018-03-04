@@ -11,13 +11,21 @@ import xbot.common.controls.actuators.XSolenoid;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ClimbSubsystem extends BaseSubsystem {
 
+    public enum ClimbRestrictionReason {
+        TooMuchStrapOut,
+        TooCloseToWinch,
+        FullPowerAvailable
+    }
+    
     final DoubleProperty ascendSpeed;
     final DoubleProperty descendSpeed;
+    final StringProperty climbRestrictionProp;
     CommonLibFactory clf;
     public XCANTalon motor;
     public XSolenoid solenoidA;
@@ -36,6 +44,7 @@ public class ClimbSubsystem extends BaseSubsystem {
         
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
         descendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
+        climbRestrictionProp = propMan.createEphemeralProperty(getPrefix() + "Restriction Reason", "Not set yet");
         
         absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", -91202);
 
@@ -81,6 +90,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
     
     public void setPower(double power) {
+        ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
         
         // positive power climbs
         // climbing makes the sensor more negative
@@ -92,13 +102,16 @@ public class ClimbSubsystem extends BaseSubsystem {
         if (getCurrentTicks() < absoluteMaxTicks.get()) {
             // too much cable out, don't pay out any more cable, no more descend
             power = MathUtils.constrainDouble(power, 0, 1);
+            potentialReason = ClimbRestrictionReason.TooMuchStrapOut;
         }
         
-        if (getCurrentTicks() > 100) {
+        if (getCurrentTicks() > 0) {
             // hook getting too close to winch - no more ascend.
             power = MathUtils.constrainDouble(power, -1, 0);
+            potentialReason = ClimbRestrictionReason.TooCloseToWinch;
         }
         
+        climbRestrictionProp.set(potentialReason.toString());
         motor.simpleSet(power);
         motor.updateTelemetryProperties();
     }
