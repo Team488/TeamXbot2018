@@ -6,14 +6,14 @@ import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.zed_deploy.ZedDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
-public class DecendClimberCommand extends BaseCommand {
+public class DescendClimberCommand extends BaseCommand {
 
     ClimbSubsystem climb;
     ClimberDeploySubsystem deploy;
     //ZedDeploySubsystem zedDeploy;
 
     @Inject
-    public DecendClimberCommand(ClimbSubsystem climb, ClimberDeploySubsystem deploy) {//, ZedDeploySubsystem zedDeploy) {
+    public DescendClimberCommand(ClimbSubsystem climb, ClimberDeploySubsystem deploy) {//, ZedDeploySubsystem zedDeploy) {
         this.climb = climb;
         this.deploy = deploy;
         //this.zedDeploy = zedDeploy;
@@ -29,12 +29,7 @@ public class DecendClimberCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        // If the pay out is too fast compared to the deploy arm, stop for a moment to let the deploy arm catch up.
-        if (climb.percentPayedOut() < deploy.percentExtended() + .2) {
-            climb.descend();
-        } else {
-            climb.stop();
-        }
+        climb.descend();
     }
 
 }

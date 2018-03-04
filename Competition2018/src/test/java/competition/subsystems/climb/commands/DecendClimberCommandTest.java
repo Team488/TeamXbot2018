@@ -5,18 +5,18 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.climb.ClimbSubsystem;
-import competition.subsystems.climb.commands.DecendClimberCommand;
+import competition.subsystems.climb.commands.DescendClimberCommand;
 
 public class DecendClimberCommandTest extends BaseCompetitionTest {
 
     ClimbSubsystem climb;
-    DecendClimberCommand command;
+    DescendClimberCommand command;
 
     @Override
     public void setUp() {
         super.setUp();
         climb = injector.getInstance(ClimbSubsystem.class);
-        command = injector.getInstance(DecendClimberCommand.class);
+        command = injector.getInstance(DescendClimberCommand.class);
     }
 
     @Test
