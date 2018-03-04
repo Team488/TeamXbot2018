@@ -7,6 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.controls.actuators.XSolenoid;
@@ -22,6 +23,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     public enum ClimbRestrictionReason {
         TooMuchStrapOut,
         TooCloseToWinch,
+        AheadOfDeployArm,
         FullPowerAvailable
     }
     
@@ -29,15 +31,19 @@ public class ClimbSubsystem extends BaseSubsystem {
     final DoubleProperty descendSpeed;
     final StringProperty climbRestrictionProp;
     CommonLibFactory clf;
+    final ClimberDeploySubsystem deploy;
     public XCANTalon motor;
     public XSolenoid solenoidA;
     public XSolenoid solenoidB;
     ElectricalContract2018 contract;
     final DoubleProperty absoluteMaxTicks;
+    final DoubleProperty percentPayedOutProp;
 
     @Inject
-    public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
+    public ClimbSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract,
+            ClimberDeploySubsystem deploy) {
         this.clf = clf;
+        this.deploy = deploy;
         this.contract = contract;
         solenoidA = clf.createSolenoid(contract.getPawlSolenoidA().channel);
         solenoidB = clf.createSolenoid(contract.getPawlSolenoidB().channel);
@@ -47,8 +53,8 @@ public class ClimbSubsystem extends BaseSubsystem {
         ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
         descendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
         climbRestrictionProp = propMan.createEphemeralProperty(getPrefix() + "Restriction Reason", "Not set yet");
-        
         absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", -91202);
+        percentPayedOutProp = propMan.createEphemeralProperty(getPrefix() + "Percent Payed Out", 0);
 
         if (contract.climbReady()) {
             initializeMotor();
@@ -103,7 +109,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     
     public void setPower(double power) {
         ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
-        
+        percentPayedOutProp.set(percentPayedOut());
         // positive power climbs
         // climbing makes the sensor more negative
         // we start at zero
@@ -122,6 +128,15 @@ public class ClimbSubsystem extends BaseSubsystem {
             power = MathUtils.constrainDouble(power, -1, 0);
             potentialReason = ClimbRestrictionReason.TooCloseToWinch;
         }
+        
+
+        if (percentPayedOut() > deploy.percentExtended() + .2) {
+            // We have payed out too much cable too quickly - stop and give the deploy arm
+            // time to catch up.
+            power = MathUtils.constrainDouble(power, 0, 1);
+            potentialReason = ClimbRestrictionReason.AheadOfDeployArm;
+        }
+        
         
         climbRestrictionProp.set(potentialReason.toString());
         motor.simpleSet(power);

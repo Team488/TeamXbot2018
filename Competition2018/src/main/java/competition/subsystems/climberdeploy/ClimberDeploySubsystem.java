@@ -17,6 +17,7 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
 
     final DoubleProperty deploySpeed;
     final DoubleProperty absoluteMaxTicks;
+    final DoubleProperty percentDeployedProp;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
     public XCANTalon motor;
@@ -27,6 +28,7 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
         this.contract = contract;
         deploySpeed = propMan.createPersistentProperty(getPrefix()+"Speed", .4);
         absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 36000);
+        percentDeployedProp = propMan.createEphemeralProperty(getPrefix() +  "PercentDeployed", 0);
         if (contract.climbDeployReady()) {
             initializeMotor();
         }
@@ -70,9 +72,10 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
         
         if (getTicks() > absoluteMaxTicks.get()) {
             power = MathUtils.constrainDouble(power, -1, 0);
-        }        
+        }
         
         motor.simpleSet(power);
+        percentDeployedProp.set(percentExtended());
     }
 
     /**
