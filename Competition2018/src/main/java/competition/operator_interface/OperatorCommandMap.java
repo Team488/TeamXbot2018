@@ -6,16 +6,18 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
+import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
-import competition.commandgroups.PrepareClimberDeployCommandGroup;
+import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
+import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
+import competition.commandgroups.PrepareToClimbCommandGroup;
+import competition.commandgroups.TotalClimbCommandGroup;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
-import competition.subsystems.climb.commands.AscendClimberCommand;
-import competition.subsystems.climb.commands.DecendClimberCommand;
 import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -28,6 +30,7 @@ import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.elevator.commands.DisableElevatorCurrentLimitCommand;
+import competition.subsystems.elevator.commands.ElevatorDangerousOverrideCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.ElevatorUncalibrateCommand;
 import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
@@ -40,7 +43,10 @@ import competition.subsystems.gripperintake.commands.GripperRotateClockwiseComma
 import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
+import competition.subsystems.offboard.commands.IdentifyAndPurePursuitToVisibleCubeCommand;
+import competition.subsystems.offboard.commands.IdentifyTargetCubeCommand.TimeoutPreset;
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
+import competition.subsystems.offboard.commands.PurePursuitToVisibleCubeCommand;
 import competition.subsystems.offboard.data.TargetCubeInfo;
 import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
@@ -49,6 +55,7 @@ import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import competition.subsystems.wrist.commands.WristCalibrateCommand;
+import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
@@ -79,32 +86,29 @@ public class OperatorCommandMap {
         fastMode.includeOnSmartDashboard("Properties FastMode");
         slowMode.includeOnSmartDashboard("Properties SlowMode");
     }
-    
+
     @Inject
-    public void setupAutoCommands(
-            OperatorInterface oi,
-            ChangeAutoDelayCommand addAutoDelay,
-            ChangeAutoDelayCommand subtractAutoDelay,
-            SelectDynamicScoreOnScaleCommand selectScale,
-            SelectDynamicScoreOnSwitchCommand selectSwitch,
-            SelectCrossLineCommand crossLine,
-            SelectDoNothingCommand doNothing,
-            SetStartingSideCommand setLeft,
-            SetStartingSideCommand setRight) {
-        
+    public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
+            ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
+            SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
+            SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
+            SetStartingSideCommand setMiddle) {
+
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
-        
-        setLeft.setRightSide(false);
-        setRight.setRightSide(true);
-        
+
+        setLeft.setStartingLocation(StartingLocations.Left);
+        setRight.setStartingLocation(StartingLocations.Right);
+        setMiddle.setStartingLocation(StartingLocations.Middle);
+
         oi.programmerGamepad.getPovIfAvailable(0).whenPressed(addAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(180).whenPressed(subtractAutoDelay);
         oi.programmerGamepad.getPovIfAvailable(90).whenPressed(setRight);
         oi.programmerGamepad.getPovIfAvailable(270).whenPressed(setLeft);
-        
+        oi.programmerGamepad.getifAvailable(5).whenPressed(setMiddle);
+
         oi.programmerGamepad.getifAvailable(1).whenPressed(selectSwitch);
-        oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);        
+        oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);
         oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
         oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
     }
@@ -119,7 +123,7 @@ public class OperatorCommandMap {
         setHeading.includeOnSmartDashboard();
 
         dynamicScore.includeOnSmartDashboard();
-        
+
         oi.driverGamepad.getPovIfAvailable(0).whenPressed(fieldTank);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
     }
@@ -142,12 +146,16 @@ public class OperatorCommandMap {
             ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
             SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
-            CalibrateElevatorHereCommand calibrateHere, EnableElevatorCurrentLimitCommand enableCurrentLimit,
+            SetElevatorTargetHeightCommand targetPortalHeight, CalibrateElevatorHereCommand calibrateHere,
+            EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
             ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
+            ElevatorDangerousOverrideCommand dangerousOverride,
             ElevatorSubsystem elevatorSubsystem) {
-        oi.operatorGamepad.getifAvailable(5).whileHeld(calibrateElevatorTicks);
-        oi.operatorGamepad.getifAvailable(6).whenPressed(joysticks);
+        
+        //calibrateElevatorTicks.includeOnSmartDashboard();
+        
+        oi.operatorGamepad.getifAvailable(6).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
         oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
@@ -155,11 +163,13 @@ public class OperatorCommandMap {
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
         targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
+        targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetExchangeZonePickUpHeight());
 
+        
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
-        oi.operatorGamepad.getifAvailable(2).whenPressed(targetSwitchDropHeight);
-        oi.operatorGamepad.getifAvailable(3).whenPressed(targetScaleMidHeight);
-        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleHighHeight);
+        oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
+        oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
+        oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);
 
@@ -171,15 +181,19 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, DecendClimberCommand decend,
-            ExtendClimberArmCommand extendArm, RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl,
-            EngagePawlCommand engagePawl, PrepareClimberDeployCommandGroup prepareDeploy) {
-        oi.driverGamepad.getifAvailable(1).whileHeld(extendArm); // a
-        oi.driverGamepad.getifAvailable(2).whileHeld(retractArm); // b
-        oi.driverGamepad.getifAvailable(3).whenPressed(engagePawl); // x
-        oi.driverGamepad.getifAvailable(4).whenPressed(releasePawl); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.raiseClimber).whileHeld(ascend); //axis 3
-        oi.driverGamepad.getAnalogIfAvailable(oi.lowerClimber).whileHeld(decend); //axis 2
+    public void setupClimberCommands(OperatorInterface oi, ExtendClimberArmCommand extendArm,
+            RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
+            DisengageWinchAndReleasePawlCommandGroup descend, EngageWinchAndLockPawlCommandGroup ascend,
+            PrepareToClimbCommandGroup prepareToClimb, TotalClimbCommandGroup everythingClimbs) {
+        oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
+        oi.driverGamepad.getifAvailable(2).whileHeld(descend); // b
+        oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
+        oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3
+        
+        engagePawl.includeOnSmartDashboard();
+        releasePawl.includeOnSmartDashboard();        
     }
 
     @Inject
@@ -194,9 +208,7 @@ public class OperatorCommandMap {
                 NavToTestGoalCommand testNav,
                 DriveAtVelocityInfinitelyCommand driveAtVelLow,
                 DriveAtVelocityInfinitelyCommand driveAtVelHigh,
-                ConfigurablePurePursuitCommand driveToLocalCubeCommand,
-                OffboardInterfaceSubsystem offboardSubsystem,
-                PoseSubsystem poseSubsystem,
+                IdentifyAndPurePursuitToVisibleCubeCommand driveToLocalCubeCommand,
                 ExtendRetractZedCommand extendZed,
                 ExtendRetractZedCommand retractZed) {
         acquireCube.includeOnSmartDashboard();
@@ -208,26 +220,14 @@ public class OperatorCommandMap {
         driveAtVelHigh.setVelocity(50);
         driveAtVelHigh.includeOnSmartDashboard("Test drive at velocity (high)");
 
-        driveToLocalCubeCommand.setMode(PursuitMode.Relative);
-        driveToLocalCubeCommand.setPointSupplier(() -> {
-            TargetCubeInfo targetCube = offboardSubsystem.getTargetCube();
-            if (targetCube == null) {
-                return null;
-            }
-            double headingDelta = Math.toDegrees(Math.atan2(targetCube.xInches, targetCube.yInches));
-
-            FieldPose targetPose = new FieldPose(new XYPair(targetCube.xInches, targetCube.yInches),
-                    new ContiguousHeading(90 - headingDelta));
-            return Arrays.asList(targetPose);
-        });
-
+        driveToLocalCubeCommand.setTimeoutPreset(TimeoutPreset.Manual);
         driveToLocalCubeCommand.includeOnSmartDashboard("Drive to local cube");
         oi.driverGamepad.getifAvailable(7).whilePressedNoRestart(driveToLocalCubeCommand);
         oi.driverGamepad.getifAvailable(8).whilePressedNoRestart(driveToLocalCubeCommand);
 
         extendZed.setIsExtended(true);
         extendZed.includeOnSmartDashboard("Extend ZED");
-        
+
         retractZed.setIsExtended(false);
         retractZed.includeOnSmartDashboard("Retract ZED");
     }
@@ -235,11 +235,13 @@ public class OperatorCommandMap {
     @Inject
     public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
             WristUncalibrateCommand loseCalibration, WristMaintainerCommand maintain, SetWristAngleCommand low,
-            SetWristAngleCommand medium, SetWristAngleCommand high) {
+            SetWristAngleCommand medium, SetWristAngleCommand high, WristDangerousOverrideCommand danger) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
+        
+        oi.operatorGamepad.getifAvailable(5).whileHeld(danger);
 
-        low.setGoalAngle(10);
+        low.setGoalAngle(0);
         medium.setGoalAngle(60);
         high.setGoalAngle(90);
 
@@ -250,13 +252,11 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupLowBatteryCommands(
-            OperatorInterface oi,
-            EnterLowBatteryModeCommand enter,
+    public void setupLowBatteryCommands(OperatorInterface oi, EnterLowBatteryModeCommand enter,
             LeaveLowBatteryModeCommand leave) {
         oi.driverGamepad.getifAvailable(9).whenPressed(enter);
         oi.driverGamepad.getifAvailable(10).whenPressed(leave);
-        
+
         enter.includeOnSmartDashboard();
         leave.includeOnSmartDashboard();
     }

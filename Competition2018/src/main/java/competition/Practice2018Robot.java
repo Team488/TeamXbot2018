@@ -102,7 +102,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbLeanMaster() {
-        return new DeviceInfo(33, false);
+        return new DeviceInfo(33, true);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbDeployMaster() {
-        return new DeviceInfo(22, false);
+        return new DeviceInfo(22, true);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbMaster() {
-        return new DeviceInfo(23, false);
+        return new DeviceInfo(23, true);
     }
 
     @Override
@@ -162,16 +162,16 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getPawlSolenoidA() {
-        return new DeviceInfo(2, false);
+        return new DeviceInfo(2, true);
     }
 
     @Override
     public DeviceInfo getPawlSolenoidB() {
-        return new DeviceInfo(3, false);
+        return new DeviceInfo(3, true);
     }
 
     @Override
     public DeviceInfo getZedDeploy() {
-        return new DeviceInfo(1, false);
+        return new DeviceInfo(0, false);
     }
 }

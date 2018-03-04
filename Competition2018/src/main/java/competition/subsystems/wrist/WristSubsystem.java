@@ -7,7 +7,6 @@ import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
 import competition.subsystems.elevator.ElevatorSubsystem;
-import competition.subsystems.elevator.ElevatorSubsystem.ElevatorPowerRestrictionReason;
 import xbot.common.command.BaseSetpointSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
@@ -137,6 +136,9 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
             lowerLimitSwitch = clf.createDigitalInput(contract.getWristLowerLimit().channel);
             lowerLimitSwitch.setInverted(contract.getWristLowerLimit().inverted);
+        } else {
+            // We don't have any limit switches, so we have to assume we started vertically.
+            calibrateHere();
         }
     }
 
@@ -228,6 +230,11 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.simpleSet(power);
         setRestrictionReason(reason);
     }
+    
+    public void insanelyDangerousSetPower(double power) {
+        setSoftLimitsEnabled(false);
+        motor.simpleSet(power);
+    }
 
     public boolean isWithinSafetyZone() {
         return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
@@ -274,12 +281,14 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
         currentWristAngleProp.set(getWristAngle());
-        lowerLimitProp.set(lowerLimitSwitch.get());
-        upperLimitProp.set(upperLimitSwitch.get());
-
+        
+        if (contract.isWristLimitsReady()) {
+          lowerLimitProp.set(lowerLimitSwitch.get());
+          upperLimitProp.set(upperLimitSwitch.get());
+        }/*
         if (isWithinSafetyZone()) {
             double newTargetAngle = modifyAngleForSafeties(getTargetAngle());
             targetAngle.set(newTargetAngle);
-        }
+        } */
     }
 }
