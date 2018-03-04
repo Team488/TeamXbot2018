@@ -9,20 +9,20 @@ import xbot.common.command.BaseCommand;
 public class ExtendClimberArmCommand extends BaseCommand {
 
     ClimberDeploySubsystem deploy;
-    ZedDeploySubsystem zedDeploy;
+    //ZedDeploySubsystem zedDeploy;
 
     @Inject
-    public ExtendClimberArmCommand(ClimberDeploySubsystem deploy, ZedDeploySubsystem zedDeploy) {
+    public ExtendClimberArmCommand(ClimberDeploySubsystem deploy) {//, ZedDeploySubsystem zedDeploy) {
         this.deploy = deploy;
-        this.zedDeploy = zedDeploy;
+        //this.zedDeploy = zedDeploy;
         this.requires(deploy);
-        this.requires(zedDeploy);
+        //this.requires(zedDeploy);
     }
 
     @Override
     public void initialize() {
         log.info("Initializing");
-        zedDeploy.setIsExtended(false);
+       //zedDeploy.setIsExtended(false);
     }
 
     @Override

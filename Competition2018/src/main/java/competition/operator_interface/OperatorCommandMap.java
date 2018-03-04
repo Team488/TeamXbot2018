@@ -153,9 +153,9 @@ public class OperatorCommandMap {
             ElevatorDangerousOverrideCommand dangerousOverride,
             ElevatorSubsystem elevatorSubsystem) {
         
-        calibrateElevatorTicks.includeOnSmartDashboard();
+        //calibrateElevatorTicks.includeOnSmartDashboard();
         
-        oi.operatorGamepad.getifAvailable(5).whileHeld(dangerousOverride);
+        oi.operatorGamepad.getifAvailable(6).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
         oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
@@ -163,7 +163,7 @@ public class OperatorCommandMap {
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
         targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
-        targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
+        targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetExchangeZonePickUpHeight());
 
         
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
@@ -191,6 +191,9 @@ public class OperatorCommandMap {
         oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
         oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
         oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3
+        
+        engagePawl.includeOnSmartDashboard();
+        releasePawl.includeOnSmartDashboard();        
     }
 
     @Inject
@@ -236,9 +239,9 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
         
-        oi.operatorGamepad.getifAvailable(6).whileHeld(danger);
+        oi.operatorGamepad.getifAvailable(5).whileHeld(danger);
 
-        low.setGoalAngle(10);
+        low.setGoalAngle(0);
         medium.setGoalAngle(60);
         high.setGoalAngle(90);
 

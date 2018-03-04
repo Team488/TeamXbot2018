@@ -122,7 +122,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbMaster() {
-        return new DeviceInfo(23, false);
+        return new DeviceInfo(23, true);
     }
 
     @Override
@@ -172,6 +172,6 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getZedDeploy() {
-        return new DeviceInfo(1, false);
+        return new DeviceInfo(0, false);
     }
 }

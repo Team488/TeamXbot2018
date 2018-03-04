@@ -165,6 +165,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorUsesTalonLimits()) {
             initializeTalonLimits();
         }
+        
+        
+        // Brutal hack since we don't trust anything
+        calibrateHere();
     }
 
     private void initializeMotor() {
@@ -178,7 +182,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         motor.enableCurrentLimit(true);
 
-        motor.configPeakOutputReverse(-0.4, 0);
+        motor.configPeakOutputReverse(-0.8, 0);
         motor.configNominalOutputForward(0.0, 0);
         
         uncalibrate();

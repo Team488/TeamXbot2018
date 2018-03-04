@@ -44,6 +44,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     
     public void setRobotPosition(StartingLocations startingLocation) {
         this.startingLocation = startingLocation;
+        robotLocation.set(startingLocation.toString());
     }
     
     public void changeAutoDelay(double amount) {
@@ -170,7 +171,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     public List<FieldPose> createPathToNearbySwitchPlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-6*12, 7.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-6*12, 8*12), new ContiguousHeading(90)));
         return points;
     }
     
@@ -179,21 +180,21 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(-7.35*12, 1.5*12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-15.6*12, 7.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-15.6*12, 8*12), new ContiguousHeading(90)));
         return points;
     }
     
     private List<FieldPose> createPathToLeftSwitchFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-5*12, 7.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-5*12, 8*12), new ContiguousHeading(90)));
         return points;
     }
     
     private List<FieldPose> createPathToRightSwitchFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(4*12, 7.5*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(4*12, 8*12), new ContiguousHeading(90)));
         return points;
     }
     
