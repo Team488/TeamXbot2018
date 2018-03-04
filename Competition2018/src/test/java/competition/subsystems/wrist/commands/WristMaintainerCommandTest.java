@@ -7,6 +7,8 @@ import org.junit.Test;
 import competition.BaseCompetitionTest;
 import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
+import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
+import xbot.common.math.XYPair;
 
 public class WristMaintainerCommandTest extends BaseCompetitionTest {
 
@@ -48,7 +50,16 @@ public class WristMaintainerCommandTest extends BaseCompetitionTest {
         
         command.initialize();
         command.execute();
+        // Should attempt to calibrate for a while.
+        assertEquals(wrist.getUncalibratedPowerFactor(), wrist.motor.getMotorOutputPercent(), 0.001);
         
+        // Then gives up, responds to joysticks.
+        timer.advanceTimeInSecondsBy(5);
+        command.execute();
         assertEquals(0, wrist.motor.getMotorOutputPercent(), 0.001);
+        
+        ((MockFTCGamepad)oi.operatorGamepad).setLeftStick(new XYPair(0, 1));
+        command.execute();
+        assertEquals(wrist.getUncalibratedPowerFactor(), wrist.motor.getMotorOutputPercent(), 0.001);
     }
 }

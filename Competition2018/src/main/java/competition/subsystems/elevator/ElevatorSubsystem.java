@@ -53,6 +53,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
+    
+    private boolean currentLimitState;
 
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
@@ -72,6 +74,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
     final BooleanProperty calibratedProp;
+    private final DoubleProperty targetExchangeZonePickUpHeight;
     private final DoubleProperty targetHitVerticalCubeHeight;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
@@ -112,6 +115,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         targetScaleLowHeight = propMan.createPersistentProperty(getPrefix() + "Scale low", 60.0);
         targetSwitchDropHeight = propMan.createPersistentProperty(getPrefix() + "Switch drop height", 35);
         targetPickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height", 3.0);
+        targetExchangeZonePickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height for exchange zone", 20.5);
         elevatorPeakCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Peak current limit", 40);
         elevatorPeakCurrentDuration = propMan.createPersistentProperty(getPrefix() + "Peak current duration", 3000);
         elevatorContinuousCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Continuous current limit", 30);
@@ -161,6 +165,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorUsesTalonLimits()) {
             initializeTalonLimits();
         }
+        
+        
+        // Brutal hack since we don't trust anything
+        calibrateHere();
     }
 
     private void initializeMotor() {
@@ -174,8 +182,10 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         motor.enableCurrentLimit(true);
 
-        motor.configPeakOutputReverse(-0.2, 0);
+        motor.configPeakOutputReverse(-0.8, 0);
         motor.configNominalOutputForward(0.0, 0);
+        
+        uncalibrate();
 
         motor.createTelemetryProperties(getPrefix(), "Motor");
     }
@@ -185,10 +195,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void enableCurrentLimit() {
+        currentLimitState = true;
         motor.enableCurrentLimit(true);
     }
 
     public void disableCurrentLimit() {
+        currentLimitState = false;
         motor.enableCurrentLimit(false);
     }
 
@@ -322,6 +334,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void insanelyDangerousSetPower(double power) {
+        setSoftLimitsEnabled(false);
         motor.simpleSet(power);
     }
 
@@ -512,8 +525,16 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return velocityPid;
     }
     
+    public boolean getCurrentLimitState() {
+        return currentLimitState;
+    }
     
     public double getHitVerticalCubeHeight() {
         return targetHitVerticalCubeHeight.get();
     }
+    
+    public double getTargetExchangeZonePickUpHeight() {
+        return targetExchangeZonePickUpHeight.get();
+    }
+    
 }
