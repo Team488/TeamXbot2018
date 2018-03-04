@@ -35,7 +35,6 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
         wait.setDelaySupplier(() -> decider.getDelay());
         
         this.addSequential(wait);
-        // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
         this.addParallel(setWristDown, 1);
         this.addParallel(setElevatorForSwitch, 1);
