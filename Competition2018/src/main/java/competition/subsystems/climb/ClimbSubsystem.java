@@ -82,7 +82,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
     
     public double percentPayedOut() {
-        return - getCurrentTicks() / absoluteMaxTicks.get(); 
+        return getCurrentTicks() / absoluteMaxTicks.get(); 
     }
 
     /**
