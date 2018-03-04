@@ -101,13 +101,13 @@ public class ClimbSubsystem extends BaseSubsystem {
         
         if (getCurrentTicks() < absoluteMaxTicks.get()) {
             // too much cable out, don't pay out any more cable, no more descend
-            power = MathUtils.constrainDouble(power, 0, 1);
+            //power = MathUtils.constrainDouble(power, 0, 1);
             potentialReason = ClimbRestrictionReason.TooMuchStrapOut;
         }
         
         if (getCurrentTicks() > 0) {
             // hook getting too close to winch - no more ascend.
-            power = MathUtils.constrainDouble(power, -1, 0);
+            //power = MathUtils.constrainDouble(power, -1, 0);
             potentialReason = ClimbRestrictionReason.TooCloseToWinch;
         }
         
