@@ -10,37 +10,28 @@ import competition.subsystems.pose.PoseSubsystem;
 public class TiltPreventionModule{
 
     PoseSubsystem pose;
-    DriveSubsystem drive;
     double goodPoint;
     double goodHeading;
     DoubleProperty pitchThrehold;
 
 
     @Inject
-    public TiltPreventionModule(PoseSubsystem pose, DriveSubsystem drive,XPropertyManager propManager) {
+    public TiltPreventionModule(PoseSubsystem pose, XPropertyManager propManager) {
         this.pose = pose;
-        this.drive = drive;
         pitchThrehold = propManager.createPersistentProperty("Absolute Value of Pitch Threhold", 10);
     }
 
-    @Inject
-    public void preventTilt (double yMaxPositiveSpeed , double yMaxNegativeSpeed) {
-        
-        if (pose.getRobotPitch() > pitchThrehold.get()) {
+    public double preventTilt (double potentialPower) {
 
-            yMaxPositiveSpeed = 0 ;
+        if (pose.getRobotPitch() > pitchThrehold.get() && potentialPower < 0) {
+            return 0; // range 1 - 0
         }
 
-        if(pose.getRobotPitch() < -pitchThrehold.get()) {
-            
-            yMaxNegativeSpeed = 0 ;
+        if(pose.getRobotPitch() < -pitchThrehold.get() && potentialPower > 0) {
+
+            return 0 ; // range 0 - -1
         }
-        
-        if(-pitchThrehold.get() <= pose.getRobotPitch() && pose.getRobotPitch() <= pitchThrehold.get()) {
-            
-            yMaxPositiveSpeed = 1;
-            yMaxNegativeSpeed = -1;
-            
-        }
+
+        return potentialPower;
     }
 }
