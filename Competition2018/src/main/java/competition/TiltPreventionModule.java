@@ -1,37 +1,20 @@
 package competition;
 
-import xbot.common.injection.RobotModule;
-import xbot.common.math.ContiguousHeading;
-import xbot.common.math.FieldPose;
-import xbot.common.math.XYPair;
-import xbot.common.math.XYPairManager;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
-import xbot.common.subsystems.drive.BaseDriveSubsystem;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
-
 import com.google.inject.Inject;
-
-import competition.subsystems.autonomous.GameDataSource;
-import competition.subsystems.autonomous.RealGameDataAdapter;
 import competition.subsystems.drive.DriveSubsystem;
-import competition.subsystems.offboard.OffboardCommsCanInterface;
-import competition.subsystems.offboard.XOffboardCommsInterface;
 import competition.subsystems.pose.PoseSubsystem;
 
 
-public class TiltPreventionModule extends RobotModule{
+public class TiltPreventionModule{
 
     PoseSubsystem pose;
     DriveSubsystem drive;
     double goodPoint;
     double goodHeading;
     DoubleProperty pitchThrehold;
-    
-    @Override
-    protected void configure() {
-        super.configure();
-    }
+
 
     @Inject
     public TiltPreventionModule(PoseSubsystem pose, DriveSubsystem drive,XPropertyManager propManager) {
