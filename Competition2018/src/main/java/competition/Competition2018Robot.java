@@ -44,11 +44,6 @@ public class Competition2018Robot extends Practice2018Robot {
     }
     
     @Override
-    public DeviceInfo getLeftCollectorMaster() {
-        return new DeviceInfo(24, true);
-    }
-    
-    @Override
     public boolean isWristLimitsReady() {
         return false;
     }
@@ -66,5 +61,9 @@ public class Competition2018Robot extends Practice2018Robot {
     @Override
     public DeviceInfo getElevatorLowerLimit() {
         return new DeviceInfo(1, true);
+    }
+    @Override
+    public DeviceInfo getRightCollectorMaster() {
+        return new DeviceInfo(31, true);
     }
 }

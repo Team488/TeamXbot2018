@@ -26,7 +26,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             // This is reversed, but I don't want to mess with the rest of the OI
-            GripperIntakeCommand eject) {
+            GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
         
