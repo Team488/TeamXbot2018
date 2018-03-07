@@ -92,7 +92,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
                 } else if (whereToStart == StartingLocations.Left) {
                     bestPath = mirrorPath(createPathToNearbySwitchPlate());
                 } else if (whereToStart == StartingLocations.Middle) {
-                    bestPath = createPathToLeftSwitchFromMiddle();
+                    bestPath = createPathToLeftSwitchPlateFromMiddle();
                 }
                 break;
             case RIGHT:
@@ -102,7 +102,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
                 } else if (whereToStart == StartingLocations.Left) {
                     bestPath = mirrorPath(createPathToDistantSwitchPlate());
                 } else if (whereToStart == StartingLocations.Middle) {
-                    bestPath = createPathToRightSwitchFromMiddle();
+                    bestPath = createPathToRightSwitchPlateFromMiddle();
                 }  
                 break;
             case UNKNOWN:
@@ -184,17 +184,17 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         return points;
     }
     
-    private List<FieldPose> createPathToLeftSwitchFromMiddle() {
+    private List<FieldPose> createPathToLeftSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-5*12, 8*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-47.74, 108.5), new ContiguousHeading(90)));
         return points;
     }
     
-    private List<FieldPose> createPathToRightSwitchFromMiddle() {
+    private List<FieldPose> createPathToRightSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0*12, 1.5*12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(4*12, 8*12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(20.26, 108.5), new ContiguousHeading(90)));
         return points;
     }
     
