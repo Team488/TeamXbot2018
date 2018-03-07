@@ -258,7 +258,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     private void setSoftLimitsEnabled(boolean on) {
         motor.configReverseSoftLimitEnable(on, 0);
-        motor.configForwardSoftLimitEnable(on, 0);
+        motor.configForwardSoftLimitEnable(false, 0);
     }
 
     public boolean isCalibrated() {
