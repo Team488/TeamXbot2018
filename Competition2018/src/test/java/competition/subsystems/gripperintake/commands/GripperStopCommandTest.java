@@ -31,6 +31,9 @@ public class GripperStopCommandTest extends BaseCompetitionTest {
         intake.leftMotor.simpleSet(1);
         intake.rightMotor.simpleSet(1);
         
+        assertEquals(1, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(1, intake.rightMotor.getMotorOutputPercent(), 0.001);
+        
         command.initialize();
         command.execute();
         
