@@ -30,7 +30,7 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
             ConfigurablePurePursuitCommand scootForward,
-            GripperIntakeCommand eject) {
+            GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
         scootForward.addPoint(new FieldPose(new XYPair(0, 2*12), new ContiguousHeading(90)));
