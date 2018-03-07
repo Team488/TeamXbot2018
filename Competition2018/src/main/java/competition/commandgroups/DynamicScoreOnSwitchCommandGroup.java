@@ -7,7 +7,7 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
-import competition.subsystems.wrist.commands.SetWristAngleCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
@@ -23,14 +23,13 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
             ConfigurablePurePursuitCommand pursuit,
-            SetWristAngleCommand setWristDown,
+            WristDownCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             // This is reversed, but I don't want to mess with the rest of the OI
             GripperIntakeCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
         
-        setWristDown.setGoalAngle(0);
         setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
         wait.setDelaySupplier(() -> decider.getDelay());
         

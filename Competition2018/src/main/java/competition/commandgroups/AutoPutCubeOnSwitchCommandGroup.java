@@ -6,7 +6,7 @@ import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
-import competition.subsystems.wrist.commands.SetWristAngleCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoPutCubeOnSwitchCommandGroup extends CommandGroup {
@@ -17,18 +17,17 @@ public class AutoPutCubeOnSwitchCommandGroup extends CommandGroup {
             ElevatorSubsystem elevator,
             GripperEjectCommand delivery,
             MoveElevatorToHeightAndStabilizeCommand elevatorSet,
-            SetWristAngleCommand wristSet) {
+            WristDownCommand wristDown) {
         elevatorSet.setTargetHeight(elevator.getTargetSwitchDropHeight());
         /**
          * 81.5 is the distance the robot with cube,
          * to the switch in inches
          */
         driveToDistance.setDeltaDistance(81.5);
-        wristSet.setGoalAngle(0);
         
         this.addParallel(elevatorSet, 1);
         this.addParallel(driveToDistance);
-        this.addSequential(wristSet, 1);
+        this.addSequential(wristDown, 1);
         this.addSequential(delivery);
     }
 

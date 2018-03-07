@@ -1,11 +1,11 @@
 package competition.subsystems.wrist.commands;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristDownCommand;
 
 public class WristDownCommandTest extends BaseCompetitionTest {
 
@@ -28,9 +28,11 @@ public class WristDownCommandTest extends BaseCompetitionTest {
 
     @Test
     public void checkDeployDown() {
-        assertEquals(0.0, wrist.motor.getMotorOutputPercent(), 0.001);
+        wrist.setWristUp(true);
+        
         command.initialize();
         command.execute();
-        assertEquals(-wrist.getMaximumAllowedPower(), wrist.motor.getMotorOutputPercent(), 0.001);
+        
+        assertFalse(wrist.getUp());
     }
 }

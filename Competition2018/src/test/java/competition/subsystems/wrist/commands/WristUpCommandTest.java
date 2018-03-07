@@ -1,6 +1,8 @@
 package competition.subsystems.wrist.commands;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
@@ -28,9 +30,11 @@ public class WristUpCommandTest extends BaseCompetitionTest {
 
     @Test
     public void checkDeployUp() {
-        assertEquals(0.0, wrist.motor.getMotorOutputPercent(), 0.001);
+        wrist.setWristUp(false);
+        
         command.initialize();
         command.execute();
-        assertEquals(wrist.getMaximumAllowedPower(), wrist.motor.getMotorOutputPercent(), 0.001);
+        
+        assertTrue(wrist.getUp());
     }
 }

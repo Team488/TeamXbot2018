@@ -6,7 +6,7 @@ import competition.subsystems.drive.commands.DriveForDistanceCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
-import competition.subsystems.wrist.commands.SetWristAngleCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
@@ -15,7 +15,7 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
     public AutoPutCubeOnScaleCommandGroup(
             DriveForDistanceCommand driveToDistance,
             ElevatorSubsystem elevator,
-            SetWristAngleCommand wristSet,
+            WristDownCommand wristDown,
             GripperEjectCommand delivery,
             SetElevatorTargetHeightCommand elevatorSet) {
         elevatorSet.setGoalHeight(elevator.getTargetScaleHighHeight());
@@ -24,11 +24,10 @@ public class AutoPutCubeOnScaleCommandGroup extends CommandGroup {
          * to the scale in inches
          */
         driveToDistance.setDeltaDistance(243);
-        wristSet.setGoalAngle(0);
         
         this.addParallel(elevatorSet, 1);
         this.addParallel(driveToDistance);
-        this.addSequential(wristSet, 1);
+        this.addSequential(wristDown, 1);
         this.addSequential(delivery); 
     }
 

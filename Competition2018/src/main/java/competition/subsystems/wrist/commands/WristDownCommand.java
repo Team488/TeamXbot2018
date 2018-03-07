@@ -24,8 +24,4 @@ public class WristDownCommand extends BaseCommand {
     public void execute() {
         wrist.goDown();
     }
-
-    public void end() {
-        wrist.stop();
-    }
 }

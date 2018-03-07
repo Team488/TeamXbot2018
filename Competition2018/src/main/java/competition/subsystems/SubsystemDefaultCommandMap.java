@@ -22,7 +22,7 @@ import competition.subsystems.lean.commands.LeanWithDpadCommand;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristMaintainerCommand;
+import competition.subsystems.wrist.commands.WristUpCommand;
 
 @Singleton
 public class SubsystemDefaultCommandMap {
@@ -60,9 +60,9 @@ public class SubsystemDefaultCommandMap {
 
     @Inject
     public void setupWristSubsystem(ElectricalContract2018 contract, WristSubsystem wristSubsystem,
-            WristMaintainerCommand maintain) {
+            WristUpCommand up) {
         if (contract.wristReady()) {
-            wristSubsystem.setDefaultCommand(maintain);
+            wristSubsystem.setDefaultCommand(up);
         }
     }
 

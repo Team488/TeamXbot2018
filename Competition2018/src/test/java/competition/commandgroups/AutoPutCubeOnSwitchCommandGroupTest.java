@@ -11,7 +11,6 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
-import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import edu.wpi.first.wpilibj.MockTimer;
 import xbot.common.command.XScheduler;
 import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
@@ -27,7 +26,6 @@ public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
     GripperIntakeSubsystem intake;
     MockTimer mockTimer;
     WristSubsystem wrist;
-    WristMaintainerCommand wristMaintainer;
     XScheduler xScheduler;
 
     @Override
@@ -42,14 +40,11 @@ public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
         this.pose = injector.getInstance(BasePoseSubsystem.class);
         this.wrist = injector.getInstance(WristSubsystem.class);
         this.xScheduler = injector.getInstance(XScheduler.class);
-        this.wristMaintainer = injector.getInstance(WristMaintainerCommand.class);
     }
 
     @Test
     public void unityTest() {
-        wrist.calibrateHere();
         elevator.calibrateHere();
-        wristMaintainer.start();
         elevatorMaintainer.start();
         command.start();
 
@@ -79,8 +74,6 @@ public class AutoPutCubeOnSwitchCommandGroupTest extends BaseCompetitionTest {
         xScheduler.run();
         xScheduler.run();
         xScheduler.run();
-
-        assertEquals(-0.3, wrist.motor.getMotorOutputPercent(), 0.001);
 
         mockTimer.advanceTimeInSecondsBy(2);
         xScheduler.run();

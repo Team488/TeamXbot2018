@@ -53,11 +53,8 @@ import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCo
 import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
-import competition.subsystems.wrist.commands.SetWristAngleCommand;
-import competition.subsystems.wrist.commands.WristCalibrateCommand;
-import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
-import competition.subsystems.wrist.commands.WristMaintainerCommand;
-import competition.subsystems.wrist.commands.WristUncalibrateCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
+import competition.subsystems.wrist.commands.WristUpCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
@@ -233,22 +230,9 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupWristCommands(OperatorInterface oi, WristCalibrateCommand calibrate,
-            WristUncalibrateCommand loseCalibration, WristMaintainerCommand maintain, SetWristAngleCommand low,
-            SetWristAngleCommand medium, SetWristAngleCommand high, WristDangerousOverrideCommand danger) {
-        oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
-        loseCalibration.includeOnSmartDashboard();
-        
-        oi.operatorGamepad.getifAvailable(5).whileHeld(danger);
-
-        low.setGoalAngle(0);
-        medium.setGoalAngle(60);
-        high.setGoalAngle(90);
-
-        oi.operatorGamepad.getPovIfAvailable(270).whenPressed(maintain);
-        oi.operatorGamepad.getPovIfAvailable(0).whenPressed(high);
-        oi.operatorGamepad.getPovIfAvailable(90).whenPressed(medium);
-        oi.operatorGamepad.getPovIfAvailable(180).whenPressed(low);
+    public void setupWristCommands(OperatorInterface oi, WristUpCommand up, WristDownCommand down) {
+        oi.operatorGamepad.getPovIfAvailable(0).whenPressed(up);
+        oi.operatorGamepad.getPovIfAvailable(180).whenPressed(down);
     }
 
     @Inject

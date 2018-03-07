@@ -7,7 +7,7 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
-import competition.subsystems.wrist.commands.SetWristAngleCommand;
+import competition.subsystems.wrist.commands.WristDownCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
@@ -27,7 +27,7 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
             ConfigurablePurePursuitCommand pursuit,
-            SetWristAngleCommand setWristDown,
+            WristDownCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
             ConfigurablePurePursuitCommand scootForward,
             GripperIntakeCommand eject) {
@@ -36,7 +36,6 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         scootForward.addPoint(new FieldPose(new XYPair(0, 2*12), new ContiguousHeading(90)));
         scootForward.setMode(PursuitMode.Relative);
         
-        setWristDown.setGoalAngle(0);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());
         wait.setDelaySupplier(() -> decider.getDelay());
         
