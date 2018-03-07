@@ -1,5 +1,7 @@
 package competition;
 
+import competition.ElectricalContract2018.DeviceInfo;
+
 public class Competition2018Robot extends Practice2018Robot {
     
     @Override
@@ -54,5 +56,15 @@ public class Competition2018Robot extends Practice2018Robot {
     @Override
     public double getWristMaximumAngle() {
         return 90;
+    }
+    
+    @Override
+    public DeviceInfo getElevatorUpperLimit() {
+        return new DeviceInfo(0, true);
+    }
+
+    @Override
+    public DeviceInfo getElevatorLowerLimit() {
+        return new DeviceInfo(1, true);
     }
 }
