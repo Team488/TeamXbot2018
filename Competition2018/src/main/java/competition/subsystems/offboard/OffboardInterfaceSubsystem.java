@@ -1,6 +1,7 @@
 package competition.subsystems.offboard;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -15,6 +16,7 @@ import competition.subsystems.offboard.data.TargetCubeInfo;
 import competition.subsystems.offboard.packets.TargetCubePacket;
 import competition.subsystems.pose.PoseSubsystem;
 import edu.wpi.first.wpilibj.Timer;
+import openrio.powerup.MatchData;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.logic.WatchdogTimer;
@@ -54,6 +56,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
                 DriveSubsystem driveSubsystem,
                 PoseSubsystem poseSubsystem,
                 XOffboardCommsInterface commsInterface) {
+
         log.info("Creating");
         
         this.driveSubsystem = driveSubsystem;
@@ -109,7 +112,8 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     }
     
     public void sendSetCurrentCommand(int commandId) {
-        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, OffboardFramePackingUtils.packSetCommandFrame(commandId));
+        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SET_CURRENT_COMMAND, 
+                OffboardFramePackingUtils.packSetCommandFrame(commandId));
     }
     
     public Collection<OffboardCommunicationPacket> getPacketQueue() {
@@ -118,6 +122,11 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
             queueContents.add(this.incomingPacketQueue.remove());
         }
         return queueContents;
+    }
+    
+    private void sendScoringPlacement() {
+        rawCommsInterface.sendRaw(OffboardCommsConstants.PACKET_TYPE_SCORING_PLACEMENT,
+                OffboardFramePackingUtils.packScoringPlacement());
     }
     
     public void clearPacketQueue() {
@@ -155,6 +164,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     @Override
     public void updatePeriodicData() {
         sendWheelOdomUpdate();
+        sendScoringPlacement();
 
         // TODO: Tune loop? Logging when hit limit?
         int numPacketsDropped = 0;
