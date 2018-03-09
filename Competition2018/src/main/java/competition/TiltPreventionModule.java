@@ -3,7 +3,6 @@ package competition;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import com.google.inject.Inject;
-import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.pose.PoseSubsystem;
 
 
@@ -24,12 +23,11 @@ public class TiltPreventionModule{
     public double preventTilt (double potentialPower) {
 
         if (pose.getRobotPitch() > pitchThrehold.get() && potentialPower < 0) {
-            return 0; // range 1 - 0
+            return 0; 
         }
 
         if(pose.getRobotPitch() < -pitchThrehold.get() && potentialPower > 0) {
-
-            return 0 ; // range 0 - -1
+            return 0 ; 
         }
 
         return potentialPower;
