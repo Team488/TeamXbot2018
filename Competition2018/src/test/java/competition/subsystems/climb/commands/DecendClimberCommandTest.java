@@ -1,6 +1,5 @@
 package competition.subsystems.climb.commands;
 
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;

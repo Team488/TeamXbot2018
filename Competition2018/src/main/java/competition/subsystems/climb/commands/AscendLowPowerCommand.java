@@ -2,7 +2,6 @@ package competition.subsystems.climb.commands;
 
 import com.google.inject.Inject;
 import competition.subsystems.climb.ClimbSubsystem;
-import competition.subsystems.zed_deploy.ZedDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
 public class AscendLowPowerCommand extends BaseCommand {
