@@ -28,6 +28,8 @@ public class TiltPreventionModuleTest extends BaseCompetitionTest{
     @Test
     public void verifyPositiveTiltAndNegativePower() {
         mockRobotIO.setGyroPitch(module.pitchThrehold.get()+5);
+        System.out.println(mockRobotIO);
+        System.out.println(pose.getRobotPitch());
         assertEquals(0, module.preventTilt(-0.5), 1e-5);
     }
 
