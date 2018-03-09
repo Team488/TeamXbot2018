@@ -6,7 +6,6 @@ import competition.subsystems.autonomous.AutonomousDecisionSystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
-import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;

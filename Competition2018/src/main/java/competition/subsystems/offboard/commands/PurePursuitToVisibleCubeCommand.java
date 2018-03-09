@@ -9,7 +9,6 @@ import com.google.inject.Inject;
 import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.data.TargetCubeInfo;
 import competition.subsystems.pose.PoseSubsystem;
-import competition.subsystems.zed_deploy.ZedDeploySubsystem;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
