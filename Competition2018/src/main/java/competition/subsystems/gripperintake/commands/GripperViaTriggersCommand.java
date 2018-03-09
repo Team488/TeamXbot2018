@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import xbot.common.command.BaseCommand;
-import xbot.common.math.MathUtils;
 
 public class GripperViaTriggersCommand extends BaseCommand {
 
@@ -23,26 +22,22 @@ public class GripperViaTriggersCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
     }
+    
+    private double getAdjustedPower(double input) {
+        if (input >= 0.1) {
+            double deadband = 0.5 / 0.9;
+            double jump = 0.4 / 0.9;
+            double adjustedPower = (deadband * input) + jump;
+            return adjustedPower;
+        } else {
+            return input;
+        }
+    }
 
     @Override
     public void execute() {
-        double intakePower;
-        double ejectPower;
-        double slope = 0.5 / 0.9;
-        double yInt = 0.4 / 0.9;
-        if (oi.operatorGamepad.getLeftTrigger() >= 0.1) {
-            intakePower = (slope * -oi.operatorGamepad.getLeftTrigger()) - yInt;
-        }
-        else {
-            intakePower = -oi.operatorGamepad.getLeftTrigger();
-        }
-        
-        if (oi.operatorGamepad.getRightTrigger() >= 0.1) {
-            ejectPower = (slope * oi.operatorGamepad.getRightTrigger()) + yInt;
-        }
-        else {
-            ejectPower = oi.operatorGamepad.getRightTrigger();
-        }
+        double intakePower = -getAdjustedPower(oi.operatorGamepad.getLeftTrigger());
+        double ejectPower = getAdjustedPower(oi.operatorGamepad.getRightTrigger());
         double totalPower = intakePower + ejectPower;
         intake.setPower(totalPower, totalPower);
     }
