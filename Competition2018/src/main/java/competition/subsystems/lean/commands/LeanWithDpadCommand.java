@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.lean.LeanSubsystem;
-import competition.subsystems.zed_deploy.ZedDeploySubsystem;
 import xbot.common.command.BaseCommand;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
