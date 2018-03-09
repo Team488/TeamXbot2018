@@ -23,7 +23,7 @@ public class ClimbSubsystemTest extends BaseCompetitionTest {
         climbSubsystem.ascend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
         
-        climbSubsystem.decend();
+        climbSubsystem.descend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
         climbSubsystem.ascend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
@@ -32,12 +32,12 @@ public class ClimbSubsystemTest extends BaseCompetitionTest {
     @Test
     public void testDecend() {
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() == 0);
-        climbSubsystem.decend();
+        climbSubsystem.descend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
         
         climbSubsystem.ascend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() > 0);
-        climbSubsystem.decend();
+        climbSubsystem.descend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
     }
 
@@ -48,7 +48,7 @@ public class ClimbSubsystemTest extends BaseCompetitionTest {
         climbSubsystem.stop();
         assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);
         
-        climbSubsystem.decend();
+        climbSubsystem.descend();
         assertTrue(climbSubsystem.motor.getMotorOutputPercent() < 0);
         climbSubsystem.stop();
         assertEquals(0, climbSubsystem.motor.getMotorOutputPercent(), 0.00001);

@@ -1,19 +1,20 @@
 package competition.subsystems.elevator.commands;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
+import competition.operator_interface.OperatorInterface;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import xbot.common.command.BaseCommand;
 
-@Singleton
-public class RiseCommand extends BaseCommand {
-
+public class ElevatorDangerousOverrideCommand extends BaseCommand {
+    
     ElevatorSubsystem elevator;
-
+    OperatorInterface oi;
+    
     @Inject
-    public RiseCommand(ElevatorSubsystem elevator) {
+    public ElevatorDangerousOverrideCommand(ElevatorSubsystem elevator, OperatorInterface oi) {
         this.elevator = elevator;
+        this.oi = oi;
         this.requires(elevator);
     }
 
@@ -24,6 +25,7 @@ public class RiseCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        elevator.rise();
+        elevator.insanelyDangerousSetPower(oi.operatorGamepad.getRightStickY());
     }
+
 }

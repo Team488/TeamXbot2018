@@ -9,14 +9,14 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 
 public class RiseElevatorCommandTest extends BaseCompetitionTest {
 
-    RiseCommand command;
+    RiseElevatorCommand command;
     ElevatorSubsystem elevator;
 
     @Override
     public void setUp() {
         super.setUp();
 
-        command = injector.getInstance(RiseCommand.class);
+        command = injector.getInstance(RiseElevatorCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
     }
 

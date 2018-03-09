@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import competition.subsystems.lean.LeanSubsystem;
-import competition.subsystems.lean.commands.LeanWithJoystickCommand;
+import competition.subsystems.lean.commands.LeanWithDpadCommand;
 
 public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
 
-    LeanWithJoystickCommand command;
+    LeanWithDpadCommand command;
     LeanSubsystem lean;
 
     @Override
@@ -16,7 +16,7 @@ public class LeanWithJoystickCommandTest extends BaseCompetitionTest {
         super.setUp();
 
         lean = injector.getInstance(LeanSubsystem.class);
-        command = injector.getInstance(LeanWithJoystickCommand.class);
+        command = injector.getInstance(LeanWithDpadCommand.class);
     }
 
     @Test

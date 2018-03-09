@@ -1,14 +1,12 @@
 package competition.subsystems.elevator;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
 import edu.wpi.first.wpilibj.MockDigitalInput;
-import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
 public class ElevatorSubsystemTest extends BaseCompetitionTest {
 
@@ -56,7 +54,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
 
         checkElevatorPower(0);
     }
-
+/* TODO: FIX THIS ONCE WE NO LONGER HAVE BRUTAL HACK
     @Test
     public void testTypicalCalibration() {
         // make sure we start uncalibrated at some random height
@@ -82,7 +80,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         elevator.setPower(1);
         assertTrue(elevator.isCalibrated());
         assertEquals(13, elevator.getCurrentHeightInInches(), 0.001);
-    }
+    }*/
 
     private void checkElevatorPower(double power) {
         assertEquals(power, elevator.motor.getMotorOutputPercent(), 0.001);

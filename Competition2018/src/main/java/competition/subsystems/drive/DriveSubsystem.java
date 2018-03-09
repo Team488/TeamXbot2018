@@ -44,6 +44,9 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     private final PIDManager positionalPid;
     private final PIDManager rotateToHeadingPid;
     private final PIDManager rotateDecayPid;
+    
+    private final PIDManager rotationalVelocityPid;
+    private final PIDManager translationalVelocityPid;
 
     private double leftAccum;
     private double rightAccum;
@@ -66,9 +69,12 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
             PIDFactory pf) {
         log.info("Creating DriveSubsystem");
         
-        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.75, -0.75, 3, 1, 0.5);
         rotateToHeadingPid = pf.createPIDManager(getPrefix()+"DriveHeading", 4, 0, 0);
         rotateDecayPid = pf.createPIDManager(getPrefix()+"DriveDecay", 0, 0, 1);
+        
+        rotationalVelocityPid = pf.createPIDManager(getPrefix() + "RotationalVelocity", 0.001, 0, 0);
+        translationalVelocityPid = pf.createPIDManager(getPrefix() + "TranslationalVelocity", 0.01, 0, 0);
 
         voltageRampNormalProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (normal)", 0.15);
         voltageRampLowBatProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (low battery)", 0.5);
@@ -81,9 +87,9 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
         final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
         leftTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"leftDriveTicksPer5Feet",
-                defaultDriveTicksPer5Feet);
+                100281);
         rightTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"rightDriveTicksPer5Feet",
-                defaultDriveTicksPer5Feet);
+                100281);
 
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
@@ -99,8 +105,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
-        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
-        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
+        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
 
         this.setVoltageRamp(voltageRampNormalProp.get());
         this.setCurrentLimits(0, false);
@@ -225,19 +231,24 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         super.updatePeriodicData();
     }
 
-    @Override
     public PIDManager getPositionalPid() {
         return positionalPid;
     }
 
-    @Override
     public PIDManager getRotateToHeadingPid() {
         return rotateToHeadingPid;
     }
 
-    @Override
     public PIDManager getRotateDecayPid() {
         return rotateDecayPid;
+    }
+    
+    public PIDManager getRotationalVelocityPid() {
+        return rotationalVelocityPid;
+    }
+    
+    public PIDManager getTranslationalVelocityPid() {
+        return translationalVelocityPid;
     }
     
     public double getLeftTicksPerFiveFt() {
@@ -246,6 +257,12 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     
     public double getRightTicksPerFiveFt() {
         return rightTicksPerFiveFeet.get();
+    }
+    
+    public double getVelocityInInchesPerSecond() {
+        double leftSpeed = ticksToInches(Side.Left, leftMaster.getSelectedSensorVelocity(0)) * 10;
+        double rightSpeed = ticksToInches(Side.Right, rightMaster.getSelectedSensorVelocity(0)) * 10;
+        return (leftSpeed + rightSpeed) / 2;
     }
     
     private void setCurrentLimitsForLowBatMode(boolean isLowBatMode) {

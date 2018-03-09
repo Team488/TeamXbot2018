@@ -17,6 +17,16 @@ public class Competition2018Robot extends Practice2018Robot {
     }
     
     @Override
+    public DeviceInfo getPawlSolenoidA() {
+        return new DeviceInfo(1, true);
+    }
+    
+    @Override
+    public DeviceInfo getPawlSolenoidB() {
+        return new DeviceInfo(2, true);
+    }
+    
+    @Override
     public boolean climbDeployReady() {
         return true;
     }
@@ -29,5 +39,29 @@ public class Competition2018Robot extends Practice2018Robot {
     @Override
     public boolean climbReady() {
         return true;
+    }
+    
+    @Override
+    public boolean isWristLimitsReady() {
+        return false;
+    }
+    
+    @Override
+    public double getWristMaximumAngle() {
+        return 90;
+    }
+    
+    @Override
+    public DeviceInfo getElevatorUpperLimit() {
+        return new DeviceInfo(0, true);
+    }
+
+    @Override
+    public DeviceInfo getElevatorLowerLimit() {
+        return new DeviceInfo(1, true);
+    }
+    @Override
+    public DeviceInfo getRightCollectorMaster() {
+        return new DeviceInfo(31, true);
     }
 }

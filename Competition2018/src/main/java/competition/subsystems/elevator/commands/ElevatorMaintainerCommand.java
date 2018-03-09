@@ -98,9 +98,9 @@ public class ElevatorMaintainerCommand extends BaseCommand {
                     return;
                 } else {
                     double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
-                    double powerDelta = elevator.getVelocityPid().calculate(positionOutput*16, elevator.getVelocityInchesPerSecond());
+                    double powerDelta = elevator.getVelocityPid().calculate(positionOutput*30, elevator.getVelocityInchesPerSecond());
                     throttle += powerDelta;
-                    throttle = MathUtils.constrainDouble(throttle, -0.2, 1);
+                    throttle = MathUtils.constrainDouble(throttle, -.8, 1);
                     power = throttle;
                 }
                 break;
