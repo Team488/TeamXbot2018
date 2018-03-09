@@ -59,17 +59,10 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
     public void afterPowerSpikeLeftTrigger() {
         for (double i = -10; i >= -100; i--) {
             double axis = (double) i / 100;
-            double expected = axis - 0.4;
             ((MockFTCGamepad) oi.operatorGamepad).setRawAxis(2, Math.abs(axis));
-            
-            System.out.println("Input: " + ((MockFTCGamepad)oi.operatorGamepad).getRawAxis(2));
-            System.out.println("Output: " + gripper.leftMotor.getMotorOutputPercent());
+            double expected = -((0.5 / 0.9 * ((MockFTCGamepad)oi.operatorGamepad).getRawAxis(2)) + 0.4 / 0.9);
             
             command.execute();
-            
-            if (expected < -1) { 
-                expected = -1;
-            }
             
             assertEquals(expected, gripper.leftMotor.getMotorOutputPercent(), 0.001);
             assertEquals(expected, gripper.rightMotor.getMotorOutputPercent(), 0.001);
@@ -80,14 +73,10 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
     public void afterPowerSpikeRightTrigger() {
         for (double i = 10; i <= 100; i++) {
             double axis = (double) i / 100;
-            double expected = axis + 0.4;
             ((MockFTCGamepad) oi.operatorGamepad).setRawAxis(3, axis);
+            double expected = ((0.5/0.9) * ((MockFTCGamepad) oi.operatorGamepad).getRawAxis(3)) + 0.4/0.9;
             
             command.execute();
-            
-            if (expected > 1) {
-                expected = 1;
-            }
             
             assertEquals(expected, gripper.leftMotor.getMotorOutputPercent(), 0.001);
             assertEquals(expected, gripper.rightMotor.getMotorOutputPercent(), 0.001);

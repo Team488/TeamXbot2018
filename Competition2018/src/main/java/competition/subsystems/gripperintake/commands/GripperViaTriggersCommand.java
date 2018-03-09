@@ -28,23 +28,17 @@ public class GripperViaTriggersCommand extends BaseCommand {
     public void execute() {
         double intakePower;
         double ejectPower;
-        //double intakePower = MathUtils.squareAndRetainSign(-oi.operatorGamepad.getLeftTrigger());
-        //double ejectPower = MathUtils.squareAndRetainSign(oi.operatorGamepad.getRightTrigger());
+        double slope = 0.5 / 0.9;
+        double yInt = 0.4 / 0.9;
         if (oi.operatorGamepad.getLeftTrigger() >= 0.1) {
-            intakePower = (-oi.operatorGamepad.getLeftTrigger()) - 0.4;
-            if (intakePower < -1) {
-                intakePower = -1;
-            }
+            intakePower = (slope * -oi.operatorGamepad.getLeftTrigger()) - yInt;
         }
         else {
             intakePower = -oi.operatorGamepad.getLeftTrigger();
         }
         
         if (oi.operatorGamepad.getRightTrigger() >= 0.1) {
-            ejectPower = (oi.operatorGamepad.getRightTrigger()) + 0.4;
-            if (ejectPower > 1) {
-                ejectPower = 1;
-            }
+            ejectPower = (slope * oi.operatorGamepad.getRightTrigger()) + yInt;
         }
         else {
             ejectPower = oi.operatorGamepad.getRightTrigger();
