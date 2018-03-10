@@ -1,21 +1,30 @@
 package competition.subsystems.gripperintake.commands;
 
+import com.google.common.eventbus.DeadEvent;
 import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import xbot.common.command.BaseCommand;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.XPropertyManager;
 
 public class GripperViaTriggersCommand extends BaseCommand {
 
     GripperIntakeSubsystem intake;
     OperatorInterface oi;
     
+    final DoubleProperty linearDeadbandProp;
+    final DoubleProperty powerJumpProp;
+    
     @Inject
-    public GripperViaTriggersCommand(GripperIntakeSubsystem intake, OperatorInterface oi) {
+    public GripperViaTriggersCommand(GripperIntakeSubsystem intake, OperatorInterface oi, XPropertyManager propMan) {
         this.intake = intake;
         this.oi = oi;
         this.requires(intake);
+        
+        linearDeadbandProp = propMan.createPersistentProperty(getPrefix() + "Linear Deadband", 0.1);
+        powerJumpProp = propMan.createPersistentProperty(getPrefix() + "Power Jump", 0.4);
     }
 
     @Override
@@ -23,12 +32,16 @@ public class GripperViaTriggersCommand extends BaseCommand {
         log.info("Initializing");
     }
     
-    private double getAdjustedPower(double input) {
-        if (input >= 0.1) {
-            double deadband = 0.5 / 0.9;
-            double jump = 0.4 / 0.9;
-            double adjustedPower = (deadband * input) + jump;
-            return adjustedPower;
+    public double getAdjustedPower(double input) {
+        double range = 1 - linearDeadbandProp.get();
+        double change = 1 - powerJumpProp.get();
+        double slope = 1;
+        if (range != 0) {
+            slope = change/range;
+        }
+        
+        if (input >= linearDeadbandProp.get()) {
+            return (input-linearDeadbandProp.get()) * slope + powerJumpProp.get();
         } else {
             return input;
         }
