@@ -1,20 +1,22 @@
-package competition.subsystems.climberdeploy.commands;
+package competition.subsystems.climb.commands;
 
 import com.google.inject.Inject;
-
+import competition.subsystems.climb.ClimbSubsystem;
 import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
-public class RetractClimberArmCommand extends BaseCommand {
+public class DescendClimberCommand extends BaseCommand {
 
+    ClimbSubsystem climb;
     ClimberDeploySubsystem deploy;
     //ZedDeploySubsystem zedDeploy;
 
     @Inject
-    public RetractClimberArmCommand(ClimberDeploySubsystem deploy) { //ZedDeploySubsystem zedDeploy) {
+    public DescendClimberCommand(ClimbSubsystem climb, ClimberDeploySubsystem deploy) {//, ZedDeploySubsystem zedDeploy) {
+        this.climb = climb;
         this.deploy = deploy;
         //this.zedDeploy = zedDeploy;
-        this.requires(deploy);
+        this.requires(climb);
         //this.requires(zedDeploy);
     }
 
@@ -26,15 +28,7 @@ public class RetractClimberArmCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        deploy.retractClimberArm();
+        climb.descend();
     }
 
-    @Override
-    public boolean isFinished() {
-        return deploy.hitBarHeight();
-    }
-
-    public void end() {
-        deploy.stopClimberArm();
-    }
 }

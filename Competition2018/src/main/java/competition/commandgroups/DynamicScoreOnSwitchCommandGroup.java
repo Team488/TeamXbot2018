@@ -24,6 +24,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
             ConfigurablePurePursuitCommand pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForSwitch,
+            // This is reversed, but I don't want to mess with the rest of the OI
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
@@ -33,7 +34,6 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
         wait.setDelaySupplier(() -> decider.getDelay());
         
         this.addSequential(wait);
-        // TODO: Uncomment these once the elevator/wrist is trustworthy.
         // Get ready to score
         this.addParallel(setWristDown, 1);
         this.addParallel(setElevatorForSwitch, 1);

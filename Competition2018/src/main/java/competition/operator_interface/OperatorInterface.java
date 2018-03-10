@@ -21,8 +21,8 @@ public class OperatorInterface {
 
     public final AnalogHIDDescription gripperIntake;
     public final AnalogHIDDescription gripperEject;
-    public final AnalogHIDDescription raiseClimber;
-    public final AnalogHIDDescription lowerClimber;
+    public final AnalogHIDDescription driverRightTrigger;
+    public final AnalogHIDDescription driverLeftTrigger;
 
     @Inject
     public OperatorInterface(CommonLibFactory factory, RobotAssertionManager assertionManager) {
@@ -45,10 +45,10 @@ public class OperatorInterface {
         gripperEject = new AnalogHIDDescription(2, .75, 1.0);
         operatorGamepad.addAnalogButton(gripperEject);
 
-        raiseClimber = new AnalogHIDDescription(3, .75, 1.0);
-        driverGamepad.addAnalogButton(raiseClimber);
+        driverRightTrigger = new AnalogHIDDescription(3, .75, 1.0);
+        driverGamepad.addAnalogButton(driverRightTrigger);
 
-        lowerClimber = new AnalogHIDDescription(2, .75, 1.0);
-        driverGamepad.addAnalogButton(lowerClimber);
+        driverLeftTrigger = new AnalogHIDDescription(2, .75, 1.0);
+        driverGamepad.addAnalogButton(driverLeftTrigger);
     }
 }

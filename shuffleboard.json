@@ -1,5 +1,5 @@
 {
-  "dividerPosition": 0.3141592920353982,
+  "dividerPosition": 0.3293299620733249,
   "tabPane": [
     {
       "title": "DriveToCube",
@@ -407,6 +407,39 @@
               "colorWhenTrue": "#7CFC00FF",
               "colorWhenFalse": "#8B0000FF"
             }
+          },
+          "1,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Pickup height",
+              "_title": "SmartDashboard/ElevatorSubsystem/Pickup height"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Switch drop height",
+              "_title": "SmartDashboard/ElevatorSubsystem/Switch drop height"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ElevatorSubsystem/Pickup height for exchange zone",
+              "_title": "SmartDashboard/ElevatorSubsystem/Pickup height for exchange zone"
+            }
           }
         }
       }
@@ -509,6 +542,32 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/WristSubsystem/Ticks per degree",
               "_title": "/SmartDashboard/WristSubsystem/Ticks per degree"
+            }
+          },
+          "5,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Upper Limit",
+              "_title": "/SmartDashboard/WristSubsystem/Upper Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/WristSubsystem/Lower Limit",
+              "_title": "/SmartDashboard/WristSubsystem/Lower Limit",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
             }
           }
         }
@@ -736,6 +795,28 @@
               "_source0": "network_table:///SmartDashboard/ClimbSubsystem/DescendSpeed",
               "_title": "SmartDashboard/ClimbSubsystem/DescendSpeed"
             }
+          },
+          "5,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/ReleasePawlCommand",
+              "_title": "SmartDashboard/ReleasePawlCommand"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/EngagePawlCommand",
+              "_title": "SmartDashboard/EngagePawlCommand"
+            }
           }
         }
       }
@@ -761,20 +842,9 @@
               "_title": "SmartDashboard/AutonomousCommandSelector/Current autonomous command name"
             }
           },
-          "0,1": {
+          "0,2": {
             "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Switch",
-              "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Robot On Right",
-              "_title": "SmartDashboard/AutonomousDecisionSystem/Robot On Right"
-            }
-          },
-          "1,1": {
-            "size": [
-              2,
+              3,
               1
             ],
             "content": {
@@ -782,8 +852,112 @@
               "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto",
               "_title": "SmartDashboard/AutonomousDecisionSystem/Seconds to Delay Auto"
             }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Extend ZED",
+              "_title": "/SmartDashboard/Extend ZED"
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "_title": "/SmartDashboard/OffboardInterfaceSubsystem/Target Cube/Has target?",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "0,1": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/AutonomousDecisionSystem/Robot Location",
+              "_title": "SmartDashboard/AutonomousDecisionSystem/Robot Location"
+            }
+          },
+          "1,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ZedDeploySubsystem/Extended position",
+              "_title": "SmartDashboard/ZedDeploySubsystem/Extended position"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/ZedDeploySubsystem/Retracted position",
+              "_title": "SmartDashboard/ZedDeploySubsystem/Retracted position"
+            }
+          },
+          "3,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/ZedDeploySubsystem/Force disable",
+              "_title": "SmartDashboard/ZedDeploySubsystem/Force disable",
+              "colorWhenTrue": "#7CFC00FF",
+              "colorWhenFalse": "#8B0000FF"
+            }
+          },
+          "1,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Retract ZED",
+              "_title": "SmartDashboard/Retract ZED"
+            }
+          },
+          "2,4": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/Extend ZED",
+              "_title": "SmartDashboard/Extend ZED"
+            }
           }
         }
+      }
+    },
+    {
+      "title": "Tab 8",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {}
       }
     }
   ]

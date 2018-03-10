@@ -8,7 +8,6 @@ import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
-import xbot.common.subsystems.drive.control_logic.HeadingAssistModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
 public class FieldOrientedTankDriveCommand extends BaseCommand {

@@ -13,18 +13,22 @@ public class LeanWithDpadCommand extends BaseCommand {
     final LeanSubsystem leanSubsystem;
     final OperatorInterface oi;
     final DoubleProperty leanPowerProp;
+    //private final ZedDeploySubsystem zedDeploy;
 
     @Inject
-    public LeanWithDpadCommand(OperatorInterface oi, LeanSubsystem leanSubsystem, XPropertyManager propMan) {
+    public LeanWithDpadCommand(OperatorInterface oi, LeanSubsystem leanSubsystem,/* ZedDeploySubsystem zedDeploy,*/ XPropertyManager propMan) {
         this.oi = oi;
         this.leanSubsystem = leanSubsystem;
+        //this.zedDeploy = zedDeploy;
         this.requires(this.leanSubsystem);
+        //this.requires(zedDeploy);
         leanPowerProp = propMan.createPersistentProperty(getPrefix() + "Power", 0.25);
     }
 
     @Override
     public void initialize() {
         log.info("Initializing");
+        //zedDeploy.setIsExtended(false);
     }
 
     @Override
