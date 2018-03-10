@@ -161,8 +161,9 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     public List<FieldPose> createPathToDistantScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 14 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-16 * 12, 17.66 * 12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-16 * 12, 17.66 * 12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16 * 12, 18.5 * 12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16 * 12, 18.5 * 12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-18 * 12, 24 * 12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(-20 * 12, 18.27 * 12), new ContiguousHeading(70)));
         return points;
     }
@@ -186,14 +187,14 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     private List<FieldPose> createPathToLeftSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-4 * 12, 9 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-4.5 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
     }
 
     private List<FieldPose> createPathToRightSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(1.7 * 12, 9 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(4.4 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
     }
 
