@@ -1,7 +1,5 @@
 package competition.operator_interface;
 
-import java.util.Arrays;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -25,6 +23,7 @@ import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.FieldOrientedTankDriveCommand;
+import competition.subsystems.drive.commands.VelocityArcadeDriveCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
 import competition.subsystems.elevator.commands.CalibrateElevatorTicksPerInchCommand;
@@ -41,14 +40,10 @@ import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
 import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
-import competition.subsystems.offboard.OffboardInterfaceSubsystem;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
 import competition.subsystems.offboard.commands.IdentifyAndPurePursuitToVisibleCubeCommand;
 import competition.subsystems.offboard.commands.IdentifyTargetCubeCommand.TimeoutPreset;
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
-import competition.subsystems.offboard.commands.PurePursuitToVisibleCubeCommand;
-import competition.subsystems.offboard.data.TargetCubeInfo;
-import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
 import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCommand;
 import competition.subsystems.shift.commands.ShiftHighCommand;
@@ -59,12 +54,7 @@ import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
-import xbot.common.math.ContiguousHeading;
-import xbot.common.math.FieldPose;
-import xbot.common.math.XYPair;
 import xbot.common.properties.ConfigurePropertiesCommand;
-import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -116,7 +106,8 @@ public class OperatorCommandMap {
     @Inject
     public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
             SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
-            FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade) {
+            FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade,
+            VelocityArcadeDriveCommand velocity) {
 
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
@@ -124,7 +115,7 @@ public class OperatorCommandMap {
 
         dynamicScore.includeOnSmartDashboard();
 
-        oi.driverGamepad.getPovIfAvailable(0).whenPressed(fieldTank);
+        oi.driverGamepad.getPovIfAvailable(0).whenPressed(velocity);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
     }
 

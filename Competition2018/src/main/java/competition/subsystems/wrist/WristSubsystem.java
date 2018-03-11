@@ -55,6 +55,10 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
 
     private final ElevatorSubsystem elevator;
 
+    public enum WristPosition {
+        Down, Middle, Up
+    }
+    
     @Inject
     WristSubsystem(CommonLibFactory clf, ElevatorSubsystem elevator, XPropertyManager propMan,
             ElectricalContract2018 contract) {
@@ -95,6 +99,16 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         targetAngle.set(angle);
     }
 
+    public void setTargetAngle(WristPosition position) {
+        if (position == WristPosition.Down) {
+            setTargetAngle(lowerLimit);
+        } else if (position == WristPosition.Up) {
+            setTargetAngle(upperLimit);
+        } else {
+            log.error("Wrist Position: " + position + " is an invalid postion");
+        }
+    }
+    
     public double getTargetAngle() {
         return targetAngle.get();
     }

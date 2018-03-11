@@ -32,11 +32,11 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
-        scootForward.addPoint(new FieldPose(new XYPair(0, 2), new ContiguousHeading(90)));
+        scootForward.addPoint(new FieldPose(new XYPair(0, 2*12), new ContiguousHeading(90)));
         scootForward.setMode(PursuitMode.Relative);
         
         setWristDown.setGoalAngle(0);
-        setElevatorForScale.setGoalHeight(elevator.getTargetScaleHighHeight());
+        setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());
         wait.setDelaySupplier(() -> decider.getDelay());
         
         this.addSequential(wait);
@@ -46,7 +46,8 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         
         // Now we've stopped, so put the wrist down and the elevator up
         this.addParallel(setWristDown, 1);
-        this.addSequential(setElevatorForScale, 2.5);
+        setElevatorForScale.changeTimeout(3.5);
+        this.addSequential(setElevatorForScale);
         
         // scoot forward a little
         this.addSequential(scootForward);
