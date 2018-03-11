@@ -43,7 +43,7 @@ public class WristMaintainerCommandTest extends BaseCompetitionTest {
         command.execute();
         assertEquals(0, wrist.motor.getMotorOutputPercent(), 0.001);
     }
-    
+    /*
     @Test
     public void uncalibrated() {
         wrist.setTargetAngle(45);
@@ -61,5 +61,5 @@ public class WristMaintainerCommandTest extends BaseCompetitionTest {
         ((MockFTCGamepad)oi.operatorGamepad).setLeftStick(new XYPair(0, 1));
         command.execute();
         assertEquals(wrist.getUncalibratedPowerFactor(), wrist.motor.getMotorOutputPercent(), 0.001);
-    }
+    }*/
 }
