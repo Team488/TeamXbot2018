@@ -22,11 +22,11 @@ public class TiltPreventionModule{
 
     public double preventTilt (double potentialPower) {
 
-        if (pose.getRobotPitch() > pitchThrehold.get() && potentialPower < 0) {
+        if (pose.getRobotPitch() > pitchThrehold.get() && potentialPower > 0) {
             return 0; 
         }
 
-        if(pose.getRobotPitch() < -pitchThrehold.get() && potentialPower > 0) {
+        if(pose.getRobotPitch() < -pitchThrehold.get() && potentialPower < 0) {
             return 0 ; 
         }
 
