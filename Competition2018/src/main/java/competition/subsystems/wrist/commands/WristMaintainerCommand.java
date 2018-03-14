@@ -51,7 +51,7 @@ public class WristMaintainerCommand extends BaseCommand {
         HumanVsMachineMode humanVsMachineMode = HumanVsMachineMode.HumanControl;
         double humanInput = oi.operatorGamepad.getLeftVector().y;
         double power = 0;
-
+        /*
         CalibrationMode calibrationMode = calibrationDecider.decideMode(wrist.getIsCalibrated());
 
         if (calibrationMode == CalibrationMode.GaveUp) {
@@ -66,7 +66,9 @@ public class WristMaintainerCommand extends BaseCommand {
         } else {
             // We're calibrated, so let the HvM figure out the best course of action.
             humanVsMachineMode = humanVsMachineDecider.getRecommendedMode(humanInput);
-        }
+        } */
+        
+        humanVsMachineMode = humanVsMachineDecider.getRecommendedMode(humanInput);
 
         switch (humanVsMachineMode) {
         case HumanControl:
