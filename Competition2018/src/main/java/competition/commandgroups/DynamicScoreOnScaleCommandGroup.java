@@ -46,7 +46,7 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         
         // Now we've stopped, so put the wrist down and the elevator up
         this.addParallel(setWristDown, 1);
-        setElevatorForScale.changeTimeout(6);
+        setElevatorForScale.changeTimeout(3.5);
         this.addSequential(setElevatorForScale);
         
         // scoot forward a little

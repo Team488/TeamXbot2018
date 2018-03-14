@@ -153,7 +153,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
 
     public List<FieldPose> createPathToNearbyScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
-        points.add(new FieldPose(new XYPair(0 * 12, 11 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(0 * 12, 15 * 12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(-1 * 12, 20.27 * 12), new ContiguousHeading(120)));
         return points;
     }
@@ -161,10 +161,10 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     public List<FieldPose> createPathToDistantScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 14 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-16 * 12, 18.5 * 12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-16 * 12, 18.5 * 12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16 * 12, 19 * 12), new ContiguousHeading(180)));
+        points.add(new FieldPose(new XYPair(-16 * 12, 19 * 12), new ContiguousHeading(180)));
         points.add(new FieldPose(new XYPair(-18 * 12, 24 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-20 * 12, 20.27 * 12), new ContiguousHeading(70)));
+        points.add(new FieldPose(new XYPair(-19 * 12, 20.27 * 12), new ContiguousHeading(70)));
         return points;
     }
 
@@ -187,14 +187,14 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     private List<FieldPose> createPathToLeftSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-4.5 * 12, 9 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-6.5 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
     }
 
     private List<FieldPose> createPathToRightSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(4.4 * 12, 9 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(3.4 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
     }
 
