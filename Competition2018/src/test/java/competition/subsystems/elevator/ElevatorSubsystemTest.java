@@ -52,7 +52,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         ((MockDigitalInput) elevator.upperLimitSwitch).setValue(true);
         elevator.setPower(1);
 
-        checkElevatorPower(0);
+        checkElevatorPower(0.1);
     }
 /* TODO: FIX THIS ONCE WE NO LONGER HAVE BRUTAL HACK
     @Test
