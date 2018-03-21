@@ -1,6 +1,5 @@
 package competition.subsystems.gripperintake.commands;
 
-import com.google.common.eventbus.DeadEvent;
 import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
