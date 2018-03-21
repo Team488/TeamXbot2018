@@ -27,24 +27,6 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
     }
     
     @Test
-    public void verifyTriggers() {
-        command.initialize();
-        for(int i = 0; i < 101; i++) {
-            double power = (double)i / 100;
-            ((MockFTCGamepad)oi.operatorGamepad).setRawAxis(2, power);
-            command.execute();
-            assertEquals(-power*power, intake.rightMotor.getMotorOutputPercent(), 0.001);
-            assertEquals(-power*power, intake.leftMotor.getMotorOutputPercent(), 0.001);
-        }
-        ((MockFTCGamepad)oi.operatorGamepad).setRawAxis(2, 0);
-        for(int i = 0; i < 101; i++) {
-            double power = (double)i / 100;
-            ((MockFTCGamepad)oi.operatorGamepad).setRawAxis(3, power);
-            command.execute();
-            assertEquals(power*power, intake.rightMotor.getMotorOutputPercent(), 0.001);
-            assertEquals(power*power, intake.leftMotor.getMotorOutputPercent(), 0.001);
-        }
-    }
     public void beforePowerSpikeLeftTrigger() {
         command.initialize();
         for (double i = 0; i < 10; i++) {
