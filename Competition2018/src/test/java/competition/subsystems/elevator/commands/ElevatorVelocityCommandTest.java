@@ -12,14 +12,14 @@ import xbot.common.controls.actuators.mock_adapters.MockCANTalon;
 
 
 public class ElevatorVelocityCommandTest extends BaseCompetitionTest{
-    
+
     ElevatorVelocityCommand command;
     ElevatorSubsystem elevator;
     MockCANTalon talon;
     double oldThrottle;
     double delta1;
     double delta2;
-    
+
     @Override
     public void setUp() {
         super.setUp();
@@ -32,7 +32,7 @@ public class ElevatorVelocityCommandTest extends BaseCompetitionTest{
         command.initialize();
         command.execute();
     }
-    
+
     @Test
     public void testVelocity() {
         command.initialize();
@@ -41,7 +41,7 @@ public class ElevatorVelocityCommandTest extends BaseCompetitionTest{
         command.execute();
         System.out.println(command.throttle);
         System.out.println(elevator.getCurrentHeightInInches());
-        
+
         oldThrottle = command.throttle;
         command.execute();
         System.out.println(command.throttle);
@@ -49,7 +49,7 @@ public class ElevatorVelocityCommandTest extends BaseCompetitionTest{
         assertTrue(oldThrottle - command.throttle < 0);
         assertTrue(-0.2 <= command.throttle && command.throttle <= 1);
         delta1 = command.throttle - oldThrottle;
-        
+
         oldThrottle = command.throttle;
         command.execute();
         System.out.println(command.throttle);
@@ -58,7 +58,7 @@ public class ElevatorVelocityCommandTest extends BaseCompetitionTest{
         assertTrue(-0.2 <= command.throttle && command.throttle <= 1);
         delta2 = command.throttle - oldThrottle;
         //assertTrue(delta1 > delta2);
-        
+
     }
-    
+
 }
