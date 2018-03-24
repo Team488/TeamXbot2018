@@ -59,7 +59,7 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.rightMaster.getMotorOutputPercent(), 0.001);
         assertEquals(drive.getPositionalPid().getMaxOutput(), drive.leftMaster.getMotorOutputPercent(), 0.001);
-        assertTrue("Elevator should be rising", elevator.motor.getMotorOutputPercent() > 0);
+        assertTrue("Elevator should be rising", elevator.master.getMotorOutputPercent() > 0);
 
         ((MockCANTalon) drive.rightMaster).setPosition((int) (243 * (drive.getRightTicksPerFiveFt() / 60)));
         ((MockCANTalon) drive.leftMaster).setPosition((int) (243 * (drive.getLeftTicksPerFiveFt() / 60)));
@@ -68,7 +68,7 @@ public class AutoPutCubeOnScaleCommandGroupTest extends BaseCompetitionTest {
         /**
          * 100 is the conversion for ticks to inches, and 300 the ticks for 3 ft
          */
-        ((MockCANTalon) elevator.motor).setPosition((int) (elevator.getTargetScaleHighHeight() * 100) - 300);
+        ((MockCANTalon) elevator.master).setPosition((int) (elevator.getTargetScaleHighHeight() * 100) - 300);
         mockTimer.advanceTimeInSecondsBy(1000);
 
         xScheduler.run();

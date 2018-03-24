@@ -35,6 +35,8 @@ public abstract class ElectricalContract2018 {
 
     public abstract DeviceInfo getElevatorEncoder();
     
+    public abstract DeviceInfo getElevatorFollower();
+    
     // Elevator sensor
     public abstract boolean elevatorLowerLimitReady();
 
