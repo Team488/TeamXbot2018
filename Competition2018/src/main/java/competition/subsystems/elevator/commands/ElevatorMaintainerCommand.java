@@ -26,15 +26,16 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     double giveUpCalibratingTime;
     final BooleanProperty motionMagicEnabled;
     final DoubleProperty elevatorCalibrationAttemptTimeMS;
+    final DoubleProperty velocityPIDMaxPower;
     double throttle;
     HumanVsMachineDecider decider;
 
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf, XPropertyManager propMan,
             OperatorInterface oi, CommonLibFactory clf) {
-        elevatorCalibrationAttemptTimeMS = propMan
-                .createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
+        elevatorCalibrationAttemptTimeMS = propMan.createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
         motionMagicEnabled = propMan.createPersistentProperty(getPrefix() + "Motion Magic Enabled", false);
+        velocityPIDMaxPower = propMan.createPersistentProperty(getPrefix() + "velocity PID Max Power", 30);
         this.elevator = elevator;
         this.requires(elevator);
         this.oi = oi;
@@ -98,7 +99,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
                     return;
                 } else {
                     double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
-                    double powerDelta = elevator.getVelocityPid().calculate(positionOutput*30, elevator.getVelocityInchesPerSecond());
+                    double powerDelta = elevator.getVelocityPid().calculate(positionOutput * velocityPIDMaxPower.get(), elevator.getVelocityInchesPerSecond());
                     throttle += powerDelta;
                     throttle = MathUtils.constrainDouble(throttle, -.8, 1);
                     power = throttle;

@@ -53,17 +53,14 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     int upperLimit;
     boolean calibrated = false;
 
-    private final ElevatorSubsystem elevator;
-
     public enum WristPosition {
         Down, Middle, Up
     }
     
     @Inject
-    WristSubsystem(CommonLibFactory clf, ElevatorSubsystem elevator, XPropertyManager propMan,
+    WristSubsystem(CommonLibFactory clf, XPropertyManager propMan,
             ElectricalContract2018 contract) {
         this.clf = clf;
-        this.elevator = elevator;
         this.contract = contract;
         maximumWristPower = propMan.createPersistentProperty(getPrefix() + "Maximum Power", 0.3);
 
@@ -236,11 +233,6 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
             reason = WristPowerRestrictionReason.FullPowerAvailable;
         }
 
-        if (isWithinSafetyZone()) {
-            power = MathUtils.constrainDouble(power, -1, 0);
-            reason = WristPowerRestrictionReason.IsWithinSafetyZone;
-        }
-
         motor.simpleSet(power);
         setRestrictionReason(reason);
     }
@@ -249,16 +241,8 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         setSoftLimitsEnabled(false);
         motor.simpleSet(power);
     }
-
-    public boolean isWithinSafetyZone() {
-        return safetyZoneEnabled.get() && elevator.getCurrentHeightInInches() >= this.safetyZoneStartHeight.get();
-    }
-
+    
     public double modifyAngleForSafeties(double angle) {
-        if (isWithinSafetyZone()) {
-            return Math.min(angle, safetyZoneMaxAngle.get());
-        }
-
         return angle;
     }
 

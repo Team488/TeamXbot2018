@@ -294,7 +294,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
-                power = MathUtils.constrainDouble(power, -1, 0);
+                power = MathUtils.constrainDouble(power, -1, 0.1);
                 reason = ElevatorPowerRestrictionReason.UpperLimitSwitch;
             }
         }
@@ -309,7 +309,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             // if we are above the max, only go down.
             double currentHeight = getCurrentHeightInInches();
             if (currentHeight > getMaxHeightInInches()) {
-                power = MathUtils.constrainDouble(power, -1, 0);
+                power = MathUtils.constrainDouble(power, -1, 0.1);
                 reason = ElevatorPowerRestrictionReason.AboveMaxHeight;
             }
             // if we are below the min, can only go up.

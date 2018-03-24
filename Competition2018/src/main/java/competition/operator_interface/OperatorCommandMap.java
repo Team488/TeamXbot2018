@@ -7,9 +7,9 @@ import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
-import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
 import competition.commandgroups.PrepareToClimbCommandGroup;
 import competition.commandgroups.TotalClimbCommandGroup;
+import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
@@ -54,7 +54,11 @@ import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
+import xbot.common.math.ContiguousHeading;
+import xbot.common.math.FieldPose;
+import xbot.common.math.XYPair;
 import xbot.common.properties.ConfigurePropertiesCommand;
+import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -107,7 +111,7 @@ public class OperatorCommandMap {
     public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
             SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
             FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade,
-            VelocityArcadeDriveCommand velocity) {
+            VelocityArcadeDriveCommand velocity, ConfigurablePurePursuitCommand square) {
 
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
@@ -117,6 +121,14 @@ public class OperatorCommandMap {
 
         oi.driverGamepad.getPovIfAvailable(0).whenPressed(velocity);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
+        
+        for (int i = 0; i < 50; i++) {
+            square.addPoint(new FieldPose(new XYPair(0*12, 6*12), new ContiguousHeading(90)));
+            square.addPoint(new FieldPose(new XYPair(6*12, 6*12), new ContiguousHeading(0)));
+            square.addPoint(new FieldPose(new XYPair(6*12, 0*12), new ContiguousHeading(-90)));
+            square.addPoint(new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(-180)));
+        }
+        square.includeOnSmartDashboard("A Square Dancing Robot");
     }
 
     @Inject
