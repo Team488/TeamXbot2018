@@ -1,25 +1,23 @@
 package competition.subsystems.gripperintake.commands;
 
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import com.google.inject.Inject;
-
+import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 import competition.BaseCompetitionTest;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
-import xbot.common.controls.sensors.mock_adapters.MockFTCGamepad;
 
 public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
-    
-    GripperIntakeSubsystem gripper;
     GripperViaTriggersCommand command;
-
-    @Inject
+    GripperIntakeSubsystem intake;
+    
+    @Override
     public void setUp() {
         super.setUp();
-        gripper = injector.getInstance(GripperIntakeSubsystem.class);
+
         command = injector.getInstance(GripperViaTriggersCommand.class);
+        intake = injector.getInstance(GripperIntakeSubsystem.class);
+
     }
     
     @Test
@@ -37,8 +35,8 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
             
             command.execute();
             
-            assertEquals(-power, gripper.leftMotor.getMotorOutputPercent(), 0.001);
-            assertEquals(-power, gripper.rightMotor.getMotorOutputPercent(), 0.001);
+            assertEquals(-power, intake.leftMotor.getMotorOutputPercent(), 0.001);
+            assertEquals(-power, intake.rightMotor.getMotorOutputPercent(), 0.001);
         }
     }
     
@@ -50,8 +48,8 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
             
             command.execute();
             
-            assertEquals(power, gripper.leftMotor.getMotorOutputPercent(), 0.001);
-            assertEquals(power, gripper.rightMotor.getMotorOutputPercent(), 0.001);
+            assertEquals(power, intake.leftMotor.getMotorOutputPercent(), 0.001);
+            assertEquals(power, intake.rightMotor.getMotorOutputPercent(), 0.001);
         }
     }
     
@@ -62,8 +60,8 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
         
         command.execute();
         
-        assertEquals(expected, gripper.leftMotor.getMotorOutputPercent(), 0.001);
-        assertEquals(expected, gripper.rightMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(expected, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(expected, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
     
     @Test
@@ -73,7 +71,7 @@ public class GripperViaTriggersCommandTest extends BaseCompetitionTest {
         
         command.execute();
         
-        assertEquals(expected, gripper.leftMotor.getMotorOutputPercent(), 0.001);
-        assertEquals(expected, gripper.rightMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(expected, intake.leftMotor.getMotorOutputPercent(), 0.001);
+        assertEquals(expected, intake.rightMotor.getMotorOutputPercent(), 0.001);
     }
 }
