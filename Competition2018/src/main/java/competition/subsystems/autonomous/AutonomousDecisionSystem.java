@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command.TotalRobotPoint;
 import openrio.powerup.MatchData.GameFeature;
 import openrio.powerup.MatchData.OwnedSide;
 import xbot.common.command.BaseSubsystem;
@@ -60,6 +61,10 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
 
     public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
         return () -> chooseBestPathToFeature(feature, startingLocation);
+    }
+    
+    public void startBestAutoProgram(GameFeature feature) {
+        
     }
 
     private List<FieldPose> mirrorPath(List<FieldPose> path) {
