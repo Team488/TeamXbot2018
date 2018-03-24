@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.power_state_manager.PowerStateManagerSubsystem;
 import competition.subsystems.power_state_manager.PowerStateResponsiveController;
 import xbot.common.controls.actuators.XCANTalon;
@@ -53,6 +54,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     
     private final DoubleProperty voltageRampNormalProp;
     private final DoubleProperty voltageRampLowBatProp;
+    private final DoubleProperty voltageRampElevatorUp;
+    private final DoubleProperty elevatorHeightLowerVoltageRamp;
     private final DoubleProperty maxCurrentNormalProp;
     private final DoubleProperty maxCurrentLowBatProp;
 
@@ -64,6 +67,7 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     public DriveSubsystem(
             CommonLibFactory factory,
             PowerStateManagerSubsystem powerStateManager,
+            ElevatorSubsystem elevator,
             XPropertyManager propManager,
             ElectricalContract2018 contract,
             PIDFactory pf) {
@@ -78,6 +82,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
 
         voltageRampNormalProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (normal)", 0.15);
         voltageRampLowBatProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (low battery)", 0.5);
+        voltageRampElevatorUp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (elevator is up)", 1);
+        elevatorHeightLowerVoltageRamp = propManager.createPersistentProperty(getPrefix() + "Elevator Height (lower voltage ramp time)", 60);
         maxCurrentNormalProp = propManager.createPersistentProperty(getPrefix() + "Current limit (normal)", 0);
         maxCurrentLowBatProp = propManager.createPersistentProperty(getPrefix() + "Current limit (low-battery)", 10);
 
@@ -107,8 +113,13 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         
         this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
         this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
-
-        this.setVoltageRamp(voltageRampNormalProp.get());
+        
+        if(elevator.getCurrentHeightInInches() > elevatorHeightLowerVoltageRamp.get()) {
+            this.setVoltageRamp(voltageRampElevatorUp.get());
+        }else {
+            this.setVoltageRamp(voltageRampNormalProp.get());
+        }
+        
         this.setCurrentLimits(0, false);
         powerStateManager.registerResponsiveController(this);
     }
