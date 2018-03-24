@@ -27,7 +27,7 @@ public class CalibrateElevatorViaStallCommandTest extends BaseCompetitionTest {
         super.setUp();
         command = injector.getInstance(CalibrateElevatorViaStallCommand.class);
         elevator = injector.getInstance(ElevatorSubsystem.class);
-        currentMonitor = new TalonCurrentMonitor(elevator.motor);
+        currentMonitor = new TalonCurrentMonitor(elevator.master);
         mockTimer = injector.getInstance(MockTimer.class);
     }
 
@@ -37,13 +37,13 @@ public class CalibrateElevatorViaStallCommandTest extends BaseCompetitionTest {
         command.calibrationCurrentThreshold.set(command.currentThreshold);
         command.initialize();
 
-        ((MockCANTalon) elevator.motor).setOutputCurrent(command.currentThreshold - 5);
+        ((MockCANTalon) elevator.master).setOutputCurrent(command.currentThreshold - 5);
         command.execute();
         assertFalse(command.isFinished());
-        ((MockCANTalon) elevator.motor).setOutputCurrent(command.currentThreshold);
+        ((MockCANTalon) elevator.master).setOutputCurrent(command.currentThreshold);
         command.execute();
         assertFalse(command.isFinished());
-        ((MockCANTalon) elevator.motor).setOutputCurrent(command.currentThreshold + 5);
+        ((MockCANTalon) elevator.master).setOutputCurrent(command.currentThreshold + 5);
         command.execute();
         assertTrue(command.isFinished());
 
@@ -53,7 +53,7 @@ public class CalibrateElevatorViaStallCommandTest extends BaseCompetitionTest {
     public void calibrationCurrentWithTimeTest() {
         command.initialize();
 
-        ((MockCANTalon) elevator.motor).setOutputCurrent(14);
+        ((MockCANTalon) elevator.master).setOutputCurrent(14);
         mockTimer.setTimeInSeconds(0);
         command.execute();
         assertFalse(command.isFinished());
