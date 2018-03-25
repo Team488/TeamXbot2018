@@ -157,7 +157,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
 
     public List<FieldPose> createPathToNearbyScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
-        points.add(new FieldPose(new XYPair(0 * 12, 15 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(0 * 12, 18 * 12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(-1 * 12, 20.27 * 12), new ContiguousHeading(120)));
         return points;
     }

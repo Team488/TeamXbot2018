@@ -37,7 +37,7 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         this.pursuit = pursuit;
         
         List<FieldPose> simplePoints = decider.createPathToNearbyScalePlate();
-        pursuit.addPoint(new TotalRobotPoint(simplePoints.get(0), Gear.HIGH_GEAR, 140));
+        pursuit.addPoint(new TotalRobotPoint(simplePoints.get(0), Gear.HIGH_GEAR, 120));
         pursuit.addPoint(new TotalRobotPoint(simplePoints.get(1), Gear.LOW_GEAR, 80));
                 
         scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));

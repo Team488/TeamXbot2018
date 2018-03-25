@@ -37,7 +37,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean elevatorReady() {
-        return true;
+        return false;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean wristReady() {
-        return true;
+        return false;
     }
 
     @Override
@@ -137,12 +137,12 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public boolean elevatorLowerLimitReady() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean elevatorUpperLimitReady() {
-        return true;
+        return false;
     }
 
     @Override
