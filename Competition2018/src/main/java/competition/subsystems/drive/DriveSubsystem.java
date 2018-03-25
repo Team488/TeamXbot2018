@@ -55,6 +55,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     private final DoubleProperty voltageRampLowBatProp;
     private final DoubleProperty maxCurrentNormalProp;
     private final DoubleProperty maxCurrentLowBatProp;
+    
+    private final DoubleProperty translationalVelocityProp;
 
     public enum Side {
         Left, Right
@@ -111,6 +113,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
         this.setVoltageRamp(voltageRampNormalProp.get());
         this.setCurrentLimits(0, false);
         powerStateManager.registerResponsiveController(this);
+        
+        translationalVelocityProp = propManager.createEphemeralProperty(getPrefix() + " Current Velocity", 0);
     }
 
     private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,
@@ -229,6 +233,8 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     @Override
     public void updatePeriodicData() {
         super.updatePeriodicData();
+        
+        translationalVelocityProp.set(getVelocityInInchesPerSecond());
     }
 
     public PIDManager getPositionalPid() {
