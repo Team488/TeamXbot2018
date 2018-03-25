@@ -7,6 +7,7 @@ import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
+import competition.commandgroups.PickUpHeightWristUpCommandGroup;
 import competition.commandgroups.PrepareToClimbCommandGroup;
 import competition.commandgroups.TotalClimbCommandGroup;
 import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
@@ -148,7 +149,7 @@ public class OperatorCommandMap {
     public void setupElevatorCommands(OperatorInterface oi, CalibrateElevatorTicksPerInchCommand calibrateElevatorTicks,
             ElevatorUncalibrateCommand uncalibrate, ElevatorMaintainerCommand maintainer,
             SetElevatorTargetHeightCommand targetScaleHighHeight, SetElevatorTargetHeightCommand targetScaleMidHeight,
-            SetElevatorTargetHeightCommand targetSwitchDropHeight, SetElevatorTargetHeightCommand targetPickUpHeight,
+            SetElevatorTargetHeightCommand targetSwitchDropHeight, PickUpHeightWristUpCommandGroup pickUpHeightWristUp,
             SetElevatorTargetHeightCommand targetPortalHeight, CalibrateElevatorHereCommand calibrateHere,
             EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
@@ -162,14 +163,13 @@ public class OperatorCommandMap {
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
         oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
-        targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
         targetScaleMidHeight.setGoalHeight(elevatorSubsystem.getTargetScaleMidHeight());
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
         targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetExchangeZonePickUpHeight());
 
         
-        oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
+        oi.operatorGamepad.getifAvailable(1).whenPressed(pickUpHeightWristUp);
         oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
         oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
