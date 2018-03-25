@@ -7,6 +7,7 @@ import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
+import competition.subsystems.gripperintake.commands.GripperIntakeTimeCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
@@ -27,7 +28,8 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
             SetElevatorTargetHeightCommand setElevatorForScale, ConfigurablePurePursuitCommand scootForward,
             GripperEjectCommand eject, ConfigurablePurePursuitCommand scootBackward,
             ConfigurablePurePursuitCommand firstCubeFromGround, SetWristAngleCommand setWristToPickUp,
-            SetElevatorTargetHeightCommand setElevatorForPickup, GripperIntakeCommand intake) {
+            SetElevatorTargetHeightCommand setElevatorForPickup, GripperIntakeCommand intake,
+            GripperIntakeTimeCommand intakeTime) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
         scootForward.addPoint(new FieldPose(new XYPair(0, 2.666 * 12), new ContiguousHeading(90)));
@@ -69,8 +71,11 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
         // go to first cube on ground position
         this.addSequential(firstCubeFromGround);
         
-        // intake block
-        this.addSequential(intake);
+        // intake cube
+        this.addParallel(intakeTime);
+        
+        // scoot backward a little
+        this.addSequential(scootBackward);
 
         // Get in position
         this.addSequential(pursuit);
