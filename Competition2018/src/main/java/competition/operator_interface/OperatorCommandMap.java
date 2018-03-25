@@ -7,6 +7,7 @@ import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
 import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
 import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
+import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import competition.commandgroups.PrepareToClimbCommandGroup;
 import competition.commandgroups.TotalClimbCommandGroup;
 import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
@@ -86,10 +87,12 @@ public class OperatorCommandMap {
             ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
             SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
             SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle) {
+            SetStartingSideCommand setMiddle, MultiCubeNearScaleCommandGroup multiCube) {
 
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
+        
+        multiCube.includeOnSmartDashboard("A MultiCube Auto");
 
         setLeft.setStartingLocation(StartingLocations.Left);
         setRight.setStartingLocation(StartingLocations.Right);

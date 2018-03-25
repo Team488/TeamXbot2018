@@ -5,41 +5,43 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.logic.VelocityThrottleModule;
 import xbot.common.math.FieldPose;
+import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
+import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
-import xbot.common.subsystems.drive.BaseDriveSubsystem;
 import xbot.common.subsystems.drive.PurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.RabbitChaseInfo;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
-
-    public class TotalRobotPoint {
-        public FieldPose simplePoint;
-        public Gear desiredGear;
-        public double velocityLimit;
-        
-        public TotalRobotPoint(FieldPose simplePoint, Gear desiredGear, double velocityLimit) {
-            this.simplePoint = simplePoint;
-            this.desiredGear = desiredGear;
-            this.velocityLimit = velocityLimit;
-        }
-    }
     
     private final ShiftSubsystem shifter;
     private List<TotalRobotPoint> originalPoints;
+    final VelocityThrottleModule translationalThrottleModule;
+    final DoubleProperty maxInchesPerSecondProp;
+    private final DriveSubsystem drive;
     
     @Inject
-    public AbsolutePurePursuit2018Command(ShiftSubsystem shifter, CommonLibFactory clf, BasePoseSubsystem pose, BaseDriveSubsystem drive,
+    public AbsolutePurePursuit2018Command(ShiftSubsystem shifter, CommonLibFactory clf, BasePoseSubsystem pose, DriveSubsystem drive,
             XPropertyManager propMan) {
         super(clf, pose, drive, propMan);
-        
+        this.drive = drive;
         this.shifter = shifter;
+        
+        translationalThrottleModule =
+                clf.createVelocityThrottleModule(getPrefix() + "Translational", drive.getTranslationalVelocityPid());
+        maxInchesPerSecondProp = propMan.createPersistentProperty(getPrefix() + "MaxInchesPerSecond", 120);
+        
         originalPoints = new ArrayList<>();
+    }
+    
+    public void addPoint(TotalRobotPoint point) {
+        originalPoints.add(point);
     }
 
     @Override
@@ -62,9 +64,16 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
         double rotation = chaseData.rotation;
         double translation = chaseData.translation;
         
-        double maximumPower = originalPoints.get(pointIndex).velocityLimit;
+        double maximumSpeed = originalPoints.get(pointIndex).velocityLimit;
         
-        drive.drive(new XYPair(0, translation), rotation);
+        double translateSpeedGoal = translation * maxInchesPerSecondProp.get();
+        double coercedSpeedGoal = MathUtils.constrainDouble(translateSpeedGoal, -maximumSpeed, maximumSpeed);
+        
+        double translationalPower = translationalThrottleModule.calculateThrottle(
+                coercedSpeedGoal, 
+                drive.getVelocityInInchesPerSecond());
+        
+        drive.drive(new XYPair(0, translationalPower), rotation);
         
         Gear desiredGear = originalPoints.get(pointIndex).desiredGear;
         if (shifter.getGear() != desiredGear) {

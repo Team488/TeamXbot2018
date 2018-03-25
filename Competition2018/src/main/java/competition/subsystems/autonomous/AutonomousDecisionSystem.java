@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command.TotalRobotPoint;
 import openrio.powerup.MatchData.GameFeature;
 import openrio.powerup.MatchData.OwnedSide;
 import xbot.common.command.BaseSubsystem;

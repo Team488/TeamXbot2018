@@ -1,14 +1,17 @@
 package competition.commandgroups;
 
+import java.util.List;
+
 import com.google.inject.Inject;
 
 import competition.subsystems.autonomous.AutonomousDecisionSystem;
 import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
+import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
-import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.math.ContiguousHeading;
@@ -32,7 +35,11 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             ConfigurablePurePursuitCommand scootForward,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        //pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
+        
+        List<FieldPose> simplePoints = decider.createPathToNearbyScalePlate();
+        pursuit.addPoint(new TotalRobotPoint(simplePoints.get(0), Gear.HIGH_GEAR, 140));
+        pursuit.addPoint(new TotalRobotPoint(simplePoints.get(1), Gear.LOW_GEAR, 80));
+                
         scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));
         scootForward.setMode(PursuitMode.Relative);
         
