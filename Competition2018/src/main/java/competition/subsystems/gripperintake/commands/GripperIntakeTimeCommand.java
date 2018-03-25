@@ -15,7 +15,7 @@ public class GripperIntakeTimeCommand extends BaseCommand {
     double stopTime;
 
     @Inject
-    public void GripperIntakeCommand(GripperIntakeSubsystem intake, XPropertyManager propMan) {
+    public GripperIntakeTimeCommand(GripperIntakeSubsystem intake, XPropertyManager propMan) {
         this.requires(intake);
         this.intake = intake;
         stopIntakeTime = propMan.createPersistentProperty("stopIntakeTime", 5);
