@@ -31,7 +31,7 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorCommandTe
             elevator.calibrateAt(-5000);
             ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
-            assertEquals(power, elevator.motor.getMotorOutputPercent(), 0.001);
+            assertEquals(power, elevator.master.getMotorOutputPercent(), 0.001);
         }
     }
 
@@ -43,7 +43,7 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorCommandTe
             elevator.calibrateAt(-7000);
             ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
-            assertEquals(elevator.getPowerNearHighLimit(), elevator.motor.getMotorOutputPercent(), 0.001);
+            assertEquals(elevator.getPowerNearHighLimit(), elevator.master.getMotorOutputPercent(), 0.001);
         }
     }
 
@@ -55,7 +55,7 @@ public class ControlElevatorViaJoystickCommandTest extends BaseElevatorCommandTe
             elevator.calibrateAt(-100);
             ((MockFTCGamepad) oi.operatorGamepad).setRightStick(new XYPair(0, power));
             command.execute();
-            assertEquals(-elevator.getPowerNearLowLimit(), elevator.motor.getMotorOutputPercent(), 0.001);
+            assertEquals(-elevator.getPowerNearLowLimit(), elevator.master.getMotorOutputPercent(), 0.001);
         }
     }
 
