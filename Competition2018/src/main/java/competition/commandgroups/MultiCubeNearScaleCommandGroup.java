@@ -32,7 +32,7 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             ConfigurablePurePursuitCommand scootForward,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
+        //pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
         scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));
         scootForward.setMode(PursuitMode.Relative);
         
