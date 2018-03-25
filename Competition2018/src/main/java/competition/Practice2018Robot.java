@@ -44,6 +44,11 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public DeviceInfo getElevatorMaster() {
         return new DeviceInfo(25, true);
     }
+    
+    @Override
+    public DeviceInfo getElevatorFollower() {
+        return new DeviceInfo(22, true);
+    }
 
     @Override
     public boolean wristReady() {
@@ -112,7 +117,7 @@ public class Practice2018Robot extends ElectricalContract2018 {
 
     @Override
     public DeviceInfo getClimbDeployMaster() {
-        return new DeviceInfo(22, true);
+        return new DeviceInfo(50, true);
     }
 
     @Override

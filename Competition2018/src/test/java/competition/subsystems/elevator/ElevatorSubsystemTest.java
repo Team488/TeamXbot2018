@@ -27,16 +27,16 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
 
     @Test
     public void rise() {
-        assertEquals(elevator.motor.getMotorOutputPercent(), 0, 0.001);
+        assertEquals(elevator.master.getMotorOutputPercent(), 0, 0.001);
         elevator.rise();
-        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
+        assertTrue(elevator.master.getMotorOutputPercent() > 0);
     }
 
     @Test
     public void lower() {
-        assertEquals(elevator.motor.getMotorOutputPercent(), 0, 0.001);
+        assertEquals(elevator.master.getMotorOutputPercent(), 0, 0.001);
         elevator.lower();
-        assertTrue(elevator.motor.getMotorOutputPercent() < 0);
+        assertTrue(elevator.master.getMotorOutputPercent() < 0);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
         ((MockDigitalInput) elevator.upperLimitSwitch).setValue(true);
         elevator.setPower(1);
 
-        checkElevatorPower(0);
+        checkElevatorPower(0.1);
     }
 /* TODO: FIX THIS ONCE WE NO LONGER HAVE BRUTAL HACK
     @Test
@@ -83,7 +83,7 @@ public class ElevatorSubsystemTest extends BaseCompetitionTest {
     }*/
 
     private void checkElevatorPower(double power) {
-        assertEquals(power, elevator.motor.getMotorOutputPercent(), 0.001);
+        assertEquals(power, elevator.master.getMotorOutputPercent(), 0.001);
     }
 
 }

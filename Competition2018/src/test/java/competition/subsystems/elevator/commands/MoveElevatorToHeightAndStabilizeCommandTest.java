@@ -31,20 +31,20 @@ public class MoveElevatorToHeightAndStabilizeCommandTest extends BaseCompetition
         mockTimer.setTimeInSeconds(0);
 
         // at target height and required time met --> should be true
-        ((MockCANTalon) elevator.motor).setPosition(7700);
+        ((MockCANTalon) elevator.master).setPosition(7700);
         command.execute();
         mockTimer.advanceTimeInSecondsBy(command.stableTimeRequired.get());
         assertTrue(command.isFinished());
 
         // required time for meeting target met but not at target --> should be false
-        ((MockCANTalon) elevator.motor).setPosition(20);
+        ((MockCANTalon) elevator.master).setPosition(20);
         command.execute();
         mockTimer.advanceTimeInSecondsBy(command.stableTimeRequired.get());
         assertFalse(command.isFinished());
 
         // required time for meeting target not met but at target --> should be false
         mockTimer.advanceTimeInSecondsBy(command.stableTimeRequired.get() - 0.3);
-        ((MockCANTalon) elevator.motor).setPosition(7700);
+        ((MockCANTalon) elevator.master).setPosition(7700);
         command.execute();
         assertFalse(command.isFinished());
     }
