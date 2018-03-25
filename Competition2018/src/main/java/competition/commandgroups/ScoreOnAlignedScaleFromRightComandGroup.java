@@ -34,7 +34,7 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
         scootForward.setMode(PursuitMode.Relative);
         scootBackward.addPoint(new FieldPose(new XYPair(0, -2.666 * 12), new ContiguousHeading(90)));
         scootBackward.setMode(PursuitMode.Relative);
-        firstCubeFromGround.addPoint(new FieldPose(new XYPair(-2 * 12, 15 * 12), new ContiguousHeading()));
+        firstCubeFromGround.addPoint(new FieldPose(new XYPair(-2 * 12, 15 * 12), new ContiguousHeading(270)));
 
         setWristDown.setGoalAngle(45);
         setWristToPickUp.setGoalAngle(0);
@@ -60,14 +60,14 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
 
         // scoot backward a little
         this.addSequential(scootBackward);
-
-        // go to first cube on ground position
-        this.addSequential(firstCubeFromGround);
-
+        
         // brings wrist to pickup position and elevator down
         this.addParallel(setWristToPickUp, 1);
         setElevatorForPickup.changeTimeout(3.5);
         this.addSequential(setElevatorForPickup);
+        
+        // go to first cube on ground position
+        this.addSequential(firstCubeFromGround);
         
         // intake block
         this.addSequential(intake);
@@ -79,5 +79,14 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
         this.addParallel(setWristDown, 1);
         setElevatorForScale.changeTimeout(3.5);
         this.addSequential(setElevatorForScale);
+        
+        // scoot forward a little
+        this.addSequential(scootForward);
+
+        // Score for 1 second
+        this.addSequential(eject, 1);
+
+        // scoot backward a little
+        this.addSequential(scootBackward);
     }
 }
