@@ -20,19 +20,20 @@ public class GripperIntakeTimeCommand extends BaseCommand {
         this.intake = intake;
         stopIntakeTime = propMan.createPersistentProperty("stopIntakeTime", 5);
     }
+
     @Override
     public void initialize() {
         log.info("Initializing");
-        stopTime = Timer.getFPGATimestamp() + stopIntakeTime.get(); 
+        stopTime = Timer.getFPGATimestamp() + stopIntakeTime.get();
     }
 
     @Override
     public void execute() {
         if (stopTime > Timer.getFPGATimestamp()) {
-        intake.intake();
+            intake.intake();
         }
     }
-    
+
     public boolean isFinished() {
         return stopTime <= Timer.getFPGATimestamp();
     }

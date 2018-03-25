@@ -62,18 +62,18 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
 
         // scoot backward a little
         this.addSequential(scootBackward);
-        
+
         // brings wrist to pickup position and elevator down
         this.addParallel(setWristToPickUp, 1);
         setElevatorForPickup.changeTimeout(3.5);
         this.addSequential(setElevatorForPickup);
-        
+
         // go to first cube on ground position
         this.addSequential(firstCubeFromGround);
-        
+
         // intake cube
         this.addParallel(intakeTime);
-        
+
         // scoot backward a little
         this.addSequential(scootBackward);
 
@@ -84,7 +84,7 @@ public class ScoreOnAlignedScaleFromRightComandGroup extends BaseCommandGroup {
         this.addParallel(setWristDown, 1);
         setElevatorForScale.changeTimeout(3.5);
         this.addSequential(setElevatorForScale);
-        
+
         // scoot forward a little
         this.addSequential(scootForward);
 
