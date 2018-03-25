@@ -32,6 +32,6 @@ public class LowerElevatorCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
 
-        assertTrue(elevator.motor.getMotorOutputPercent() <= 0.1);
+        assertTrue(elevator.master.getMotorOutputPercent() <= 0.1);
     }
 }

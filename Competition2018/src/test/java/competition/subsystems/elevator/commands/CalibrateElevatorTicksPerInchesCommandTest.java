@@ -26,13 +26,13 @@ public class CalibrateElevatorTicksPerInchesCommandTest extends BaseCompetitionT
     public void maxAndMinTickTest() {
 
         command.initialize();
-        ((MockCANTalon) elevator.motor).setPosition(10);
+        ((MockCANTalon) elevator.master).setPosition(10);
         command.execute(); 
-        ((MockCANTalon) elevator.motor).setPosition(40);
+        ((MockCANTalon) elevator.master).setPosition(40);
         command.execute(); 
-        ((MockCANTalon) elevator.motor).setPosition(80);
+        ((MockCANTalon) elevator.master).setPosition(80);
         command.execute(); 
-        ((MockCANTalon) elevator.motor).setPosition(0);
+        ((MockCANTalon) elevator.master).setPosition(0);
         command.execute(); 
         assertEquals(80, command.maxTick, 1e-5);
         assertEquals(0, command.minTick, 1e-5);

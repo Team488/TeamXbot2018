@@ -20,6 +20,6 @@ public class ExperimentalMotionMagicCommandTest extends BaseElevatorCommandTest 
     public void testHeightCalculation() {
         elevator.motionMagicToHeight(13);
         
-        assertEquals(1000, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(1000, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
     }
 }

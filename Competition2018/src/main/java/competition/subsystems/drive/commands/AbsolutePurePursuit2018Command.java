@@ -21,12 +21,12 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     public class TotalRobotPoint {
         public FieldPose simplePoint;
         public Gear desiredGear;
-        public double powerLimit;
+        public double velocityLimit;
         
-        public TotalRobotPoint(FieldPose simplePoint, Gear desiredGear, double powerLimit) {
+        public TotalRobotPoint(FieldPose simplePoint, Gear desiredGear, double velocityLimit) {
             this.simplePoint = simplePoint;
             this.desiredGear = desiredGear;
-            this.powerLimit = powerLimit;
+            this.velocityLimit = velocityLimit;
         }
     }
     
@@ -62,19 +62,7 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
         double rotation = chaseData.rotation;
         double translation = chaseData.translation;
         
-        double maximumPower = originalPoints.get(pointIndex).powerLimit;
-        
-        // Small safety check - max power should never be zero, but let's just be cautious.
-        if (maximumPower == 0) {
-            maximumPower = 1;
-        }
-        
-        double recommendedPower = Math.abs(chaseData.rotation) + Math.abs(chaseData.translation);
-        if (recommendedPower > maximumPower) {
-            double reductionRatio = recommendedPower / maximumPower;
-            rotation /= reductionRatio;
-            translation /= reductionRatio;            
-        }
+        double maximumPower = originalPoints.get(pointIndex).velocityLimit;
         
         drive.drive(new XYPair(0, translation), rotation);
         

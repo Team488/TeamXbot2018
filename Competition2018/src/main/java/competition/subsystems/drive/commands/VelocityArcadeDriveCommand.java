@@ -59,17 +59,19 @@ public class VelocityArcadeDriveCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        double translateSpeedGoal = oi.driverGamepad.getLeftVector().y * maxInchesPerSecondProp.get();
-        double rotateSpeedGoal = oi.driverGamepad.getRightVector().x * maxDegreesPerSecondProp.get();
-                
-        double rotationalPower = rotationalThrottleModule.calculateThrottle(
+        double translateSpeedGoal = MathUtils.deadband(oi.driverGamepad.getLeftVector().y, 0.05) * maxInchesPerSecondProp.get();
+        double rotateSpeedGoal = MathUtils.deadband(oi.driverGamepad.getRightVector().x, 0.05) * maxDegreesPerSecondProp.get();
+        
+        double rotationalVelocityInDegrees = -pose.getYawAngularVelocity() * 180 / Math.PI;
+        //log.info("RotVel: " + rotationalVelocityInDegrees);
+        /*double rotationalPower = rotationalThrottleModule.calculateThrottle(
                 rotateSpeedGoal, 
-                pose.getYawAngularVelocity());
+                rotationalVelocityInDegrees);*/
         double translationalPower = translationalThrottleModule.calculateThrottle(
                 translateSpeedGoal, 
                 driveSubsystem.getVelocityInInchesPerSecond());
         
-        double turn = ham.calculateHeadingPower(rotationalPower);
+        double turn = ham.calculateHeadingPower(MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x));
         driveSubsystem.drive(new XYPair(0, translationalPower), turn);
     }
 
