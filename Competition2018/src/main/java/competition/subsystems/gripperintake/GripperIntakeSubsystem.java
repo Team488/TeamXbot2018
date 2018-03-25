@@ -67,13 +67,6 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
         leftMotor.simpleSet(highPower.get() * -1);
     }
     
-    public void intakeTime() {
-        if (Timer.getFPGATimestamp() > stopIntakeTime +) {
-            rightMotor.simpleSet(highPower.get() * -1);
-            leftMotor.simpleSet(highPower.get() * -1);
-        }
-    }
-    
     public void rotateClockwise() {
         rightMotor.simpleSet(highPower.get());
         leftMotor.simpleSet(highPower.get() * -1);
