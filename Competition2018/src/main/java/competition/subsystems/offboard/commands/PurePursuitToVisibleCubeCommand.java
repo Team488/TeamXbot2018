@@ -16,6 +16,7 @@ import xbot.common.math.XYPair;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
 import xbot.common.subsystems.drive.PurePursuitCommand;
+import xbot.common.subsystems.drive.RabbitPoint;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
@@ -54,7 +55,7 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
     }
     
     @Override
-    protected List<FieldPose> getOriginalPoints() {
+    protected List<RabbitPoint> getOriginalPoints() {
         TargetCubeInfo targetCube = targetSupplier == null ? offboardSubsystem.getTargetCube() : targetSupplier.get();
         if (targetCube == null) {
             return null;
@@ -63,12 +64,13 @@ public class PurePursuitToVisibleCubeCommand extends PurePursuitCommand {
 
         FieldPose targetPose = new FieldPose(new XYPair(targetCube.xInches, targetCube.yInches),
                 new ContiguousHeading(90 - headingDelta));
-        return Arrays.asList(targetPose);
+        
+        return Arrays.asList(new RabbitPoint(targetPose));
     }
 
     @Override
-    protected PursuitMode getPursuitMode() {
-        return PursuitMode.Relative;
+    protected PointLoadingMode getPursuitMode() {
+        return PointLoadingMode.Relative;
     }
 
 }

@@ -16,6 +16,7 @@ import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.PurePursuitCommand;
+import xbot.common.subsystems.drive.RabbitPoint;
 import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
@@ -45,22 +46,22 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     }
 
     @Override
-    protected List<FieldPose> getOriginalPoints() {
-        ArrayList<FieldPose> simplePoints = new ArrayList<>();
+    protected List<RabbitPoint> getOriginalPoints() {
+        ArrayList<RabbitPoint> simplePoints = new ArrayList<>();
         originalPoints.stream().forEach(complexPoint -> simplePoints.add(complexPoint.simplePoint));
         return simplePoints;        
     }
 
     @Override
-    protected PursuitMode getPursuitMode() {
-        return PursuitMode.Absolute;
+    protected PointLoadingMode getPursuitMode() {
+        return PointLoadingMode.Absolute;
     }
     
     @Override
     public void execute() {
         // In the base command, the program would get the chaseData and apply it to the drive. We're mostly
         // okay with this, but we want to potentially modify the total power output as well as shift gears.
-        RabbitChaseInfo chaseData = navigateToRabbit();
+        RabbitChaseInfo chaseData = evaluateCurrentPoint();
         double rotation = chaseData.rotation;
         double translation = chaseData.translation;
         

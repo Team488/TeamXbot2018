@@ -1,14 +1,14 @@
 package competition.subsystems.drive.commands;
 
 import competition.subsystems.shift.ShiftSubsystem.Gear;
-import xbot.common.math.FieldPose;
+import xbot.common.subsystems.drive.RabbitPoint;
 
 public class TotalRobotPoint {
-    public FieldPose simplePoint;
+    public RabbitPoint simplePoint;
     public Gear desiredGear;
     public double velocityLimit;
     
-    public TotalRobotPoint(FieldPose simplePoint, Gear desiredGear, double velocityLimit) {
+    public TotalRobotPoint(RabbitPoint simplePoint, Gear desiredGear, double velocityLimit) {
         this.simplePoint = simplePoint;
         this.desiredGear = desiredGear;
         this.velocityLimit = velocityLimit;

@@ -14,7 +14,8 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
+import xbot.common.subsystems.drive.PurePursuitCommand.PointLoadingMode;
+import xbot.common.subsystems.drive.RabbitPoint;
 
 public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
 
@@ -32,8 +33,8 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
-        scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));
-        scootForward.setMode(PursuitMode.Relative);
+        scootForward.addPoint(new RabbitPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90))));
+        scootForward.setMode(PointLoadingMode.Relative);
         
         setWristDown.setGoalAngle(45);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());

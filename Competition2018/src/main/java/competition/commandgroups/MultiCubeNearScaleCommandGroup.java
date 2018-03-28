@@ -18,7 +18,8 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
+import xbot.common.subsystems.drive.PurePursuitCommand.PointLoadingMode;
+import xbot.common.subsystems.drive.RabbitPoint;
 
 public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
 
@@ -36,12 +37,12 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
         
-        List<FieldPose> simplePoints = decider.createPathToNearbyScalePlate();
+        List<RabbitPoint> simplePoints = RabbitPoint.upgradeFieldPoseList(decider.createPathToNearbyScalePlate());
         pursuit.addPoint(new TotalRobotPoint(simplePoints.get(0), Gear.HIGH_GEAR, 120));
         pursuit.addPoint(new TotalRobotPoint(simplePoints.get(1), Gear.LOW_GEAR, 80));
                 
-        scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));
-        scootForward.setMode(PursuitMode.Relative);
+        scootForward.addPoint(new RabbitPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90))));
+        scootForward.setMode(PointLoadingMode.Relative);
         
         setWristDown.setGoalAngle(45);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());

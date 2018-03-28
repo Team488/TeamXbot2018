@@ -17,6 +17,7 @@ import xbot.common.math.XYPair;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
+import xbot.common.subsystems.drive.RabbitPoint;
 
 @Singleton
 public class AutonomousDecisionSystem extends BaseSubsystem {
@@ -58,7 +59,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         return autonomousDelay.get();
     }
 
-    public Supplier<List<FieldPose>> getAutoPathToFeature(GameFeature feature) {
+    public Supplier<List<RabbitPoint>> getAutoPathToFeature(GameFeature feature) {
         return () -> chooseBestPathToFeature(feature, startingLocation);
     }
     
@@ -81,7 +82,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         return flippedPath;
     }
 
-    private List<FieldPose> chooseBestPathToFeature(GameFeature feature, StartingLocations whereToStart) {
+    private List<RabbitPoint> chooseBestPathToFeature(GameFeature feature, StartingLocations whereToStart) {
         OwnedSide targetSide = gameData.getOwnedSide(feature);
         log.info("Target Side is: " + targetSide);
         List<FieldPose> bestPath = createPathToNowhere();
@@ -152,7 +153,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
             break;
         }
 
-        return bestPath;
+        return RabbitPoint.upgradeFieldPoseList(bestPath);
     }
 
     public List<FieldPose> createPathToNearbyScalePlate() {

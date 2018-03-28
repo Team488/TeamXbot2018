@@ -9,6 +9,8 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
+import xbot.common.subsystems.drive.RabbitPoint;
+import xbot.common.subsystems.drive.RabbitPointBuilder;
 
 public class CrossAutoLineCommandGroup extends BaseCommandGroup {
 
@@ -17,9 +19,9 @@ public class CrossAutoLineCommandGroup extends BaseCommandGroup {
             AutonomousDecisionSystem decider,
             DelayViaSupplierCommand delay,
             ConfigurablePurePursuitCommand crossLine) {
-        
+                
         delay.setDelaySupplier(() -> decider.getDelay());
-        crossLine.addPoint(new FieldPose(new XYPair(0, 7.5*12), new ContiguousHeading(90)));
+        crossLine.addPoint(new RabbitPoint(new FieldPose(new XYPair(0, 7.5*12), new ContiguousHeading(90))));
         
         this.addSequential(delay);
         this.addSequential(crossLine);
