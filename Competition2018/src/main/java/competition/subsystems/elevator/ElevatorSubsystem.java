@@ -17,6 +17,8 @@ import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
 import xbot.common.logic.Latch.EdgeType;
+import xbot.common.logic.StallDetector;
+import xbot.common.logic.StallDetector.StallMode;
 import xbot.common.math.MathUtils;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
@@ -44,6 +46,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final ElectricalContract2018 contract;
     final DoubleProperty elevatorPower;
     final DoubleProperty elevatorTicksPerInch;
+    //final StallDetector detector;
 
     /**
      * If our elevator is uncalibrated, we don't allow large power inputs.
@@ -137,6 +140,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         currentVelocity = propMan.createEphemeralProperty(getPrefix() + "Current Velocity", 0);
         calibrationOffset = 0.0;
         targetHitVerticalCubeHeight = propMan.createPersistentProperty(getPrefix() + "Knock vertical cube down height", 8);
+clf.createStallDetector("StallDetector", talonMaxVelocity.get());
         
         
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
@@ -330,10 +334,12 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             if (getCurrentHeightInInches() > getHeightNearHighLimit()
                     && getCurrentHeightInInches() < getMaxHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
-                reason = ElevatorPowerRestrictionReason.NearMaxHeight;
+                reason = ElevatorPowerRestrictionReason.NearMaxHeight;     
             }
         }
-
+        if(pr.checkIsStalled(power, currentVelocity.get()) //== StallMode.StalledRecently) {
+            power = 0;
+            }
         master.simpleSet(power);
         setRestrictionReason(reason);
     }
