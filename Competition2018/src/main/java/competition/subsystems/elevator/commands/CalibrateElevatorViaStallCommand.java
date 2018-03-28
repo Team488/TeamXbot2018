@@ -28,7 +28,7 @@ public class CalibrateElevatorViaStallCommand extends BaseCommand {
         calibrationTime = propMan.createPersistentProperty("Elevator Calibration time (s)", 4);
         calibrationCurrentThreshold = propMan.createPersistentProperty("Calibration Current Threshold", 15);
         this.elevator = elevator;
-        this.currentMonitor = new TalonCurrentMonitor(elevator.motor);
+        this.currentMonitor = new TalonCurrentMonitor(elevator.master);
         this.requires(elevator);
     }
 

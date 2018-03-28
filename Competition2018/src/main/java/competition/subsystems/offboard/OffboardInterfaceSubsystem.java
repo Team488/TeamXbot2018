@@ -2,7 +2,6 @@ package competition.subsystems.offboard;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -45,8 +44,9 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
     private DoubleProperty targetCubeXProp;
     private DoubleProperty targetCubeYProp;
     private DoubleProperty targetCubeZProp;
-    
-    private WatchdogTimer watchdog;
+
+    private WatchdogTimer connectionWatchdog;
+    private WatchdogTimer cubeLocationWatchdog;
     
     @Inject
     public OffboardInterfaceSubsystem(
@@ -64,14 +64,22 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
         targetCubeYProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Y", 0);
         targetCubeZProp = propManager.createEphemeralProperty(getPrefix()+"Target Cube/Z", 0);
         
-        watchdog = new WatchdogTimer(
+        connectionWatchdog = new WatchdogTimer(
             3.0,
             () -> log.info("Connected"),
             () -> {
                 log.info("Disconnected");
                 this.targetCube = null;
                 updateProps();
-            });
+        });
+        
+        cubeLocationWatchdog = new WatchdogTimer(
+            0.3,
+            null,
+            () -> {
+                this.targetCube = null;
+                updateProps();
+        });
     }
     
     private void sendWheelOdomUpdate() {
@@ -121,6 +129,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
             try {
                 TargetCubePacket cubePacket = TargetCubePacket.parse(packet.data);
                 this.targetCube = cubePacket.targetInfo;
+                cubeLocationWatchdog.kick();
                 updateProps();
             }
             catch (IllegalArgumentException e) {
@@ -155,7 +164,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
                 break;
             }
             
-            watchdog.kick();
+            connectionWatchdog.kick();
             
             if(handlePacketIfPossible(packet)) {
                 continue;
@@ -174,6 +183,7 @@ public class OffboardInterfaceSubsystem extends BaseSubsystem implements Periodi
                     + " all commands running on the offboard subsystem should process incoming packets.");
         }
         
-        watchdog.check();
+        connectionWatchdog.check();
+        cubeLocationWatchdog.check();
     }
 }

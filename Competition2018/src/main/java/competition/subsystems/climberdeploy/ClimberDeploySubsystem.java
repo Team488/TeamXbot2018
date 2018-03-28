@@ -1,5 +1,6 @@
 package competition.subsystems.climberdeploy;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -7,15 +8,16 @@ import competition.ElectricalContract2018;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.math.MathUtils;
 import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 
 @Singleton
 public class ClimberDeploySubsystem extends BaseSubsystem {
 
-    double currentDeploySpeed;
-    final DoubleProperty fastDeploySpeed;
-    final DoubleProperty slowDeploySpeed;
+    final DoubleProperty deploySpeed;
+    final DoubleProperty absoluteMaxTicks;
+    final DoubleProperty percentDeployedProp;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
     public XCANTalon motor;
@@ -24,10 +26,9 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     public ClimberDeploySubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        fastDeploySpeed = propMan.createPersistentProperty(getPrefix()+"FastDeploySpeed", .4);
-        slowDeploySpeed = propMan.createPersistentProperty(getPrefix()+"SlowDeploySpeed", .1);
-        currentDeploySpeed = fastDeploySpeed.get();
-
+        deploySpeed = propMan.createPersistentProperty(getPrefix()+"Speed", .4);
+        absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", 36000);
+        percentDeployedProp = propMan.createEphemeralProperty(getPrefix() +  "PercentDeployed", 0);
         if (contract.climbDeployReady()) {
             initializeMotor();
         }
@@ -36,20 +37,45 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
     private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbDeployMaster().channel);
         motor.setInverted(contract.getClimbDeployMaster().inverted);
+        
+        motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+    }
+    
+    public int getTicks() {
+        return motor.getSelectedSensorPosition(0);
+    }
+    
+    public double percentExtended() {
+        return getTicks() / absoluteMaxTicks.get();
     }
 
     /**
      * extends the climber arm
      */
     public void extendClimberArm() {
-        motor.simpleSet(currentDeploySpeed);
+        setPower(deploySpeed.get());
     }
 
     /**
      * detracts the climber arm
      */
     public void retractClimberArm() {
-        motor.simpleSet(-currentDeploySpeed);
+        setPower(-deploySpeed.get());
+    }
+    
+    
+    // Use this once we have a good understanding of limits
+    public void setPower(double power) {
+        /*if (getTicks() < 1000) {
+            power = MathUtils.constrainDouble(power, 0, 1);
+        }*/
+        
+        if (getTicks() > absoluteMaxTicks.get()) {
+            power = MathUtils.constrainDouble(power, -1, 0);
+        }
+        
+        motor.simpleSet(power);
+        percentDeployedProp.set(percentExtended());
     }
 
     /**
@@ -57,20 +83,6 @@ public class ClimberDeploySubsystem extends BaseSubsystem {
      */
     public void stopClimberArm() {
         motor.simpleSet(0);
-    }
-
-    /**
-     * speeds up the arm, regardless of what direction the arm is moving
-     */
-    public void increaseSpeed() {
-        currentDeploySpeed = fastDeploySpeed.get();
-    }
-
-    /**
-     * slows down the arm, regardless of what direction the arm is moving
-     */
-    public void decreaseSpeed() {
-        currentDeploySpeed = slowDeploySpeed.get();
     }
 
     /**

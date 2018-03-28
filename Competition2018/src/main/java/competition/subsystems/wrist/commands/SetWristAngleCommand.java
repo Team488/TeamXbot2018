@@ -30,11 +30,6 @@ public class SetWristAngleCommand extends BaseSetpointCommand {
 
     @Override
     public void execute() {
+        wrist.setTargetAngle(goalAngle);
     }
-    
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
-
 }

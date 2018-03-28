@@ -11,10 +11,8 @@ import com.google.inject.Singleton;
 
 import xbot.common.command.BaseSetpointSubsystem;
 import competition.ElectricalContract2018;
-import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.PeriodicDataSource;
 import xbot.common.controls.actuators.XCANTalon;
-import xbot.common.controls.sensors.TalonCurrentMonitor;
 import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
@@ -32,15 +30,11 @@ import xbot.common.properties.XPropertyManager;
 public class ElevatorSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
 
     public enum ElevatorPowerRestrictionReason {
-        FullPowerAvailable,
-        LowerLimitSwitch,
-        UpperLimitSwitch,
-        Uncalibrated,
-        AboveMaxHeight,
-        NearMaxHeight,
-        BelowMinHeight,
-        NearMinHeight,
-        CurrentTooHigh
+        FullPowerAvailable, LowerLimitSwitch, UpperLimitSwitch, Uncalibrated, AboveMaxHeight, NearMaxHeight, BelowMinHeight, NearMinHeight,
+    }
+
+    public enum ElevatorGoal {
+        PickUpHeight, Switch, ScaleLow, ScaleMid, ScaleHigh
     }
 
     final StringProperty elevatorRestrictionReasonProp;
@@ -60,6 +54,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     private boolean isCalibrated;
     private double calibrationOffset;
     private final Latch calibrationLatch;
+    
+    private boolean currentLimitState;
 
     private Supplier<Boolean> lowerLimitSupplier;
     private Supplier<Boolean> upperLimitSupplier;
@@ -76,21 +72,27 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     final DoubleProperty currentTicks;
     final DoubleProperty currentHeight;
     final DoubleProperty calibrationCurrentThreshold;
+    final DoubleProperty currentVelocity;
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
     final BooleanProperty calibratedProp;
+    private final DoubleProperty targetExchangeZonePickUpHeight;
+    private final DoubleProperty targetHitVerticalCubeHeight;
     private final DoubleProperty targetScaleHighHeight;
     private final DoubleProperty targetScaleMidHeight;
+    private final DoubleProperty targetScaleLowHeight;
     private final DoubleProperty targetSwitchDropHeight;
     private final DoubleProperty targetPickUpHeight;
     final DoubleProperty elevatorPeakCurrentLimit;
     final DoubleProperty elevatorPeakCurrentDuration;
     final DoubleProperty elevatorContinuousCurrentLimit;
     final PIDPropertyManager motionMagicProperties;
-    public XCANTalon motor;
+    public XCANTalon master;
+    public XCANTalon follower;
     public XDigitalInput lowerLimitSwitch;
     public XDigitalInput upperLimitSwitch;
     final PIDManager positionalPid;
+    final PIDManager velocityPid;
 
     int updateMotorValuesCounter = 0;
 
@@ -101,38 +103,44 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             PIDFactory pf) {
         this.clf = clf;
         this.contract = contract;
-        elevatorPower = propMan.createPersistentProperty(getPrefix()+"Standard Power", 0.4);
-        elevatorTicksPerInch = propMan.createPersistentProperty(getPrefix()+"TicksPerInch", 100);
-        calibrationPower = propMan.createPersistentProperty(getPrefix()+"CalibrationPower", 0.2);
-        maxHeightInInches = propMan.createPersistentProperty(getPrefix()+"Max HeightInInches", 80);
-        minHeightInInches = propMan.createPersistentProperty(getPrefix()+"Min HeightInInches", 3);
-        elevatorTargetHeight = propMan.createEphemeralProperty(getPrefix()+"TargetHeight", maxHeightInInches.get());
-        currentTicks = propMan.createEphemeralProperty(getPrefix()+"Current ticks", 0.0);
-        currentHeight = propMan.createEphemeralProperty(getPrefix()+"Current height", 0.0);
-        lowerLimitProp = propMan.createEphemeralProperty(getPrefix()+"Lower Limit", false);
-        upperLimitProp = propMan.createEphemeralProperty(getPrefix()+"Upper Limit", false);
-        targetScaleHighHeight = propMan.createPersistentProperty(getPrefix()+"Scale high", 76.5);
-        targetScaleMidHeight = propMan.createPersistentProperty(getPrefix()+"Scale mid", 64.5);
-        targetSwitchDropHeight = propMan.createPersistentProperty(getPrefix()+"Switch drop height", 19.0);
-        targetPickUpHeight = propMan.createPersistentProperty(getPrefix()+"Pickup height", 3.0);
-        elevatorPeakCurrentLimit = propMan.createPersistentProperty(getPrefix()+"Peak current limit", 35);
-        elevatorPeakCurrentDuration = propMan.createPersistentProperty(getPrefix()+"Peak current duration", 200);
-        elevatorContinuousCurrentLimit = propMan.createPersistentProperty(getPrefix()+"Continuous current limit", 30);
-        calibrationCurrentThreshold = propMan.createPersistentProperty(getPrefix()+"Calibration Current Threshold", 15);
-        motionMagicProperties = pf.createPIDPropertyManager(getPrefix()+"Motion Magic", 0.3, 0, 0, 0.688);
-        talonMaxVelocity = propMan.createPersistentProperty(getPrefix()+"Max Velocity", 1400);
-        talonMaxAcceleration = propMan.createPersistentProperty(getPrefix()+"Max Accleration", 1400);
-        elevatorRestrictionReasonProp = propMan.createEphemeralProperty(getPrefix()+"Restriction Reason", "Waiting to run...");
-        calibratedProp = propMan.createEphemeralProperty(getPrefix()+"Calibrated", false);
-        heightNearLowLimit = propMan.createPersistentProperty(getPrefix()+"Height Near Low Limit", minHeightInInches.get() + 10);
-        heightNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Height Near High Limit", maxHeightInInches.get() - 10);
-        powerNearLowLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near Low Limit", 0.3);
-        powerNearHighLimit = propMan.createPersistentProperty(getPrefix()+"Max Power Near High Limit", 0.3);
-        positionalPid = pf.createPIDManager(getPrefix()+"Position", 1, 0, 0);
+        elevatorPower = propMan.createPersistentProperty(getPrefix() + "Standard Power", 0.4);
+        elevatorTicksPerInch = propMan.createPersistentProperty(getPrefix() + "TicksPerInch", 100);
+        calibrationPower = propMan.createPersistentProperty(getPrefix() + "CalibrationPower", 0.3);
+        maxHeightInInches = propMan.createPersistentProperty(getPrefix() + "Max HeightInInches", 80);
+        minHeightInInches = propMan.createPersistentProperty(getPrefix() + "Min HeightInInches", 3);
+        elevatorTargetHeight = propMan.createEphemeralProperty(getPrefix() + "TargetHeight", maxHeightInInches.get());
+        currentTicks = propMan.createEphemeralProperty(getPrefix() + "Current ticks", 0.0);
+        currentHeight = propMan.createEphemeralProperty(getPrefix() + "Current height", 0.0);
+        lowerLimitProp = propMan.createEphemeralProperty(getPrefix() + "Lower Limit", false);
+        upperLimitProp = propMan.createEphemeralProperty(getPrefix() + "Upper Limit", false);
+        targetScaleHighHeight = propMan.createPersistentProperty(getPrefix() + "Scale high", 76.5);
+        targetScaleMidHeight = propMan.createPersistentProperty(getPrefix() + "Scale mid", 64.5);
+        targetScaleLowHeight = propMan.createPersistentProperty(getPrefix() + "Scale low", 60.0);
+        targetSwitchDropHeight = propMan.createPersistentProperty(getPrefix() + "Switch drop height", 35);
+        targetPickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height", 3.0);
+        targetExchangeZonePickUpHeight = propMan.createPersistentProperty(getPrefix() + "Pickup height for exchange zone", 20.5);
+        elevatorPeakCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Peak current limit", 40);
+        elevatorPeakCurrentDuration = propMan.createPersistentProperty(getPrefix() + "Peak current duration", 3000);
+        elevatorContinuousCurrentLimit = propMan.createPersistentProperty(getPrefix() + "Continuous current limit", 30);
+        motionMagicProperties = pf.createPIDPropertyManager(getPrefix() + "Motion Magic", 0.3, 0, 0, 0.688);
+        talonMaxVelocity = propMan.createPersistentProperty(getPrefix() + "Max Velocity", 1400);
+        talonMaxAcceleration = propMan.createPersistentProperty(getPrefix() + "Max Accleration", 1400);
+        elevatorRestrictionReasonProp = propMan.createEphemeralProperty(getPrefix() + "Restriction Reason",
+                "Waiting to run...");
+        calibratedProp = propMan.createEphemeralProperty(getPrefix() + "Calibrated", false);
+        heightNearLowLimit = propMan.createPersistentProperty(getPrefix() + "Height Near Low Limit",
+                minHeightInInches.get() + 10);
+        heightNearHighLimit = propMan.createPersistentProperty(getPrefix() + "Height Near High Limit",
+                maxHeightInInches.get() - 10);
+        powerNearLowLimit = propMan.createPersistentProperty(getPrefix() + "Max Power Near Low Limit", 0.2);
+        powerNearHighLimit = propMan.createPersistentProperty(getPrefix() + "Max Power Near High Limit", 0.5);
+        positionalPid = pf.createPIDManager(getPrefix() + "Position", 0.1, 0, 0);
+        velocityPid = pf.createPIDManager(getPrefix() + "Velocity", 0.004, 0, 0);
+        currentVelocity = propMan.createEphemeralProperty(getPrefix() + "Current Velocity", 0);
         calibrationOffset = 0.0;
-
-
-
+        targetHitVerticalCubeHeight = propMan.createPersistentProperty(getPrefix() + "Knock vertical cube down height", 8);
+        
+        
         calibrationLatch = new Latch(false, EdgeType.RisingEdge, edge -> {
             if (edge == EdgeType.RisingEdge) {
                 calibrateHere();
@@ -160,20 +168,33 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorUsesTalonLimits()) {
             initializeTalonLimits();
         }
+        
+        
+        // Brutal hack since we don't trust anything
+        calibrateHere();
     }
 
     private void initializeMotor() {
-        motor = clf.createCANTalon(contract.getElevatorMaster().channel);
-        motor.setInverted(contract.getElevatorMaster().inverted);
-        motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-        motor.setSensorPhase(true);
+        master = clf.createCANTalon(contract.getElevatorMaster().channel);
+        master.setInverted(contract.getElevatorMaster().inverted);
+        master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+        master.setSensorPhase(contract.getElevatorEncoder().inverted);
 
-        motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
-        motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
-        motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
-        motor.enableCurrentLimit(true);
+        master.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+        master.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+        master.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
+        master.enableCurrentLimit(true);
 
-        motor.createTelemetryProperties(getPrefix(), "Motor");
+        master.configPeakOutputReverse(-0.8, 0);
+        master.configNominalOutputForward(0.0, 0);
+        
+        uncalibrate();
+
+        master.createTelemetryProperties(getPrefix(), "Motor");
+        
+        follower = clf.createCANTalon(contract.getElevatorFollower().channel);
+        follower.setInverted(contract.getElevatorFollower().inverted);
+        follower.follow(master);
     }
 
     private void setRestrictionReason(ElevatorPowerRestrictionReason reason) {
@@ -181,11 +202,13 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public void enableCurrentLimit() {
-        motor.enableCurrentLimit(true);
+        currentLimitState = true;
+        master.enableCurrentLimit(true);
     }
 
     public void disableCurrentLimit() {
-        motor.enableCurrentLimit(false);
+        currentLimitState = false;
+        master.enableCurrentLimit(false);
     }
 
     private void initializeLowerLimit() {
@@ -202,17 +225,17 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
     private void initializeTalonLimits() {
         // Upper limit
-        motor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+        master.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 
         // Lower limit
-        motor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+        master.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
 
-        upperLimitSupplier = () -> motor.isFwdLimitSwitchClosed();
-        lowerLimitSupplier = () -> motor.isRevLimitSwitchClosed();
+        upperLimitSupplier = () -> master.isFwdLimitSwitchClosed();
+        lowerLimitSupplier = () -> master.isRevLimitSwitchClosed();
     }
 
     public void calibrateHere() {
-        calibrateAt(motor.getSelectedSensorPosition(0));
+        calibrateAt(master.getSelectedSensorPosition(0));
     }
 
     public void calibrateAt(int lowestPosition) {
@@ -220,7 +243,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         calibrationOffset = lowestPosition;
         isCalibrated = true;
 
-        motor.configReverseSoftLimitThreshold(lowestPosition, 0);
+        master.configReverseSoftLimitThreshold(lowestPosition, 0);
 
         // calculate the upper limit and set safeties.
         double inchRange = getMaxHeightInInches() - getMinHeightInInches();
@@ -228,7 +251,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         int upperLimit = tickRange + lowestPosition;
 
         log.info("Upper limit set at: " + upperLimit);
-        motor.configForwardSoftLimitThreshold(upperLimit, 0);
+        master.configForwardSoftLimitThreshold(upperLimit, 0);
 
         setSoftLimitsEnabled(true);
 
@@ -241,8 +264,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     private void setSoftLimitsEnabled(boolean on) {
-        motor.configReverseSoftLimitEnable(on, 0);
-        motor.configForwardSoftLimitEnable(on, 0);
+        master.configReverseSoftLimitEnable(on, 0);
+        master.configForwardSoftLimitEnable(false, 0);
     }
 
     public boolean isCalibrated() {
@@ -276,10 +299,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
 
             boolean sensorHit = upperLimitSupplier.get();
 
-
             // If the upper-bound sensor is hit, then we need to prevent the mechanism from rising any further.
             if (sensorHit) {
-                power = MathUtils.constrainDouble(power, -1, 0);
+                power = MathUtils.constrainDouble(power, -1, 0.1);
                 reason = ElevatorPowerRestrictionReason.UpperLimitSwitch;
             }
         }
@@ -300,7 +322,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
             // if we are above the max, only go down.
             double currentHeight = getCurrentHeightInInches();
             if (currentHeight > getMaxHeightInInches()) {
-                power = MathUtils.constrainDouble(power, -1, 0);
+                power = MathUtils.constrainDouble(power, -1, 0.1);
                 reason = ElevatorPowerRestrictionReason.AboveMaxHeight;
             }
             // if we are below the min, can only go up.
@@ -308,27 +330,31 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
                 power = MathUtils.constrainDouble(power, 0, 1);
                 reason = ElevatorPowerRestrictionReason.BelowMinHeight;
             }
-            if(getCurrentHeightInInches() < getHeightNearLowLimit() && getCurrentHeightInInches() > getMinHeightInInches()) {
+            if (getCurrentHeightInInches() < getHeightNearLowLimit()
+                    && getCurrentHeightInInches() > getMinHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -getPowerNearLowLimit(), 1);
                 reason = ElevatorPowerRestrictionReason.NearMinHeight;
             }
-            if(getCurrentHeightInInches() > getHeightNearHighLimit() && getCurrentHeightInInches() < getMaxHeightInInches()) {
+            if (getCurrentHeightInInches() > getHeightNearHighLimit()
+                    && getCurrentHeightInInches() < getMaxHeightInInches()) {
                 power = MathUtils.constrainDouble(power, -1, getPowerNearHighLimit());
                 reason = ElevatorPowerRestrictionReason.NearMaxHeight;
             }
         }
 
-        motor.simpleSet(power);
+        master.simpleSet(power);
         setRestrictionReason(reason);
     }
 
     public void insanelyDangerousSetPower(double power) {
-        motor.simpleSet(power);
+        setSoftLimitsEnabled(false);
+        master.simpleSet(power);
     }
 
     public double getPowerNearLowLimit() {
         return powerNearLowLimit.get();
     }
+
     public double getPowerNearHighLimit() {
         return powerNearHighLimit.get();
     }
@@ -341,15 +367,14 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         return heightNearHighLimit.get();
     }
 
-
     public void configureMotionMagic() {
-        motor.configMotionCruiseVelocity((int)talonMaxVelocity.get(), 0);
-        motor.configMotionAcceleration((int)talonMaxAcceleration.get(), 0);
+        master.configMotionCruiseVelocity((int) talonMaxVelocity.get(), 0);
+        master.configMotionAcceleration((int) talonMaxAcceleration.get(), 0);
 
-        motor.config_kP(0, this.motionMagicProperties.getP(), 0);
-        motor.config_kI(0, this.motionMagicProperties.getI(), 0);
-        motor.config_kD(0, this.motionMagicProperties.getD(), 0);
-        motor.config_kF(0, this.motionMagicProperties.getF(), 0);
+        master.config_kP(0, this.motionMagicProperties.getP(), 0);
+        master.config_kI(0, this.motionMagicProperties.getI(), 0);
+        master.config_kD(0, this.motionMagicProperties.getD(), 0);
+        master.config_kF(0, this.motionMagicProperties.getF(), 0);
     }
 
     public void motionMagicToHeight(double heightInInches) {
@@ -358,12 +383,35 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (isCalibrated) {
             double targetTicks = inchesToTicks(heightInInches);
 
-            motor.set(ControlMode.MotionMagic, targetTicks);
+            master.set(ControlMode.MotionMagic, targetTicks);
         }
     }
 
     public void setTargetHeight(double height) {
         elevatorTargetHeight.set(height);
+    }
+
+    public void setTargetHeight(ElevatorGoal elevatorGoal) {
+        switch (elevatorGoal) {
+        case PickUpHeight:
+            setTargetHeight(targetPickUpHeight.get());
+            break;
+        case Switch:
+            setTargetHeight(targetSwitchDropHeight.get());
+            break;
+        case ScaleLow:
+            setTargetHeight(targetScaleLowHeight.get());
+            break;
+        case ScaleMid:
+            setTargetHeight(targetScaleMidHeight.get());
+            break;
+        case ScaleHigh:
+            setTargetHeight(targetScaleHighHeight.get());
+            break;
+        default:
+            log.error(elevatorGoal + ": is an invalid type");
+            break;
+        }
     }
 
     public double getTargetHeight() {
@@ -389,11 +437,15 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     public double getCurrentHeightInInches() {
-        return ticksToInches(motor.getSelectedSensorPosition(0));
+        return ticksToInches(master.getSelectedSensorPosition(0));
+    }
+
+    public double getVelocityInchesPerSecond() {
+        return master.getSelectedSensorVelocity(0) * 10 / elevatorTicksPerInch.get();
     }
 
     public int getCurrentTick() {
-        return motor.getSelectedSensorPosition(0);
+        return master.getSelectedSensorPosition(0);
     }
 
     public double getMinHeightInInches() {
@@ -418,7 +470,7 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     }
 
     private double inchesToTicks(double inches) {
-        return (inches-minHeightInInches.get()) * elevatorTicksPerInch.get() + calibrationOffset;
+        return (inches - minHeightInInches.get()) * elevatorTicksPerInch.get() + calibrationOffset;
     }
 
     public double getMaxHeight() {
@@ -434,9 +486,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         if (contract.elevatorReady()) {
             currentTicks.set(getCurrentTick());
             currentHeight.set(getCurrentHeightInInches());
-            motor.updateTelemetryProperties();
+            master.updateTelemetryProperties();
+            currentVelocity.set(getVelocityInchesPerSecond());
         }
-
         if (contract.elevatorLowerLimitReady()) {
             lowerLimitProp.set(lowerLimitSwitch.get());
         }
@@ -449,14 +501,13 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         calibratedProp.set(isCalibrated);
 
         // roughly 5 seconds at 30 Hz
-        if (updateMotorValuesCounter == 150 ) {
+        if (updateMotorValuesCounter == 150) {
             updateMotorValuesCounter = 0;
-            motor.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
-            motor.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
-            motor.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
+            master.configPeakCurrentLimit((int) elevatorPeakCurrentLimit.get(), 0);
+            master.configPeakCurrentDuration((int) elevatorPeakCurrentDuration.get(), 0);
+            master.configContinuousCurrentLimit((int) elevatorContinuousCurrentLimit.get(), 0);
         }
     }
-
 
     public double getTargetScaleHighHeight() {
         return targetScaleHighHeight.get();
@@ -482,4 +533,21 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     public PIDManager getPositionalPid() {
         return positionalPid;
     }
+
+    public PIDManager getVelocityPid() {
+        return velocityPid;
+    }
+    
+    public boolean getCurrentLimitState() {
+        return currentLimitState;
+    }
+    
+    public double getHitVerticalCubeHeight() {
+        return targetHitVerticalCubeHeight.get();
+    }
+    
+    public double getTargetExchangeZonePickUpHeight() {
+        return targetExchangeZonePickUpHeight.get();
+    }
+    
 }

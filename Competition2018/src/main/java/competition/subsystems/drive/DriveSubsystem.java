@@ -13,6 +13,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import competition.subsystems.power_state_manager.PowerStateManagerSubsystem;
+import competition.subsystems.power_state_manager.PowerStateResponsiveController;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.MathUtils;
@@ -23,7 +25,7 @@ import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.BaseDriveSubsystem;
 
 @Singleton
-public class DriveSubsystem extends BaseDriveSubsystem {
+public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResponsiveController {
     private static Logger log = Logger.getLogger(DriveSubsystem.class);
 
     public final XCANTalon leftMaster;
@@ -42,22 +44,42 @@ public class DriveSubsystem extends BaseDriveSubsystem {
     private final PIDManager positionalPid;
     private final PIDManager rotateToHeadingPid;
     private final PIDManager rotateDecayPid;
+    
+    private final PIDManager rotationalVelocityPid;
+    private final PIDManager translationalVelocityPid;
 
     private double leftAccum;
     private double rightAccum;
+    
+    private final DoubleProperty voltageRampNormalProp;
+    private final DoubleProperty voltageRampLowBatProp;
+    private final DoubleProperty maxCurrentNormalProp;
+    private final DoubleProperty maxCurrentLowBatProp;
 
     public enum Side {
         Left, Right
     }
 
     @Inject
-    public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager, ElectricalContract2018 contract, PIDFactory pf) {
+    public DriveSubsystem(
+            CommonLibFactory factory,
+            PowerStateManagerSubsystem powerStateManager,
+            XPropertyManager propManager,
+            ElectricalContract2018 contract,
+            PIDFactory pf) {
         log.info("Creating DriveSubsystem");
         
-        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.5, -0.5, 3, 1, 0.5);
+        positionalPid = pf.createPIDManager(getPrefix()+"Drive to position", 0.1, 0, 0, 0, 0.75, -0.75, 3, 1, 0.5);
         rotateToHeadingPid = pf.createPIDManager(getPrefix()+"DriveHeading", 4, 0, 0);
         rotateDecayPid = pf.createPIDManager(getPrefix()+"DriveDecay", 0, 0, 1);
         
+        rotationalVelocityPid = pf.createPIDManager(getPrefix() + "RotationalVelocity", 0.001, 0, 0);
+        translationalVelocityPid = pf.createPIDManager(getPrefix() + "TranslationalVelocity", 0.01, 0, 0);
+
+        voltageRampNormalProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (normal)", 0.15);
+        voltageRampLowBatProp = propManager.createPersistentProperty(getPrefix() + "Voltage ramp time (low battery)", 0.5);
+        maxCurrentNormalProp = propManager.createPersistentProperty(getPrefix() + "Current limit (normal)", 0);
+        maxCurrentLowBatProp = propManager.createPersistentProperty(getPrefix() + "Current limit (low-battery)", 10);
 
         // Default is for 2018 robot design
         // SRX counts edges rather than ticks, so the 1024-count sensor is read as 4096 per rev
@@ -65,9 +87,9 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         final double defaultDriveTicksPerInch = 4096d * 3d / (Math.PI * 4d);
         final double defaultDriveTicksPer5Feet = defaultDriveTicksPerInch * (12 * 5);
         leftTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"leftDriveTicksPer5Feet",
-                defaultDriveTicksPer5Feet);
+                100281);
         rightTicksPerFiveFeet = propManager.createPersistentProperty(getPrefix()+"rightDriveTicksPer5Feet",
-                defaultDriveTicksPer5Feet);
+                100281);
 
         this.leftMaster = factory.createCANTalon(contract.getLeftDriveMaster().channel);
         this.leftFollower = factory.createCANTalon(contract.getLeftDriveFollower().channel);
@@ -83,10 +105,12 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         masterTalons.put(leftMaster, new MotionRegistration(0, 1, -1));
         masterTalons.put(rightMaster, new MotionRegistration(0, 1, 1));
         
-        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
-        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0, 0, 0, 0, 1, -1);
+        this.leftVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
+        this.rightVelocityPidManager = pf.createPIDManager(getPrefix()+"Velocity (local)", 0.005, 0, 0.01, 0, 1, -1);
 
-        this.setVoltageRamp(0.15);
+        this.setVoltageRamp(voltageRampNormalProp.get());
+        this.setCurrentLimits(0, false);
+        powerStateManager.registerResponsiveController(this);
     }
 
     private void configureMotorTeam(String masterName, XCANTalon master, XCANTalon follower, boolean masterInverted,
@@ -207,18 +231,65 @@ public class DriveSubsystem extends BaseDriveSubsystem {
         super.updatePeriodicData();
     }
 
-    @Override
     public PIDManager getPositionalPid() {
         return positionalPid;
     }
 
-    @Override
     public PIDManager getRotateToHeadingPid() {
         return rotateToHeadingPid;
     }
 
-    @Override
     public PIDManager getRotateDecayPid() {
         return rotateDecayPid;
+    }
+    
+    public PIDManager getRotationalVelocityPid() {
+        return rotationalVelocityPid;
+    }
+    
+    public PIDManager getTranslationalVelocityPid() {
+        return translationalVelocityPid;
+    }
+    
+    public double getLeftTicksPerFiveFt() {
+        return leftTicksPerFiveFeet.get();
+    }
+    
+    public double getRightTicksPerFiveFt() {
+        return rightTicksPerFiveFeet.get();
+    }
+    
+    public double getVelocityInInchesPerSecond() {
+        double leftSpeed = ticksToInches(Side.Left, leftMaster.getSelectedSensorVelocity(0)) * 10;
+        double rightSpeed = ticksToInches(Side.Right, rightMaster.getSelectedSensorVelocity(0)) * 10;
+        return (leftSpeed + rightSpeed) / 2;
+    }
+    
+    private void setCurrentLimitsForLowBatMode(boolean isLowBatMode) {
+        if (isLowBatMode) {
+            this.setCurrentLimits((int)maxCurrentLowBatProp.get(), true);
+        }
+        else {
+            int maxCurrent = (int)maxCurrentNormalProp.get();
+            // Setting the normal current limit to 0 will disable current limiting
+            if (maxCurrent > 0) {
+                this.setCurrentLimits(maxCurrent, true);
+            }
+            else {
+                this.setCurrentLimits(0, false);
+            }
+        }
+    }
+    
+    @Override
+    public void onEnterLowBatteryMode() {
+        setCurrentLimitsForLowBatMode(true);
+        this.setVoltageRamp(voltageRampLowBatProp.get());
+    }
+
+    @Override
+    public void onLeaveLowBatteryMode() {
+        this.setCurrentLimitsForLowBatMode(false);
+        this.setVoltageRamp(voltageRampNormalProp.get());
     }
 }

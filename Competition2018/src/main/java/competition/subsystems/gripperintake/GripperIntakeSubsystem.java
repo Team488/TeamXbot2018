@@ -21,12 +21,16 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     final DoubleProperty highPower;
     final DoubleProperty lowPower;
 
+    public enum GripperMode {
+        Intake, Eject, Stop
+    }
+    
     @Inject
     public GripperIntakeSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
         highPower = propMan.createPersistentProperty(getPrefix()+"High Power", 1);
-        lowPower = propMan.createPersistentProperty(getPrefix()+"Low Power", 0.3);
+        lowPower = propMan.createPersistentProperty(getPrefix()+"Low Power", 0.25);
 
         if (contract.collectorReady()) {
             initializeMotors();
@@ -75,5 +79,17 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     public void stop() {
         rightMotor.simpleSet(0);
         leftMotor.simpleSet(0);
+    }
+    
+    public void setIntakeMode(GripperMode mode) {
+        if (mode == GripperMode.Intake) {
+            intake();
+        } else if (mode == GripperMode.Eject) {
+            eject();
+        } else if (mode == GripperMode.Stop) {
+            stop();
+        } else {
+            log.error("Gripper Mode: " + mode + " is an invalid value");
+        }
     }
 }

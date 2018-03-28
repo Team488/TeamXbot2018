@@ -1,8 +1,6 @@
 package competition.subsystems.elevator.commands;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import competition.BaseCompetitionTest;
@@ -35,6 +33,5 @@ public class SetElevatorTargetHeightCommandTest extends BaseCompetitionTest {
         command.initialize();
         command.execute();
         assertEquals(10, elevator.getTargetHeight(), .01);
-        assertTrue(command.isFinished());
     }
 }

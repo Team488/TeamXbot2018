@@ -20,9 +20,9 @@ public abstract class ElectricalContract2018 {
     public abstract DeviceInfo getRightDriveMaster();
 
     public abstract DeviceInfo getRightDriveFollower();
-    
+
     public abstract DeviceInfo getLeftDriveMasterEncoder();
-    
+
     public abstract DeviceInfo getRightDriveMasterEncoder();
 
     // Pneumatic Shifters
@@ -32,26 +32,38 @@ public abstract class ElectricalContract2018 {
     public abstract boolean elevatorReady();
 
     public abstract DeviceInfo getElevatorMaster();
+
+    public abstract DeviceInfo getElevatorEncoder();
+    
+    public abstract DeviceInfo getElevatorFollower();
     
     // Elevator sensor
     public abstract boolean elevatorLowerLimitReady();
-    
+
     public abstract boolean elevatorUpperLimitReady();
-    
+
     public abstract boolean elevatorUsesTalonLimits();
-    
+
     public abstract DeviceInfo getElevatorLowerLimit();
-    
+
     public abstract DeviceInfo getElevatorUpperLimit();
 
     // Wrist Motor
     public abstract boolean wristReady();
 
     public abstract DeviceInfo getWristMaster();
-    
+
     public abstract DeviceInfo getWristEncoder();
-    
+
     public abstract double getWristMaximumAngle();
+    
+    // Wrist Sensors
+    
+    public abstract boolean isWristLimitsReady();
+    
+    public abstract DeviceInfo getWristLowerLimit();
+    
+    public abstract DeviceInfo getWristUpperLimit();
 
     // Collector Motors
     public abstract boolean collectorReady();
@@ -74,4 +86,11 @@ public abstract class ElectricalContract2018 {
     public abstract boolean climbReady();
 
     public abstract DeviceInfo getClimbMaster();
+
+    public abstract DeviceInfo getPawlSolenoidA();
+
+    public abstract DeviceInfo getPawlSolenoidB();
+
+    // ZED mount
+    public abstract DeviceInfo getZedDeploy();
 }
