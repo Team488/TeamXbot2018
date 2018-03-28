@@ -55,7 +55,6 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     int lowerLimit;
     int upperLimit;
     boolean calibrated = false;
-    boolean isStalled = false;
 
     public enum WristPosition {
         Down, Middle, Up
