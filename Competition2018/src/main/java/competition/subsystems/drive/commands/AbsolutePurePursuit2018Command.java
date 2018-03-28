@@ -44,6 +44,10 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     public void addPoint(TotalRobotPoint point) {
         originalPoints.add(point);
     }
+    
+    public void setAllPoints(List<TotalRobotPoint> points) {
+        originalPoints = points;
+    }
 
     @Override
     protected List<RabbitPoint> getOriginalPoints() {

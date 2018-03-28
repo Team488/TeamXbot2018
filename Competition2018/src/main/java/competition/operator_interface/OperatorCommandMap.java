@@ -21,9 +21,11 @@ import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
 import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
+import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.FieldOrientedTankDriveCommand;
+import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.drive.commands.VelocityArcadeDriveCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
@@ -47,6 +49,7 @@ import competition.subsystems.offboard.commands.IdentifyTargetCubeCommand.Timeou
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
 import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
 import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCommand;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
@@ -60,6 +63,10 @@ import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.properties.ConfigurePropertiesCommand;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
+import xbot.common.subsystems.drive.RabbitPoint;
+import xbot.common.subsystems.drive.RabbitPoint.PointDriveStyle;
+import xbot.common.subsystems.drive.RabbitPoint.PointTerminatingType;
+import xbot.common.subsystems.drive.RabbitPoint.PointType;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -114,7 +121,8 @@ public class OperatorCommandMap {
     public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
             SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
             FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade,
-            VelocityArcadeDriveCommand velocity, ConfigurablePurePursuitCommand square) {
+            VelocityArcadeDriveCommand velocity, ConfigurablePurePursuitCommand square,
+            AbsolutePurePursuit2018Command pretendMulticube) {
 
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
@@ -125,12 +133,110 @@ public class OperatorCommandMap {
         oi.driverGamepad.getPovIfAvailable(0).whenPressed(velocity);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
         
-        for (int i = 0; i < 50; i++) {
-            square.addPoint(new FieldPose(new XYPair(0*12, 6*12), new ContiguousHeading(90)));
-            square.addPoint(new FieldPose(new XYPair(6*12, 6*12), new ContiguousHeading(0)));
-            square.addPoint(new FieldPose(new XYPair(6*12, 0*12), new ContiguousHeading(-90)));
-            square.addPoint(new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(-180)));
-        }
+        
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(
+                        new FieldPose(new XYPair(0, -3*12), new ContiguousHeading(90)), 
+                        PointType.PositionAndHeading, 
+                        PointTerminatingType.Continue, 
+                        PointDriveStyle.Macro),
+                Gear.LOW_GEAR,
+                80));
+        
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(
+                        new FieldPose(new XYPair(0, 0), new ContiguousHeading(225)), 
+                        PointType.HeadingOnly, 
+                        PointTerminatingType.Continue, 
+                        PointDriveStyle.Macro),
+                Gear.LOW_GEAR,
+                80));
+        
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(
+                        new FieldPose(new XYPair(-3*12, -6*12), new ContiguousHeading(225)), 
+                        PointType.PositionAndHeading, 
+                        PointTerminatingType.Continue, 
+                        PointDriveStyle.Micro),
+                Gear.LOW_GEAR,
+                40));
+        
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(
+                        new FieldPose(new XYPair(0*12, -6*12), new ContiguousHeading(180)), 
+                        PointType.PositionAndHeading, 
+                        PointTerminatingType.Continue, 
+                        PointDriveStyle.Macro),
+                Gear.LOW_GEAR,
+                80));
+        
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(
+                        new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(90)), 
+                        PointType.HeadingOnly, 
+                        PointTerminatingType.Continue, 
+                        PointDriveStyle.Macro),
+                Gear.LOW_GEAR,
+                80));
+        
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(
+                        new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(90)), 
+                        PointType.PositionAndHeading, 
+                        PointTerminatingType.Stop, 
+                        PointDriveStyle.Macro),
+                Gear.LOW_GEAR,
+                80));
+        
+        pretendMulticube.includeOnSmartDashboard("A Pretent Multicube");
+        
+        
+            
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(0*12, 6*12), new ContiguousHeading(90)),
+                PointType.PositionAndHeading,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(0)),
+                PointType.HeadingOnly,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(6*12, 6*12), new ContiguousHeading(0)),
+                PointType.PositionAndHeading,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(-90)),
+                PointType.HeadingOnly,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(6*12, 0*12), new ContiguousHeading(-90)),
+                PointType.PositionAndHeading,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(180)),
+                PointType.HeadingOnly,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(180)),
+                PointType.PositionAndHeading,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(
+                new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(90)),
+                PointType.HeadingOnly,
+                PointTerminatingType.Stop,
+                PointDriveStyle.Macro));
+        
+        
         square.includeOnSmartDashboard("A Square Dancing Robot");
     }
 

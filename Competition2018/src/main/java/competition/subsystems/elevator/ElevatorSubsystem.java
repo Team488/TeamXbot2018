@@ -171,7 +171,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         
         
         // Brutal hack since we don't trust anything
-        //calibrateHere();
+        if (contract.elevatorReady()) {
+            calibrateHere();
+        }
     }
 
     private void initializeMotor() {
