@@ -2,7 +2,7 @@ package competition.commandgroups;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -18,7 +18,7 @@ public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
     
     @Inject
     public DynamicScoreOnSwitchCommandGroup(
-            AutonomousDecisionSystem decider,
+            AutonomousPathSupplier decider,
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
             ConfigurablePurePursuitCommand pursuit,
