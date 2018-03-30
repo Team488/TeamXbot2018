@@ -12,6 +12,7 @@ import competition.commandgroups.PrepareToClimbCommandGroup;
 import competition.commandgroups.TotalClimbCommandGroup;
 import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
+import competition.subsystems.autonomous.selection.SelectAdvancedAutonomous;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
@@ -58,6 +59,7 @@ import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
+import openrio.powerup.MatchData.GameFeature;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -94,8 +96,10 @@ public class OperatorCommandMap {
             ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
             SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
             SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle, MultiCubeNearScaleCommandGroup multiCube) {
+            SetStartingSideCommand setMiddle, MultiCubeNearScaleCommandGroup multiCube, SelectAdvancedAutonomous advancedScale) {
 
+        advancedScale.setGoalFeature(GameFeature.SCALE);
+        
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
         
@@ -115,6 +119,8 @@ public class OperatorCommandMap {
         oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);
         oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
         oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
+        
+        oi.programmerGamepad.getifAvailable(6).whenPressed(advancedScale);
     }
 
     @Inject

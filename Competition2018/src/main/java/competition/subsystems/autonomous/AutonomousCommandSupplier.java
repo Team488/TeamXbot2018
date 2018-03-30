@@ -43,7 +43,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         this.crossLine = crossLine;
     }
     
-    public void setGoalElement(GameFeature feature) {
+    public void setGoalFeature(GameFeature feature) {
         goalFeature = feature;
     }
     

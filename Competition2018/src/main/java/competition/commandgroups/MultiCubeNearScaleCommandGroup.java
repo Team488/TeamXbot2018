@@ -1,31 +1,18 @@
 package competition.commandgroups;
 
-import java.util.List;
-
 import com.google.inject.Inject;
 
 import competition.subsystems.autonomous.AutonomousPathSupplier;
 import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
-import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.MoveElevatorToHeightAndStabilizeCommand;
-import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
-import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
-import xbot.common.math.ContiguousHeading;
-import xbot.common.math.FieldPose;
-import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.PointLoadingMode;
-import xbot.common.subsystems.drive.RabbitPoint.PointDriveStyle;
-import xbot.common.subsystems.drive.RabbitPoint.PointTerminatingType;
-import xbot.common.subsystems.drive.RabbitPoint.PointType;
-import xbot.common.subsystems.drive.RabbitPoint;
 
 public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
 
