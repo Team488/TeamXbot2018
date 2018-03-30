@@ -14,6 +14,7 @@ import xbot.common.controls.sensors.XDigitalInput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.logic.Latch;
 import xbot.common.logic.Latch.EdgeType;
+import xbot.common.logic.StallDetector;
 import xbot.common.math.MathUtils;
 import xbot.common.properties.BooleanProperty;
 import xbot.common.properties.DoubleProperty;
@@ -24,13 +25,14 @@ import xbot.common.properties.XPropertyManager;
 public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDataSource {
     
     public enum WristPowerRestrictionReason {
-        FullPowerAvailable, LowerLimitSwitch, UpperLimitSwitch, Uncalibrated, IsWithinSafetyZone
+        FullPowerAvailable, LowerLimitSwitch, UpperLimitSwitch, Uncalibrated, IsWithinSafetyZone, isStalled
     }
     
     final StringProperty wristRestrictionReasonProp;
     final DoubleProperty maximumWristPower;
     final CommonLibFactory clf;
     final ElectricalContract2018 contract;
+    final StallDetector stallChecker;
     private final Latch calibrationLatch;
 
     public XCANTalon motor;
@@ -42,6 +44,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     final BooleanProperty wristCalibratedProp;
     final DoubleProperty wristUncalibratedPowerProp;
     final DoubleProperty targetAngle;
+    final DoubleProperty currentVelocity;
     final BooleanProperty lowerLimitProp;
     final BooleanProperty upperLimitProp;
 
@@ -59,11 +62,13 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
     
     @Inject
     WristSubsystem(CommonLibFactory clf, XPropertyManager propMan,
-            ElectricalContract2018 contract) {
+            ElectricalContract2018 contract, StallDetector stallChecker) {
         this.clf = clf;
         this.contract = contract;
+        this.stallChecker = stallChecker;
         maximumWristPower = propMan.createPersistentProperty(getPrefix() + "Maximum Power", 0.3);
 
+        currentVelocity = propMan.createEphemeralProperty(getPrefix() + "Current Velocity", 0);
         wristRestrictionReasonProp = propMan.createEphemeralProperty(getPrefix() + "Restriction Reason","Waiting to run...");
         currentWristAngleProp = propMan.createEphemeralProperty(getPrefix() + "Current Angle", 0.0);
         wristTicksPerDegreeProp = propMan.createPersistentProperty(getPrefix() + "Ticks per degree", 1);
@@ -232,7 +237,15 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
             power = MathUtils.constrainDouble(power, -maximumWristPower.get(), maximumWristPower.get());
             reason = WristPowerRestrictionReason.FullPowerAvailable;
         }
-
+        
+        if (stallChecker.checkIsStalled(power, currentVelocity.get()) == StallDetector.StallMode.StalledRecently) {
+            power = 0;
+            reason = WristPowerRestrictionReason.isStalled;
+        } else {
+            power = MathUtils.constrainDouble(power, -maximumWristPower.get(), maximumWristPower.get());
+            reason = WristPowerRestrictionReason.FullPowerAvailable;
+        }
+        
         motor.simpleSet(power);
         setRestrictionReason(reason);
     }
@@ -279,6 +292,7 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
         motor.updateTelemetryProperties();
         wristCalibratedProp.set(calibrated);
         currentWristAngleProp.set(getWristAngle());
+        currentVelocity.set(getVelocityDegreesPerSecond());
         
         if (contract.isWristLimitsReady()) {
           lowerLimitProp.set(lowerLimitSwitch.get());
@@ -288,5 +302,9 @@ public class WristSubsystem extends BaseSetpointSubsystem implements PeriodicDat
             double newTargetAngle = modifyAngleForSafeties(getTargetAngle());
             targetAngle.set(newTargetAngle);
         } */
+    }
+    
+    public double getVelocityDegreesPerSecond() {
+        return motor.getSelectedSensorVelocity(0) * 10 / getWristTicksPerDegree();
     }
 }
