@@ -2,17 +2,17 @@ package competition.subsystems.autonomous.selection;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
-import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
+import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
 import xbot.common.command.BaseCommand;
 
 public class SetStartingSideCommand extends BaseCommand {
 
-    AutonomousDecisionSystem decider;
+    AutonomousPathSupplier decider;
     StartingLocations whereToStart;
     
     @Inject
-    public SetStartingSideCommand(AutonomousDecisionSystem decider) {
+    public SetStartingSideCommand(AutonomousPathSupplier decider) {
         this.decider = decider;
         this.setRunWhenDisabled(true);
     }

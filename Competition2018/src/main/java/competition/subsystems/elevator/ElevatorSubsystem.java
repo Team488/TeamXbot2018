@@ -99,6 +99,8 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
     @Inject
     public ElevatorSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract,
             PIDFactory pf) {
+        log.info("Creating ElevatorSubsystem");
+        
         this.clf = clf;
         this.contract = contract;
         elevatorPower = propMan.createPersistentProperty(getPrefix() + "Standard Power", 0.4);
@@ -169,7 +171,9 @@ public class ElevatorSubsystem extends BaseSetpointSubsystem implements Periodic
         
         
         // Brutal hack since we don't trust anything
-        calibrateHere();
+        if (contract.elevatorReady()) {
+            calibrateHere();
+        }
     }
 
     private void initializeMotor() {

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
 import competition.subsystems.autonomous.GameDataSource;
 import competition.subsystems.autonomous.MockGameDataAdapter;
 import competition.subsystems.drive.DriveSubsystem;
@@ -19,7 +19,7 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
     XScheduler scheduler;
     DriveSubsystem drive;
     MockGameDataAdapter dataSource;
-    AutonomousDecisionSystem decider;
+    AutonomousPathSupplier decider;
     
     @Override
     public void setUp() {
@@ -29,7 +29,7 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
         this.scheduler = injector.getInstance(XScheduler.class);
         this.drive = injector.getInstance(DriveSubsystem.class);
         this.dataSource = (MockGameDataAdapter)injector.getInstance(GameDataSource.class);
-        this.decider = injector.getInstance(AutonomousDecisionSystem.class); 
+        this.decider = injector.getInstance(AutonomousPathSupplier.class); 
     }
     
     @Test
