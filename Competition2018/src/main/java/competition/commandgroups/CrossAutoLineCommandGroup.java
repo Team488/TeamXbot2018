@@ -2,7 +2,7 @@ package competition.commandgroups;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.math.ContiguousHeading;
@@ -16,7 +16,7 @@ public class CrossAutoLineCommandGroup extends BaseCommandGroup {
 
     @Inject
     public CrossAutoLineCommandGroup(
-            AutonomousDecisionSystem decider,
+            AutonomousPathSupplier decider,
             DelayViaSupplierCommand delay,
             ConfigurablePurePursuitCommand crossLine) {
                 

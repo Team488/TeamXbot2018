@@ -10,7 +10,7 @@ import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
 import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import competition.commandgroups.PrepareToClimbCommandGroup;
 import competition.commandgroups.TotalClimbCommandGroup;
-import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
+import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
 import competition.subsystems.autonomous.selection.SelectDoNothingCommand;

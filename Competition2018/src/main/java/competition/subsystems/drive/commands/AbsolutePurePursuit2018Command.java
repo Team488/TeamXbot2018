@@ -2,6 +2,7 @@ package competition.subsystems.drive.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.google.inject.Inject;
 
@@ -23,6 +24,7 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     
     private final ShiftSubsystem shifter;
     private List<TotalRobotPoint> originalPoints;
+    private Supplier<List<TotalRobotPoint>> externalPointSource;
     final VelocityThrottleModule translationalThrottleModule;
     final DoubleProperty maxInchesPerSecondProp;
     private final DriveSubsystem drive;
@@ -48,11 +50,21 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     public void setAllPoints(List<TotalRobotPoint> points) {
         originalPoints = points;
     }
-
-    @Override
+    
+    public void setPointSupplier(Supplier<List<TotalRobotPoint>> externalPointSource) {
+        this.externalPointSource = externalPointSource;
+    }
+    
     protected List<RabbitPoint> getOriginalPoints() {
+        if (externalPointSource != null) {
+            originalPoints = externalPointSource.get();
+        }
+        return downgradeTotalRobotPoints(originalPoints);
+    }
+
+    private List<RabbitPoint> downgradeTotalRobotPoints(List<TotalRobotPoint> complexPoints) {
         ArrayList<RabbitPoint> simplePoints = new ArrayList<>();
-        originalPoints.stream().forEach(complexPoint -> simplePoints.add(complexPoint.simplePoint));
+        complexPoints.stream().forEach(complexPoint -> simplePoints.add(complexPoint.simplePoint));
         return simplePoints;        
     }
 

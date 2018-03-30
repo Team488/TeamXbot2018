@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import competition.subsystems.drive.commands.TotalRobotPoint;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
 import openrio.powerup.MatchData.GameFeature;
 import openrio.powerup.MatchData.OwnedSide;
 import xbot.common.command.BaseSubsystem;
@@ -18,9 +20,12 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.RabbitPoint;
+import xbot.common.subsystems.drive.RabbitPoint.PointDriveStyle;
+import xbot.common.subsystems.drive.RabbitPoint.PointTerminatingType;
+import xbot.common.subsystems.drive.RabbitPoint.PointType;
 
 @Singleton
-public class AutonomousDecisionSystem extends BaseSubsystem {
+public class AutonomousPathSupplier extends BaseSubsystem {
 
     final GameDataSource gameData;
     final StringProperty robotLocation;
@@ -33,7 +38,7 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
     }
 
     @Inject
-    public AutonomousDecisionSystem(GameDataSource gameData, XPropertyManager propMan) {
+    public AutonomousPathSupplier(GameDataSource gameData, XPropertyManager propMan) {
         this.gameData = gameData;
         startingLocation = StartingLocations.Right;
         robotLocation = propMan.createPersistentProperty(getPrefix() + "Robot Location", "Not Set");
@@ -63,9 +68,87 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
         return () -> chooseBestPathToFeature(feature, startingLocation);
     }
     
-    public void startBestAutoProgram(GameFeature feature) {
+    public boolean matchingSide() {
+        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
+        log.info("Target Side is: " + targetSide);
         
+        boolean matchLeft = targetSide == OwnedSide.LEFT && startingLocation == StartingLocations.Left;
+        boolean matchRight = targetSide == OwnedSide.RIGHT && startingLocation == StartingLocations.Right;
+        
+        return (matchLeft || matchRight);
     }
+    
+    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlate() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+
+        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
+        log.info("Target Side is: " + targetSide);
+    
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 4 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.HIGH_GEAR, 120));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 22 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.HIGH_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
+    
+    public List<TotalRobotPoint> getAdvancedPathToNearbyCubeFromScalePlate() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 19 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(225)),
+                PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-4 * 12, 16 * 12), new ContiguousHeading(225)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
+                Gear.LOW_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
+    
+    public List<TotalRobotPoint> getAdvancedPathBackToScalePlateFromCube() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 16 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                        PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 22 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
+    
+    
 
     private List<FieldPose> mirrorPath(List<FieldPose> path) {
         List<FieldPose> flippedPath = new ArrayList<FieldPose>();
@@ -79,6 +162,27 @@ public class AutonomousDecisionSystem extends BaseSubsystem {
                     new ContiguousHeading(flippedHeading)));
         }
 
+        return flippedPath;
+    }
+    
+    private List<TotalRobotPoint> mirrorTotalPointPath(List<TotalRobotPoint> path) {
+        List<TotalRobotPoint> flippedPath = new ArrayList<TotalRobotPoint>();
+        
+        for(TotalRobotPoint point : path) {
+            double currentHeading = point.simplePoint.pose.getHeading().getValue();
+            double flippedHeading = -1 * (currentHeading - 90) + 90;
+            flippedPath.add(new TotalRobotPoint(new RabbitPoint(
+                        new FieldPose(
+                                new XYPair(
+                                        -point.simplePoint.pose.getPoint().x, 
+                                        point.simplePoint.pose.getPoint().y), 
+                                new ContiguousHeading(flippedHeading)), 
+                        point.simplePoint.pointType, 
+                        point.simplePoint.terminatingType,
+                        point.simplePoint.driveStyle),
+                point.desiredGear,
+                point.velocityLimit));
+        }    
         return flippedPath;
     }
 
