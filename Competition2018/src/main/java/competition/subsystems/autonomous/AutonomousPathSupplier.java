@@ -85,12 +85,12 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         log.info("Target Side is: " + targetSide);
     
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 4 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(1 * 12, 4 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.HIGH_GEAR, 120));
 
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 22 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 23.5 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.HIGH_GEAR, 80));
 
@@ -104,7 +104,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     public List<TotalRobotPoint> getAdvancedPathToNearbyCubeFromScalePlate() {
         List<TotalRobotPoint> points = new ArrayList<>();
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 19 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 20 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
@@ -112,7 +112,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
 
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-4 * 12, 16 * 12), new ContiguousHeading(225)),
+                new RabbitPoint(new FieldPose(new XYPair(-3.5 * 12, 18 * 12), new ContiguousHeading(225)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
                 Gear.LOW_GEAR, 80));
 
