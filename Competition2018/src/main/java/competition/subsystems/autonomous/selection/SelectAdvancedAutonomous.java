@@ -25,6 +25,7 @@ public class SelectAdvancedAutonomous extends BaseCommand {
 
     @Override
     public void initialize() {
+        log.info("Initializing with goal feature: " + goalFeature.toString());
         autoCommandSupplier.setGoalFeature(goalFeature);
         autoSelector.setCurrentAutonomousCommandSupplier(autoCommandSupplier.getBestAuto());
         
@@ -33,4 +34,9 @@ public class SelectAdvancedAutonomous extends BaseCommand {
     @Override
     public void execute() {
     }    
+    
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }
