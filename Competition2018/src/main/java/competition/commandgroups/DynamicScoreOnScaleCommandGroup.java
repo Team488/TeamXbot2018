@@ -30,12 +30,9 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
             AbsolutePurePursuit2018Command pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
-            ConfigurablePurePursuitCommand scootForward,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAdvancedAutoPathToScale());
-        scootForward.addPoint(new RabbitPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90))));
-        scootForward.setMode(PointLoadingMode.Relative);
         
         setWristDown.setGoalAngle(45);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());
@@ -50,9 +47,6 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.addParallel(setWristDown, 1);
         setElevatorForScale.changeTimeout(3.5);
         this.addSequential(setElevatorForScale);
-        
-        // scoot forward a little
-        this.addSequential(scootForward);
         
         // Score for 1 second
         this.addSequential(eject, 1);
