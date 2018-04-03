@@ -68,6 +68,17 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return () -> chooseBestPathToFeature(feature, startingLocation);
     }
     
+    public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToFeature(GameFeature feature) {
+        return () -> TotalRobotPoint.upgradeRabbitPointList(chooseBestPathToFeature(feature, startingLocation));
+    }
+    
+    public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToScale() {
+        if (matchingSide()) {
+            return () -> getAdvancedPathToNearbyScalePlate();
+        }
+        return () -> createAdvancedPathToDistantScalePlate();
+    }
+    
     public boolean matchingSide() {
         OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
         log.info("Target Side is: " + targetSide);
@@ -83,16 +94,11 @@ public class AutonomousPathSupplier extends BaseSubsystem {
 
         OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
         log.info("Target Side is: " + targetSide);
-    /*
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1.5 * 12, 16 * 12), new ContiguousHeading(90)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
-                Gear.HIGH_GEAR, 120));
-*/
+        
         points.add(new TotalRobotPoint(
                 new RabbitPoint(new FieldPose(new XYPair(-3 * 12, 22 * 12), new ContiguousHeading(110)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
-                Gear.HIGH_GEAR, 100));
+                Gear.LOW_GEAR, 80));
 
         if (startingLocation == StartingLocations.Left) {
             points = mirrorTotalPointPath(points);
@@ -274,6 +280,33 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(-16 * 12, 19 * 12), new ContiguousHeading(180)));
         points.add(new FieldPose(new XYPair(-18 * 12, 24 * 12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(-19 * 12, 20.27 * 12), new ContiguousHeading(70)));
+        return points;
+    }
+    
+    public List<TotalRobotPoint> createAdvancedPathToDistantScalePlate() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 14 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-16 * 12, 19 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-16 * 12, 22 * 12), new ContiguousHeading(90)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+        
         return points;
     }
 
