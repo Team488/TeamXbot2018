@@ -33,7 +33,8 @@ public class ElevatorMaintainerCommand extends BaseCommand {
     @Inject
     public ElevatorMaintainerCommand(ElevatorSubsystem elevator, PIDFactory pf, XPropertyManager propMan,
             OperatorInterface oi, CommonLibFactory clf) {
-        elevatorCalibrationAttemptTimeMS = propMan.createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
+        elevatorCalibrationAttemptTimeMS = propMan
+                .createPersistentProperty(getPrefix() + "Calibration attempt time (ms)", 4000);
         motionMagicEnabled = propMan.createPersistentProperty(getPrefix() + "Motion Magic Enabled", false);
         velocityPIDMaxPower = propMan.createPersistentProperty(getPrefix() + "velocity PID Max Power", 30);
         this.elevator = elevator;
@@ -54,7 +55,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
             log.info("Setting current height (" + elevator.getCurrentHeightInInches() + " inches) as target height");
             elevator.setTargetHeight(elevator.getCurrentHeightInInches());
         }
-        
+
         decider.reset();
     }
 
@@ -73,13 +74,12 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         } else {
             currentMode = MaintinerMode.GaveUp;
         }
-        
+
         // Decide what low-level activity the elevator is involved in.
         // Will only be used if the elevator is calibrated.
         double humanInput = oi.operatorGamepad.getRightStickY();
         HumanVsMachineMode deciderMode = decider.getRecommendedMode(humanInput);
         double power = 0;
-        
 
         if (currentMode == MaintinerMode.Calibrated) {
             switch (deciderMode) {
@@ -98,14 +98,16 @@ public class ElevatorMaintainerCommand extends BaseCommand {
                     elevator.motionMagicToHeight(elevator.getTargetHeight());
                     return;
                 } else {
-                    double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(), elevator.getCurrentHeightInInches());
-                    double powerDelta = elevator.getVelocityPid().calculate(positionOutput * velocityPIDMaxPower.get(), elevator.getVelocityInchesPerSecond());
+                    double positionOutput = elevator.getPositionalPid().calculate(elevator.getTargetHeight(),
+                            elevator.getCurrentHeightInInches());
+                    double powerDelta = elevator.getVelocityPid().calculate(positionOutput * velocityPIDMaxPower.get(),
+                            elevator.getVelocityInchesPerSecond());
                     throttle += powerDelta;
                     throttle = MathUtils.constrainDouble(throttle, -.8, 1);
                     power = throttle;
                 }
                 break;
-            default: 
+            default:
                 power = 0;
                 break;
             }

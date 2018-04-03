@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XCANTalon;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
@@ -24,13 +25,13 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
     public enum GripperMode {
         Intake, Eject, Stop
     }
-    
+
     @Inject
     public GripperIntakeSubsystem(CommonLibFactory clf, XPropertyManager propMan, ElectricalContract2018 contract) {
         this.clf = clf;
         this.contract = contract;
-        highPower = propMan.createPersistentProperty(getPrefix()+"High Power", 1);
-        lowPower = propMan.createPersistentProperty(getPrefix()+"Low Power", 0.25);
+        highPower = propMan.createPersistentProperty(getPrefix() + "High Power", 1);
+        lowPower = propMan.createPersistentProperty(getPrefix() + "Low Power", 0.25);
 
         if (contract.collectorReady()) {
             initializeMotors();
@@ -65,12 +66,12 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
         rightMotor.simpleSet(highPower.get() * -1);
         leftMotor.simpleSet(highPower.get() * -1);
     }
-    
+
     public void rotateClockwise() {
         rightMotor.simpleSet(highPower.get());
         leftMotor.simpleSet(highPower.get() * -1);
     }
-    
+
     public void rotateCounterClockwise() {
         rightMotor.simpleSet(highPower.get() * -1);
         leftMotor.simpleSet(highPower.get());
@@ -80,7 +81,7 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
         rightMotor.simpleSet(0);
         leftMotor.simpleSet(0);
     }
-    
+
     public void setIntakeMode(GripperMode mode) {
         if (mode == GripperMode.Intake) {
             intake();
