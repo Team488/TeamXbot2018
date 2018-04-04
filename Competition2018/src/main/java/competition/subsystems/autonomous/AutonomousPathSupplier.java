@@ -224,8 +224,9 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     public List<TotalRobotPoint> getAdvancedPathBackToSwitchPlateFromCube() {
         List<TotalRobotPoint> points = new ArrayList<>();
 
+        // If right side ...
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 16 * 12), new ContiguousHeading(180)),
+                new RabbitPoint(new FieldPose(new XYPair(3.4 * 12, 7 * 12), new ContiguousHeading(180)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
@@ -235,13 +236,26 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 Gear.LOW_GEAR, 80));
 
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 22 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(3.4 * 12, 9 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
+        
+        // If left side ...
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-6.5 * 12, 7 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
 
-        if (startingLocation == StartingLocations.Left) {
-            points = mirrorTotalPointPath(points);
-        }
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                        PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-6.5 * 12, 9 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
 
         return points;
     }
