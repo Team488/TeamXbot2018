@@ -179,4 +179,9 @@ public class Practice2018Robot extends ElectricalContract2018 {
     public DeviceInfo getZedDeploy() {
         return new DeviceInfo(0, false);
     }
+
+    @Override
+    public DeviceInfo getAutonomousLight() {
+        return new DeviceInfo(100, false);
+    }
 }
