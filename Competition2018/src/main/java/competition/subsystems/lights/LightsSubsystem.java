@@ -1,5 +1,6 @@
 package competition.subsystems.lights;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.ElectricalContract2018;
@@ -12,6 +13,7 @@ public class LightsSubsystem extends BaseSubsystem {
 
     final XRelay light;
     
+    @Inject
     public LightsSubsystem(CommonLibFactory clf, ElectricalContract2018 contract) {
         light = clf.createRelay(contract.getAutonomousLight().channel);
         light.setInverted(contract.getAutonomousLight().inverted);
