@@ -148,7 +148,103 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return points;
     }
     
+    public List<TotalRobotPoint> getAdvancedPathToNearbySwitchPlateFromMiddle() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+
+        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SWITCH_NEAR);
+        log.info("Target Side is: " + targetSide);
     
+        if (targetSide == OwnedSide.RIGHT) {
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(3.4 * 12, 9 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+        }
+
+        else if (targetSide == OwnedSide.LEFT) {
+            points.add(new TotalRobotPoint(
+                    new RabbitPoint(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)),
+                            PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                    Gear.LOW_GEAR, 80));
+            
+            points.add(new TotalRobotPoint(
+                    new RabbitPoint(new FieldPose(new XYPair(-6.5 * 12, 9 * 12), new ContiguousHeading(90)),
+                            PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                    Gear.LOW_GEAR, 80));
+            
+            return points;
+        } else {
+            log.info("UNABLE TO IDENTIFY TARGET SIDE");
+            
+            return points;
+        }
+    }
+    
+    public List<TotalRobotPoint> getAdvancedPathToNearbyCubeFromSwitchPlate() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        
+        //If owned switch is right side then ...
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(3.4 * 12, 7 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(180)),
+                PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(1.4 * 12, 7 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
+                Gear.LOW_GEAR, 80));
+        
+        //If owned switch is left side then ...
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-6.5 * 12, 7 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(180)),
+                PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-4.5 * 12, 7 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
+                Gear.LOW_GEAR, 80));
+
+        return points;
+    }
+    
+    public List<TotalRobotPoint> getAdvancedPathBackToSwitchPlateFromCube() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 16 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                        PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 22 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
 
     private List<FieldPose> mirrorPath(List<FieldPose> path) {
         List<FieldPose> flippedPath = new ArrayList<FieldPose>();
@@ -312,44 +408,5 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0, 0), new ContiguousHeading(90)));
         return points;
     }
-
-    public List<TotalRobotPoint> getAdvancedPathToNearbySwitchPlateFromMiddle() {
-        List<TotalRobotPoint> points = new ArrayList<>();
-
-        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SWITCH_NEAR);
-        log.info("Target Side is: " + targetSide);
     
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 8.7 * 12), new ContiguousHeading(90)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
-                Gear.LOW_GEAR, 80));
-
-        if (startingLocation == StartingLocations.Left) {
-            points = mirrorTotalPointPath(points);
-        }
-
-        return points;
-    }
-    
-    public List<TotalRobotPoint> getAdvancedPathToNearbyCubeFromSwitchPlate() {
-        List<TotalRobotPoint> points = new ArrayList<>();
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 19 * 12), new ContiguousHeading(90)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
-                Gear.LOW_GEAR, 80));
-
-        points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(225)),
-                PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
-
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-4 * 12, 16 * 12), new ContiguousHeading(225)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
-                Gear.LOW_GEAR, 80));
-
-        if (startingLocation == StartingLocations.Left) {
-            points = mirrorTotalPointPath(points);
-        }
-
-        return points;
-    }
 }
