@@ -74,8 +74,10 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     
     public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToScale() {
         if (matchingSide()) {
+            log.info("Side matches - going to nearby scale plate");
             return () -> getAdvancedPathToNearbyScalePlate();
         }
+        log.info("No match - going to distant scale plate");
         return () -> createAdvancedPathToDistantScalePlate();
     }
     
@@ -85,8 +87,9 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         
         boolean matchLeft = targetSide == OwnedSide.LEFT && startingLocation == StartingLocations.Left;
         boolean matchRight = targetSide == OwnedSide.RIGHT && startingLocation == StartingLocations.Right;
-        
-        return (matchLeft || matchRight);
+        boolean matchTotal = matchLeft || matchRight;
+        log.info("Do we have a matching side?" + matchTotal);
+        return (matchTotal);
     }
     
     public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlate() {
@@ -414,14 +417,14 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 Gear.LOW_GEAR, 80));
         points.add(new TotalRobotPoint(
                 new RabbitPoint(new FieldPose(new XYPair(-16 * 12, 19 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-20 * 12, 25 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
-                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
-                Gear.LOW_GEAR, 80));
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-16 * 12, 22 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(0)),
                         PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
