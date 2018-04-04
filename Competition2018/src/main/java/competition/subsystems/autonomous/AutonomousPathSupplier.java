@@ -298,7 +298,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-20 * 12, 25 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(-20.75 * 12, 25 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         points.add(new TotalRobotPoint(
