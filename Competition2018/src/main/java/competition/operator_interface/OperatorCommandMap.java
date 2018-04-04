@@ -40,6 +40,7 @@ import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
+import competition.subsystems.gripperintake.commands.GripperDropCubeCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
@@ -256,7 +257,10 @@ public class OperatorCommandMap {
     @Inject
     public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
             GripperRotateCounterClockwiseCommand counterClockwise, GripperEjectCommand eject,
-            GripperIntakeCommand intake) {
+            GripperIntakeCommand intake, GripperDropCubeCommand dropCube) {
+        
+        oi.operatorGamepad.getifAvailable(8).whenPressed(dropCube);
+
     }
 
     @Inject
@@ -275,7 +279,6 @@ public class OperatorCommandMap {
         
         oi.operatorGamepad.getifAvailable(6).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
-        oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
