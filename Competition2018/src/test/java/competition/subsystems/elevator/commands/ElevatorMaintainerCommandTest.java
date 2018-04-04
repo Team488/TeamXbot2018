@@ -35,50 +35,50 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
     
     @Test
     public void checkGoUp() {
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.isCalibrated();
         command.initialize();
         elevator.setTargetHeight(70);
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
+        assertTrue(elevator.master.getMotorOutputPercent() > 0);
     }
    
     @Test
     public void checkGoDown() {
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         command.initialize();
         elevator.setTargetHeight(12);
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() < 0);
+        assertTrue(elevator.master.getMotorOutputPercent() < 0);
     }
     
     @Test
     public void stop() {
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(40);
         command.initialize();
         command.execute();
-        assertEquals(0.0, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(0.0, elevator.master.getMotorOutputPercent(), .01);
     }
     
     @Test
     public void checkCalibrateMode() {
         elevator.uncalibrate();
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(70);
         command.initialize();
         command.execute();
-        assertEquals(-.3, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(-.3, elevator.master.getMotorOutputPercent(), .01);
     }
     
     @Test
     public void checkMaintainerMode() {
         elevator.calibrateHere();
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         command.initialize();
         elevator.setTargetHeight(70);
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
+        assertTrue(elevator.master.getMotorOutputPercent() > 0);
     }
     
     @Test
@@ -86,118 +86,118 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         elevator.uncalibrate();
         command.initialize();
         mockTimer.advanceTimeInSecondsBy(4000);
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(70);
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
         command.execute();        
-        assertEquals(.15, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(.15, elevator.master.getMotorOutputPercent(), .01);
     }
      
     @Test
     public void checkTryToCalUnderTime() {
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(70);
         elevator.uncalibrate();
         command.initialize();
         command.execute();
-        assertEquals(-.3, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(-.3, elevator.master.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
+        assertTrue(elevator.master.getMotorOutputPercent() > 0);
         elevator.uncalibrate();
         mockTimer.advanceTimeInSecondsBy(4000);
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
         command.execute();
-        assertEquals(0.15, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(0.15, elevator.master.getMotorOutputPercent(), .01);
     }
     
     @Test
     public void checkTryToCalOverTime() {
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(70);
         elevator.uncalibrate();
         command.initialize();
         mockTimer.advanceTimeInSecondsBy(4000);
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
         command.execute();
-        assertEquals(.15, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(.15, elevator.master.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() > 0);
+        assertTrue(elevator.master.getMotorOutputPercent() > 0);
         elevator.uncalibrate();
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .1));
         command.execute();
-        assertEquals(.1, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(.1, elevator.master.getMotorOutputPercent(), .01);
     }
     
     @Test
     public void checkMotionMagicModeGoUp() {
         command.isMotionMagicMode(true);
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.isCalibrated();
         command.initialize();
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(6700, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(6700, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
     }
     
     @Test
     public void checkMotionMagicModeGoDown() {
         command.isMotionMagicMode(true);
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         command.initialize();
         elevator.setTargetHeight(12);
         command.execute();
-        assertEquals(900, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(900, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
     }
     
     @Test
     public void checkMotionMagicModestop() {
         command.isMotionMagicMode(true);
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(40);
         command.initialize();
         command.execute();
-        assertEquals(3700, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(3700, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
     }
     
     @Test
     public void checkMotionMagicModeMaintainerMode() {
         command.isMotionMagicMode(true);
         elevator.calibrateHere();
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         command.initialize();
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(6700, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(6700, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
     }
     
     @Test
     public void checkMotionMagicModeTryToCalUnderTime() {
         command.isMotionMagicMode(true);
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(70);
         elevator.uncalibrate();
         command.initialize();
         command.execute();
-        assertEquals(-.3, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(-.3, elevator.master.getMotorOutputPercent(), .01);
         elevator.calibrateHere();
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(10400, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(10400, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
         elevator.uncalibrate();
         mockTimer.advanceTimeInSecondsBy(4000);
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
         command.execute();
-        assertEquals(0.15, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(0.15, elevator.master.getMotorOutputPercent(), .01);
     }
     
     @Test
     public void checkMotionMagicModeTryToCalOverTime() {
         command.isMotionMagicMode(true);
-        ((MockCANTalon)elevator.motor).setPosition(3700);
+        ((MockCANTalon)elevator.master).setPosition(3700);
         elevator.setTargetHeight(70);
         elevator.uncalibrate();
         command.initialize();
@@ -205,7 +205,7 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .15));
         command.execute();
         // Verify that we have given up
-        assertEquals(.15, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(.15, elevator.master.getMotorOutputPercent(), .01);
         
         elevator.calibrateHere();
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, 0));
@@ -219,10 +219,10 @@ public class ElevatorMaintainerCommandTest extends BaseCompetitionTest {
         
         elevator.setTargetHeight(70);
         command.execute();
-        assertEquals(10400, ((MockCANTalon)elevator.motor).getSetpoint(), 0.001);
+        assertEquals(10400, ((MockCANTalon)elevator.master).getSetpoint(), 0.001);
         elevator.uncalibrate();
         ((MockFTCGamepad)oi.operatorGamepad).setRightStick(new XYPair(0, .1));
         command.execute();
-        assertEquals(.1, elevator.motor.getMotorOutputPercent(), .01);
+        assertEquals(.1, elevator.master.getMotorOutputPercent(), .01);
     }
 }

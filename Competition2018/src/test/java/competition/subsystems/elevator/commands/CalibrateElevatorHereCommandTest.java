@@ -23,10 +23,10 @@ public class CalibrateElevatorHereCommandTest extends BaseCompetitionTest {
     
     @Test
     public void test() {
-        ((MockCANTalon)elevator.motor).setPosition(20);
+        ((MockCANTalon)elevator.master).setPosition(20);
         command.initialize();
         assertTrue(elevator.isCalibrated());
-        assertEquals(((MockCANTalon)elevator.motor).getPosition(), elevator.getLowerLimitInTicks(), 0.0001);
+        assertEquals(((MockCANTalon)elevator.master).getPosition(), elevator.getLowerLimitInTicks(), 0.0001);
     }
 
 }

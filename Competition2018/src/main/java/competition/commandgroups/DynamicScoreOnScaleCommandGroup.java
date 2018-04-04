@@ -2,7 +2,8 @@ package competition.commandgroups;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
+import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -14,26 +15,24 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
+import xbot.common.subsystems.drive.PurePursuitCommand.PointLoadingMode;
+import xbot.common.subsystems.drive.RabbitPoint;
 
 public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
 
-    public ConfigurablePurePursuitCommand pursuit;
+    public AbsolutePurePursuit2018Command pursuit;
     
     @Inject
     public DynamicScoreOnScaleCommandGroup(
-            AutonomousDecisionSystem decider,
+            AutonomousPathSupplier decider,
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
-            ConfigurablePurePursuitCommand pursuit,
+            AbsolutePurePursuit2018Command pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
-            ConfigurablePurePursuitCommand scootForward,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
-        scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));
-        scootForward.setMode(PursuitMode.Relative);
+        pursuit.setPointSupplier(decider.getAdvancedAutoPathToScale());
         
         setWristDown.setGoalAngle(45);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());
@@ -48,9 +47,6 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.addParallel(setWristDown, 1);
         setElevatorForScale.changeTimeout(3.5);
         this.addSequential(setElevatorForScale);
-        
-        // scoot forward a little
-        this.addSequential(scootForward);
         
         // Score for 1 second
         this.addSequential(eject, 1);
