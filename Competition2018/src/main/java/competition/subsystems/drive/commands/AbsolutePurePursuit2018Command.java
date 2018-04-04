@@ -82,6 +82,11 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     public void execute() {
         // In the base command, the program would get the chaseData and apply it to the drive. We're mostly
         // okay with this, but we want to potentially modify the total power output as well as shift gears.
+
+        if (originalPoints.size() == 0) {
+            return;
+        }
+        
         RabbitChaseInfo chaseData = evaluateCurrentPoint();
         double rotation = chaseData.rotation;
         double translation = chaseData.translation;
