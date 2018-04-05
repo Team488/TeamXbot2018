@@ -255,7 +255,9 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject,
+
+    public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
+            GripperRotateCounterClockwiseCommand counterClockwise, GripperEjectCommand eject,
             GripperIntakeCommand intake, GripperDropCubeCommand dropCube) {
         
         oi.operatorGamepad.getifAvailable(8).whenPressed(dropCube);
