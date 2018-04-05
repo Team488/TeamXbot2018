@@ -18,6 +18,7 @@ import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
+import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -40,6 +41,7 @@ import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
+import competition.subsystems.gripperintake.commands.GripperDropCubeCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
 import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
@@ -138,7 +140,6 @@ public class OperatorCommandMap {
 
         oi.driverGamepad.getPovIfAvailable(0).whenPressed(velocity);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
-        
         
         pretendMulticube.addPoint(new TotalRobotPoint(
                 new RabbitPoint(
@@ -254,9 +255,13 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
-            GripperRotateCounterClockwiseCommand counterClockwise, GripperEjectCommand eject,
-            GripperIntakeCommand intake) {
+    public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject,
+            GripperIntakeCommand intake, GripperDropCubeCommand dropCube) {
+        
+        oi.operatorGamepad.getifAvailable(8).whenPressed(dropCube);
+
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(eject);
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(dropCube);
     }
 
     @Inject
@@ -275,7 +280,6 @@ public class OperatorCommandMap {
         
         oi.operatorGamepad.getifAvailable(6).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
-        oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
@@ -299,19 +303,8 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupClimberCommands(OperatorInterface oi, ExtendClimberArmCommand extendArm,
-            RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
-            DisengageWinchAndReleasePawlCommandGroup descend, EngageWinchAndLockPawlCommandGroup ascend,
-            PrepareToClimbCommandGroup prepareToClimb, TotalClimbCommandGroup everythingClimbs) {
+    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend) {
         oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
-        oi.driverGamepad.getifAvailable(2).whileHeld(descend); // b
-        oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
-        oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
-        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3
-        
-        engagePawl.includeOnSmartDashboard();
-        releasePawl.includeOnSmartDashboard();        
     }
 
     @Inject
