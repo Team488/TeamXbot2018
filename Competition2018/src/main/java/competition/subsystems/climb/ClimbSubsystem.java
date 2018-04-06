@@ -112,7 +112,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     		return;
     	}
     	
-        ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
+        /*ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
         percentPayedOutProp.set(percentPayedOut());
         // positive power climbs
         // climbing makes the sensor more negative
@@ -139,10 +139,10 @@ public class ClimbSubsystem extends BaseSubsystem {
             // time to catch up.
             power = MathUtils.constrainDouble(power, 0, 1);
             potentialReason = ClimbRestrictionReason.AheadOfDeployArm;
-        }
+        }*/
         
         
-        climbRestrictionProp.set(potentialReason.toString());
+       //climbRestrictionProp.set(potentialReason.toString());
         motor.simpleSet(power);
         motor.updateTelemetryProperties();
     }

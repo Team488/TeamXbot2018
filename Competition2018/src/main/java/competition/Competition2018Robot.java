@@ -45,7 +45,7 @@ public class Competition2018Robot extends Practice2018Robot {
     
     @Override
     public boolean climbReady() {
-        return false;
+        return true;
     }
     
     @Override

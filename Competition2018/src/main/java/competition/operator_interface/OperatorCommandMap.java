@@ -19,6 +19,7 @@ import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleComm
 import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
+import competition.subsystems.climb.commands.AscendLowPowerCommand;
 import competition.subsystems.climb.commands.EngagePawlCommand;
 import competition.subsystems.climb.commands.ReleasePawlCommand;
 import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
@@ -303,8 +304,9 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend) {
+    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, AscendLowPowerCommand ascendSlowly) {
         oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
+        oi.driverGamepad.getifAvailable(2).whileHeld(ascendSlowly); // b
     }
 
     @Inject
