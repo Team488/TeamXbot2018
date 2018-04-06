@@ -332,14 +332,14 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     private List<FieldPose> createPathToLeftSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-6.5 * 12, 8.5 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(-5.5 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
     }
 
     private List<FieldPose> createPathToRightSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(3.4 * 12, 9 * 12), new ContiguousHeading(90)));
+        points.add(new FieldPose(new XYPair(5 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
     }
 
