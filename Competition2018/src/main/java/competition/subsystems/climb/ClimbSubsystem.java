@@ -108,6 +108,10 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
     
     public void setPower(double power) {
+    	if (!contract.climbReady()) {
+    		return;
+    	}
+    	
         ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
         percentPayedOutProp.set(percentPayedOut());
         // positive power climbs

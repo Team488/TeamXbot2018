@@ -258,7 +258,7 @@ public class OperatorCommandMap {
     public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject,
             GripperIntakeCommand intake, GripperDropCubeCommand dropCube) {
         
-        oi.operatorGamepad.getifAvailable(8).whenPressed(dropCube);
+        oi.operatorGamepad.getifAvailable(8).whileHeld(dropCube);
 
         oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(eject);
         oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(dropCube);
