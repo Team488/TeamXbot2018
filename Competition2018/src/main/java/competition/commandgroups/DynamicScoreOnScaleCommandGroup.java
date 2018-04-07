@@ -34,7 +34,7 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(decider.getAdvancedAutoPathToScale());
         
-        setWristDown.setGoalAngle(45);
+        setWristDown.setGoalAngle(60);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());
         wait.setDelaySupplier(() -> decider.getDelay());
         
@@ -44,9 +44,9 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(pursuit);
         
         // Now we've stopped, so put the wrist down and the elevator up
-        this.addParallel(setWristDown, 1);
-        setElevatorForScale.changeTimeout(3.5);
+        setElevatorForScale.changeTimeout(2);
         this.addSequential(setElevatorForScale);
+        this.addSequential(setWristDown, 1);
         
         // Score for 1 second
         this.addSequential(eject, 1);
