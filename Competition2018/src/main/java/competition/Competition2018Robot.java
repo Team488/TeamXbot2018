@@ -6,11 +6,16 @@ public class Competition2018Robot extends Practice2018Robot {
     
     @Override
     public DeviceInfo getElevatorMaster() {
-        return new DeviceInfo(25, false);
+        return new DeviceInfo(25, true);
+    }
+    
+    @Override
+    public DeviceInfo getElevatorFollower() {
+        return new DeviceInfo(22, false);
     }
     
     public DeviceInfo getElevatorEncoder() {
-        return new DeviceInfo(0, false);
+        return new DeviceInfo(0, true);
     }
     
     @Override
@@ -30,12 +35,12 @@ public class Competition2018Robot extends Practice2018Robot {
     
     @Override
     public boolean climbDeployReady() {
-        return true;
+        return false;
     }
     
     @Override
     public boolean climbLeanReady() {
-        return true;
+        return false;
     }
     
     @Override
@@ -62,8 +67,14 @@ public class Competition2018Robot extends Practice2018Robot {
     public DeviceInfo getElevatorLowerLimit() {
         return new DeviceInfo(1, true);
     }
+
+    @Override
+    public DeviceInfo getLeftCollectorMaster() {
+        return new DeviceInfo(24, true);
+    }
+    
     @Override
     public DeviceInfo getRightCollectorMaster() {
-        return new DeviceInfo(31, true);
+        return new DeviceInfo(31, false);
     }
 }
