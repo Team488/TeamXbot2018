@@ -101,12 +101,12 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         log.info("Target Side is: " + targetSide);
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-1 * 12, 15.5 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 20 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(-2.5 * 12, 21.5 * 12), new ContiguousHeading(110)),
+                new RabbitPoint(new FieldPose(new XYPair(2 * 12, 28 * 12), new ContiguousHeading(0)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
