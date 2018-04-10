@@ -21,12 +21,9 @@ import xbot.common.properties.XPropertyManager;
 public class ClimbSubsystem extends BaseSubsystem {
 
     public enum ClimbRestrictionReason {
-        TooMuchStrapOut,
-        TooCloseToWinch,
-        AheadOfDeployArm,
-        FullPowerAvailable
+        TooMuchStrapOut, TooCloseToWinch, AheadOfDeployArm, FullPowerAvailable
     }
-    
+
     final DoubleProperty ascendSpeed;
     final DoubleProperty descendSpeed;
     final StringProperty climbRestrictionProp;
@@ -49,9 +46,9 @@ public class ClimbSubsystem extends BaseSubsystem {
         solenoidB = clf.createSolenoid(contract.getPawlSolenoidB().channel);
         solenoidA.setInverted(contract.getPawlSolenoidA().inverted);
         solenoidB.setInverted(contract.getPawlSolenoidB().inverted);
-        
-        ascendSpeed = propMan.createPersistentProperty(getPrefix()+"AscendSpeed", 1);
-        descendSpeed = propMan.createPersistentProperty(getPrefix()+"DescendSpeed", -.1);
+
+        ascendSpeed = propMan.createPersistentProperty(getPrefix() + "AscendSpeed", 1);
+        descendSpeed = propMan.createPersistentProperty(getPrefix() + "DescendSpeed", -.1);
         climbRestrictionProp = propMan.createEphemeralProperty(getPrefix() + "Restriction Reason", "Not set yet");
         absoluteMaxTicks = propMan.createPersistentProperty(getPrefix() + "Absolute Max Ticks", -91202);
         percentPayedOutProp = propMan.createEphemeralProperty(getPrefix() + "Percent Payed Out", 0);
@@ -68,21 +65,21 @@ public class ClimbSubsystem extends BaseSubsystem {
     private void initializeMotor() {
         motor = clf.createCANTalon(contract.getClimbMaster().channel);
         motor.setInverted(contract.getClimbMaster().inverted);
-        
+
         motor.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
         motor.configReverseLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.Disabled, 0);
-        
+
         motor.configForwardSoftLimitEnable(false, 0);
         motor.configReverseSoftLimitEnable(false, 0);
-        
+
         motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
         motor.setSensorPhase(false);
-        
+
         motor.createTelemetryProperties(getPrefix(), "Motor");
     }
-    
+
     public double percentPayedOut() {
-        return getCurrentTicks() / absoluteMaxTicks.get(); 
+        return getCurrentTicks() / absoluteMaxTicks.get();
     }
 
     /**
@@ -91,7 +88,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     public void ascend() {
         setPower(ascendSpeed.get());
     }
-    
+
     public void ascendLowPower() {
         setPower(ascendSpeed.get() / 5);
     }
@@ -102,47 +99,38 @@ public class ClimbSubsystem extends BaseSubsystem {
     public void descend() {
         setPower(descendSpeed.get());
     }
-    
+
     public int getCurrentTicks() {
         return motor.getSelectedSensorPosition(0);
     }
-    
-    public void setPower(double power) {
-    	if (!contract.climbReady()) {
-    		return;
-    	}
-    	
-        /*ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
-        percentPayedOutProp.set(percentPayedOut());
-        // positive power climbs
-        // climbing makes the sensor more negative
-        // we start at zero
-        
-        // if we start at zero, then we don't want to allow very much positive motion
-        // if we are too positivce, then we should only allow positive power
-        
-        if (getCurrentTicks() < absoluteMaxTicks.get()) {
-            // too much cable out, don't pay out any more cable, no more descend
-            power = MathUtils.constrainDouble(power, 0, 1);
-            potentialReason = ClimbRestrictionReason.TooMuchStrapOut;
-        }
-        
-        if (getCurrentTicks() > 0) {
-            // hook getting too close to winch - no more ascend.
-            power = MathUtils.constrainDouble(power, -1, 0);
-            potentialReason = ClimbRestrictionReason.TooCloseToWinch;
-        }
-        
 
-        if (percentPayedOut() > deploy.percentExtended() + .2) {
-            // We have payed out too much cable too quickly - stop and give the deploy arm
-            // time to catch up.
-            power = MathUtils.constrainDouble(power, 0, 1);
-            potentialReason = ClimbRestrictionReason.AheadOfDeployArm;
-        }*/
-        
-        
-       //climbRestrictionProp.set(potentialReason.toString());
+    public void setPower(double power) {
+        if (!contract.climbReady()) {
+            return;
+        }
+
+        /*
+         * ClimbRestrictionReason potentialReason = ClimbRestrictionReason.FullPowerAvailable;
+         * percentPayedOutProp.set(percentPayedOut()); // positive power climbs // climbing makes the sensor more
+         * negative // we start at zero
+         * 
+         * // if we start at zero, then we don't want to allow very much positive motion // if we are too positivce,
+         * then we should only allow positive power
+         * 
+         * if (getCurrentTicks() < absoluteMaxTicks.get()) { // too much cable out, don't pay out any more cable, no
+         * more descend power = MathUtils.constrainDouble(power, 0, 1); potentialReason =
+         * ClimbRestrictionReason.TooMuchStrapOut; }
+         * 
+         * if (getCurrentTicks() > 0) { // hook getting too close to winch - no more ascend. power =
+         * MathUtils.constrainDouble(power, -1, 0); potentialReason = ClimbRestrictionReason.TooCloseToWinch; }
+         * 
+         * 
+         * if (percentPayedOut() > deploy.percentExtended() + .2) { // We have payed out too much cable too quickly -
+         * stop and give the deploy arm // time to catch up. power = MathUtils.constrainDouble(power, 0, 1);
+         * potentialReason = ClimbRestrictionReason.AheadOfDeployArm; }
+         */
+
+        // climbRestrictionProp.set(potentialReason.toString());
         motor.simpleSet(power);
         motor.updateTelemetryProperties();
     }
@@ -153,12 +141,12 @@ public class ClimbSubsystem extends BaseSubsystem {
     public void stop() {
         motor.simpleSet(0);
     }
-    
+
     public void releasePawl() {
         solenoidA.setOn(true);
         solenoidB.setOn(false);
     }
-    
+
     public void engagePawl() {
         solenoidA.setOn(false);
         solenoidB.setOn(true);
