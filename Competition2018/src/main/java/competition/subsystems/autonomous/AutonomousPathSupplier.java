@@ -131,8 +131,10 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         switch (targetLocation) {
             case SideFacingAllianceWall:
                 if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.RIGHT) {
+                    // switch on right, we don't care about starting position
                     return createPathToRightSwitchPlateNearestEdge();
                 }
+                // switch on left, we don't care about starting position
                 return createPathToLeftSwitchPlateNearestEdge();
             default:
                 return createPathToNowhere();
@@ -154,7 +156,70 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return mirrorTotalPointPath(createPathToRightSwitchPlateNearestEdge());
     }
     
+    public List<TotalRobotPoint> getPathToCorrectScale(SwitchScoringLocation targetLocation) {
+        if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.RIGHT) {
+            if (matchingSide()) {
+                // scale on the right, we're on the right
+                return createPathToRightAlignedScaleSafeScoringPosition();
+            }
+            // scale on the right, we're on the left
+            return mirrorTotalPointPath(createPathToLeftUnalignedScaleSafeScoringPosition());
+        } else {
+            if (matchingSide()) {
+                // scale on the left, we're on the left
+                return mirrorTotalPointPath(createPathToRightAlignedScaleSafeScoringPosition());
+            }
+            // scale on the left, we're on the right
+            return createPathToLeftUnalignedScaleSafeScoringPosition();
+        }
+    }    
+    
+    public List<TotalRobotPoint> createPathToRightAlignedScaleSafeScoringPosition() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 25* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(180)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }
+    
+    public List<TotalRobotPoint> createPathToLeftUnalignedScaleSafeScoringPosition() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 14* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 19.5* 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(4 * 12, 25* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(0)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }    
+    
+    // The rest of this class is commented for reference.
 
+    /*
+    
     public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToScale() {
         return () -> {
             if (matchingSide()) {
@@ -165,8 +230,6 @@ public class AutonomousPathSupplier extends BaseSubsystem {
             return createAdvancedPathToDistantScalePlate();
         };
     }
-
-    
 
     public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlate() {
         List<TotalRobotPoint> points = new ArrayList<>();
@@ -295,7 +358,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(5 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
-    }
+    } */
 
     private List<TotalRobotPoint> createPathToNowhere() {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
@@ -306,8 +369,5 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 Gear.LOW_GEAR, 80));
 
         return points;
-    }
-
-
-    
+    }    
 }
