@@ -24,7 +24,7 @@ public class AbsolutePurePursuit2018CommandTest extends BaseCompetitionTest {
     
     @Test
     public void advancedTest() {
-        command.setAllPoints(injector.getInstance(AutonomousPathSupplier.class).createAdvancedPathToDistantScalePlate());
+        command.setAllPoints(injector.getInstance(AutonomousPathSupplier.class).createPathToLeftSwitchPlateNearestEdge());
         
         command.initialize();
         command.execute();

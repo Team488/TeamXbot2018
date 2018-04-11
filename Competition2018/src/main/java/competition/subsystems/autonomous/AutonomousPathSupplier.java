@@ -45,6 +45,10 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         autonomousDelay = propMan.createPersistentProperty(getPrefix() + "Seconds to Delay Auto", 0.0);
         constrainDelay();
     }
+    
+    //
+    // Helper methods to prepare for autonomous
+    // 
 
     public void setRobotPosition(StartingLocations startingLocation) {
         this.startingLocation = startingLocation;
@@ -63,26 +67,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     public double getDelay() {
         return autonomousDelay.get();
     }
-
-    public Supplier<List<RabbitPoint>> getAutoPathToFeature(GameFeature feature) {
-        return () -> chooseBestPathToFeature(feature, startingLocation);
-    }
-
-    public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToFeature(GameFeature feature) {
-        return () -> TotalRobotPoint.upgradeRabbitPointList(chooseBestPathToFeature(feature, startingLocation));
-    }
-
-    public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToScale() {
-        return () -> {
-            if (matchingSide()) {
-                log.info("Side matches - going to nearby scale plate");
-                return getAdvancedPathToNearbyScalePlate();
-            }
-            log.info("No match - going to distant scale plate");
-            return createAdvancedPathToDistantScalePlate();
-        };
-    }
-
+    
     public boolean matchingSide() {
         OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
         log.info("Target Side is: " + targetSide);
@@ -92,6 +77,158 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         boolean matchTotal = matchLeft || matchRight;
         log.info("Do we have a matching side?" + matchTotal);
         return (matchTotal);
+    }
+
+    private List<TotalRobotPoint> mirrorTotalPointPath(List<TotalRobotPoint> path) {
+        return mirrorTotalPointPath(path, false);
+    }
+    
+    private List<TotalRobotPoint> mirrorTotalPointPath(List<TotalRobotPoint> path, boolean relative) {
+        List<TotalRobotPoint> flippedPath = new ArrayList<TotalRobotPoint>();
+
+        for (TotalRobotPoint point : path) {
+            double currentHeading = point.simplePoint.pose.getHeading().getValue();
+            double flippedHeading = -1 * (currentHeading - 90) + 90;
+            XYPair flippedPoint = new XYPair();
+            if (relative) {
+                // In relative mode, flip around 0,0
+                flippedPoint = new XYPair(
+                        -point.simplePoint.pose.getPoint().x,
+                        point.simplePoint.pose.getPoint().y);
+            } else {
+                // In absolute mode, flip around the centerline of the field.
+                // This would normally look like -(currentX-midline)+midline, but we can
+                // just simplify to -currentX + 2*midline, or -currentX + fieldWidth.
+                double fieldWidth = 27*12;
+                flippedPoint = new XYPair(
+                        -point.simplePoint.pose.getPoint().x + fieldWidth,
+                        point.simplePoint.pose.getPoint().y);
+            }            
+            
+            flippedPath.add(new TotalRobotPoint(
+                    new RabbitPoint(
+                            new FieldPose(
+                                    flippedPoint,
+                                    new ContiguousHeading(flippedHeading)),
+                            point.simplePoint.pointType, point.simplePoint.terminatingType,
+                            point.simplePoint.driveStyle),
+                    point.desiredGear, point.velocityLimit));
+        }
+        return flippedPath;
+    }
+    
+    //
+    // Methods that return some kind of path
+    //
+    public enum SwitchScoringLocation {
+        SideFacingAllianceWall,
+        EndCaps,
+        SideFacingScale
+    }
+    
+    public List<TotalRobotPoint> getPathToCorrectSwitch(SwitchScoringLocation targetLocation) {
+
+        switch (targetLocation) {
+            case SideFacingAllianceWall:
+                if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.RIGHT) {
+                    // switch on right, we don't care about starting position
+                    return createPathToRightSwitchPlateNearestEdge();
+                }
+                // switch on left, we don't care about starting position
+                return createPathToLeftSwitchPlateNearestEdge();
+            default:
+                return createPathToNowhere();
+        }
+    }
+    
+    public List<TotalRobotPoint> createPathToRightSwitchPlateNearestEdge() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(18 * 12, 9* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }
+
+    public List<TotalRobotPoint> createPathToLeftSwitchPlateNearestEdge() {
+        return mirrorTotalPointPath(createPathToRightSwitchPlateNearestEdge());
+    }
+    
+    public List<TotalRobotPoint> getPathToCorrectScale() {
+        if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.RIGHT) {
+            if (matchingSide()) {
+                // scale on the right, we're on the right
+                return createPathToRightAlignedScaleSafeScoringPosition();
+            }
+            // scale on the right, we're on the left
+            return mirrorTotalPointPath(createPathToLeftUnalignedScaleSafeScoringPosition());
+        } else {
+            if (matchingSide()) {
+                // scale on the left, we're on the left
+                return mirrorTotalPointPath(createPathToRightAlignedScaleSafeScoringPosition());
+            }
+            // scale on the left, we're on the right
+            return createPathToLeftUnalignedScaleSafeScoringPosition();
+        }
+    }    
+    
+    public List<TotalRobotPoint> createPathToRightAlignedScaleSafeScoringPosition() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 25* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(180)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }
+    
+    public List<TotalRobotPoint> createPathToLeftUnalignedScaleSafeScoringPosition() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 14* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 19.5* 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(4 * 12, 25* 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(0)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }    
+    
+    // The rest of this class is commented for reference.
+
+    /*
+    
+    public Supplier<List<TotalRobotPoint>> getAdvancedAutoPathToScale() {
+        return () -> {
+            if (matchingSide()) {
+                log.info("Side matches - going to nearby scale plate");
+                return getAdvancedPathToNearbyScalePlate();
+            }
+            log.info("No match - going to distant scale plate");
+            return createAdvancedPathToDistantScalePlate();
+        };
     }
 
     public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlate() {
@@ -163,114 +300,8 @@ public class AutonomousPathSupplier extends BaseSubsystem {
 
         return points;
     }
-
-    private List<FieldPose> mirrorPath(List<FieldPose> path) {
-        List<FieldPose> flippedPath = new ArrayList<FieldPose>();
-
-        for (FieldPose pose : path) {
-
-            double currentHeading = pose.getHeading().getValue();
-            double flippedHeading = -1 * (currentHeading - 90) + 90;
-
-            flippedPath.add(new FieldPose(new XYPair(-pose.getPoint().x, pose.getPoint().y),
-                    new ContiguousHeading(flippedHeading)));
-        }
-
-        return flippedPath;
-    }
-
-    private List<TotalRobotPoint> mirrorTotalPointPath(List<TotalRobotPoint> path) {
-        List<TotalRobotPoint> flippedPath = new ArrayList<TotalRobotPoint>();
-
-        for (TotalRobotPoint point : path) {
-            double currentHeading = point.simplePoint.pose.getHeading().getValue();
-            double flippedHeading = -1 * (currentHeading - 90) + 90;
-            flippedPath.add(new TotalRobotPoint(
-                    new RabbitPoint(
-                            new FieldPose(
-                                    new XYPair(-point.simplePoint.pose.getPoint().x,
-                                            point.simplePoint.pose.getPoint().y),
-                                    new ContiguousHeading(flippedHeading)),
-                            point.simplePoint.pointType, point.simplePoint.terminatingType,
-                            point.simplePoint.driveStyle),
-                    point.desiredGear, point.velocityLimit));
-        }
-        return flippedPath;
-    }
-
-    private List<RabbitPoint> chooseBestPathToFeature(GameFeature feature, StartingLocations whereToStart) {
-        OwnedSide targetSide = gameData.getOwnedSide(feature);
-        log.info("Target Side is: " + targetSide);
-        List<FieldPose> bestPath = createPathToNowhere();
-        switch (feature) {
-        case SWITCH_NEAR:
-            switch (targetSide) {
-            case LEFT:
-                log.info("Creating path to Left Switch Plate");
-                if (whereToStart == StartingLocations.Right) {
-                    bestPath = createPathToDistantSwitchPlate();
-                } else if (whereToStart == StartingLocations.Left) {
-                    bestPath = mirrorPath(createPathToNearbySwitchPlate());
-                } else if (whereToStart == StartingLocations.Middle) {
-                    bestPath = createPathToLeftSwitchPlateFromMiddle();
-                }
-                break;
-            case RIGHT:
-                log.info("Creating path to Right Switch Plate");
-                if (whereToStart == StartingLocations.Right) {
-                    bestPath = createPathToNearbySwitchPlate();
-                } else if (whereToStart == StartingLocations.Left) {
-                    bestPath = mirrorPath(createPathToDistantSwitchPlate());
-                } else if (whereToStart == StartingLocations.Middle) {
-                    bestPath = createPathToRightSwitchPlateFromMiddle();
-                }
-                break;
-            case UNKNOWN:
-                log.warn("Jaci's library could not parse which Switch side to visit in auto. Going nowhere");
-                bestPath = createPathToNowhere();
-                break;
-            default:
-                log.warn("Somehow no idea where to go. Going nowhere.");
-                bestPath = createPathToNowhere();
-                break;
-            }
-            break;
-        case SCALE:
-            switch (targetSide) {
-            case LEFT:
-                log.info("Creating path to Left Scale");
-                if (whereToStart == StartingLocations.Right) {
-                    bestPath = createPathToDistantScalePlate();
-                } else if (whereToStart == StartingLocations.Left) {
-                    bestPath = mirrorPath(createPathToNearbyScalePlate());
-                }
-                break;
-            case RIGHT:
-                log.info("Creating path to Right Scale");
-                if (whereToStart == StartingLocations.Right) {
-                    bestPath = createPathToNearbyScalePlate();
-                } else if (whereToStart == StartingLocations.Left) {
-                    bestPath = mirrorPath(createPathToDistantScalePlate());
-                }
-                break;
-            case UNKNOWN:
-                log.warn("Jaci's library could not parse which Scale side to visit in auto. Going nowhere");
-                bestPath = createPathToNowhere();
-                break;
-            default:
-                log.warn("Somehow no idea where to go. Going nowhere.");
-                bestPath = createPathToNowhere();
-                break;
-            }
-            break;
-        default:
-            log.warn("Somehow no idea where to go. Going nowhere.");
-            bestPath = createPathToNowhere();
-            break;
-        }
-
-        return RabbitPoint.upgradeFieldPoseList(bestPath);
-    }
+    
+    
 
     public List<FieldPose> createPathToNearbyScalePlate() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
@@ -315,22 +346,6 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return points;
     }
 
-    public List<FieldPose> createPathToNearbySwitchPlate() {
-        ArrayList<FieldPose> points = new ArrayList<FieldPose>();
-        points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-6 * 12, 9 * 12), new ContiguousHeading(90)));
-        return points;
-    }
-
-    public List<FieldPose> createPathToDistantSwitchPlate() {
-        ArrayList<FieldPose> points = new ArrayList<FieldPose>();
-
-        points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
-        points.add(new FieldPose(new XYPair(-7.35 * 12, 1.5 * 12), new ContiguousHeading(180)));
-        points.add(new FieldPose(new XYPair(-15.6 * 12, 9 * 12), new ContiguousHeading(90)));
-        return points;
-    }
-
     private List<FieldPose> createPathToLeftSwitchPlateFromMiddle() {
         ArrayList<FieldPose> points = new ArrayList<FieldPose>();
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
@@ -343,12 +358,16 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         points.add(new FieldPose(new XYPair(0 * 12, 1.5 * 12), new ContiguousHeading(90)));
         points.add(new FieldPose(new XYPair(5 * 12, 9 * 12), new ContiguousHeading(90)));
         return points;
-    }
+    } */
 
-    private List<FieldPose> createPathToNowhere() {
-        ArrayList<FieldPose> points = new ArrayList<FieldPose>();
-        points.add(new FieldPose(new XYPair(0, 0), new ContiguousHeading(90)));
+    private List<TotalRobotPoint> createPathToNowhere() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(13.5 * 12, 0 * 12), new ContiguousHeading(0)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
         return points;
-    }
-
+    }    
 }
