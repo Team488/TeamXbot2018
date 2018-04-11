@@ -1,6 +1,5 @@
 package competition.subsystems.autonomous;
 
-import java.sql.Savepoint;
 import java.util.function.Supplier;
 
 import com.google.inject.Inject;
@@ -12,7 +11,6 @@ import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import edu.wpi.first.wpilibj.command.Command;
-import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;

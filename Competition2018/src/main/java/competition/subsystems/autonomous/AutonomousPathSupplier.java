@@ -67,17 +67,6 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     public double getDelay() {
         return autonomousDelay.get();
     }
-    
-    public boolean isMatchingScaleSide() {
-        OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
-        log.info("Target Side is: " + targetSide);
-
-        boolean matchLeft = targetSide == OwnedSide.LEFT && startingLocation == StartingLocations.Left;
-        boolean matchRight = targetSide == OwnedSide.RIGHT && startingLocation == StartingLocations.Right;
-        boolean eitherMatch = matchLeft || matchRight;
-        log.info("Do we have a matching side? " + eitherMatch);
-        return eitherMatch;
-    }
 
     private List<TotalRobotPoint> mirrorTotalPointPath(List<TotalRobotPoint> path) {
         return mirrorTotalPointPath(path, false);
