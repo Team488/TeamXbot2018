@@ -68,15 +68,15 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return autonomousDelay.get();
     }
     
-    public boolean matchingSide() {
+    public boolean isMatchingScaleSide() {
         OwnedSide targetSide = gameData.getOwnedSide(GameFeature.SCALE);
         log.info("Target Side is: " + targetSide);
 
         boolean matchLeft = targetSide == OwnedSide.LEFT && startingLocation == StartingLocations.Left;
         boolean matchRight = targetSide == OwnedSide.RIGHT && startingLocation == StartingLocations.Right;
-        boolean matchTotal = matchLeft || matchRight;
-        log.info("Do we have a matching side?" + matchTotal);
-        return (matchTotal);
+        boolean eitherMatch = matchLeft || matchRight;
+        log.info("Do we have a matching side? " + eitherMatch);
+        return eitherMatch;
     }
 
     private List<TotalRobotPoint> mirrorTotalPointPath(List<TotalRobotPoint> path) {
@@ -134,8 +134,14 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                     // switch on right, we don't care about starting position
                     return createPathToRightSwitchPlateNearestEdge();
                 }
-                // switch on left, we don't care about starting position
-                return createPathToLeftSwitchPlateNearestEdge();
+                else if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.LEFT) {
+                    // switch on left, we don't care about starting position
+                    return createPathToLeftSwitchPlateNearestEdge();
+                }
+                else {
+                    log.error("Owned switch side is unknown; returning an empty path");
+                    return createPathToNowhere();
+                }
             default:
                 return createPathToNowhere();
         }
@@ -158,19 +164,36 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     
     public List<TotalRobotPoint> getPathToCorrectScale() {
         if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.RIGHT) {
-            if (matchingSide()) {
+            if (startingLocation == StartingLocations.Right) {
                 // scale on the right, we're on the right
                 return createPathToRightAlignedScaleSafeScoringPosition();
             }
-            // scale on the right, we're on the left
-            return mirrorTotalPointPath(createPathToLeftUnalignedScaleSafeScoringPosition());
-        } else {
-            if (matchingSide()) {
+            else if (startingLocation == StartingLocations.Left) {
+                // scale on the right, we're on the left
+                return mirrorTotalPointPath(createPathToLeftUnalignedScaleSafeScoringPosition());
+            }
+            else {
+                log.error("Unknown or unsupported starting location; returning an empty path");
+                return createPathToNowhere();
+            }
+        }
+        else if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.LEFT) {
+            if (startingLocation == StartingLocations.Left) {
                 // scale on the left, we're on the left
                 return mirrorTotalPointPath(createPathToRightAlignedScaleSafeScoringPosition());
             }
-            // scale on the left, we're on the right
-            return createPathToLeftUnalignedScaleSafeScoringPosition();
+            else if (startingLocation == StartingLocations.Right) {
+                // scale on the left, we're on the right
+                return createPathToLeftUnalignedScaleSafeScoringPosition();
+            }
+            else {
+                log.error("Unknown or unsupported starting location; returning an empty path");
+                return createPathToNowhere();
+            }
+        }
+        else {
+            log.error("Owned scale side is unknown; returning an empty path");
+            return createPathToNowhere();
         }
     }    
     
@@ -361,13 +384,6 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     } */
 
     private List<TotalRobotPoint> createPathToNowhere() {
-        ArrayList<TotalRobotPoint> points = new ArrayList<>();
-        
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(13.5 * 12, 0 * 12), new ContiguousHeading(0)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
-                Gear.LOW_GEAR, 80));
-
-        return points;
+        return new ArrayList<TotalRobotPoint>();
     }    
 }
