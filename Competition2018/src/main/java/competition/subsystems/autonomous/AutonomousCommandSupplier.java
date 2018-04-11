@@ -73,6 +73,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
     }
     
     public Command chooseAutoToServeMetaprogram() {
+        log.info("Choosing metaprogram; setting is " + metaprogram);
         switch (metaprogram) {
         case Switch:
             log.info("Choosing: Doing single-cube switch");
@@ -84,6 +85,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         case CrossLine:
             log.info("Choosing: Crossing auto line");
             return crossLine;
+        case DoNothing:
         default:
             log.info("Choosing: Do nothing");
             return driveNowhere;
