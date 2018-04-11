@@ -2,16 +2,16 @@ package competition.subsystems.autonomous.selection;
 
 import com.google.inject.Inject;
 
-import competition.commandgroups.DynamicScoreOnScaleCommandGroup;
+import competition.commandgroups.ScoreOnScaleCommandGroup;
 import xbot.common.command.BaseCommand;
 
 public class SelectDynamicScoreOnScaleCommand extends BaseCommand {
 
-    DynamicScoreOnScaleCommandGroup dynamicScoreScale;
+    ScoreOnScaleCommandGroup dynamicScoreScale;
     AutonomousCommandSelector autoSelector;
     
     @Inject
-    public SelectDynamicScoreOnScaleCommand(AutonomousCommandSelector autoSelector, DynamicScoreOnScaleCommandGroup dynamicScoreScale) {
+    public SelectDynamicScoreOnScaleCommand(AutonomousCommandSelector autoSelector, ScoreOnScaleCommandGroup dynamicScoreScale) {
         this.setRunWhenDisabled(true);
         this.autoSelector = autoSelector;
         this.dynamicScoreScale = dynamicScoreScale;

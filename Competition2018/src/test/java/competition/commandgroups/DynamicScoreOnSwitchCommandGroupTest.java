@@ -15,7 +15,7 @@ import xbot.common.command.XScheduler;
 
 public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
 
-    DynamicScoreOnSwitchCommandGroup commandgroup;
+    ScoreOnSwitchCommandGroup commandgroup;
     XScheduler scheduler;
     DriveSubsystem drive;
     MockGameDataAdapter dataSource;
@@ -25,7 +25,7 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
     public void setUp() {
         super.setUp();
         
-        this.commandgroup = injector.getInstance(DynamicScoreOnSwitchCommandGroup.class);
+        this.commandgroup = injector.getInstance(ScoreOnSwitchCommandGroup.class);
         this.scheduler = injector.getInstance(XScheduler.class);
         this.drive = injector.getInstance(DriveSubsystem.class);
         this.dataSource = (MockGameDataAdapter)injector.getInstance(GameDataSource.class);

@@ -2,16 +2,16 @@ package competition.subsystems.autonomous.selection;
 
 import com.google.inject.Inject;
 
-import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
+import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import xbot.common.command.BaseCommand;
 
 public class SelectDynamicScoreOnSwitchCommand extends BaseCommand {
 
-    DynamicScoreOnSwitchCommandGroup dynamicScoreSwitch;
+    ScoreOnSwitchCommandGroup dynamicScoreSwitch;
     AutonomousCommandSelector autoSelector;
     
     @Inject
-    public SelectDynamicScoreOnSwitchCommand(AutonomousCommandSelector autoSelector, DynamicScoreOnSwitchCommandGroup dynamicScoreSwitch) {
+    public SelectDynamicScoreOnSwitchCommand(AutonomousCommandSelector autoSelector, ScoreOnSwitchCommandGroup dynamicScoreSwitch) {
         this.setRunWhenDisabled(true);
         this.autoSelector = autoSelector;
         this.dynamicScoreSwitch = dynamicScoreSwitch;

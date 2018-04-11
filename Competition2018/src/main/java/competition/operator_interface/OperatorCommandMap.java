@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
 import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
-import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
+import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
 import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import competition.commandgroups.PrepareToClimbCommandGroup;
@@ -128,7 +128,7 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
-            SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
+            SetRobotHeadingCommand setHeading, ScoreOnSwitchCommandGroup dynamicScore,
             FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade,
             VelocityArcadeDriveCommand velocity, ConfigurablePurePursuitCommand square,
             AbsolutePurePursuit2018Command pretendMulticube) {
