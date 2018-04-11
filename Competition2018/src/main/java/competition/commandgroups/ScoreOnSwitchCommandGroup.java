@@ -3,6 +3,7 @@ package competition.commandgroups;
 import com.google.inject.Inject;
 
 import competition.subsystems.autonomous.AutonomousPathSupplier;
+import competition.subsystems.autonomous.AutonomousPathSupplier.SwitchScoringLocation;
 import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.elevator.ElevatorSubsystem;
@@ -29,7 +30,7 @@ public class ScoreOnSwitchCommandGroup extends BaseCommandGroup {
             // This is reversed, but I don't want to mess with the rest of the OI
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAdvancedAutoPathToFeature(GameFeature.SWITCH_NEAR));
+        pursuit.setPointSupplier(() -> decider.getPathToCorrectSwitch(SwitchScoringLocation.SideFacingAllianceWall));
         
         setWristDown.setGoalAngle(0);
         setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());

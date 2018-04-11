@@ -59,7 +59,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         log.info("Created.");
     }
     
-    public void setGoalFeature(AutonomousMetaprogram metaprogram) {
+    public void setMetaprogram(AutonomousMetaprogram metaprogram) {
         log.info("Metaprogram is" + metaprogram.toString());
         this.metaprogram = metaprogram;
         goalFeatureProp.set(metaprogram.toString());

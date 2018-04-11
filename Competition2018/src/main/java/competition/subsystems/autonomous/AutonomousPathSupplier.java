@@ -99,7 +99,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 // In absolute mode, flip around the centerline of the field.
                 // This would normally look like -(currentX-midline)+midline, but we can
                 // just simplify to -currentX + 2*midline, or -currentX + fieldWidth.
-                double fieldWidth = 27;
+                double fieldWidth = 27*12;
                 flippedPoint = new XYPair(
                         -point.simplePoint.pose.getPoint().x + fieldWidth,
                         point.simplePoint.pose.getPoint().y);
@@ -156,7 +156,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return mirrorTotalPointPath(createPathToRightSwitchPlateNearestEdge());
     }
     
-    public List<TotalRobotPoint> getPathToCorrectScale(SwitchScoringLocation targetLocation) {
+    public List<TotalRobotPoint> getPathToCorrectScale() {
         if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.RIGHT) {
             if (matchingSide()) {
                 // scale on the right, we're on the right

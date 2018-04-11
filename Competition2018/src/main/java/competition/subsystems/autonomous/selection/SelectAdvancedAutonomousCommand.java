@@ -3,32 +3,31 @@ package competition.subsystems.autonomous.selection;
 import com.google.inject.Inject;
 
 import competition.subsystems.autonomous.AutonomousCommandSupplier;
-import openrio.powerup.MatchData.GameFeature;
+import competition.subsystems.autonomous.AutonomousCommandSupplier.AutonomousMetaprogram;
 import xbot.common.command.BaseCommand;
 
-public class SelectAdvancedAutonomous extends BaseCommand {
+public class SelectAdvancedAutonomousCommand extends BaseCommand {
 
     AutonomousCommandSupplier autoCommandSupplier;
     AutonomousCommandSelector autoSelector;
-    GameFeature goalFeature;
+    AutonomousMetaprogram metaprogram;
     
     @Inject
-    public SelectAdvancedAutonomous(AutonomousCommandSelector autoSelector, AutonomousCommandSupplier autoCommandSupplier) {
+    public SelectAdvancedAutonomousCommand(AutonomousCommandSelector autoSelector, AutonomousCommandSupplier autoCommandSupplier) {
         this.autoSelector = autoSelector;
         this.autoCommandSupplier = autoCommandSupplier;
         this.setRunWhenDisabled(true);
     }
     
-    public void setGoalFeature(GameFeature feature) {
-        this.goalFeature = feature;
+    public void setMetaprogram(AutonomousMetaprogram metaprogram) {
+        this.metaprogram = metaprogram;
     }
 
     @Override
     public void initialize() {
-        log.info("Initializing with goal feature: " + goalFeature.toString());
-        autoCommandSupplier.setGoalFeature(goalFeature);
+        log.info("Initializing with goal feature: " + metaprogram.toString());
+        autoCommandSupplier.setMetaprogram(metaprogram);
         autoSelector.setCurrentAutonomousCommandSupplier(autoCommandSupplier.getBestAuto());
-        
     }
 
     @Override

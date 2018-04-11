@@ -4,26 +4,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
-import competition.commandgroups.ScoreOnSwitchCommandGroup;
-import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
 import competition.commandgroups.MultiCubeNearScaleCommandGroup;
-import competition.commandgroups.PrepareToClimbCommandGroup;
-import competition.commandgroups.TotalClimbCommandGroup;
+import competition.commandgroups.ScoreOnSwitchCommandGroup;
+import competition.subsystems.autonomous.AutonomousCommandSupplier.AutonomousMetaprogram;
 import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
-import competition.subsystems.autonomous.selection.SelectAdvancedAutonomous;
-import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
-import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
-import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
-import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
+import competition.subsystems.autonomous.selection.SelectAdvancedAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.AscendLowPowerCommand;
-import competition.subsystems.climb.commands.EngagePawlCommand;
-import competition.subsystems.climb.commands.ReleasePawlCommand;
-import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
-import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
 import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
@@ -45,8 +34,6 @@ import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperDropCubeCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
-import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
-import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
 import competition.subsystems.offboard.commands.IdentifyAndPurePursuitToVisibleCubeCommand;
 import competition.subsystems.offboard.commands.IdentifyTargetCubeCommand.TimeoutPreset;
@@ -62,7 +49,6 @@ import competition.subsystems.wrist.commands.WristDangerousOverrideCommand;
 import competition.subsystems.wrist.commands.WristMaintainerCommand;
 import competition.subsystems.wrist.commands.WristUncalibrateCommand;
 import competition.subsystems.zed_deploy.commands.ExtendRetractZedCommand;
-import openrio.powerup.MatchData.GameFeature;
 import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
@@ -96,12 +82,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
-            ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
-            SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
-            SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle, MultiCubeNearScaleCommandGroup multiCube, SelectAdvancedAutonomous advancedScale) {
+            ChangeAutoDelayCommand subtractAutoDelay, SelectAdvancedAutonomousCommand selectScale,
+            SelectAdvancedAutonomousCommand selectSwitch, SelectAdvancedAutonomousCommand crossLine,
+            SelectAdvancedAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
+            SetStartingSideCommand setMiddle, MultiCubeNearScaleCommandGroup multiCube, SelectAdvancedAutonomousCommand advancedScale) {
 
-        advancedScale.setGoalFeature(GameFeature.SCALE);
+        selectScale.setMetaprogram(AutonomousMetaprogram.Scale);
+        selectSwitch.setMetaprogram(AutonomousMetaprogram.Switch);
+        crossLine.setMetaprogram(AutonomousMetaprogram.CrossLine);
+        doNothing.setMetaprogram(AutonomousMetaprogram.Scale);
         
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);

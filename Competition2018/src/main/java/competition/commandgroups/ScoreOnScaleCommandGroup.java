@@ -32,7 +32,7 @@ public class ScoreOnScaleCommandGroup extends BaseCommandGroup {
             SetElevatorTargetHeightCommand setElevatorForScale,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAdvancedAutoPathToScale());
+        pursuit.setPointSupplier(() -> decider.getPathToCorrectScale());
         
         setWristDown.setGoalAngle(60);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());

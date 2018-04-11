@@ -54,11 +54,9 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
         scheduler.run();
         
         assertEquals("Should be heading to right side", 
-                decider.createPathToNearbySwitchPlate().size(), 
-                commandgroup.pursuit.getPlannedPointsToVisit().size(), 
+                decider.createPathToRightSwitchPlateNearestEdge().get(0).simplePoint.pose.getPoint().x, 
+                commandgroup.pursuit.getPlannedPointsToVisit().get(0).pose.getPoint().x,
                 0.001);
-
-        verifyDrivePositive();
     }
     
     @Test
@@ -70,10 +68,8 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
         scheduler.run();
         
         assertEquals("Should be heading to left side", 
-                decider.createPathToDistantSwitchPlate().size(), 
-                commandgroup.pursuit.getPlannedPointsToVisit().size(), 
+                decider.createPathToLeftSwitchPlateNearestEdge().get(0).simplePoint.pose.getPoint().x, 
+                commandgroup.pursuit.getPlannedPointsToVisit().get(0).pose.getPoint().x,
                 0.001);
-        
-        verifyDrivePositive();
     }
 }

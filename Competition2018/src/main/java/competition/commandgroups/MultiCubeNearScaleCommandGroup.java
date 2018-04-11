@@ -14,6 +14,7 @@ import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 
+@Deprecated
 public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
 
     public AbsolutePurePursuit2018Command pursuit;
@@ -39,7 +40,7 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             GripperEjectCommand ejectAgain,
             GripperStopCommand stopCollector
             ) {
-        this.pursuit = pursuit;
+        /*this.pursuit = pursuit;
         
         pursuit.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlate());
         getCube.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyCubeFromScalePlate());
@@ -85,6 +86,6 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
                 
         // eject
         this.addSequential(ejectAgain, 1);
-        
+        */
     }
 }
