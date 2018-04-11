@@ -34,10 +34,10 @@ public class SetStartingSideCommand extends BaseCommand {
             pose.setCurrentPosition(4 * 12, 3.1 * 12);
             break;
         case Middle:
-            pose.setCurrentPosition(15, 3.1 * 12);
+            pose.setCurrentPosition(15 * 12, 3.1 * 12);
             break;
         case Right:
-            pose.setCurrentPosition(23, 3.1 * 12);
+            pose.setCurrentPosition(23 * 12, 3.1 * 12);
             break;
         default: 
             break;
