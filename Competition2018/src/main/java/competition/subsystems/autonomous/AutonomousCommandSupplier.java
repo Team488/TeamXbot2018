@@ -1,6 +1,5 @@
 package competition.subsystems.autonomous;
 
-import java.sql.Savepoint;
 import java.util.function.Supplier;
 
 import com.google.inject.Inject;
@@ -9,9 +8,9 @@ import com.google.inject.Singleton;
 import competition.commandgroups.CrossAutoLineCommandGroup;
 import competition.commandgroups.ScoreOnScaleCommandGroup;
 import competition.commandgroups.ScoreOnSwitchCommandGroup;
+import competition.subsystems.autonomous.commands.DriveNowhereCommand;
 import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import edu.wpi.first.wpilibj.command.Command;
-import openrio.powerup.MatchData.GameFeature;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.properties.StringProperty;
 import xbot.common.properties.XPropertyManager;
@@ -20,6 +19,7 @@ import xbot.common.properties.XPropertyManager;
 public class AutonomousCommandSupplier extends BaseSubsystem {
     
     public enum AutonomousMetaprogram {
+        DoNothing,
         Switch,
         Scale,
         Opportunistic,
@@ -33,6 +33,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
     ScoreOnScaleCommandGroup singleCubeAnyScale;
     ScoreOnSwitchCommandGroup singleCubeSwitch;
     CrossAutoLineCommandGroup crossLine;
+    DriveNowhereCommand driveNowhere;
     
     AutonomousMetaprogram metaprogram;
     
@@ -46,6 +47,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
             ScoreOnScaleCommandGroup singleCubeAnyScale,
             ScoreOnSwitchCommandGroup singleCubeSwitch,
             CrossAutoLineCommandGroup crossLine,
+            DriveNowhereCommand driveNowhere,
             XPropertyManager propMan) {
         this.pathSupplier = pathSupplier;
         this.gameData = gameData;
@@ -53,6 +55,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         this.singleCubeAnyScale = singleCubeAnyScale;
         this.singleCubeSwitch = singleCubeSwitch;
         this.crossLine = crossLine;
+        this.driveNowhere = driveNowhere;
         
         goalFeatureProp = propMan.createEphemeralProperty(getPrefix() + "Goal Feature", "Not set yet");
         
@@ -60,7 +63,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
     }
     
     public void setMetaprogram(AutonomousMetaprogram metaprogram) {
-        log.info("Metaprogram is" + metaprogram.toString());
+        log.info("Metaprogram is " + metaprogram.toString());
         this.metaprogram = metaprogram;
         goalFeatureProp.set(metaprogram.toString());
     }
@@ -70,6 +73,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
     }
     
     public Command chooseAutoToServeMetaprogram() {
+        log.info("Choosing metaprogram; setting is " + metaprogram);
         switch (metaprogram) {
         case Switch:
             log.info("Choosing: Doing single-cube switch");
@@ -78,9 +82,13 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
             // if we have a matching side, try the multi cube auto
             log.info("Choosing: Doing single cube scale");
             return singleCubeAnyScale;
-        default:
+        case CrossLine:
             log.info("Choosing: Crossing auto line");
             return crossLine;
+        case DoNothing:
+        default:
+            log.info("Choosing: Do nothing");
+            return driveNowhere;
         }
     }
 }

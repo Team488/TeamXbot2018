@@ -85,17 +85,15 @@ public class OperatorCommandMap {
             ChangeAutoDelayCommand subtractAutoDelay, SelectAdvancedAutonomousCommand selectScale,
             SelectAdvancedAutonomousCommand selectSwitch, SelectAdvancedAutonomousCommand crossLine,
             SelectAdvancedAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle, MultiCubeNearScaleCommandGroup multiCube, SelectAdvancedAutonomousCommand advancedScale) {
+            SetStartingSideCommand setMiddle, SelectAdvancedAutonomousCommand advancedScale) {
 
         selectScale.setMetaprogram(AutonomousMetaprogram.Scale);
         selectSwitch.setMetaprogram(AutonomousMetaprogram.Switch);
         crossLine.setMetaprogram(AutonomousMetaprogram.CrossLine);
-        doNothing.setMetaprogram(AutonomousMetaprogram.Scale);
+        doNothing.setMetaprogram(AutonomousMetaprogram.DoNothing);
         
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
-        
-        multiCube.includeOnSmartDashboard("A MultiCube Auto");
 
         setLeft.setStartingLocation(StartingLocations.Left);
         setRight.setStartingLocation(StartingLocations.Right);
