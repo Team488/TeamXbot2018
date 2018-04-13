@@ -51,8 +51,6 @@ public class DriveSubsystem extends BaseDriveSubsystem implements PowerStateResp
     private double leftAccum;
     private double rightAccum;
     
-    private boolean toggleAccelerationLimit;
-    
     private final DoubleProperty voltageRampNormalProp;
     private final DoubleProperty voltageRampLowBatProp;
     private final DoubleProperty maxCurrentNormalProp;

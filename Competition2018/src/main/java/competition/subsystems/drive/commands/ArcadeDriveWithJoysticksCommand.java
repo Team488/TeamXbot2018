@@ -9,6 +9,8 @@ import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
+import xbot.common.properties.DoubleProperty;
+import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.control_logic.HeadingAssistModule;
 import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
@@ -19,29 +21,19 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     final OperatorInterface oi;
     final HeadingAssistModule ham;
     
-    private double translateAdjustedPower;
-    private double rotateAdjustedPower;
-    private double turn;
+    DoubleProperty powerLimit;
+    DoubleProperty elevatorHeightLimit;
     
-    private double nextTranslateInput;
-    private double currentTranslateOutput;
-    private double translateInputDelta;
-    
-    private double nextRotateInput;
-    private double currentRotateOutput;
-    private double rotateInputDelta;
-
     @Inject
-    public ArcadeDriveWithJoysticksCommand(
-            OperatorInterface oi, DriveSubsystem driveSubsystem, CommonLibFactory clf,
-            ElevatorSubsystem elevatorSubsystem) {
+    public ArcadeDriveWithJoysticksCommand(OperatorInterface oi, DriveSubsystem driveSubsystem, CommonLibFactory clf,
+            ElevatorSubsystem elevatorSubsystem, XPropertyManager propManager) {
         this.oi = oi;
         this.driveSubsystem = driveSubsystem;
         this.elevatorSubsystem = elevatorSubsystem;
         this.requires(this.driveSubsystem);
         
-        this.translateAdjustedPower = 0;
-        this.rotateAdjustedPower = 0;
+        powerLimit = propManager.createPersistentProperty("Power Limit for low acceleration mode", 0.2);
+        elevatorHeightLimit = propManager.createPersistentProperty("Elevator Height Limit for low acceleration mode", 40);
 
         HeadingModule holdHeading = clf.createHeadingModule(driveSubsystem.getRotateToHeadingPid());
         HeadingModule decayHeading = clf.createHeadingModule(driveSubsystem.getRotateDecayPid());
@@ -56,43 +48,56 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        nextTranslateInput = oi.driverGamepad.getLeftVector().y;
-        nextRotateInput = MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x);
+        double currentTranslateOutput = 0;
+        double currentRotateOutput = 0;
         
-        translateInputDelta = nextTranslateInput - currentTranslateOutput;
-        rotateInputDelta = nextRotateInput - currentRotateOutput;
+        double nextTranslateInput = oi.driverGamepad.getLeftVector().y;
+        double nextRotateInput = MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x);
+        double turn = ham.calculateHeadingPower(nextRotateInput);
+        
+        double translateInputDelta = nextTranslateInput - currentTranslateOutput;
+        double rotateInputDelta = nextRotateInput - currentRotateOutput;
         
         // Rotate
-        if (rotateInputDelta > 0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
-            rotateAdjustedPower += 0.2;
-            turn = ham.calculateHeadingPower(rotateAdjustedPower);
-            currentRotateOutput = rotateAdjustedPower;
-        }
-        else if (rotateInputDelta < -0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
-            rotateAdjustedPower += -0.2;
-            turn = ham.calculateHeadingPower(rotateAdjustedPower);
-            currentRotateOutput = rotateAdjustedPower;
-        }
-        else {
-            turn = ham.calculateHeadingPower(nextRotateInput);
-            currentRotateOutput = nextRotateInput;
+        if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimit.get()) {
+            double rotateAdjustedPower = 0;
+            if (rotateInputDelta > 0.2) {
+                rotateAdjustedPower += 0.2;
+                turn = ham.calculateHeadingPower(rotateAdjustedPower);
+                currentRotateOutput = rotateAdjustedPower;
+            }
+            else if (rotateInputDelta < -0.2) {
+                rotateAdjustedPower += -0.2;
+                turn = ham.calculateHeadingPower(rotateAdjustedPower);
+                currentRotateOutput = rotateAdjustedPower;
+            }
+            else {
+                currentRotateOutput = nextRotateInput;
+            }
         }
         
         // Translate
-        if (translateInputDelta > 0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
-            translateAdjustedPower += 0.2;
-            driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
-            currentTranslateOutput = translateAdjustedPower;
-        }
-        else if(translateInputDelta < -0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
-            translateAdjustedPower += -0.2;
-            driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
-            currentTranslateOutput = translateAdjustedPower;
+        if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimit.get()) {
+            double translateAdjustedPower = 0;
+            if (translateInputDelta > 0.2) {
+                translateAdjustedPower += 0.2;
+                driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
+                currentTranslateOutput = translateAdjustedPower;
+            }
+            else if(translateInputDelta < -0.2) {
+                translateAdjustedPower += -0.2;
+                driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
+                currentTranslateOutput = translateAdjustedPower;
+            }
+            else {
+            driveSubsystem.drive(new XYPair(0, nextTranslateInput), turn);
+            currentTranslateOutput = nextTranslateInput;
+            }
         }
         else {
-        driveSubsystem.drive(new XYPair(0, nextTranslateInput), turn);
-        currentTranslateOutput = nextTranslateInput;
+            driveSubsystem.drive(new XYPair(0, nextTranslateInput), turn);
+            currentTranslateOutput = nextTranslateInput;
+            currentRotateOutput = nextRotateInput;
         }
     }
-
 }

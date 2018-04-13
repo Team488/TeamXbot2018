@@ -18,7 +18,7 @@ public class ArcadeDriveWithJoysticksCommandTest extends BaseCompetitionTest {
     ArcadeDriveWithJoysticksCommand command;
     DriveSubsystem drive;
     ElevatorSubsystem elevator;
-
+    
     @Override
     public void setUp() {
         super.setUp();
