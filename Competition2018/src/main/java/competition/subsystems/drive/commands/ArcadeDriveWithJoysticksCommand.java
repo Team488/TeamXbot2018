@@ -66,26 +66,32 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
         if (rotateInputDelta > 0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
             rotateAdjustedPower += 0.2;
             turn = ham.calculateHeadingPower(rotateAdjustedPower);
+            currentRotateOutput = rotateAdjustedPower;
         }
         else if (rotateInputDelta < -0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
             rotateAdjustedPower += -0.2;
             turn = ham.calculateHeadingPower(rotateAdjustedPower);
+            currentRotateOutput = rotateAdjustedPower;
         }
         else {
             turn = ham.calculateHeadingPower(nextRotateInput);
+            currentRotateOutput = nextRotateInput;
         }
         
         // Translate
         if (translateInputDelta > 0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
             translateAdjustedPower += 0.2;
             driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
+            currentTranslateOutput = translateAdjustedPower;
         }
         else if(translateInputDelta < -0.2 && elevatorSubsystem.getCurrentHeightInInches() > 40) {
             translateAdjustedPower += -0.2;
             driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
+            currentTranslateOutput = translateAdjustedPower;
         }
         else {
         driveSubsystem.drive(new XYPair(0, nextTranslateInput), turn);
+        currentTranslateOutput = nextTranslateInput;
         }
     }
 
