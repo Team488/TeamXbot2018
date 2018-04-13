@@ -6,10 +6,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CrossAutoLineCommandGroup;
+import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import competition.commandgroups.ScoreOnScaleCommandGroup;
 import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
-import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import edu.wpi.first.wpilibj.command.Command;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.properties.StringProperty;
@@ -58,7 +58,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         this.driveNowhere = driveNowhere;
         
         goalFeatureProp = propMan.createEphemeralProperty(getPrefix() + "Goal Feature", "Not set yet");
-        
+        this.metaprogram = AutonomousMetaprogram.DoNothing;
         log.info("Created.");
     }
     
@@ -68,7 +68,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         goalFeatureProp.set(metaprogram.toString());
     }
     
-    public Supplier<Command> getBestAuto() {
+    public Supplier<Command> getAutoSupplier() {
         return () -> chooseAutoToServeMetaprogram();
     }
     
