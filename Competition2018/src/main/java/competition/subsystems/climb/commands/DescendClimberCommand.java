@@ -2,19 +2,16 @@ package competition.subsystems.climb.commands;
 
 import com.google.inject.Inject;
 import competition.subsystems.climb.ClimbSubsystem;
-import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import xbot.common.command.BaseCommand;
 
 public class DescendClimberCommand extends BaseCommand {
 
     ClimbSubsystem climb;
-    ClimberDeploySubsystem deploy;
     //ZedDeploySubsystem zedDeploy;
 
     @Inject
-    public DescendClimberCommand(ClimbSubsystem climb, ClimberDeploySubsystem deploy) {//, ZedDeploySubsystem zedDeploy) {
+    public DescendClimberCommand(ClimbSubsystem climb) {//, ZedDeploySubsystem zedDeploy) {
         this.climb = climb;
-        this.deploy = deploy;
         //this.zedDeploy = zedDeploy;
         this.requires(climb);
         //this.requires(zedDeploy);
