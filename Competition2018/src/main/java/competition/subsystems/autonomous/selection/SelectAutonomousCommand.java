@@ -6,14 +6,14 @@ import competition.subsystems.autonomous.AutonomousCommandSupplier;
 import competition.subsystems.autonomous.AutonomousCommandSupplier.AutonomousMetaprogram;
 import xbot.common.command.BaseCommand;
 
-public class SelectAdvancedAutonomousCommand extends BaseCommand {
+public class SelectAutonomousCommand extends BaseCommand {
 
     AutonomousCommandSupplier autoCommandSupplier;
     AutonomousCommandSelector autoSelector;
     AutonomousMetaprogram metaprogram;
     
     @Inject
-    public SelectAdvancedAutonomousCommand(AutonomousCommandSelector autoSelector, AutonomousCommandSupplier autoCommandSupplier) {
+    public SelectAutonomousCommand(AutonomousCommandSelector autoSelector, AutonomousCommandSupplier autoCommandSupplier) {
         this.autoSelector = autoSelector;
         this.autoCommandSupplier = autoCommandSupplier;
         this.setRunWhenDisabled(true);
@@ -27,7 +27,7 @@ public class SelectAdvancedAutonomousCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing with goal feature: " + metaprogram.toString());
         autoCommandSupplier.setMetaprogram(metaprogram);
-        autoSelector.setCurrentAutonomousCommandSupplier(autoCommandSupplier.getBestAuto());
+        autoSelector.setCurrentAutonomousCommandSupplier(autoCommandSupplier.getAutoSupplier());
     }
 
     @Override
