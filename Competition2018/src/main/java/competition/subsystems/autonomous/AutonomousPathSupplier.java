@@ -140,7 +140,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(18 * 12, 9* 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(17 * 12, 11.5 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
@@ -190,7 +190,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 25* 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 28 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
@@ -206,17 +206,17 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 14* 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 21 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 19.5* 12), new ContiguousHeading(180)),
+                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 21 * 12), new ContiguousHeading(180)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(4 * 12, 25* 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(4 * 12, 28 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
