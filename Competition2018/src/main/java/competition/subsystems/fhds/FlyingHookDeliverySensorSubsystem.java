@@ -52,7 +52,7 @@ public class FlyingHookDeliverySensorSubsystem extends BaseSubsystem {
                 
                 OffboardCommunicationPacket packet = comms.receiveRaw(OffboardCommsConstants.SENDER_ID_DRONE_CONTROLLER);
                 if (packet != null) {
-                   if (packet.packetType == OffboardCommsConstants.PACKET_TYPE_DRONE_MOTOR_COMMAND) {
+                   if (packet.packetType == OffboardCommsConstants.PACKET_TYPE_DRONE_MOTOR_POWER) {
                        DroneMotorCommandPacket commandPacket = DroneMotorCommandPacket.parse(packet.data);
 
                        leftFrontMotor.setSigned(commandPacket.leftFront);
@@ -66,7 +66,7 @@ public class FlyingHookDeliverySensorSubsystem extends BaseSubsystem {
                 }
                 
                 comms.sendRaw(
-                        OffboardCommsConstants.PACKET_TYPE_DRONE_CONTROL_COMMAND,
+                        OffboardCommsConstants.PACKET_TYPE_DRONE_CONTROL_INPUT,
                         OffboardFramePackingUtils.packDroneCommandFrame(
                                 requestedPowerForward,
                                 requestedPowerSideways,

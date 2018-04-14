@@ -22,6 +22,6 @@ public class OffboardCommsConstants {
 
     public static final byte PACKET_TYPE_DETECTED_CUBE = 0x0B;
 
-    public static final byte PACKET_TYPE_DRONE_CONTROL_COMMAND = 0x70;
-    public static final byte PACKET_TYPE_DRONE_MOTOR_COMMAND = 0x71;
+    public static final byte PACKET_TYPE_DRONE_CONTROL_INPUT = 0x70;
+    public static final byte PACKET_TYPE_DRONE_MOTOR_POWER = 0x71;
 }
