@@ -13,7 +13,9 @@ import competition.subsystems.shift.ShiftSubsystem;
 import competition.subsystems.shift.ShiftSubsystem.Gear;
 import edu.wpi.first.wpilibj.Timer;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
+import xbot.common.logic.Latch;
 import xbot.common.logic.VelocityThrottleModule;
+import xbot.common.logic.Latch.EdgeType;
 import xbot.common.math.FieldPose;
 import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
@@ -21,7 +23,6 @@ import xbot.common.properties.DoubleProperty;
 import xbot.common.properties.XPropertyManager;
 import xbot.common.subsystems.drive.PurePursuitCommand;
 import xbot.common.subsystems.drive.RabbitPoint;
-import xbot.common.subsystems.pose.BasePoseSubsystem;
 
 public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     
@@ -32,6 +33,8 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     final DoubleProperty maxInchesPerSecondProp;
     private final DriveSubsystem drive;
     private final PoseSubsystem pose;
+    
+    private Latch lowGearPidLatch;
     
     @Inject
     public AbsolutePurePursuit2018Command(ShiftSubsystem shifter, CommonLibFactory clf, PoseSubsystem pose, DriveSubsystem drive,
@@ -46,6 +49,17 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
         maxInchesPerSecondProp = propMan.createPersistentProperty(getPrefix() + "MaxInchesPerSecond", 120);
         
         originalPoints = new ArrayList<>();
+        
+        lowGearPidLatch = new  Latch(false, EdgeType.Both, edge -> {
+            if (edge == EdgeType.RisingEdge) {
+                this.setPIDsToDefault();
+                // TODO: Also set low gear velocity PIDs
+            }
+            if (edge == EdgeType.FallingEdge) {
+                // TODO: set base PurePursuitCommand PIDs for high gear
+                // TODO: Also set high gear velocity PIDs
+            }
+        });
     }
     
     public void addPoint(TotalRobotPoint point) {
@@ -82,16 +96,20 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
     public void execute() {
         // In the base command, the program would get the chaseData and apply it to the drive. We're mostly
         // okay with this, but we want to potentially modify the total power output as well as shift gears.
-
+        
         if (originalPoints.size() == 0) {
             return;
         }
         
+        Gear desiredGear = originalPoints.get(pointIndex).desiredGear;
+        double maximumSpeed = originalPoints.get(pointIndex).velocityLimit;
+        
+        // This will automatically shift between PIDs on the base PurePursuitCommand
+        lowGearPidLatch.setValue(desiredGear == Gear.LOW_GEAR);
+        
         RabbitChaseInfo chaseData = evaluateCurrentPoint();
         double rotation = chaseData.rotation;
         double translation = chaseData.translation;
-        
-        double maximumSpeed = originalPoints.get(pointIndex).velocityLimit;
         
         double translateSpeedGoal = translation * maxInchesPerSecondProp.get();
         double coercedSpeedGoal = MathUtils.constrainDouble(translateSpeedGoal, -maximumSpeed, maximumSpeed);
@@ -102,7 +120,6 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
         
         drive.drive(new XYPair(0, translationalPower), rotation);
         
-        Gear desiredGear = originalPoints.get(pointIndex).desiredGear;
         if (shifter.getGear() != desiredGear) {
             shifter.setGear(desiredGear);
         }
