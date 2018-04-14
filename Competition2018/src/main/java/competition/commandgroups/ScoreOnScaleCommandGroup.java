@@ -2,7 +2,8 @@ package competition.commandgroups;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
+import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -14,28 +15,26 @@ import xbot.common.math.ContiguousHeading;
 import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
-import xbot.common.subsystems.drive.PurePursuitCommand.PursuitMode;
+import xbot.common.subsystems.drive.PurePursuitCommand.PointLoadingMode;
+import xbot.common.subsystems.drive.RabbitPoint;
 
-public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
+public class ScoreOnScaleCommandGroup extends BaseCommandGroup {
 
-    public ConfigurablePurePursuitCommand pursuit;
+    public AbsolutePurePursuit2018Command pursuit;
     
     @Inject
-    public DynamicScoreOnScaleCommandGroup(
-            AutonomousDecisionSystem decider,
+    public ScoreOnScaleCommandGroup(
+            AutonomousPathSupplier decider,
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
-            ConfigurablePurePursuitCommand pursuit,
+            AbsolutePurePursuit2018Command pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
-            ConfigurablePurePursuitCommand scootForward,
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SCALE));
-        scootForward.addPoint(new FieldPose(new XYPair(0, 2.666*12), new ContiguousHeading(90)));
-        scootForward.setMode(PursuitMode.Relative);
+        pursuit.setPointSupplier(() -> decider.getPathToCorrectScale());
         
-        setWristDown.setGoalAngle(45);
+        setWristDown.setGoalAngle(60);
         setElevatorForScale.setGoalHeight(elevator.getTargetScaleMidHeight());
         wait.setDelaySupplier(() -> decider.getDelay());
         
@@ -45,12 +44,9 @@ public class DynamicScoreOnScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(pursuit);
         
         // Now we've stopped, so put the wrist down and the elevator up
-        this.addParallel(setWristDown, 1);
-        setElevatorForScale.changeTimeout(3.5);
+        setElevatorForScale.changeTimeout(2);
         this.addSequential(setElevatorForScale);
-        
-        // scoot forward a little
-        this.addSequential(scootForward);
+        this.addSequential(setWristDown, 1);
         
         // Score for 1 second
         this.addSequential(eject, 1);

@@ -4,25 +4,19 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.commandgroups.DisengageWinchAndReleasePawlCommandGroup;
-import competition.commandgroups.DynamicScoreOnSwitchCommandGroup;
-import competition.commandgroups.EngageWinchAndLockPawlCommandGroup;
-import competition.commandgroups.PrepareToClimbCommandGroup;
-import competition.commandgroups.TotalClimbCommandGroup;
-import competition.subsystems.autonomous.AutonomousDecisionSystem.StartingLocations;
+import competition.commandgroups.ScoreOnSwitchCommandGroup;
+import competition.subsystems.autonomous.AutonomousCommandSupplier.AutonomousMetaprogram;
+import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
-import competition.subsystems.autonomous.selection.SelectCrossLineCommand;
-import competition.subsystems.autonomous.selection.SelectDoNothingCommand;
-import competition.subsystems.autonomous.selection.SelectDynamicScoreOnScaleCommand;
-import competition.subsystems.autonomous.selection.SelectDynamicScoreOnSwitchCommand;
+import competition.subsystems.autonomous.selection.SelectAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
-import competition.subsystems.climb.commands.EngagePawlCommand;
-import competition.subsystems.climb.commands.ReleasePawlCommand;
-import competition.subsystems.climberdeploy.commands.ExtendClimberArmCommand;
-import competition.subsystems.climberdeploy.commands.RetractClimberArmCommand;
+import competition.subsystems.climb.commands.AscendClimberCommand;
+import competition.subsystems.climb.commands.AscendLowPowerCommand;
+import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.FieldOrientedTankDriveCommand;
+import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.drive.commands.VelocityArcadeDriveCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.CalibrateElevatorHereCommand;
@@ -36,16 +30,16 @@ import competition.subsystems.elevator.commands.ElevatorVelocityCommand;
 import competition.subsystems.elevator.commands.EnableElevatorCurrentLimitCommand;
 import competition.subsystems.elevator.commands.ExperimentMotionMagicCommand;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
+import competition.subsystems.gripperintake.commands.GripperDropCubeCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
 import competition.subsystems.gripperintake.commands.GripperIntakeCommand;
-import competition.subsystems.gripperintake.commands.GripperRotateClockwiseCommand;
-import competition.subsystems.gripperintake.commands.GripperRotateCounterClockwiseCommand;
 import competition.subsystems.offboard.commands.AcquireVisibleCubeCommand;
 import competition.subsystems.offboard.commands.IdentifyAndPurePursuitToVisibleCubeCommand;
 import competition.subsystems.offboard.commands.IdentifyTargetCubeCommand.TimeoutPreset;
 import competition.subsystems.offboard.commands.NavToTestGoalCommand;
 import competition.subsystems.power_state_manager.commands.EnterLowBatteryModeCommand;
 import competition.subsystems.power_state_manager.commands.LeaveLowBatteryModeCommand;
+import competition.subsystems.shift.ShiftSubsystem.Gear;
 import competition.subsystems.shift.commands.ShiftHighCommand;
 import competition.subsystems.shift.commands.ShiftLowCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
@@ -59,6 +53,10 @@ import xbot.common.math.FieldPose;
 import xbot.common.math.XYPair;
 import xbot.common.properties.ConfigurePropertiesCommand;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
+import xbot.common.subsystems.drive.RabbitPoint;
+import xbot.common.subsystems.drive.RabbitPoint.PointDriveStyle;
+import xbot.common.subsystems.drive.RabbitPoint.PointTerminatingType;
+import xbot.common.subsystems.drive.RabbitPoint.PointType;
 import xbot.common.subsystems.pose.commands.ResetDistanceCommand;
 import xbot.common.subsystems.pose.commands.SetRobotHeadingCommand;
 
@@ -83,10 +81,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
-            ChangeAutoDelayCommand subtractAutoDelay, SelectDynamicScoreOnScaleCommand selectScale,
-            SelectDynamicScoreOnSwitchCommand selectSwitch, SelectCrossLineCommand crossLine,
-            SelectDoNothingCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle) {
+            ChangeAutoDelayCommand subtractAutoDelay, SelectAutonomousCommand selectScale,
+            SelectAutonomousCommand selectSwitch, SelectAutonomousCommand crossLine,
+            SelectAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
+            SetStartingSideCommand setMiddle, SelectAutonomousCommand advancedScale) {
+
+        selectScale.setMetaprogram(AutonomousMetaprogram.Scale);
+        selectSwitch.setMetaprogram(AutonomousMetaprogram.Switch);
+        crossLine.setMetaprogram(AutonomousMetaprogram.CrossLine);
+        doNothing.setMetaprogram(AutonomousMetaprogram.DoNothing);
 
         addAutoDelay.setDelayChangeAmount(1);
         subtractAutoDelay.setDelayChangeAmount(-1);
@@ -105,13 +108,16 @@ public class OperatorCommandMap {
         oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);
         oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
         oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
+
+        oi.programmerGamepad.getifAvailable(6).whenPressed(advancedScale);
     }
 
     @Inject
     public void setupDriveCommands(OperatorInterface oi, ResetDistanceCommand resetDistance,
-            SetRobotHeadingCommand setHeading, DynamicScoreOnSwitchCommandGroup dynamicScore,
+            SetRobotHeadingCommand setHeading, ScoreOnSwitchCommandGroup dynamicScore,
             FieldOrientedTankDriveCommand fieldTank, ArcadeDriveWithJoysticksCommand arcade,
-            VelocityArcadeDriveCommand velocity, ConfigurablePurePursuitCommand square) {
+            VelocityArcadeDriveCommand velocity, ConfigurablePurePursuitCommand square,
+            AbsolutePurePursuit2018Command pretendMulticube) {
 
         resetDistance.includeOnSmartDashboard();
         setHeading.setHeadingToApply(90);
@@ -121,13 +127,60 @@ public class OperatorCommandMap {
 
         oi.driverGamepad.getPovIfAvailable(0).whenPressed(velocity);
         oi.driverGamepad.getPovIfAvailable(180).whenPressed(arcade);
-        
-        for (int i = 0; i < 50; i++) {
-            square.addPoint(new FieldPose(new XYPair(0*12, 6*12), new ContiguousHeading(90)));
-            square.addPoint(new FieldPose(new XYPair(6*12, 6*12), new ContiguousHeading(0)));
-            square.addPoint(new FieldPose(new XYPair(6*12, 0*12), new ContiguousHeading(-90)));
-            square.addPoint(new FieldPose(new XYPair(0*12, 0*12), new ContiguousHeading(-180)));
-        }
+
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, -3 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        pretendMulticube
+                .addPoint(new TotalRobotPoint(
+                        new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(225)),
+                                PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                        Gear.LOW_GEAR, 80));
+
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(-3 * 12, -6 * 12), new ContiguousHeading(225)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
+                Gear.LOW_GEAR, 40));
+
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, -6 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                        PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        pretendMulticube.addPoint(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        pretendMulticube.includeOnSmartDashboard("A Pretent Multicube");
+
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(0 * 12, 6 * 12), new ContiguousHeading(90)),
+                PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(0)),
+                PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro));
+
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(6 * 12, 6 * 12), new ContiguousHeading(0)),
+                PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(-90)),
+                PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro));
+
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(6 * 12, 0 * 12), new ContiguousHeading(-90)),
+                PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(180)),
+                PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro));
+
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(180)),
+                PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro));
+        square.addPoint(new RabbitPoint(new FieldPose(new XYPair(0 * 12, 0 * 12), new ContiguousHeading(90)),
+                PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro));
+
         square.includeOnSmartDashboard("A Square Dancing Robot");
     }
 
@@ -139,9 +192,13 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupGripperCommands(OperatorInterface oi, GripperRotateClockwiseCommand clockwise,
-            GripperRotateCounterClockwiseCommand counterClockwise, GripperEjectCommand eject,
-            GripperIntakeCommand intake) {
+    public void setupGripperCommands(OperatorInterface oi, GripperEjectCommand eject, GripperIntakeCommand intake,
+            GripperDropCubeCommand dropCube) {
+
+        oi.operatorGamepad.getifAvailable(8).whileHeld(dropCube);
+
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(eject);
+        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(dropCube);
     }
 
     @Inject
@@ -153,14 +210,12 @@ public class OperatorCommandMap {
             EnableElevatorCurrentLimitCommand enableCurrentLimit,
             DisableElevatorCurrentLimitCommand disableCurrentLimit, ExperimentMotionMagicCommand mm,
             ControlElevatorViaJoystickCommand joysticks, ElevatorVelocityCommand velocity,
-            ElevatorDangerousOverrideCommand dangerousOverride,
-            ElevatorSubsystem elevatorSubsystem) {
-        
-        //calibrateElevatorTicks.includeOnSmartDashboard();
-        
+            ElevatorDangerousOverrideCommand dangerousOverride, ElevatorSubsystem elevatorSubsystem) {
+
+        // calibrateElevatorTicks.includeOnSmartDashboard();
+
         oi.operatorGamepad.getifAvailable(6).whileHeld(dangerousOverride);
         oi.operatorGamepad.getifAvailable(7).whenPressed(velocity);
-        oi.operatorGamepad.getifAvailable(8).whenPressed(velocity);
 
         targetPickUpHeight.setGoalHeight(elevatorSubsystem.getTargetPickUpHeight());
         targetSwitchDropHeight.setGoalHeight(elevatorSubsystem.getTargetSwitchDropHeight());
@@ -168,7 +223,6 @@ public class OperatorCommandMap {
         targetScaleHighHeight.setGoalHeight(elevatorSubsystem.getTargetScaleHighHeight());
         targetPortalHeight.setGoalHeight(elevatorSubsystem.getTargetExchangeZonePickUpHeight());
 
-        
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
         oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
         oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
@@ -184,19 +238,10 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupClimberCommands(OperatorInterface oi, ExtendClimberArmCommand extendArm,
-            RetractClimberArmCommand retractArm, ReleasePawlCommand releasePawl, EngagePawlCommand engagePawl,
-            DisengageWinchAndReleasePawlCommandGroup descend, EngageWinchAndLockPawlCommandGroup ascend,
-            PrepareToClimbCommandGroup prepareToClimb, TotalClimbCommandGroup everythingClimbs) {
+    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend,
+            AscendLowPowerCommand ascendSlowly) {
         oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
-        oi.driverGamepad.getifAvailable(2).whileHeld(descend); // b
-        oi.driverGamepad.getifAvailable(3).whileHeld(retractArm); // x
-        oi.driverGamepad.getifAvailable(4).whileHeld(extendArm); // y
-        oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(prepareToClimb); // axis 2
-        oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(everythingClimbs); // axis 3
-        
-        engagePawl.includeOnSmartDashboard();
-        releasePawl.includeOnSmartDashboard();        
+        oi.driverGamepad.getifAvailable(2).whileHeld(ascendSlowly); // b
     }
 
     @Inject
@@ -205,15 +250,11 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupVisionCommands(
-                OperatorInterface oi,
-                AcquireVisibleCubeCommand acquireCube,
-                NavToTestGoalCommand testNav,
-                DriveAtVelocityInfinitelyCommand driveAtVelLow,
-                DriveAtVelocityInfinitelyCommand driveAtVelHigh,
-                IdentifyAndPurePursuitToVisibleCubeCommand driveToLocalCubeCommand,
-                ExtendRetractZedCommand extendZed,
-                ExtendRetractZedCommand retractZed) {
+    public void setupVisionCommands(OperatorInterface oi, AcquireVisibleCubeCommand acquireCube,
+            NavToTestGoalCommand testNav, DriveAtVelocityInfinitelyCommand driveAtVelLow,
+            DriveAtVelocityInfinitelyCommand driveAtVelHigh,
+            IdentifyAndPurePursuitToVisibleCubeCommand driveToLocalCubeCommand, ExtendRetractZedCommand extendZed,
+            ExtendRetractZedCommand retractZed) {
         acquireCube.includeOnSmartDashboard();
         testNav.includeOnSmartDashboard();
 
@@ -241,7 +282,7 @@ public class OperatorCommandMap {
             SetWristAngleCommand medium, SetWristAngleCommand high, WristDangerousOverrideCommand danger) {
         oi.operatorGamepad.getifAvailable(9).whenPressed(calibrate);
         loseCalibration.includeOnSmartDashboard();
-        
+
         oi.operatorGamepad.getifAvailable(5).whileHeld(danger);
 
         low.setGoalAngle(0);

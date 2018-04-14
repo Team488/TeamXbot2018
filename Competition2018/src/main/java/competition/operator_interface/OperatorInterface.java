@@ -19,8 +19,8 @@ public class OperatorInterface {
     public final XFTCGamepad operatorGamepad;
     public final XFTCGamepad programmerGamepad;
 
-    public final AnalogHIDDescription gripperIntake;
-    public final AnalogHIDDescription gripperEject;
+    public final AnalogHIDDescription operatorGripperIntake;
+    public final AnalogHIDDescription operatorGripperEject;
     public final AnalogHIDDescription driverRightTrigger;
     public final AnalogHIDDescription driverLeftTrigger;
 
@@ -39,11 +39,11 @@ public class OperatorInterface {
         programmerGamepad.setLeftStickYInversion(true);
         programmerGamepad.setRightStickYInversion(true);        
 
-        gripperIntake = new AnalogHIDDescription(3, .75, 1.0);
-        operatorGamepad.addAnalogButton(gripperIntake);
+        operatorGripperIntake = new AnalogHIDDescription(3, .75, 1.0);
+        operatorGamepad.addAnalogButton(operatorGripperIntake);
 
-        gripperEject = new AnalogHIDDescription(2, .75, 1.0);
-        operatorGamepad.addAnalogButton(gripperEject);
+        operatorGripperEject = new AnalogHIDDescription(2, .75, 1.0);
+        operatorGamepad.addAnalogButton(operatorGripperEject);
 
         driverRightTrigger = new AnalogHIDDescription(3, .75, 1.0);
         driverGamepad.addAnalogButton(driverRightTrigger);

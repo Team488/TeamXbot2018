@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
 import competition.subsystems.autonomous.GameDataSource;
 import competition.subsystems.autonomous.MockGameDataAdapter;
 import competition.subsystems.drive.DriveSubsystem;
@@ -15,21 +15,21 @@ import xbot.common.command.XScheduler;
 
 public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
 
-    DynamicScoreOnSwitchCommandGroup commandgroup;
+    ScoreOnSwitchCommandGroup commandgroup;
     XScheduler scheduler;
     DriveSubsystem drive;
     MockGameDataAdapter dataSource;
-    AutonomousDecisionSystem decider;
+    AutonomousPathSupplier decider;
     
     @Override
     public void setUp() {
         super.setUp();
         
-        this.commandgroup = injector.getInstance(DynamicScoreOnSwitchCommandGroup.class);
+        this.commandgroup = injector.getInstance(ScoreOnSwitchCommandGroup.class);
         this.scheduler = injector.getInstance(XScheduler.class);
         this.drive = injector.getInstance(DriveSubsystem.class);
         this.dataSource = (MockGameDataAdapter)injector.getInstance(GameDataSource.class);
-        this.decider = injector.getInstance(AutonomousDecisionSystem.class); 
+        this.decider = injector.getInstance(AutonomousPathSupplier.class); 
     }
     
     @Test
@@ -54,11 +54,9 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
         scheduler.run();
         
         assertEquals("Should be heading to right side", 
-                decider.createPathToNearbySwitchPlate().size(), 
-                commandgroup.pursuit.getPlannedPointsToVisit().size(), 
+                decider.createPathToRightSwitchPlateNearestEdge().get(0).simplePoint.pose.getPoint().x, 
+                commandgroup.pursuit.getPlannedPointsToVisit().get(0).pose.getPoint().x,
                 0.001);
-
-        verifyDrivePositive();
     }
     
     @Test
@@ -70,10 +68,8 @@ public class DynamicScoreOnSwitchCommandGroupTest extends DriveTestBase {
         scheduler.run();
         
         assertEquals("Should be heading to left side", 
-                decider.createPathToDistantSwitchPlate().size(), 
-                commandgroup.pursuit.getPlannedPointsToVisit().size(), 
+                decider.createPathToLeftSwitchPlateNearestEdge().get(0).simplePoint.pose.getPoint().x, 
+                commandgroup.pursuit.getPlannedPointsToVisit().get(0).pose.getPoint().x,
                 0.001);
-        
-        verifyDrivePositive();
     }
 }

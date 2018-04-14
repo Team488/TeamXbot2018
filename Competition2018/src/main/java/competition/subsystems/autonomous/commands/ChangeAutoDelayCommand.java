@@ -2,16 +2,16 @@ package competition.subsystems.autonomous.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
 import xbot.common.command.BaseCommand;
 
 public class ChangeAutoDelayCommand extends BaseCommand{
 
-    AutonomousDecisionSystem decider;
+    AutonomousPathSupplier decider;
     double delayChangeAmount;
     
     @Inject
-    public ChangeAutoDelayCommand(AutonomousDecisionSystem decider) {
+    public ChangeAutoDelayCommand(AutonomousPathSupplier decider) {
         this.decider = decider;
         delayChangeAmount = 1;
         this.setRunWhenDisabled(true);

@@ -35,6 +35,8 @@ public abstract class ElectricalContract2018 {
 
     public abstract DeviceInfo getElevatorEncoder();
     
+    public abstract DeviceInfo getElevatorFollower();
+    
     // Elevator sensor
     public abstract boolean elevatorLowerLimitReady();
 
@@ -91,4 +93,7 @@ public abstract class ElectricalContract2018 {
 
     // ZED mount
     public abstract DeviceInfo getZedDeploy();
+    
+    // Lights
+    public abstract DeviceInfo getAutonomousLight();
 }

@@ -2,7 +2,10 @@ package competition.commandgroups;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.autonomous.AutonomousDecisionSystem;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
+import competition.subsystems.autonomous.AutonomousPathSupplier.SwitchScoringLocation;
+import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
+import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.SetElevatorTargetHeightCommand;
 import competition.subsystems.gripperintake.commands.GripperEjectCommand;
@@ -12,22 +15,22 @@ import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 
-public class DynamicScoreOnSwitchCommandGroup extends BaseCommandGroup {
+public class ScoreOnSwitchCommandGroup extends BaseCommandGroup {
 
-    public ConfigurablePurePursuitCommand pursuit;
+    public AbsolutePurePursuit2018Command pursuit;
     
     @Inject
-    public DynamicScoreOnSwitchCommandGroup(
-            AutonomousDecisionSystem decider,
+    public ScoreOnSwitchCommandGroup(
+            AutonomousPathSupplier decider,
             ElevatorSubsystem elevator,
             DelayViaSupplierCommand wait,
-            ConfigurablePurePursuitCommand pursuit,
+            AbsolutePurePursuit2018Command pursuit,
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             // This is reversed, but I don't want to mess with the rest of the OI
             GripperEjectCommand eject) {
         this.pursuit = pursuit;
-        pursuit.setPointSupplier(decider.getAutoPathToFeature(GameFeature.SWITCH_NEAR));
+        pursuit.setPointSupplier(() -> decider.getPathToCorrectSwitch(SwitchScoringLocation.SideFacingAllianceWall));
         
         setWristDown.setGoalAngle(0);
         setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());

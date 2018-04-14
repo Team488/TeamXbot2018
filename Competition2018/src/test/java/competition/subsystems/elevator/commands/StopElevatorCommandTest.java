@@ -27,6 +27,6 @@ public class StopElevatorCommandTest extends BaseCompetitionTest {
     @Test
     public void verifyMovingUp() {
         command.execute();
-        assertTrue(elevator.motor.getMotorOutputPercent() == 0);
+        assertTrue(elevator.master.getMotorOutputPercent() == 0);
     }
 }
