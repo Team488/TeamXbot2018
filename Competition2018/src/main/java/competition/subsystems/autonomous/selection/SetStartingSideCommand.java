@@ -11,12 +11,10 @@ public class SetStartingSideCommand extends BaseCommand {
 
     final AutonomousPathSupplier decider;
     StartingLocations whereToStart;
-    final PoseSubsystem pose;
     
     @Inject
-    public SetStartingSideCommand(AutonomousPathSupplier decider, PoseSubsystem pose) {
+    public SetStartingSideCommand(AutonomousPathSupplier decider) {
         this.decider = decider;
-        this.pose = pose;
         this.setRunWhenDisabled(true);
     }
     
@@ -28,20 +26,6 @@ public class SetStartingSideCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing with position:" + whereToStart);
         decider.setRobotPosition(whereToStart);
-        
-        switch (whereToStart) {
-        case Left:
-            pose.setCurrentPosition(46.75, 38.5);
-            break;
-        case Middle:
-            pose.setCurrentPosition(166.75, 38.5);
-            break;
-        case Right:
-            pose.setCurrentPosition(277.25, 38.5);
-            break;
-        default: 
-            break;
-        }
     }
 
     @Override

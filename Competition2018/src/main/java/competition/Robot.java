@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import competition.operator_interface.OperatorCommandMap;
 import competition.operator_interface.RumbleManager;
 import competition.subsystems.SubsystemDefaultCommandMap;
+import competition.subsystems.autonomous.AutonomousPathSupplier;
 import competition.subsystems.autonomous.selection.AutonomousCommandSelector;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
@@ -23,7 +24,9 @@ public class Robot extends BaseRobot {
     static Logger log = Logger.getLogger(Robot.class);
     
     AutonomousCommandSelector autonomousCommandSelector;
+    AutonomousPathSupplier autonomousPathSupplier;
     ZedDeploySubsystem zedExtender;
+    PoseSubsystem poseSubsystem;
 
     @Override
     protected void setupInjectionModule() {
@@ -45,7 +48,9 @@ public class Robot extends BaseRobot {
         this.injector.getInstance(SubsystemDefaultCommandMap.class);
         this.injector.getInstance(OperatorCommandMap.class);
         autonomousCommandSelector = this.injector.getInstance(AutonomousCommandSelector.class);
+        autonomousPathSupplier = this.injector.getInstance(AutonomousPathSupplier.class);
         zedExtender = this.injector.getInstance(ZedDeploySubsystem.class);
+        poseSubsystem = this.injector.getInstance(PoseSubsystem.class);
         ElectricalContract2018 contract = this.injector.getInstance(ElectricalContract2018.class);
 
         registerPeriodicDataSource(this.injector.getInstance(PoseSubsystem.class));
@@ -66,6 +71,7 @@ public class Robot extends BaseRobot {
     public void autonomousInit() {
         zedExtender.setIsExtended(true);
         this.autonomousCommand = this.autonomousCommandSelector.getCurrentAutonomousCommand();
+        poseSubsystem.initializePoseForStartLocation(autonomousPathSupplier.getConfiguredStartingLocation());
         // Base implementation will run the command
         super.autonomousInit();
     }
