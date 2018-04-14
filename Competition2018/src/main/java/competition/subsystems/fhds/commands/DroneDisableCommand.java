@@ -2,15 +2,15 @@ package competition.subsystems.fhds.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.fhds.FlyingHookDeliverySubsystem;
+import competition.subsystems.fhds.FlyingHookDeliverySensorSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class DroneDisableCommand extends BaseCommand {
 
-    private final FlyingHookDeliverySubsystem droneSubsystem;
+    private final FlyingHookDeliverySensorSubsystem droneSubsystem;
     
     @Inject
-    public DroneDisableCommand(FlyingHookDeliverySubsystem droneSubsystem) {
+    public DroneDisableCommand(FlyingHookDeliverySensorSubsystem droneSubsystem) {
         this.droneSubsystem = droneSubsystem;
     }
     
@@ -18,12 +18,7 @@ public class DroneDisableCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
         
-        if (droneSubsystem.getDroneThread().isAlive()) {
-            log.error("There is no drone thread to interrupt");
-        } else {
-            droneSubsystem.getDroneThread().interrupt();
-            log.info("The drone thread has been interrupted");
-        }
+        droneSubsystem.stopDroneControl();
     }
 
     @Override

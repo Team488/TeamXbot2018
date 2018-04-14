@@ -31,11 +31,11 @@ public class OffboardCommsCanInterface implements XOffboardCommsInterface {
         }
     }
     
-    public OffboardCommunicationPacket receiveRaw() {
+    public OffboardCommunicationPacket receiveRaw(int senderId) {
         ByteBuffer messageIdBuffer = ByteBuffer.allocateDirect(4);
         messageIdBuffer.order(ByteOrder.LITTLE_ENDIAN);
         IntBuffer messageIdIntBuffer = messageIdBuffer.asIntBuffer();
-        messageIdIntBuffer.put(OffboardCommsConstants.CAN_ARBID_ROOT);
+        messageIdIntBuffer.put(OffboardCommsConstants.CAN_ARBID_ROOT | (senderId << 16));
         messageIdIntBuffer.rewind();
         
         // A buffer is required, but we don't care about the timestamp value.
@@ -48,6 +48,7 @@ public class OffboardCommsCanInterface implements XOffboardCommsInterface {
                     timeStamp);
             
             int messageId = messageIdIntBuffer.get();
+            // TODO: source ID
             byte packetType = (byte)(messageId & (~OffboardCommsConstants.CAN_ARBID_ROOT_AND_SOURCE_MASK));
             
             return new OffboardCommunicationPacket(packetType,  resultBytes);

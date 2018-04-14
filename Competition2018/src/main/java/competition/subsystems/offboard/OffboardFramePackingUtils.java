@@ -23,4 +23,22 @@ public class OffboardFramePackingUtils {
             (byte)(commandId & 0xFF)
         };
     }
+
+    public static byte[] packDroneCommandFrame(double forward, double sideways, double up, double yaw) {
+        short forwardInteger = (short)(forward * 1_000);
+        short sidewaysInteger = (short)(sideways * 1_000);
+        short upInteger = (short)(up * 1_000);
+        short yawInteger = (short)(yaw * 1_000);
+        
+        return new byte[] {
+            (byte)(forwardInteger >>> 8),
+            (byte)(forwardInteger & 0xFF),
+            (byte)(sidewaysInteger >>> 8),
+            (byte)(sidewaysInteger & 0xFF),
+            (byte)(upInteger >>> 8),
+            (byte)(upInteger & 0xFF),
+            (byte)(yawInteger >>> 8),
+            (byte)(yawInteger & 0xFF)
+        };
+    }
 }

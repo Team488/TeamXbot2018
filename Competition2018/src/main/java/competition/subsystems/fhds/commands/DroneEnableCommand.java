@@ -2,28 +2,22 @@ package competition.subsystems.fhds.commands;
 
 import com.google.inject.Inject;
 
-import competition.subsystems.fhds.FlyingHookDeliverySubsystem;
+import competition.subsystems.fhds.FlyingHookDeliverySensorSubsystem;
 import xbot.common.command.BaseCommand;
 
 public class DroneEnableCommand extends BaseCommand {
 
-    private final FlyingHookDeliverySubsystem droneSubsystem;
+    private final FlyingHookDeliverySensorSubsystem droneSubsystem;
     
     @Inject
-    public DroneEnableCommand(FlyingHookDeliverySubsystem droneSubsystem) {
+    public DroneEnableCommand(FlyingHookDeliverySensorSubsystem droneSubsystem) {
         this.droneSubsystem = droneSubsystem;
     }
 
     @Override
     public void initialize() {
         log.info("Initializing");
-        
-        if (droneSubsystem.getDroneThread().isAlive()) {
-            log.error("There is a drone thread already active");
-        } else {
-            droneSubsystem.getDroneThread().start();
-            log.info("It's(Drone) alive!!");
-        }
+        droneSubsystem.startDroneControl();
     }
 
     @Override

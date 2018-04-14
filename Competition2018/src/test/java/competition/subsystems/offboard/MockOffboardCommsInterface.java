@@ -8,7 +8,7 @@ public class MockOffboardCommsInterface implements XOffboardCommsInterface {
     }
 
     @Override
-    public OffboardCommunicationPacket receiveRaw() {
+    public OffboardCommunicationPacket receiveRaw(int senderId) {
         return null;
     }
 

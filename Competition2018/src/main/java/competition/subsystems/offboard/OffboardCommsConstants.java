@@ -5,6 +5,9 @@ public class OffboardCommsConstants {
     public static final int CAN_ARBID_ROOT_MASK = 0xFFFF0000;
     public static final int CAN_ARBID_ROOT_AND_SOURCE_MASK = 0xFFFFFF00;
 
+    public static final int SENDER_ID_JETSON = 0x00;
+    public static final int SENDER_ID_DRONE_CONTROLLER = 0x02;
+
     public static final byte PACKET_TYPE_WHEEL_ODOM = 0x01;
     public static final byte PACKET_TYPE_ORIENTATION = 0x02;
     public static final byte PACKET_TYPE_HEADING = 0x04;
@@ -18,4 +21,7 @@ public class OffboardCommsConstants {
     public static final byte PACKET_TYPE_COMMAND_FINISHED = 0x07;
 
     public static final byte PACKET_TYPE_DETECTED_CUBE = 0x0B;
+
+    public static final byte PACKET_TYPE_DRONE_CONTROL_COMMAND = 0x70;
+    public static final byte PACKET_TYPE_DRONE_MOTOR_COMMAND = 0x71;
 }
