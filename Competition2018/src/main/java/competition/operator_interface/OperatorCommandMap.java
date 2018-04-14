@@ -12,6 +12,7 @@ import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
 import competition.subsystems.autonomous.selection.SelectAdvancedAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
+import competition.subsystems.climb.commands.AscendLowPowerCommand;
 import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
@@ -290,8 +291,9 @@ public class OperatorCommandMap {
     }
 
     @Inject
-    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend) {
+    public void setupClimberCommands(OperatorInterface oi, AscendClimberCommand ascend, AscendLowPowerCommand ascendSlowly) {
         oi.driverGamepad.getifAvailable(1).whileHeld(ascend); // a
+        oi.driverGamepad.getifAvailable(2).whileHeld(ascendSlowly); // b
     }
 
     @Inject
