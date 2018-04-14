@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.Timer;
 import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.MathUtils;
@@ -21,14 +22,12 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     final OperatorInterface oi;
     final HeadingAssistModule ham;
     
-    DoubleProperty powerLimit;
-    DoubleProperty elevatorHeightLimit;
+    DoubleProperty secondsToFullPowerProp;
+    DoubleProperty elevatorHeightLimitProp;
     
-    double currentTranslateOutput;
-    double currentRotateOutput;
-    
-    double translateAdjustedPower;
-    double rotateAdjustedPower;
+    double lastTranslatePower;
+    double lastRotatePower;
+    double lastTime;
     
     @Inject
     public ArcadeDriveWithJoysticksCommand(OperatorInterface oi, DriveSubsystem driveSubsystem, CommonLibFactory clf,
@@ -38,8 +37,8 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
         this.elevatorSubsystem = elevatorSubsystem;
         this.requires(this.driveSubsystem);
         
-        powerLimit = propManager.createPersistentProperty("Power Limit for low acceleration mode", 0.2);
-        elevatorHeightLimit = propManager.createPersistentProperty("Elevator Height Limit for low acceleration mode", 40);
+        secondsToFullPowerProp = propManager.createPersistentProperty(getPrefix() + "LowAccel: Seconds to full power", 1);
+        elevatorHeightLimitProp = propManager.createPersistentProperty("LowAccel: Elevator Height Trigger", 40);
 
         HeadingModule holdHeading = clf.createHeadingModule(driveSubsystem.getRotateToHeadingPid());
         HeadingModule decayHeading = clf.createHeadingModule(driveSubsystem.getRotateDecayPid());
@@ -51,62 +50,39 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
         log.info("Initializing ArcadeDriveWithJoysticksCommand");
         ham.reset();
         
-        currentTranslateOutput = 0;
-        currentRotateOutput = 0;
-        
-        translateAdjustedPower = 0;
-        rotateAdjustedPower = 0;
+        lastTranslatePower = 0;
+        lastRotatePower = 0;
+    }
+    
+    public double getSecondsToFullPower() {
+        return secondsToFullPowerProp.get();
     }
 
     @Override
     public void execute() {
-        double nextTranslateInput = oi.driverGamepad.getLeftVector().y;
-        double nextRotateInput = MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x);
-        double turn = ham.calculateHeadingPower(nextRotateInput);
+        double currentTime = Timer.getFPGATimestamp();
+        double timeDelta = currentTime - lastTime;        
         
-        double translateInputDelta = nextTranslateInput - currentTranslateOutput;
-        double rotateInputDelta = nextRotateInput - currentRotateOutput;
+        double humanTranslateInput = oi.driverGamepad.getLeftVector().y;
+        double humanRotateInput = MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x);
+        double turn = ham.calculateHeadingPower(humanRotateInput);
         
-        // Rotate
-        if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimit.get()) {
-            if (rotateInputDelta > 0.2) {
-                rotateAdjustedPower += 0.2;
-                turn = ham.calculateHeadingPower(rotateAdjustedPower);
-                currentRotateOutput = rotateAdjustedPower;
+        double translationPower = humanTranslateInput;
+        double rotationPower = turn;
+        
+        if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimitProp.get()) {
+            double timeFactor = 1;
+            if (secondsToFullPowerProp.get() != 0) {
+                timeFactor = timeDelta / secondsToFullPowerProp.get();
             }
-            else if (rotateInputDelta < -0.2) {
-                rotateAdjustedPower += -0.2;
-                turn = ham.calculateHeadingPower(rotateAdjustedPower);
-                currentRotateOutput = rotateAdjustedPower;
-            }
-            else {
-                currentRotateOutput = nextRotateInput;
-            }
-        } else {
-            currentRotateOutput = nextRotateInput;
+            
+            translationPower = MathUtils.constrainDouble(translationPower, lastTranslatePower-timeFactor, lastTranslatePower+timeFactor);
+            rotationPower = MathUtils.constrainDouble(rotationPower, lastRotatePower-timeFactor, lastRotatePower+timeFactor);
         }
         
-        // Translate
-        if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimit.get()) {
-            if (translateInputDelta > 0.2) {
-                translateAdjustedPower += 0.2;
-                driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
-                currentTranslateOutput = translateAdjustedPower;
-            }
-            else if(translateInputDelta < -0.2) {
-                translateAdjustedPower += -0.2;
-                driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
-                currentTranslateOutput = translateAdjustedPower;
-            }
-            else {
-            driveSubsystem.drive(new XYPair(0, nextTranslateInput), turn);
-            currentTranslateOutput = nextTranslateInput;
-            }
-        }
-        else {
-            driveSubsystem.drive(new XYPair(0, nextTranslateInput), turn);
-            currentTranslateOutput = nextTranslateInput;
-            currentRotateOutput = nextRotateInput;
-        }
+        driveSubsystem.drive(new XYPair(0, translationPower), rotationPower);
+        lastTranslatePower = translationPower;
+        lastRotatePower = rotationPower;
+        lastTime = currentTime;
     }
 }
