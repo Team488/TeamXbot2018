@@ -196,6 +196,7 @@ public class OperatorCommandMap {
             GripperDropCubeCommand dropCube) {
 
         oi.operatorGamepad.getifAvailable(8).whileHeld(dropCube);
+        oi.operatorGamepad.getifAvailable(3).whileHeld(dropCube);
 
         oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(eject);
         oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(dropCube);
@@ -225,7 +226,7 @@ public class OperatorCommandMap {
 
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
         oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
-        oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
+        //oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);

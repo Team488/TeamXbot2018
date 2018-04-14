@@ -138,11 +138,11 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
         data.add(robot.getPoint().x);
         data.add(robot.getPoint().y);
         data.add(robot.getHeading().getValue());
-        data.add(target.getPoint().x);
-        data.add(target.getPoint().y);
-        data.add(target.getHeading().getValue());
-        data.add(rabbit.getPoint().x);
-        data.add(rabbit.getPoint().y);
+        data.add(target == null ? null : target.getPoint().x);
+        data.add(target == null ? null : target.getPoint().y);
+        data.add(target == null ? null : target.getHeading().getValue());
+        data.add(rabbit == null ? null : rabbit.getPoint().x);
+        data.add(rabbit == null ? null : rabbit.getPoint().y);
         data.add(velocityGoal);
         data.add(velocity);
         
