@@ -8,18 +8,19 @@ import competition.subsystems.fhds.FlyingHookDeliverySensorSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class OperateDroneWithGamepadCommand extends BaseCommand {
+public class OperateFHDSWithGamepadCommand extends BaseCommand {
 
-    private final FlyingHookDeliverySensorSubsystem drone;
+    private final FlyingHookDeliverySensorSubsystem fhdsSubsystem;
     private final OperatorInterface oi;
-    
+
     @Inject
-    public OperateDroneWithGamepadCommand(FlyingHookDeliverySensorSubsystem drone, WristSubsystem wrist, ElevatorSubsystem elevator, OperatorInterface oi) {
-        this.drone = drone;
+    public OperateFHDSWithGamepadCommand(FlyingHookDeliverySensorSubsystem fhdsSubsystem, WristSubsystem wrist,
+            ElevatorSubsystem elevator, OperatorInterface oi) {
+        this.fhdsSubsystem = fhdsSubsystem;
         this.oi = oi;
-        
-        this.requires(drone);
-        
+
+        this.requires(fhdsSubsystem);
+
         // Require other systems that might be using the operator gamepad
         this.requires(wrist);
         this.requires(elevator);
@@ -32,6 +33,6 @@ public class OperateDroneWithGamepadCommand extends BaseCommand {
 
     @Override
     public void execute() {
-        drone.handleOperatorInput(oi.operatorGamepad.getLeftVector(), oi.operatorGamepad.getRightVector());
+        fhdsSubsystem.handleOperatorInput(oi.operatorGamepad.getLeftVector(), oi.operatorGamepad.getRightVector());
     }
 }

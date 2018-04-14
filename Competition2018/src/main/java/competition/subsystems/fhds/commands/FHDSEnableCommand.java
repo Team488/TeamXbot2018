@@ -5,27 +5,26 @@ import com.google.inject.Inject;
 import competition.subsystems.fhds.FlyingHookDeliverySensorSubsystem;
 import xbot.common.command.BaseCommand;
 
-public class DroneDisableCommand extends BaseCommand {
+public class FHDSEnableCommand extends BaseCommand {
 
-    private final FlyingHookDeliverySensorSubsystem droneSubsystem;
+    private final FlyingHookDeliverySensorSubsystem fhdsSubsystem;
     
     @Inject
-    public DroneDisableCommand(FlyingHookDeliverySensorSubsystem droneSubsystem) {
-        this.droneSubsystem = droneSubsystem;
+    public FHDSEnableCommand(FlyingHookDeliverySensorSubsystem fhdsSubsystem) {
+        this.fhdsSubsystem = fhdsSubsystem;
     }
-    
+
     @Override
     public void initialize() {
         log.info("Initializing");
-        
-        droneSubsystem.stopDroneControl();
+        fhdsSubsystem.startFHDSControl();
     }
 
     @Override
     public void execute() {
         // Do Nothing
     }
-
+    
     @Override
     public boolean isFinished() {
         return true;
