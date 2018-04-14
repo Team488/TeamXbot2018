@@ -9,7 +9,7 @@ import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.AutonomousCommandSupplier.AutonomousMetaprogram;
 import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
 import competition.subsystems.autonomous.commands.ChangeAutoDelayCommand;
-import competition.subsystems.autonomous.selection.SelectAdvancedAutonomousCommand;
+import competition.subsystems.autonomous.selection.SelectAutonomousCommand;
 import competition.subsystems.autonomous.selection.SetStartingSideCommand;
 import competition.subsystems.climb.commands.AscendClimberCommand;
 import competition.subsystems.climb.commands.AscendLowPowerCommand;
@@ -82,10 +82,10 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
-            ChangeAutoDelayCommand subtractAutoDelay, SelectAdvancedAutonomousCommand selectScale,
-            SelectAdvancedAutonomousCommand selectSwitch, SelectAdvancedAutonomousCommand crossLine,
-            SelectAdvancedAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle, SelectAdvancedAutonomousCommand advancedScale) {
+            ChangeAutoDelayCommand subtractAutoDelay, SelectAutonomousCommand selectScale,
+            SelectAutonomousCommand selectSwitch, SelectAutonomousCommand crossLine,
+            SelectAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
+            SetStartingSideCommand setMiddle, SelectAutonomousCommand advancedScale) {
 
         selectScale.setMetaprogram(AutonomousMetaprogram.Scale);
         selectSwitch.setMetaprogram(AutonomousMetaprogram.Switch);
