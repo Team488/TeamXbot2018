@@ -24,6 +24,12 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     DoubleProperty powerLimit;
     DoubleProperty elevatorHeightLimit;
     
+    double currentTranslateOutput;
+    double currentRotateOutput;
+    
+    double translateAdjustedPower;
+    double rotateAdjustedPower;
+    
     @Inject
     public ArcadeDriveWithJoysticksCommand(OperatorInterface oi, DriveSubsystem driveSubsystem, CommonLibFactory clf,
             ElevatorSubsystem elevatorSubsystem, XPropertyManager propManager) {
@@ -44,13 +50,16 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing ArcadeDriveWithJoysticksCommand");
         ham.reset();
+        
+        currentTranslateOutput = 0;
+        currentRotateOutput = 0;
+        
+        translateAdjustedPower = 0;
+        rotateAdjustedPower = 0;
     }
 
     @Override
     public void execute() {
-        double currentTranslateOutput = 0;
-        double currentRotateOutput = 0;
-        
         double nextTranslateInput = oi.driverGamepad.getLeftVector().y;
         double nextRotateInput = MathUtils.squareAndRetainSign(oi.driverGamepad.getRightVector().x);
         double turn = ham.calculateHeadingPower(nextRotateInput);
@@ -60,7 +69,6 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
         
         // Rotate
         if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimit.get()) {
-            double rotateAdjustedPower = 0;
             if (rotateInputDelta > 0.2) {
                 rotateAdjustedPower += 0.2;
                 turn = ham.calculateHeadingPower(rotateAdjustedPower);
@@ -74,11 +82,12 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
             else {
                 currentRotateOutput = nextRotateInput;
             }
+        } else {
+            currentRotateOutput = nextRotateInput;
         }
         
         // Translate
         if (elevatorSubsystem.getCurrentHeightInInches() > elevatorHeightLimit.get()) {
-            double translateAdjustedPower = 0;
             if (translateInputDelta > 0.2) {
                 translateAdjustedPower += 0.2;
                 driveSubsystem.drive(new XYPair(0, translateAdjustedPower), turn);
