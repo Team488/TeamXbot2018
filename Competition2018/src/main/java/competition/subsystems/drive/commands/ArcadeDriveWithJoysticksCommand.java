@@ -47,7 +47,7 @@ public class ArcadeDriveWithJoysticksCommand extends BaseCommand {
 
     @Override
     public void initialize() {
-        log.info("Initializing ArcadeDriveWithJoysticksCommand");
+        log.info("Initializing");
         ham.reset();
         
         lastTranslatePower = 0;
