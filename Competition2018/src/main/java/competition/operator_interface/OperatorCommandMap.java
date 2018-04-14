@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import competition.commandgroups.CollectCubeCommandGroup;
-import competition.commandgroups.MultiCubeNearScaleCommandGroup;
 import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.AutonomousCommandSupplier.AutonomousMetaprogram;
 import competition.subsystems.autonomous.AutonomousPathSupplier.StartingLocations;
