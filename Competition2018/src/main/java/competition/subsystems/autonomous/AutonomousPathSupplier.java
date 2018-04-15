@@ -260,12 +260,12 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(23.5 * 12, 25.5 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(23 * 12, 26 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 100));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(140)),
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(130)),
                         PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
@@ -305,7 +305,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(19 * 12, 19.5 * 12), new ContiguousHeading(240)),
+                new RabbitPoint(new FieldPose(new XYPair(19.5 * 12, 20.3 * 12), new ContiguousHeading(240)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
@@ -316,12 +316,17 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return points;
     }
 
-    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCubeA() {
+    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCube() {
         List<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
                 new RabbitPoint(new FieldPose(new XYPair(21 * 12, 25.5 * 12), new ContiguousHeading(245)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(130)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
         if (startingLocation == StartingLocations.Left) {

@@ -52,12 +52,10 @@ public class AbsolutePurePursuit2018Command extends PurePursuitCommand {
         
         lowGearPidLatch = new  Latch(false, EdgeType.Both, edge -> {
             if (edge == EdgeType.RisingEdge) {
-                this.rabbitLookAhead.set(24);
                 this.setPIDsToDefault();
                 // TODO: Also set low gear velocity PIDs
             }
             if (edge == EdgeType.FallingEdge) {
-                this.rabbitLookAhead.set(36);
                 // TODO: set base PurePursuitCommand PIDs for high gear
                 // TODO: Also set high gear velocity PIDs
             }

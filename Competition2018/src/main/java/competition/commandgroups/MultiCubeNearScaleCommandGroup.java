@@ -1,6 +1,7 @@
 package competition.commandgroups;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import competition.subsystems.autonomous.AutonomousPathSupplier;
 import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
@@ -12,6 +13,8 @@ import competition.subsystems.gripperintake.commands.GripperStopCommand;
 import competition.subsystems.wrist.commands.SetWristAngleCommand;
 import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
+import xbot.common.command.RunCommandAfterDelayCommand;
+import xbot.common.command.TimeoutCommand;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 
 public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
@@ -36,16 +39,18 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             AbsolutePurePursuit2018Command returnToScaleA,
             AbsolutePurePursuit2018Command returnToScaleB,
             GripperIntakeCommand intake,
+            GripperIntakeCommand intakeContinued,
             GripperEjectCommand eject,
             GripperEjectCommand ejectAgain,
-            GripperStopCommand stopCollector
+            GripperStopCommand stopCollector,
+            Provider<TimeoutCommand> timeoutProvider
             ) {
         this.pursuit = pursuit;
         
         pursuit.setPointSupplier(() -> pathSupplier.getPathToAlignedScaleFast());
         getCube.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyCubeFromScalePlate());
-        returnToScaleA.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeA());
-        returnToScaleB.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeB());
+        returnToScaleA.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCube());
+        //returnToScaleB.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeB());
         
         setWristDown.setGoalAngle(45);
         setWristDownAgain.setGoalAngle(0);
@@ -57,7 +62,6 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         lowerElevator.setTargetHeight(elevator.getTargetPickUpHeight());
         
         wait.setDelaySupplier(() -> pathSupplier.getDelay());
-        
         
         this.addSequential(wait);
         
@@ -76,18 +80,18 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         
         // intake later
         this.addParallel(setWristDownAgain, 0.1);
-        this.addParallel(intake, 1);
+        this.addParallel(intake, 2);
         this.addSequential(getCube);
         
         // parallel
         this.addSequential(stopCollector, 0.1);
-        
-        this.addSequential(returnToScaleA);
 
         this.addParallel(setWristUpAgain, 0.1);
-        this.addParallel(setElevatorForScaleAgain);
+        this.addParallel(new RunCommandAfterDelayCommand(setElevatorForScaleAgain, 1.5, timeoutProvider));
+        this.addSequential(returnToScaleA);
+
         
-        this.addSequential(returnToScaleB);
+        //this.addSequential(returnToScaleB);
                 
         // eject
         this.addSequential(ejectAgain, 1);
