@@ -69,7 +69,7 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         // Score for 1 second
         this.addSequential(eject, 0.5);
         
-        this.addSequential(setWristUp);
+        //this.addSequential(setWristUp);
         this.addParallel(lowerElevator);
         
         // intake later
