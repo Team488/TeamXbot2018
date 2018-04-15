@@ -17,7 +17,6 @@ public class FHDSDisableCommand extends BaseCommand {
     @Override
     public void initialize() {
         log.info("Initializing");
-        
         fhdsSubsystem.stopFHDSControl();
     }
 
