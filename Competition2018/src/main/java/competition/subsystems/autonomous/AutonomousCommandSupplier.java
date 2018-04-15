@@ -22,6 +22,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         DoNothing,
         Switch,
         Scale,
+        DoubleScale,
         Opportunistic,
         CrossLine
     }
@@ -79,8 +80,15 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
             log.info("Choosing: Doing single-cube switch");
             return singleCubeSwitch;
         case Scale:
-            // if we have a matching side, try the multi cube auto
             log.info("Choosing: Doing single cube scale");
+            return singleCubeAnyScale;
+        case DoubleScale:
+            // if we have a matching side, try the multi cube auto
+            if (pathSupplier.isMatchingSide()) {
+                log.info("Choosing: Multi-cube for near scale");
+                return multiCubeNearScale;
+            }
+            log.info("Choosing: Single cube on scale (requested double-scale metaprogram, but unaligned side)");
             return singleCubeAnyScale;
         case CrossLine:
             log.info("Choosing: Crossing auto line");

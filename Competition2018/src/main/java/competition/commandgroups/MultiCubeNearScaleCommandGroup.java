@@ -14,7 +14,6 @@ import xbot.common.command.BaseCommandGroup;
 import xbot.common.command.DelayViaSupplierCommand;
 import xbot.common.subsystems.drive.ConfigurablePurePursuitCommand;
 
-@Deprecated
 public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
 
     public AbsolutePurePursuit2018Command pursuit;
@@ -40,15 +39,15 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             GripperEjectCommand ejectAgain,
             GripperStopCommand stopCollector
             ) {
-        /*this.pursuit = pursuit;
+        this.pursuit = pursuit;
         
-        pursuit.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlate());
+        pursuit.setPointSupplier(() -> pathSupplier.getPathToAlignedScaleFast());
         getCube.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyCubeFromScalePlate());
-        returnToScale.setPointSupplier(() -> pathSupplier.getAdvancedPathBackToScalePlateFromCube());
+        returnToScale.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCube());
 
         setWristDown.setGoalAngle(45);
         setWristDownAgain.setGoalAngle(0);
-        setWristUp.setGoalAngle(45);
+        setWristUp.setGoalAngle(90);
         setWristUpAgain.setGoalAngle(45);
         
         setElevatorForScale.setTargetHeight(elevator.getTargetScaleMidHeight());
@@ -68,24 +67,24 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(setElevatorForScale);
         
         // Score for 1 second
-        this.addSequential(eject, 1);
-                
-        //this.addSequential(setWristUp, 0.33);
+        this.addSequential(eject, 0.5);
+        
+        this.addSequential(setWristUp);
         this.addParallel(lowerElevator);
         
         // intake later
-        this.addParallel(setWristDownAgain, 1);
+        this.addParallel(setWristDownAgain, 0.1);
         this.addParallel(intake, 1);
         this.addSequential(getCube);
         
-        this.addParallel(stopCollector);
+        // parallel
+        this.addSequential(stopCollector, 0.1);
         this.addSequential(returnToScale);
 
-        this.addParallel(setWristUpAgain, 1);
+        this.addParallel(setWristUpAgain, 0.1);
         this.addSequential(setElevatorForScaleAgain);
                 
         // eject
         this.addSequential(ejectAgain, 1);
-        */
     }
 }

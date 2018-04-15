@@ -124,10 +124,12 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         switch (targetLocation) {
             case SideFacingAllianceWall:
                 if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.RIGHT) {
+                    log.info("RIGHT");
                     // switch on right, we don't care about starting position
                     return createPathToRightSwitchPlateNearestEdge();
                 }
                 else if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.LEFT) {
+                    log.info("LEFT");
                     // switch on left, we don't care about starting position
                     return createPathToLeftSwitchPlateNearestEdge();
                 }
@@ -152,7 +154,20 @@ public class AutonomousPathSupplier extends BaseSubsystem {
     }
 
     public List<TotalRobotPoint> createPathToLeftSwitchPlateNearestEdge() {
-        return mirrorTotalPointPath(createPathToRightSwitchPlateNearestEdge());
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 11.5 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }
+    
+    public boolean isMatchingSide() {
+        boolean matchesOnRight = gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.RIGHT && startingLocation == StartingLocations.Right;
+        boolean matchesOnLeft = gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.LEFT && startingLocation == StartingLocations.Left;
+        return matchesOnRight || matchesOnLeft;
     }
     
     public List<TotalRobotPoint> getPathToCorrectScale() {
@@ -188,7 +203,42 @@ public class AutonomousPathSupplier extends BaseSubsystem {
             log.error("Owned scale side is unknown; returning an empty path");
             return createPathToNowhere();
         }
-    }    
+    }
+    
+    public List<TotalRobotPoint> getPathToAlignedScaleFast() {
+        if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.RIGHT) {
+            if (startingLocation == StartingLocations.Right) {
+                // scale on the right, we're on the right
+                return createPathToRightAlignedScaleFast();
+            }
+            else if (startingLocation == StartingLocations.Left) {
+                log.error("Asked to get fast path to unaligned scale; returning an empty path");
+                return createPathToNowhere();
+            }
+            else {
+                log.error("Unknown or unsupported starting location; returning an empty path");
+                return createPathToNowhere();
+            }
+        }
+        else if (gameData.getOwnedSide(GameFeature.SCALE) == OwnedSide.LEFT) {
+            if (startingLocation == StartingLocations.Left) {
+                // scale on the left, we're on the left
+                return mirrorTotalPointPath(createPathToRightAlignedScaleFast());
+            }
+            else if (startingLocation == StartingLocations.Right) {
+                log.error("Asked to get fast path to unaligned scale; returning an empty path");
+                return createPathToNowhere();
+            }
+            else {
+                log.error("Unknown or unsupported starting location; returning an empty path");
+                return createPathToNowhere();
+            }
+        }
+        else {
+            log.error("Owned scale side is unknown; returning an empty path");
+            return createPathToNowhere();
+        }
+    }
     
     public List<TotalRobotPoint> createPathToRightAlignedScaleSafeScoringPosition() {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
@@ -206,21 +256,37 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return points;
     }
     
+    public List<TotalRobotPoint> createPathToRightAlignedScaleFast() {
+        ArrayList<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(23.5 * 12, 25.5 * 12), new ContiguousHeading(90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.HIGH_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(140)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        return points;
+    }
+    
     public List<TotalRobotPoint> createPathToLeftUnalignedScaleSafeScoringPosition() {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 21 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 21.5 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 21 * 12), new ContiguousHeading(180)),
+                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 21.5 * 12), new ContiguousHeading(180)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(4 * 12, 28 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(2.5 * 12, 30 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
@@ -230,7 +296,58 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 Gear.LOW_GEAR, 80));
         
         return points;
-    }    
+    }   
+
+    public List<TotalRobotPoint> getAdvancedPathToNearbyCubeFromScalePlate() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        //new XYPair(23.5 * 12, 25.5 * 12)
+        points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(240)),
+                PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(19 * 12, 19.5 * 12), new ContiguousHeading(240)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
+                Gear.LOW_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
+
+    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCube() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        
+        //points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(270)),
+        //        PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
+        
+        /*points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(24 * 12, 22 * 12), new ContiguousHeading(180)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(23.5 * 12, 25.5 * 12), new ContiguousHeading(140)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Micro),
+                Gear.LOW_GEAR, 80));*/
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 25 * 12), new ContiguousHeading(240)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(140)),
+                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
     
     // The rest of this class is commented for reference.
 
