@@ -306,7 +306,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         
         points.add(new TotalRobotPoint(
                 new RabbitPoint(new FieldPose(new XYPair(19 * 12, 19.5 * 12), new ContiguousHeading(240)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Micro),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
         if (startingLocation == StartingLocations.Left) {
@@ -333,8 +333,8 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 Gear.LOW_GEAR, 80));*/
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 25 * 12), new ContiguousHeading(240)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                new RabbitPoint(new FieldPose(new XYPair(21 * 12, 25.5 * 12), new ContiguousHeading(240)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(

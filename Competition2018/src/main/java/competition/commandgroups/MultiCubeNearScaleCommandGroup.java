@@ -79,10 +79,11 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         
         // parallel
         this.addSequential(stopCollector, 0.1);
-        this.addSequential(returnToScale);
 
         this.addParallel(setWristUpAgain, 0.1);
-        this.addSequential(setElevatorForScaleAgain);
+        this.addParallel(setElevatorForScaleAgain);
+        
+        this.addSequential(returnToScale);
                 
         // eject
         this.addSequential(ejectAgain, 1);
