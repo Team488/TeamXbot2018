@@ -61,6 +61,11 @@ public class GripperIntakeSubsystem extends BaseSubsystem {
         leftMotor.simpleSet(lowPower.get());
     }
 
+    public void ejectHighPower() {
+        rightMotor.simpleSet(highPower.get());
+        leftMotor.simpleSet(highPower.get());
+    }
+
     public void intake() {
         rightMotor.simpleSet(highPower.get() * -1);
         leftMotor.simpleSet(highPower.get() * -1);

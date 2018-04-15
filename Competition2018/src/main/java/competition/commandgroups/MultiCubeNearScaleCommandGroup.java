@@ -47,12 +47,14 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             ) {
         this.pursuit = pursuit;
         
+        eject.setIsHighPower(true);
+        
         pursuit.setPointSupplier(() -> pathSupplier.getPathToAlignedScaleFast());
         getCube.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyCubeFromScalePlate());
         returnToScaleA.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCube());
         //returnToScaleB.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeB());
         
-        setWristDown.setGoalAngle(45);
+        setWristDown.setGoalAngle(25);
         setWristDownAgain.setGoalAngle(0);
         setWristUp.setGoalAngle(90);
         setWristUpAgain.setGoalAngle(45);
