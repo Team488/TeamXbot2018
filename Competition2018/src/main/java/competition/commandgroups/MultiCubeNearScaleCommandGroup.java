@@ -59,12 +59,12 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         
         this.addSequential(wait);
         
-        // Get in position
-        this.addSequential(pursuit);
-        
         // Now we've stopped, so put the wrist down and the elevator up
         this.addParallel(setWristDown, 1);
-        this.addSequential(setElevatorForScale);
+        this.addParallel(setElevatorForScale);
+        
+        // Get in position
+        this.addSequential(pursuit);
         
         // Score for 1 second
         this.addSequential(eject, 0.5);
