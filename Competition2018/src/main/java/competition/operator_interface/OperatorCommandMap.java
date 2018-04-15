@@ -84,11 +84,12 @@ public class OperatorCommandMap {
             ChangeAutoDelayCommand subtractAutoDelay, SelectAutonomousCommand selectScale, SelectAutonomousCommand selectDoubleScale,
             SelectAutonomousCommand selectSwitch, SelectAutonomousCommand crossLine,
             SelectAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle) {
+            SetStartingSideCommand setMiddle, SelectAutonomousCommand selectDoubleSwitch) {
 
         selectScale.setMetaprogram(AutonomousMetaprogram.Scale);
         selectDoubleScale.setMetaprogram(AutonomousMetaprogram.DoubleScale);
         selectSwitch.setMetaprogram(AutonomousMetaprogram.Switch);
+        selectDoubleSwitch.setMetaprogram(AutonomousMetaprogram.DoubleSwitch);
         crossLine.setMetaprogram(AutonomousMetaprogram.CrossLine);
         doNothing.setMetaprogram(AutonomousMetaprogram.DoNothing);
 
@@ -110,6 +111,7 @@ public class OperatorCommandMap {
         oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
         oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
         oi.programmerGamepad.getifAvailable(6).whenPressed(selectDoubleScale);
+        oi.programmerGamepad.getifAvailable(8).whenPressed(selectDoubleSwitch);
     }
 
     @Inject

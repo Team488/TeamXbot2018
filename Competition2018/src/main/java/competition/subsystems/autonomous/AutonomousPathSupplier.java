@@ -336,7 +336,6 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return points;
     }
 
-
     public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCubeB() {
         List<TotalRobotPoint> points = new ArrayList<>();
         
@@ -349,6 +348,44 @@ public class AutonomousPathSupplier extends BaseSubsystem {
             points = mirrorTotalPointPath(points);
         }
 
+        return points;
+    }
+    
+    public List<TotalRobotPoint> getAdvancedPathToNearbyCubeFromSwitchPlate() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair (16 * 12, 5 * 12), new ContiguousHeading (110)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair (13.5 * 12, 10 * 12), new ContiguousHeading (110)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.LEFT) {
+            points = mirrorTotalPointPath(points);
+        }
+        return points;
+    }
+    
+    public List<TotalRobotPoint> getAdvancedPathToNearbySwitchFromSecondCube() {
+        List<TotalRobotPoint> points = new ArrayList<>();
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair (16 * 12, 5 * 12), new ContiguousHeading(135)),
+                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        points.add(new TotalRobotPoint(
+                new RabbitPoint(new FieldPose(new XYPair (17 * 12, 11.5 * 12), new ContiguousHeading (90)),
+                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                Gear.LOW_GEAR, 80));
+        
+        if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.LEFT) {
+            points = mirrorTotalPointPath(points);
+        }
         return points;
     }
     
