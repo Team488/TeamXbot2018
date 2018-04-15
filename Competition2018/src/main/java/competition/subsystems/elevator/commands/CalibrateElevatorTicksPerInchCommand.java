@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 
 import competition.operator_interface.OperatorInterface;
 import competition.subsystems.climb.ClimbSubsystem;
-import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
@@ -26,7 +25,7 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
     @Inject
     public CalibrateElevatorTicksPerInchCommand(ElevatorSubsystem elevator, DriveSubsystem drive,
             WristSubsystem wrist, GripperIntakeSubsystem intake, LeanSubsystem leaner, ClimbSubsystem climber,
-            ClimberDeploySubsystem climbDeploy, OperatorInterface oi) {
+             OperatorInterface oi) {
         this.elevator = elevator;
         this.oi = oi;
 
@@ -36,7 +35,6 @@ public class CalibrateElevatorTicksPerInchCommand extends BaseCommand {
         this.requires(intake);
         this.requires(leaner);
         this.requires(climber);
-        this.requires(climbDeploy);
     }
 
     @Override

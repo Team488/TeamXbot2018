@@ -54,6 +54,10 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         this.startingLocation = startingLocation;
         robotLocation.set(startingLocation.toString());
     }
+    
+    public StartingLocations getConfiguredStartingLocation() {
+        return this.startingLocation;
+    }
 
     public void changeAutoDelay(double amount) {
         autonomousDelay.set(autonomousDelay.get() + amount);

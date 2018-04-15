@@ -6,8 +6,6 @@ import com.google.inject.Singleton;
 import competition.ElectricalContract2018;
 import competition.subsystems.climb.ClimbSubsystem;
 import competition.subsystems.climb.commands.StopClimberCommand;
-import competition.subsystems.climberdeploy.ClimberDeploySubsystem;
-import competition.subsystems.climberdeploy.commands.StopClimberArmCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
@@ -47,14 +45,6 @@ public class SubsystemDefaultCommandMap {
     public void setupClimb(ElectricalContract2018 contract, ClimbSubsystem climb, StopClimberCommand stop) {
         if (contract.climbReady()) {
             climb.setDefaultCommand(stop);
-        }
-    }
-
-    @Inject
-    public void setupClimberDeploySubsystem(ElectricalContract2018 contract,
-            ClimberDeploySubsystem climberdeploySubsystem, StopClimberArmCommand command) {
-        if (contract.climbDeployReady()) {
-            climberdeploySubsystem.setDefaultCommand(command);
         }
     }
 
