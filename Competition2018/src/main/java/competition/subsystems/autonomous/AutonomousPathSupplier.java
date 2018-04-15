@@ -316,26 +316,24 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         return points;
     }
 
-    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCube() {
+    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCubeA() {
         List<TotalRobotPoint> points = new ArrayList<>();
         
-        //points.add(new TotalRobotPoint(new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(270)),
-        //        PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
-        
-        /*points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(24 * 12, 22 * 12), new ContiguousHeading(180)),
-                        PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
-                Gear.LOW_GEAR, 80));
-        
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(23.5 * 12, 25.5 * 12), new ContiguousHeading(140)),
-                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Micro),
-                Gear.LOW_GEAR, 80));*/
-        
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(21 * 12, 25.5 * 12), new ContiguousHeading(240)),
+                new RabbitPoint(new FieldPose(new XYPair(21 * 12, 25.5 * 12), new ContiguousHeading(245)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
+
+        if (startingLocation == StartingLocations.Left) {
+            points = mirrorTotalPointPath(points);
+        }
+
+        return points;
+    }
+
+
+    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCubeB() {
+        List<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
                 new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(140)),

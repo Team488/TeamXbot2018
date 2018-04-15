@@ -33,7 +33,8 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
             SetWristAngleCommand setWristUp,
             SetWristAngleCommand setWristUpAgain,
             AbsolutePurePursuit2018Command getCube,
-            AbsolutePurePursuit2018Command returnToScale,
+            AbsolutePurePursuit2018Command returnToScaleA,
+            AbsolutePurePursuit2018Command returnToScaleB,
             GripperIntakeCommand intake,
             GripperEjectCommand eject,
             GripperEjectCommand ejectAgain,
@@ -43,8 +44,9 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         
         pursuit.setPointSupplier(() -> pathSupplier.getPathToAlignedScaleFast());
         getCube.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyCubeFromScalePlate());
-        returnToScale.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCube());
-
+        returnToScaleA.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeA());
+        returnToScaleB.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeB());
+        
         setWristDown.setGoalAngle(45);
         setWristDownAgain.setGoalAngle(0);
         setWristUp.setGoalAngle(90);
@@ -79,11 +81,13 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         
         // parallel
         this.addSequential(stopCollector, 0.1);
+        
+        this.addSequential(returnToScaleA);
 
         this.addParallel(setWristUpAgain, 0.1);
         this.addParallel(setElevatorForScaleAgain);
         
-        this.addSequential(returnToScale);
+        this.addSequential(returnToScaleB);
                 
         // eject
         this.addSequential(ejectAgain, 1);
