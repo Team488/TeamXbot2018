@@ -276,12 +276,12 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 21.5 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(22 * 12, 20 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 21.5 * 12), new ContiguousHeading(180)),
+                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 22.0 * 12), new ContiguousHeading(180)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
