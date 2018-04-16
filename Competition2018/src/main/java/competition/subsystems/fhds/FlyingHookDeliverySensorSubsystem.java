@@ -11,7 +11,6 @@ import competition.subsystems.offboard.packets.DroneMotorCommandPacket;
 import xbot.common.command.BaseSubsystem;
 import xbot.common.controls.actuators.XDigitalOutput;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
-import xbot.common.math.MathUtils;
 import xbot.common.math.XYPair;
 
 @Singleton
@@ -28,29 +27,26 @@ public class FlyingHookDeliverySensorSubsystem extends BaseSubsystem {
     private volatile Object fhdsThreadLock = new Object();
     
     private static class FHDSServoOutput {
-        // Maximum frequency is (1000 (ms/s) / 2 ms) = 500Hz, but we need to
-        // ensure there is margin between each pulse so they are individually
-        // discernible. Division factor is chosen arbitrarily.
-        private final double xFREQUENCY = (1000d / 2d) / 1.5;
-        private final double xPERIOD = 1 / xFREQUENCY;
+        private final double FREQUENCY = 400;
+        private final double PERIOD = 1 / FREQUENCY;
         
         XDigitalOutput output;
         public FHDSServoOutput(XDigitalOutput output) {
             this.output = output;
         }
         
-        private double calculateDutyCycle(double throttle) {
-            double targetTime = MathUtils.scaleDouble(throttle, -1, 1, 1.0, 2.0) / 1000;
-            return targetTime / xPERIOD;
+        private double calculateDutyCycle(int pulseWidthMicros) {
+            double targetTime = pulseWidthMicros / 1_000_000;
+            return targetTime / PERIOD;
         }
         
-        public void start(double throttle) {
-            output.setPWMRate(xFREQUENCY);
-            output.enablePWM(calculateDutyCycle(throttle));
+        public void start(int pulseWidthMicros) {
+            output.setPWMRate(FREQUENCY);
+            output.enablePWM(calculateDutyCycle(pulseWidthMicros));
         }
         
-        public void set(double throttle) {
-            output.updateDutyCycle(calculateDutyCycle(throttle));
+        public void set(int pulseWidthMicros) {
+            output.updateDutyCycle(calculateDutyCycle(pulseWidthMicros));
         }
         
         public void stop() {
