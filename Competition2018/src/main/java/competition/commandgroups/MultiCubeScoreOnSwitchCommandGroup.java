@@ -35,6 +35,7 @@ public class MultiCubeScoreOnSwitchCommandGroup extends BaseCommandGroup {
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForSwitch,
             SetElevatorTargetHeightCommand setElevatorToPickUpCube,
+            SetElevatorTargetHeightCommand setElevatorForSwitchAgain,
             GripperStopCommand stop,
             GripperIntakeCommand intake,
             Provider<TimeoutCommand> timeoutProvider,
@@ -48,6 +49,7 @@ public class MultiCubeScoreOnSwitchCommandGroup extends BaseCommandGroup {
         setWristDown.setGoalAngle(0);
         setElevatorForSwitch.setGoalHeight(elevator.getTargetSwitchDropHeight());
         setElevatorToPickUpCube.setGoalHeight(elevator.getTargetPickUpHeight());
+        setElevatorForSwitchAgain.setGoalHeight(elevator.getTargetSwitchDropHeight());
         wait.setDelaySupplier(() -> decider.getDelay());
         
         this.addSequential(wait);
@@ -59,13 +61,23 @@ public class MultiCubeScoreOnSwitchCommandGroup extends BaseCommandGroup {
         // Score for 1 second
         this.addSequential(eject, 1);
         
+        // Lower Elevator to cube height
         this.addParallel(new RunCommandAfterDelayCommand(setElevatorToPickUpCube, .75, timeoutProvider));
         
+        // Begin intake
         this.addParallel(intake, 1);
         
+        // Goes towards pyramid cube
         this.addSequential(getCube);
+        
+        // Stops intake
         this.addParallel(new RunCommandAfterDelayCommand(stop, .1, timeoutProvider));
         
+        // Gets ready to score
+        this.addParallel(setElevatorForSwitchAgain);
         this.addSequential(returnToSwitch);
+        
+        // Score for 1 second
+        this.addSequential(eject, 1);
     }
 }
