@@ -9,6 +9,7 @@ import xbot.common.command.BaseCommand;
 public class GripperEjectCommand extends BaseCommand {
 
     GripperIntakeSubsystem intake;
+    private boolean highPower = false;
 
     @Inject
     public GripperEjectCommand(GripperIntakeSubsystem intake) {
@@ -20,10 +21,19 @@ public class GripperEjectCommand extends BaseCommand {
     public void initialize() {
         log.info("Initializing");
     }
+    
+    public void setIsHighPower(boolean isHighPower) {
+        this.highPower = isHighPower;
+    }
 
     @Override
     public void execute() {
-        intake.eject();
+        if (highPower) {
+            intake.ejectHighPower();
+        }
+        else {
+            intake.eject();
+        }
     }
 
 }

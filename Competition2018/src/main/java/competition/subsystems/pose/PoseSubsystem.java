@@ -34,6 +34,7 @@ public class PoseSubsystem extends BasePoseSubsystem {
     }
     
     public void initializePoseForStartLocation(StartingLocations startLocation) {
+        log.info("Initializing pose for start location: " + startLocation);
         switch (startLocation) {
         case Left:
             setCurrentPosition(46.75, 38.5);

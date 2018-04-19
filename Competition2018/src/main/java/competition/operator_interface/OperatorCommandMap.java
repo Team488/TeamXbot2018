@@ -81,13 +81,15 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupAutoCommands(OperatorInterface oi, ChangeAutoDelayCommand addAutoDelay,
-            ChangeAutoDelayCommand subtractAutoDelay, SelectAutonomousCommand selectScale,
+            ChangeAutoDelayCommand subtractAutoDelay, SelectAutonomousCommand selectScale, SelectAutonomousCommand selectDoubleScale,
             SelectAutonomousCommand selectSwitch, SelectAutonomousCommand crossLine,
             SelectAutonomousCommand doNothing, SetStartingSideCommand setLeft, SetStartingSideCommand setRight,
-            SetStartingSideCommand setMiddle, SelectAutonomousCommand advancedScale) {
+            SetStartingSideCommand setMiddle, SelectAutonomousCommand selectDoubleSwitch) {
 
         selectScale.setMetaprogram(AutonomousMetaprogram.Scale);
+        selectDoubleScale.setMetaprogram(AutonomousMetaprogram.DoubleScale);
         selectSwitch.setMetaprogram(AutonomousMetaprogram.Switch);
+        selectDoubleSwitch.setMetaprogram(AutonomousMetaprogram.DoubleSwitch);
         crossLine.setMetaprogram(AutonomousMetaprogram.CrossLine);
         doNothing.setMetaprogram(AutonomousMetaprogram.DoNothing);
 
@@ -108,8 +110,8 @@ public class OperatorCommandMap {
         oi.programmerGamepad.getifAvailable(2).whenPressed(selectScale);
         oi.programmerGamepad.getifAvailable(3).whenPressed(crossLine);
         oi.programmerGamepad.getifAvailable(4).whenPressed(doNothing);
-
-        oi.programmerGamepad.getifAvailable(6).whenPressed(advancedScale);
+        oi.programmerGamepad.getifAvailable(6).whenPressed(selectDoubleScale);
+        oi.programmerGamepad.getifAvailable(8).whenPressed(selectDoubleSwitch);
     }
 
     @Inject
@@ -196,6 +198,7 @@ public class OperatorCommandMap {
             GripperDropCubeCommand dropCube) {
 
         oi.operatorGamepad.getifAvailable(8).whileHeld(dropCube);
+        oi.operatorGamepad.getifAvailable(3).whileHeld(dropCube);
 
         oi.driverGamepad.getAnalogIfAvailable(oi.driverLeftTrigger).whileHeld(eject);
         oi.driverGamepad.getAnalogIfAvailable(oi.driverRightTrigger).whileHeld(dropCube);
@@ -225,7 +228,7 @@ public class OperatorCommandMap {
 
         oi.operatorGamepad.getifAvailable(1).whenPressed(targetPickUpHeight);
         oi.operatorGamepad.getifAvailable(2).whenPressed(targetPortalHeight);
-        oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
+        //oi.operatorGamepad.getifAvailable(3).whenPressed(targetSwitchDropHeight);
         oi.operatorGamepad.getifAvailable(4).whenPressed(targetScaleMidHeight);
 
         oi.operatorGamepad.getifAvailable(10).whenPressed(calibrateHere);

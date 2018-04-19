@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 
 import competition.commandgroups.CrossAutoLineCommandGroup;
 import competition.commandgroups.MultiCubeNearScaleCommandGroup;
+import competition.commandgroups.MultiCubeScoreOnSwitchCommandGroup;
 import competition.commandgroups.ScoreOnScaleCommandGroup;
 import competition.commandgroups.ScoreOnSwitchCommandGroup;
 import competition.subsystems.autonomous.commands.DriveNowhereCommand;
@@ -21,7 +22,9 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
     public enum AutonomousMetaprogram {
         DoNothing,
         Switch,
+        DoubleSwitch,
         Scale,
+        DoubleScale,
         Opportunistic,
         CrossLine
     }
@@ -32,6 +35,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
     MultiCubeNearScaleCommandGroup multiCubeNearScale;
     ScoreOnScaleCommandGroup singleCubeAnyScale;
     ScoreOnSwitchCommandGroup singleCubeSwitch;
+    MultiCubeScoreOnSwitchCommandGroup multiCubeMidSwitch;
     CrossAutoLineCommandGroup crossLine;
     DriveNowhereCommand driveNowhere;
     
@@ -44,6 +48,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
             AutonomousPathSupplier pathSupplier, 
             GameDataSource gameData,
             MultiCubeNearScaleCommandGroup multiCubeNearScale,
+            MultiCubeScoreOnSwitchCommandGroup multiCubeMidSwitch,
             ScoreOnScaleCommandGroup singleCubeAnyScale,
             ScoreOnSwitchCommandGroup singleCubeSwitch,
             CrossAutoLineCommandGroup crossLine,
@@ -52,6 +57,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         this.pathSupplier = pathSupplier;
         this.gameData = gameData;
         this.multiCubeNearScale = multiCubeNearScale;
+        this.multiCubeMidSwitch = multiCubeMidSwitch;
         this.singleCubeAnyScale = singleCubeAnyScale;
         this.singleCubeSwitch = singleCubeSwitch;
         this.crossLine = crossLine;
@@ -78,9 +84,19 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
         case Switch:
             log.info("Choosing: Doing single-cube switch");
             return singleCubeSwitch;
+        case DoubleSwitch:
+            log.info("Choosing: Doing double-cube switch");
+            return multiCubeMidSwitch;
         case Scale:
-            // if we have a matching side, try the multi cube auto
             log.info("Choosing: Doing single cube scale");
+            return singleCubeAnyScale;
+        case DoubleScale:
+            // if we have a matching side, try the multi cube auto
+            if (pathSupplier.isMatchingSide()) {
+                log.info("Choosing: Multi-cube for near scale");
+                return multiCubeNearScale;
+            }
+            log.info("Choosing: Single cube on scale (requested double-scale metaprogram, but unaligned side)");
             return singleCubeAnyScale;
         case CrossLine:
             log.info("Choosing: Crossing auto line");

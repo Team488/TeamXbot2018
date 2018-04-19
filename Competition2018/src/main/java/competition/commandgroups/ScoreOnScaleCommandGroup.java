@@ -19,8 +19,6 @@ import xbot.common.subsystems.drive.PurePursuitCommand.PointLoadingMode;
 import xbot.common.subsystems.drive.RabbitPoint;
 
 public class ScoreOnScaleCommandGroup extends BaseCommandGroup {
-
-    public AbsolutePurePursuit2018Command pursuit;
     
     @Inject
     public ScoreOnScaleCommandGroup(
@@ -31,7 +29,6 @@ public class ScoreOnScaleCommandGroup extends BaseCommandGroup {
             SetWristAngleCommand setWristDown,
             SetElevatorTargetHeightCommand setElevatorForScale,
             GripperEjectCommand eject) {
-        this.pursuit = pursuit;
         pursuit.setPointSupplier(() -> decider.getPathToCorrectScale());
         
         setWristDown.setGoalAngle(60);
