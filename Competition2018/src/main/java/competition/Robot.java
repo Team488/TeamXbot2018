@@ -17,6 +17,7 @@ import competition.subsystems.pose.PoseSubsystem;
 import competition.subsystems.power_state_manager.PowerStateManagerSubsystem;
 import competition.subsystems.wrist.WristSubsystem;
 import competition.subsystems.zed_deploy.ZedDeploySubsystem;
+import edu.wpi.first.wpilibj.CameraServer;
 import xbot.common.command.BaseRobot;
 
 public class Robot extends BaseRobot {
@@ -65,6 +66,8 @@ public class Robot extends BaseRobot {
         if (contract.wristReady()) {
             registerPeriodicDataSource(this.injector.getInstance(WristSubsystem.class));
         }
+        
+        CameraServer.getInstance().startAutomaticCapture();
     }
     
     @Override
