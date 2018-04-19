@@ -40,7 +40,8 @@ public class MultiCubeScoreOnSwitchCommandGroup extends BaseCommandGroup {
             GripperIntakeCommand intake,
             Provider<TimeoutCommand> timeoutProvider,
             // This is reversed, but I don't want to mess with the rest of the OI
-            GripperEjectCommand eject) {
+            GripperEjectCommand eject,
+            GripperEjectCommand ejectAgain) {
         this.pursuit = pursuit;
         pursuit.setPointSupplier(() -> decider.getPathToCorrectSwitch(SwitchScoringLocation.SideFacingAllianceWall));
         getCube.setPointSupplier(() -> decider.getAdvancedPathToNearbyCubeFromSwitchPlate());
@@ -78,6 +79,6 @@ public class MultiCubeScoreOnSwitchCommandGroup extends BaseCommandGroup {
         this.addSequential(returnToSwitch);
         
         // Score for 1 second
-        this.addSequential(eject, 1);
+        this.addSequential(ejectAgain, 1);
     }
 }
