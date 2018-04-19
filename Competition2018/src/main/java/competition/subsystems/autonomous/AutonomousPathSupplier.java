@@ -146,7 +146,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(17 * 12, 11.5 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(18 * 12, 12 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
@@ -157,7 +157,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         ArrayList<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(7 * 12, 11.5 * 12), new ContiguousHeading(90)),
+                new RabbitPoint(new FieldPose(new XYPair(8.5 * 12, 12.5 * 12), new ContiguousHeading(90)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
@@ -305,7 +305,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(19.5 * 12, 20.5 * 12), new ContiguousHeading(240)),
+                new RabbitPoint(new FieldPose(new XYPair(20 * 12, 20.5 * 12), new ContiguousHeading(240)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
@@ -345,7 +345,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair (13.5 * 12, 10 * 12), new ContiguousHeading (110)),
+                new RabbitPoint(new FieldPose(new XYPair (13.5 * 12, 9.5 * 12), new ContiguousHeading (110)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
