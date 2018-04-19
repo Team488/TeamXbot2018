@@ -305,7 +305,7 @@ public class AutonomousPathSupplier extends BaseSubsystem {
                 PointType.HeadingOnly, PointTerminatingType.Continue, PointDriveStyle.Macro), Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(19.5 * 12, 20.3 * 12), new ContiguousHeading(240)),
+                new RabbitPoint(new FieldPose(new XYPair(19.5 * 12, 20.5 * 12), new ContiguousHeading(240)),
                         PointType.PositionAndHeading, PointTerminatingType.Continue, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 
@@ -320,27 +320,12 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         List<TotalRobotPoint> points = new ArrayList<>();
         
         points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(21 * 12, 25.5 * 12), new ContiguousHeading(245)),
+                new RabbitPoint(new FieldPose(new XYPair(21.5 * 12, 26 * 12), new ContiguousHeading(230)),
                         PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
         
         points.add(new TotalRobotPoint(
                 new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(130)),
-                        PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
-                Gear.LOW_GEAR, 80));
-
-        if (startingLocation == StartingLocations.Left) {
-            points = mirrorTotalPointPath(points);
-        }
-
-        return points;
-    }
-
-    public List<TotalRobotPoint> getAdvancedPathToNearbyScalePlateFromSecondCubeB() {
-        List<TotalRobotPoint> points = new ArrayList<>();
-        
-        points.add(new TotalRobotPoint(
-                new RabbitPoint(new FieldPose(new XYPair(0, 0), new ContiguousHeading(140)),
                         PointType.HeadingOnly, PointTerminatingType.Stop, PointDriveStyle.Macro),
                 Gear.LOW_GEAR, 80));
 

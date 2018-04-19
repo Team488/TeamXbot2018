@@ -54,7 +54,7 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         returnToScaleA.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCube());
         //returnToScaleB.setPointSupplier(() -> pathSupplier.getAdvancedPathToNearbyScalePlateFromSecondCubeB());
         
-        setWristDown.setGoalAngle(25);
+        setWristDown.setGoalAngle(50);
         setWristDownAgain.setGoalAngle(0);
         setWristUp.setGoalAngle(90);
         setWristUpAgain.setGoalAngle(45);
@@ -89,7 +89,7 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(stopCollector, 0.1);
 
         this.addParallel(setWristUpAgain, 0.1);
-        this.addParallel(new RunCommandAfterDelayCommand(setElevatorForScaleAgain, 1.5, timeoutProvider));
+        this.addParallel(new RunCommandAfterDelayCommand(setElevatorForScaleAgain, 1.2, timeoutProvider));
         this.addSequential(returnToScaleA);
 
         
