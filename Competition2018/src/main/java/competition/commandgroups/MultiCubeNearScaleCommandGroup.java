@@ -63,6 +63,8 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         setElevatorForScaleAgain.setTargetHeight(elevator.getTargetScaleMidHeight());
         lowerElevator.setTargetHeight(elevator.getTargetPickUpHeight());
         
+        intakeContinued.setDuration(1);
+        
         wait.setDelaySupplier(() -> pathSupplier.getDelay());
         
         this.addSequential(wait);
@@ -86,7 +88,8 @@ public class MultiCubeNearScaleCommandGroup extends BaseCommandGroup {
         this.addSequential(getCube);
         
         // parallel
-        this.addSequential(new RunCommandAfterDelayCommand(stopCollector, 1, 0.1, timeoutProvider));
+        this.addParallel(intakeContinued);
+        //this.addSequential(new RunCommandAfterDelayCommand(stopCollector, 1, 0.1, timeoutProvider));
 
         this.addParallel(setWristUpAgain, 0.1);
         this.addParallel(new RunCommandAfterDelayCommand(setElevatorForScaleAgain, 1.2, timeoutProvider));

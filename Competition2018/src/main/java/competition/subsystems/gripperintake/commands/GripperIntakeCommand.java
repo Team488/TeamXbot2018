@@ -16,6 +16,10 @@ public class GripperIntakeCommand extends BaseCommand {
         this.intake = intake;
     }
 
+    public void setDuration(double seconds) {
+    	this.setTimeout(seconds);
+    }
+    
     @Override
     public void initialize() {
         log.info("Initializing");
@@ -24,6 +28,11 @@ public class GripperIntakeCommand extends BaseCommand {
     @Override
     public void execute() {
         intake.intake();
+    }
+    
+    @Override
+    public boolean isFinished() {
+    	return this.isTimedOut();
     }
 
 }
