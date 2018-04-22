@@ -17,7 +17,7 @@ public class GripperIntakeCommand extends BaseCommand {
     }
 
     public void setDuration(double seconds) {
-    	this.setTimeout(seconds);
+        this.setTimeout(seconds);
     }
     
     @Override
@@ -32,7 +32,7 @@ public class GripperIntakeCommand extends BaseCommand {
     
     @Override
     public boolean isFinished() {
-    	return this.isTimedOut();
+        return this.isTimedOut();
     }
 
 }

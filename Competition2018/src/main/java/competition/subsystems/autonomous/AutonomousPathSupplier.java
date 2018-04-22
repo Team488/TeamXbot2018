@@ -380,16 +380,16 @@ public class AutonomousPathSupplier extends BaseSubsystem {
         if (gameData.getOwnedSide(GameFeature.SWITCH_NEAR) == OwnedSide.LEFT) {
             points = mirrorTotalPointPath(points);
             
-	        points.add(new TotalRobotPoint(
-	                new RabbitPoint(new FieldPose(new XYPair (10 * 12, 12.5 * 12), new ContiguousHeading (90)),
-	                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
-	                Gear.LOW_GEAR, 80));
+            points.add(new TotalRobotPoint(
+                    new RabbitPoint(new FieldPose(new XYPair (10 * 12, 12.5 * 12), new ContiguousHeading (90)),
+                            PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                    Gear.LOW_GEAR, 80));
         }
         else {
-	        points.add(new TotalRobotPoint(
-	                new RabbitPoint(new FieldPose(new XYPair (17 * 12, 12.5 * 12), new ContiguousHeading (90)),
-	                        PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
-	                Gear.LOW_GEAR, 80));
+            points.add(new TotalRobotPoint(
+                    new RabbitPoint(new FieldPose(new XYPair (17 * 12, 12.5 * 12), new ContiguousHeading (90)),
+                            PointType.PositionAndHeading, PointTerminatingType.Stop, PointDriveStyle.Macro),
+                    Gear.LOW_GEAR, 80));
         }
         
         return points;
