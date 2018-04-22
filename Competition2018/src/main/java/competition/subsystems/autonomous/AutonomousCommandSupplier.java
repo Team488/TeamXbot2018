@@ -97,7 +97,7 @@ public class AutonomousCommandSupplier extends BaseSubsystem {
                 return multiCubeNearScale;
             }
             log.info("Choosing: Single cube on scale (requested double-scale metaprogram, but unaligned side)");
-            return singleCubeAnyScale;
+            return crossLine;
         case CrossLine:
             log.info("Choosing: Crossing auto line");
             return crossLine;
