@@ -8,9 +8,11 @@ import competition.subsystems.climb.ClimbSubsystem;
 import competition.subsystems.climb.commands.StopClimberCommand;
 import competition.subsystems.drive.DriveSubsystem;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
+import competition.subsystems.drive.commands.OutreachDriveWithJoysticksCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
 import competition.subsystems.elevator.commands.ControlElevatorViaJoystickCommand;
 import competition.subsystems.elevator.commands.ElevatorMaintainerCommand;
+import competition.subsystems.elevator.commands.OutreachElevatorMaintainerCommand;
 import competition.subsystems.elevator.commands.StopElevatorCommand;
 import competition.subsystems.gripperintake.GripperIntakeSubsystem;
 import competition.subsystems.gripperintake.commands.GripperStopCommand;
@@ -27,17 +29,20 @@ public class SubsystemDefaultCommandMap {
     // For setting the default commands on subsystems
 
     @Inject
-    public void setupDriveSubsystem(DriveSubsystem driveSubsystem, ArcadeDriveWithJoysticksCommand command) {
-        driveSubsystem.setDefaultCommand(command);
+    public void setupDriveSubsystem(DriveSubsystem driveSubsystem, ArcadeDriveWithJoysticksCommand command,
+            OutreachDriveWithJoysticksCommand outreach) {
+           // driveSubsystem.setDefaultCommand(command);
+           driveSubsystem.setDefaultCommand(outreach);
     }
 
     @Inject
     public void setupElevatorSubsystem(ElectricalContract2018 contract, ElevatorSubsystem elevator,
             ElevatorMaintainerCommand maintain,
             StopElevatorCommand stop,
-            ControlElevatorViaJoystickCommand joysticks) {
+            ControlElevatorViaJoystickCommand joysticks, OutreachElevatorMaintainerCommand outreach) {
         if (contract.elevatorReady()) {
-            elevator.setDefaultCommand(maintain);
+            // elevator.setDefaultCommand(maintain);
+            elevator.setDefaultCommand(outreach);
         }
     }
     

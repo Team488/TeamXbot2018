@@ -57,6 +57,10 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         
         decider.reset();
     }
+    
+    public double GetHumanInput() {
+        return oi.operatorGamepad.getRightStickY();
+    }
 
     @Override
     public void execute() {
@@ -76,7 +80,7 @@ public class ElevatorMaintainerCommand extends BaseCommand {
         
         // Decide what low-level activity the elevator is involved in.
         // Will only be used if the elevator is calibrated.
-        double humanInput = oi.operatorGamepad.getRightStickY();
+        double humanInput = GetHumanInput();
         HumanVsMachineMode deciderMode = decider.getRecommendedMode(humanInput);
         double power = 0;
         
