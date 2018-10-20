@@ -97,8 +97,18 @@ public class OutreachDriveWithJoysticksCommand extends BaseCommand {
         }
         
         if (elevatorSubsystem.getCurrentHeightInInches() > elevatorSubsystem.getMaxHeightInInches() - 36){
-            translatePower = 0;
-            rotationPower = 0;
+            if (translatePower > 0.1) {
+                translatePower = 0.1;
+            }
+            else if (translatePower < -0.1) {
+                translatePower = -0.1;
+            }
+            if (rotationPower > 0.1) {
+                rotationPower = 0.1;
+            }
+            else if (rotationPower < -0.1) {
+                rotationPower = -0.1;
+            }
         }
         
         driveSubsystem.drive(new XYPair(0, translatePower), rotationPower);

@@ -16,7 +16,6 @@ import competition.subsystems.drive.commands.AbsolutePurePursuit2018Command;
 import competition.subsystems.drive.commands.ArcadeDriveWithJoysticksCommand;
 import competition.subsystems.drive.commands.DriveAtVelocityInfinitelyCommand;
 import competition.subsystems.drive.commands.FieldOrientedTankDriveCommand;
-import competition.subsystems.drive.commands.ToggleArcadeDriveCommand;
 import competition.subsystems.drive.commands.TotalRobotPoint;
 import competition.subsystems.drive.commands.VelocityArcadeDriveCommand;
 import competition.subsystems.elevator.ElevatorSubsystem;
@@ -189,11 +188,11 @@ public class OperatorCommandMap {
 
     @Inject
     public void setupShiftGearCommand(OperatorInterface oi, ShiftHighCommand shiftHigh, ShiftLowCommand shiftLow,
-            ToggleArcadeDriveCommand toggleArcade) {
+            ArcadeDriveWithJoysticksCommand shiftArcade) {
 
         oi.driverGamepad.getifAvailable(5).whenPressed(shiftLow);
         oi.driverGamepad.getifAvailable(6).whenPressed(shiftHigh);
-        oi.driverGamepad.getifAvailable(1).whenPressed(toggleArcade);
+        oi.programmerGamepad.getifAvailable(9).toggleWhenPressed(shiftArcade);
     }
 
     @Inject
